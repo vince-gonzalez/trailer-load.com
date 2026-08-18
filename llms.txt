@@ -1,6 +1,6 @@
 # LOCK IN — trailer-load.com
 
-> LOCK IN is a free, browser-based warehouse trailer-loading training simulator. It plays like Tetris but models the real job: load integrity, weight and balance, hazmat segregation, non-conveyables, a dispatch clock, and safety incidents scored the way a dock supervisor would call them. Built by F-Keys LLC (founder: Vince Gonzalez). Free forever for workers and students; an opt-in performance dashboard is the paid product for CTE programs, trade schools, and warehouse employers.
+> LOCK IN is a free, browser-based warehouse trailer-loading training simulator. It plays like Tetris but models the real job: load integrity, weight and balance, hazmat segregation, non-conveyables, a dispatch clock, and safety incidents scored the way a dock supervisor would call them. Built by F-Keys Creative LLC (founder: Vince Gonzalez). Free forever for workers and students; an opt-in performance dashboard is the paid product for CTE programs, trade schools, and warehouse employers.
 
 ## Play
 - [LOCK IN — the game](https://trailer-load.com/lock-in.html): The full trailer-loading simulator. Free, no login. Modes: Training, Trailer-Load, Daily. Scored on integrity, density, pace, and safety; ranked Rookie to Yard Legend.
@@ -17,4 +17,4 @@
 - [Terms of Service](https://trailer-load.com/terms.html): Free gameplay, facility dashboards, acceptable use, and disclaimers.
 
 ## About
-LOCK IN is a training *supplement* — it builds loading intuition and tracks readiness. It does NOT replace employer safety training, OSHA training, or any certification requirement. Made by F-Keys LLC, a Florida limited liability company (https://www.f-keys.com/). Founder: Vince Gonzalez.
+LOCK IN is a training *supplement* — it builds loading intuition and tracks readiness. It does NOT replace employer safety training, OSHA training, or any certification requirement. Made by F-Keys Creative LLC, a Florida limited liability company (https://www.f-keys.com/). Founder: Vince Gonzalez.
