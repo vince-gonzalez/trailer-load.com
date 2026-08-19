@@ -27,9 +27,32 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.184
+   LOCK IN v3.5.185
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.185 - THE PERFECT WALL CERTIFICATE. Vince's ask: a player who finishes a wall ALL THE WAY
+     -- not one who clicked NEXT early -- gets "Congratulations, you're LOCKED IN" as a keepsake. The image is
+     a crop of THEIR OWN WALL taken off the live scene canvas, because walls are near-unique and a picture of
+     the wall YOU built is the only thing this product has ever made that a person would show someone else
+     unprompted. It is also his own thesis rendered visible: loaders separate by style, which is invisible as
+     a sentence and obvious as a picture.
+     EARN CONDITION IS STRICT ON PURPOSE: every cell of the 17x20 grid filled AND sealed. Verified that 339 of
+     340 cells is REFUSED -- that is exactly the "clicked NEXT before I was done" case he wanted excluded --
+     and that a full-but-unsealed wall is refused too.
+     HONESTY: the card states on its face "A GAME ACHIEVEMENT - NOT A SAFETY CERTIFICATION AND NOT A
+     QUALIFICATION TO LOAD REAL FREIGHT", and the overlay repeats it. The Terms disclaim certification; a
+     certificate that contradicted them would cost more credibility than it earns. His own framing, kept:
+     "not saying they're ready for the floor... they're good at building digital walls of freight."
+     Also on the card: handle, date, and the wall's real numbers (pack, integrity, pieces, incidents).
+     THREE LEAKS, ALL FOUND BY INTEGRATION TEST RATHER THAN UNIT BEHAVIOUR -- the earn logic was correct from
+     the first write and the WIRING was wrong three times. The reset was hooked only to the makeGrid path, so
+     the button stayed lit through (1) nextTrailer, which clears G.sealed on its own line, (2) a fresh mode
+     start, and (3) returnToMenu. A certificate would have been offered for a wall the player never finished.
+     Fixed with ONE liCertReset() called from hideStartMenu() and showStartMenu() -- the two entries every
+     path actually shares -- plus nextTrailer. SAME LESSON AS v3.5.184's trainer pane, which I had just
+     learned and did not apply: teardown belongs on the shared entry, never on the individual routes.
+     Verified all seven paths clean and the certificate still renders afterwards.
 
    CHANGE LOG v3.5.184 - TRAINING'S SIDE PANE OUTLIVED TRAINING (Vince, live). He clicked out of the trainer
      into DAILY and the side pane kept rendering the training game beside a real mode. Reproduced and it is
@@ -2296,6 +2319,27 @@ body[data-cb="trit"]{
 .rec-btns{display:flex;flex-direction:column;gap:11px;}
 .rec-dbg{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--t3);margin-top:18px;word-break:break-all;opacity:.65;}
 /* ── v2.8.0 DAILY RESULT ── */
+
+/* ── v3.5.185 PERFECT WALL CERTIFICATE ──────────────────────────────────────
+   Earned only on a genuinely finished wall: every cell filled, sealed, not a
+   bail-out. It is deliberately a GAME artifact and says so on its face — the
+   Terms disclaim certification and this must never read like an OSHA card.
+   The point is that the picture is of THEIR wall. Walls are ~95% unique, so
+   the certificate is the first thing LOCK IN produces that a person would
+   voluntarily show someone else. */
+#ov-cert{position:fixed;inset:0;z-index:640;display:none;align-items:center;justify-content:center;
+  background:rgba(12,8,4,.92);padding:18px;overflow:auto;}
+#ov-cert.vis{display:flex;}
+.cert-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:min(560px,94vw);}
+#cert-canvas{width:100%;height:auto;border:1.5px solid var(--btn-line);border-radius:6px;
+  box-shadow:0 14px 44px rgba(0,0,0,.6);background:#1c1410;}
+.cert-acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.cert-btn{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;min-height:34px;
+  border:1.5px solid var(--btn-line);border-radius:6px;background:var(--acc);color:#241505;
+  padding:9px 22px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+.cert-btn.ghost{background:transparent;color:var(--t1);}
+.cert-note{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;
+  color:var(--t2);text-align:center;max-width:460px;line-height:1.5;}
 #daily-result{margin:10px 0;padding:12px;background:#2e2016;border-radius:8px;border:1px solid var(--border2);text-align:left;} /* v3.5.178 explicit dark ground — this panel only ever renders on the dark end screen */
 .dr-head{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--acc);letter-spacing:1px;}
 .dr-streak{font-family:'Share Tech Mono',monospace;font-size:14px;color:#ffb84a;margin:6px 0 2px;letter-spacing:.5px;} /* v3.5.146 daily streak line */
@@ -2411,7 +2455,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.184 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.185 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2517,7 +2561,7 @@ body[data-cb="trit"]{
     </div>
   </div>
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.184 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.185 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -2675,7 +2719,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.184 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.185 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -2871,12 +2915,22 @@ body[data-cb="trit"]{
     <div id="world">
       <div id="scene-wrap">
         <canvas id="scene" tabindex="0" role="img" aria-label="Freight trailer loading wall — stack boxes to build a stable, full wall"></canvas>
-        <div id="next-popup">
+        <div id="ov-cert"><div class="cert-wrap">
+  <canvas id="cert-canvas" width="1000" height="1300" role="img" aria-label="Your perfect wall certificate"></canvas>
+  <div class="cert-acts">
+    <button class="cert-btn" onclick="liSaveCert()">⬇ SAVE PNG</button>
+    <button class="cert-btn ghost" onclick="liCloseCert()">✕ CLOSE</button>
+  </div>
+  <div class="cert-note">This is a game achievement, not a safety certification and not a qualification to load real freight.</div>
+</div></div>
+
+<div id="next-popup">
           <div id="next-popup-badge">✓ WALL COMPLETE — LOAD SEALED</div>
           <div id="np-shift">
             <button id="next-popup-btn" onclick="nextTrailer()">NEXT TRAILER ▶</button>
             <button class="btn-p" onclick="npKeepLoading()">↺ CONTINUE LOADING — MAX PACK</button>
-            <button class="btn-p" onclick="openPostSort()">◆ POST-SORT REPORT</button>
+            <button class="btn-p" id="cert-earn-btn" style="display:none;" onclick="liOpenCert()">★ YOUR PERFECT-WALL CERTIFICATE</button>
+    <button class="btn-p" onclick="openPostSort()">◆ POST-SORT REPORT</button>
             <button class="btn-p" onclick="returnToMenu()">⌂ MAIN MENU</button>
           </div>
           <div id="np-daily" style="display:none;">
@@ -3152,7 +3206,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.184
+// LOCK IN v3.5.185
 // LOCK IN — V. Gonzalez — © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3611,7 +3665,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.184'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.185'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -5714,6 +5768,7 @@ function sendToPractice(){
   setTimeout(function(){
     S.warnings=[]; // new wall, warnings reset (incidents/record persist)
     G.grid=makeGrid();placed=0;G.score=0;G.cog=.5;G.support=1;G.integrity=100;G._finalized=false;G._practiceSent=false;
+  try{liCertReset();}catch(_cr0){} // v3.5.185 the certificate never carries to the next wall
     G.drinks=0;G.throws=0;G._hyd75=false;G._hyd100=false;G.tetrisTotal=0;G.tetrisRows={};G.tetrisPaid={};G.bulkheadRows={};G.bulkheadCount=0;
     G.practice=true;startT=null; // v3.5.144 clock deferred to first piece
     if(typeof wallBaseline==='function')wallBaseline(); // v3.5.81 per-wall stat baseline (practice trailer)
@@ -6461,6 +6516,147 @@ function finalizeWall(){
 // Every "% PACKED" the player sees (seal banner, wall-complete popup, re-seal, finish) now routes through this,
 // computed FRESH, so scoreboard/popup/report never disagree again (was mixing stale solidity vs live cube-fill).
 function packPct(){return (typeof countFilled==='function'&&typeof GW!=='undefined')?Math.round(countFilled()/(GW*GH)*100):0;}
+
+// ══ v3.5.185 THE PERFECT WALL CERTIFICATE ═══════════════════════════════════
+// Vince's ask: a player who finishes a wall ALL THE WAY - not one who clicked
+// NEXT early - gets "Congratulations, you're LOCKED IN!" as a keepsake.
+// The image is a crop of THEIR OWN WALL off the live scene canvas. Every wall
+// is near-unique, so the artifact is personal, and it is the only thing in the
+// product a player would share unprompted.
+// HONESTY: the earn condition is strict on purpose (every cell filled + sealed),
+// and the card states on its face that it is a game achievement. The Terms
+// disclaim certification; this must never contradict that.
+var CERT_LAST=null;
+// Called from EVERY path that starts a fresh wall. The first version only hooked the
+// makeGrid reset, which nextTrailer() does not go through -- so the earn button stayed
+// lit on the NEXT wall's completion card and would have handed out a certificate for a
+// wall the player never finished. Caught by integration test, not by unit behaviour.
+function liCertReset(){CERT_LAST=null;var b=document.getElementById('cert-earn-btn');if(b)b.style.display='none';}
+
+function liCertEarned(){
+  try{
+    if(!G||!G.sealed)return false;
+    if(typeof countFilled!=='function'||typeof GW==='undefined')return false;
+    return countFilled()>=(GW*GH);   // every cell. no voids is implied by this.
+  }catch(e){return false;}
+}
+
+// crop the wall out of the live scene canvas. NW holds the wall corners in
+// LOGICAL px; the backing store is DPR-scaled, so source coords multiply by DPR.
+function liWallShot(){
+  try{
+    var sc=document.getElementById('scene');
+    if(!sc||!NW||!NW.tl)return null;
+    var sx=NW.tl.x, sy=NW.tl.y, sw=NW.tr.x-NW.tl.x, sh=NW.bl.y-NW.tl.y;
+    if(!(sw>4&&sh>4))return null;
+    var pad=Math.round(Math.min(sw,sh)*0.04);
+    sx=Math.max(0,sx-pad); sy=Math.max(0,sy-pad); sw=sw+pad*2; sh=sh+pad*2;
+    var d=document.createElement('canvas');
+    d.width=Math.round(sw*DPR); d.height=Math.round(sh*DPR);
+    d.getContext('2d').drawImage(sc, Math.round(sx*DPR), Math.round(sy*DPR),
+      Math.round(sw*DPR), Math.round(sh*DPR), 0, 0, d.width, d.height);
+    return d;
+  }catch(e){console.error('liWallShot:',e);return null;}
+}
+
+function liDrawCert(){
+  var cv=document.getElementById('cert-canvas'); if(!cv)return;
+  var c=cv.getContext('2d'), W2=cv.width, H2=cv.height;
+  var shot=CERT_LAST||liWallShot();
+  var who=(typeof zWho==='function')?zWho():'LOADER';
+  var when=new Date().toISOString().slice(0,10);
+
+  c.fillStyle='#1c1410'; c.fillRect(0,0,W2,H2);
+  c.strokeStyle='#c8791e'; c.lineWidth=6; c.strokeRect(14,14,W2-28,H2-28);
+  c.strokeStyle='#4a3826'; c.lineWidth=2; c.strokeRect(30,30,W2-60,H2-60);
+
+  c.textAlign='center';
+  c.fillStyle='#c8791e';
+  c.font="64px 'Bebas Neue',sans-serif";
+  c.fillText('LOCK IN', W2/2, 118);
+  c.fillStyle='#c0ad90';
+  c.font="20px 'Share Tech Mono',monospace";
+  c.fillText('THE PERFECT WALL', W2/2, 152);
+
+  // the wall itself - the whole reason this is worth sharing
+  var bx=70, by=190, bw=W2-140, bh=620;
+  c.fillStyle='#241a13'; c.fillRect(bx,by,bw,bh);
+  if(shot){
+    var r=Math.min(bw/shot.width, bh/shot.height);
+    var dw=shot.width*r, dh=shot.height*r;
+    c.drawImage(shot, bx+(bw-dw)/2, by+(bh-dh)/2, dw, dh);
+  }else{
+    c.fillStyle='#6a5c48'; c.font="22px 'Share Tech Mono',monospace";
+    c.fillText('(wall image unavailable)', W2/2, by+bh/2);
+  }
+  c.strokeStyle='#4a3826'; c.lineWidth=2; c.strokeRect(bx,by,bw,bh);
+
+  c.fillStyle='#f0e6d4';
+  c.font="52px 'Bebas Neue',sans-serif";
+  c.fillText("CONGRATULATIONS, YOU'RE LOCKED IN", W2/2, 880);
+  c.fillStyle='#c0ad90';
+  c.font="19px 'Share Tech Mono',monospace";
+  c.fillText('sealed a complete wall \u2014 every cell filled', W2/2, 912);
+
+  c.fillStyle='#e0962e';
+  c.font="46px 'Bebas Neue',sans-serif";
+  c.fillText(String(who).toUpperCase(), W2/2, 972);
+  c.fillStyle='#8a7860';
+  c.font="17px 'Share Tech Mono',monospace";
+  c.fillText(when, W2/2, 1000);
+
+  // the numbers off the wall they just built
+  var integ=Math.round((G&&G.integrity!=null)?G.integrity:100);
+  var pieces=(typeof gridPieceCount==='function')?gridPieceCount():0;
+  var inc=(S&&S.incidents)?S.incidents.length:0;
+  var stats=[['PACK','100%'],['INTEGRITY',integ+'%'],['PIECES',String(pieces)],['INCIDENTS',String(inc)]];
+  var i,colw=(W2-140)/stats.length;
+  for(i=0;i<stats.length;i++){
+    var cx2=70+colw*i+colw/2;
+    c.fillStyle='#8a7860'; c.font="15px 'Share Tech Mono',monospace";
+    c.fillText(stats[i][0], cx2, 1058);
+    c.fillStyle='#f0e6d4'; c.font="38px 'Bebas Neue',sans-serif";
+    c.fillText(stats[i][1], cx2, 1100);
+  }
+
+  c.strokeStyle='#3a2c20'; c.lineWidth=2;
+  c.beginPath(); c.moveTo(70,1140); c.lineTo(W2-70,1140); c.stroke();
+
+  c.fillStyle='#8a7860'; c.font="16px 'Share Tech Mono',monospace";
+  c.fillText('A GAME ACHIEVEMENT \u2014 NOT A SAFETY CERTIFICATION', W2/2, 1180);
+  c.fillText('AND NOT A QUALIFICATION TO LOAD REAL FREIGHT', W2/2, 1206);
+  c.fillStyle='#c8791e'; c.font="24px 'Share Tech Mono',monospace";
+  c.fillText('trailer-load.com', W2/2, 1252);
+}
+
+function liOpenCert(){
+  CERT_LAST=liWallShot();          // grab the wall BEFORE any overlay covers it
+  var ov=document.getElementById('ov-cert'); if(!ov)return;
+  ov.classList.add('vis');
+  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(liDrawCert).catch(liDrawCert);}
+  else liDrawCert();
+}
+function liCloseCert(){var ov=document.getElementById('ov-cert');if(ov)ov.classList.remove('vis');}
+function liSaveCert(){
+  try{
+    var cv=document.getElementById('cert-canvas');
+    var a=document.createElement('a');
+    a.download='LOCK-IN-perfect-wall-'+String((typeof zWho==='function')?zWho():'loader').replace(/[^a-z0-9_-]/gi,'')+'-'+new Date().toISOString().slice(0,10)+'.png';
+    a.href=cv.toDataURL('image/png');
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }catch(e){console.error('liSaveCert:',e);}
+}
+// surface the earn on the completion popup, and only there
+function liCertOffer(){
+  try{
+    if(!liCertEarned())return;
+    CERT_LAST=liWallShot();
+    var b=document.getElementById('cert-earn-btn');
+    if(b)b.style.display='';
+    if(typeof showBanner==='function')showBanner('\u2605 PERFECT WALL \u2014 EVERY CELL FILLED.<br><span style="font-size:.72em">YOUR CERTIFICATE IS READY ON THE WALL-COMPLETE CARD.</span>','ok',3200);
+  }catch(e){console.error('liCertOffer:',e);}
+}
+
 function sealWall(reason){
   if(!hydrationOK())return;
   if(G.sealed){
@@ -6478,7 +6674,8 @@ function sealWall(reason){
   var _dens=Math.min(1,(typeof wallSolidity==='function')?wallSolidity(G.grid):(countFilled()/(GW*GH))); // v3.5.50 SOLIDITY (gapless fill up to wall height), not raw volume
   var _sealPay=Math.round(LOAD_SEALED_BONUS*_dens); // seal payout SCALED BY FILL \u2014 a loose wall earns a loose payout (kills the panic-bail-at-threshold A+ exploit)
   try{finalizeWall();}catch(_dh){} // v3.5.57 capture this wall's integrity+density once (single source of truth)
-  try{if(typeof zLogWall==='function')zLogWall();}catch(_lw){} // v3.5.83 post this sealed wall to the per-wall boards
+  try{if(typeof zLogWall==='function')zLogWall();}catch(_lw){}
+  try{liCertOffer();}catch(_ce){} // v3.5.185 perfect-wall certificate, only on a genuinely full wall // v3.5.83 post this sealed wall to the per-wall boards
   bankScore(_sealPay); // v2.1.11 #1 payout, v3.5.46 density-scaled; v3.5.156 BANKED — KEEP LOADING after a seal no longer erases the payout (the "improving a daily wall COSTS you ~3300 on the board" blocker)
   showBanner('\u2713 LOAD SEALED +'+_sealPay+'<br><span style="font-size:.72em">'+packPct()+'% PACKED \u2014 PAYOUT SCALES WITH FILL.</span>','ok',3000);
   if(panicActive&&!panicSealed){
@@ -9161,6 +9358,7 @@ function stopMenuDemo(){
   if(trainingState.stepTimer){clearTimeout(trainingState.stepTimer);trainingState.stepTimer=null;}
 }
 function showStartMenu(){
+  try{if(typeof liCertReset==='function')liCertReset();}catch(_cr3){} // v3.5.185 leaving to the menu drops the wall, so it drops the certificate
   TRAILER_MODE=false; // v3.5.89 clear the flagship flag on every menu return; the next pick sets it
   TUTORIAL_MODE=false;var _tt2=document.getElementById('tut-tip');if(_tt2)_tt2.classList.remove('vis'); // v3.5.137 never sit in tutorial mode on the menu
   if(typeof _killStoppage==='function')_killStoppage(); // v3.5.121 belt-and-suspenders: the home screen never shows a stuck WORK STOPPAGE
@@ -9187,6 +9385,11 @@ function hideStartMenu(){
   // going from training into DAILY. The tutorial got this treatment in v3.5.137; the demo trainer
   // that replaced it in v3.5.150 never did. hideStartMenu() runs on EVERY mode start, so the
   // teardown belongs here rather than in one exit path that most routes never touch.
+  // v3.5.185 the perfect-wall certificate is per-wall and must never be inherited.
+  // Same lesson as the trainer pane above: hideStartMenu() is the one entry EVERY
+  // mode start shares, so the reset belongs here rather than on the individual paths
+  // (nextTrailer and the makeGrid reset each cover only their own route).
+  try{if(typeof liCertReset==='function')liCertReset();}catch(_cr2){}
   if(typeof _trainAutoStop==='function')_trainAutoStop();
   if(typeof trainingState!=='undefined'&&trainingState){
     trainingState.playing=false;
@@ -9749,7 +9952,8 @@ function nextTrailer(){
   // v3.5.123 DAILY IS ONE WALL — FINISH/next ends the run, never spawns a fresh trailer (kills infinite daily score).
   // v3.5.133 endGame(FALSE): the win-path bounced into sealWall and froze the game (no end screen, no admin).
   if(gameMode==='daily'){var _mf0=document.getElementById('maxpack-finish');if(_mf0)_mf0.style.display='none';if(!gOver)showDailyComplete();return;} // v3.5.139 FINISH in daily -> submit/keep/restart choice, not an auto-graded end
-  if(G){G.sealed=false;G.maxPack=false;G.wallDone=false;}var _mf=document.getElementById('maxpack-finish');if(_mf){_mf.style.display='none';_mf.classList.remove('pulse');} // v3.5.4 reset seal/max-pack for the new wall; v3.5.98 clear the pulse
+  if(G){G.sealed=false;G.maxPack=false;G.wallDone=false;}
+  try{liCertReset();}catch(_cr1){} // v3.5.185 new trailer = new wall = no inherited certificatevar _mf=document.getElementById('maxpack-finish');if(_mf){_mf.style.display='none';_mf.classList.remove('pulse');} // v3.5.4 reset seal/max-pack for the new wall; v3.5.98 clear the pulse
   var _kl2=document.querySelector('#next-popup button[onclick="npKeepLoading()"]');if(_kl2)_kl2.style.display=''; // v3.5.24 restore keep-loading for the next wall
   S.bestTrailerAvg=Math.max(S.bestTrailerAvg||0,getPPH()); // v2.1.9 best single-trailer rate
   if(gameMode==='shift'){
@@ -10296,7 +10500,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u2014':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.184</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.185</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
