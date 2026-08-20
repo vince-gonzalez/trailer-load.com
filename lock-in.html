@@ -27,9 +27,30 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.185
+   LOCK IN v3.5.186
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.186 - THE CERTIFICATE WAS UNEARNABLE. Vince played two walls on 3.5.185 and got nothing.
+     Neither was a bug in the wiring: the BAR was wrong. 3.5.185 required all 340 cells. Measured against every
+     wall this product has ever logged -- 203 of them -- exactly ONE reached 100% SOLIDITY, and solidity is the
+     forgiving metric; pack is stricter. His two walls: floor to ceiling, integrity 100, zero collapses, 88% and
+     84% packed. A bar its own author cannot clear in 203 attempts issues zero certificates, which is the same
+     as not shipping one, which is the same as the credibility it was built to buy never arriving.
+     THE BAR NOW READS: sealed + wall to the CEILING + 85%+ packed + integrity 100 + zero collapses on this wall
+     + zero incidents on this wall. Height 100% is the literal opposite of "clicked NEXT early" -- the case he
+     asked to exclude. Integrity/collapses/incidents mean nothing shifted, crushed, or fell. 85% sits above his
+     own 48-wall daily average of 82.9%, so it is a good wall and not an attendance prize. Calibration on his
+     two walls: the 88% daily earns it, the 84% shift with one incident does not.
+     100% pack keeps its own name: the card reads THE PERFECT WALL and "every one of 340 cells filled" only
+     when all 340 are filled; otherwise A WALL LOADED CLEAN and "floor to ceiling, nothing shifted, nothing
+     broken". Both say CONGRATULATIONS, YOU'RE LOCKED IN. The game-achievement disclaimer is unchanged.
+     SECOND DEFECT, SAME FEATURE: the earn button lived inside #np-shift, and showDailyComplete() hides that
+     whole branch -- so in DAILY, the mode every new player and every visiting instructor opens first, the
+     certificate could be EARNED and the button never shown. Hoisted to #next-popup, above both branches.
+     The card also stopped lying: PACK was hardcoded "100%" (the old bar could only be met at 100) and
+     INCIDENTS was printing the whole SESSION's incident list onto a single wall's card. Both now come off the
+     graded wall. Gate proved by .tools/certgate.js -- 4 accepts, 8 refusals, run against the shipped source.
 
    CHANGE LOG v3.5.185 - THE PERFECT WALL CERTIFICATE. Vince's ask: a player who finishes a wall ALL THE WAY
      -- not one who clicked NEXT early -- gets "Congratulations, you're LOCKED IN" as a keepsake. The image is
@@ -2455,7 +2476,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.185 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.186 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2561,7 +2582,7 @@ body[data-cb="trit"]{
     </div>
   </div>
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.185 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.186 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -2719,7 +2740,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.185 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.186 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -2926,10 +2947,13 @@ body[data-cb="trit"]{
 
 <div id="next-popup">
           <div id="next-popup-badge">✓ WALL COMPLETE — LOAD SEALED</div>
+          <!-- v3.5.186 OUTSIDE np-shift on purpose: showDailyComplete() hides that whole branch,
+               so a daily wall -- the mode every new player and every professor opens first --
+               could earn the certificate and never be shown the button. -->
+          <button class="btn-p" id="cert-earn-btn" style="display:none;" onclick="liOpenCert()">★ YOUR LOCKED-IN CERTIFICATE</button>
           <div id="np-shift">
             <button id="next-popup-btn" onclick="nextTrailer()">NEXT TRAILER ▶</button>
             <button class="btn-p" onclick="npKeepLoading()">↺ CONTINUE LOADING — MAX PACK</button>
-            <button class="btn-p" id="cert-earn-btn" style="display:none;" onclick="liOpenCert()">★ YOUR PERFECT-WALL CERTIFICATE</button>
     <button class="btn-p" onclick="openPostSort()">◆ POST-SORT REPORT</button>
             <button class="btn-p" onclick="returnToMenu()">⌂ MAIN MENU</button>
           </div>
@@ -3206,7 +3230,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.185
+// LOCK IN v3.5.186
 // LOCK IN — V. Gonzalez — © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3665,7 +3689,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.185'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.186'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -6517,29 +6541,63 @@ function finalizeWall(){
 // computed FRESH, so scoreboard/popup/report never disagree again (was mixing stale solidity vs live cube-fill).
 function packPct(){return (typeof countFilled==='function'&&typeof GW!=='undefined')?Math.round(countFilled()/(GW*GH)*100):0;}
 
-// ══ v3.5.185 THE PERFECT WALL CERTIFICATE ═══════════════════════════════════
+// ══ v3.5.186 THE LOCKED-IN CERTIFICATE   ═══════════════════════════════════
 // Vince's ask: a player who finishes a wall ALL THE WAY - not one who clicked
 // NEXT early - gets "Congratulations, you're LOCKED IN!" as a keepsake.
 // The image is a crop of THEIR OWN WALL off the live scene canvas. Every wall
 // is near-unique, so the artifact is personal, and it is the only thing in the
 // product a player would share unprompted.
-// HONESTY: the earn condition is strict on purpose (every cell filled + sealed),
-// and the card states on its face that it is a game achievement. The Terms
+// HONESTY: the card states on its face that it is a game achievement. The Terms
 // disclaim certification; this must never contradict that.
+//
+// v3.5.186 THE BAR, RECALIBRATED AGAINST THE RECORD. v3.5.185 required all 340
+// cells. Measured against every wall this product has ever logged: 203 walls, and
+// exactly ONE reached even 100% SOLIDITY, which is the forgiving metric. Vince
+// played two walls on 3.5.185 -- floor to ceiling, integrity 100, zero collapses,
+// 88% and 84% packed -- and earned nothing. A bar its own author cannot clear in
+// 203 attempts hands out zero certificates, which is the same as not shipping one.
+// The bar now tests what he actually asked for -- finished the wall ALL THE WAY,
+// not clicked NEXT early -- in the game's own terms:
+//     sealed + wall to the CEILING + 85%+ packed + integrity 100
+//     + zero collapses on this wall + zero incidents on this wall
+// Height 100% is the literal opposite of stopping short. Integrity, collapses and
+// incidents mean nothing shifted, crushed, or fell. 85% pack sits above his own
+// 48-wall daily average of 82.9%, so it is a good wall, not an attendance prize.
+// Calibration check on his two walls: the 88% daily earns it, the 84% shift with
+// one incident does not. Earnable, not automatic.
+// 100% pack keeps its own name on the card: PERFECT LOAD.
+var CERT_MIN_PACK=85;
 var CERT_LAST=null;
+var CERT_GRADE=null;
 // Called from EVERY path that starts a fresh wall. The first version only hooked the
 // makeGrid reset, which nextTrailer() does not go through -- so the earn button stayed
 // lit on the NEXT wall's completion card and would have handed out a certificate for a
 // wall the player never finished. Caught by integration test, not by unit behaviour.
-function liCertReset(){CERT_LAST=null;var b=document.getElementById('cert-earn-btn');if(b)b.style.display='none';}
+function liCertReset(){CERT_LAST=null;CERT_GRADE=null;var b=document.getElementById('cert-earn-btn');if(b)b.style.display='none';}
 
-function liCertEarned(){
+// null = not earned. Otherwise the wall's own numbers, for the card to print.
+// Reads the per-wall snapshot finalizeWall() pushes onto S.wallLog (sealWall calls
+// it before this), so collapses/incidents are THIS WALL's, not the session's.
+function liCertGrade(){
   try{
-    if(!G||!G.sealed)return false;
-    if(typeof countFilled!=='function'||typeof GW==='undefined')return false;
-    return countFilled()>=(GW*GH);   // every cell. no voids is implied by this.
-  }catch(e){return false;}
+    if(!G||!G.grid||!G.sealed)return null;
+    if(typeof packPct!=='function'||typeof wallH!=='function')return null;
+    var wl=(S&&S.wallLog)?S.wallLog:[],w=wl.length?wl[wl.length-1]:null;
+    var pack=packPct();
+    var hgt=Math.round(wallH()/GH*100);
+    var integ=Math.round((G.integrity!=null)?G.integrity:0);
+    var col=w?(w.collapses||0):((S&&S.collapses)||0);
+    var inc=w?(w.incidentsWall||0):((S&&S.incidents)?S.incidents.length:0);
+    if(hgt<100)return null;              // stopped short = the NEXT-early case, refused
+    if(pack<CERT_MIN_PACK)return null;
+    if(integ<100)return null;
+    if(col>0||inc>0)return null;
+    return {pack:pack,integ:integ,col:col,inc:inc,
+            pieces:(typeof gridPieceCount==='function')?gridPieceCount():0,
+            perfect:(typeof countFilled==='function'&&countFilled()>=(GW*GH))};
+  }catch(e){return null;}
 }
+function liCertEarned(){return !!liCertGrade();}
 
 // crop the wall out of the live scene canvas. NW holds the wall corners in
 // LOGICAL px; the backing store is DPR-scaled, so source coords multiply by DPR.
@@ -6563,6 +6621,7 @@ function liDrawCert(){
   var cv=document.getElementById('cert-canvas'); if(!cv)return;
   var c=cv.getContext('2d'), W2=cv.width, H2=cv.height;
   var shot=CERT_LAST||liWallShot();
+  var gr=CERT_GRADE||liCertGrade()||{pack:(typeof packPct==='function')?packPct():0,integ:100,inc:0,pieces:0,perfect:false};
   var who=(typeof zWho==='function')?zWho():'LOADER';
   var when=new Date().toISOString().slice(0,10);
 
@@ -6576,7 +6635,7 @@ function liDrawCert(){
   c.fillText('LOCK IN', W2/2, 118);
   c.fillStyle='#c0ad90';
   c.font="20px 'Share Tech Mono',monospace";
-  c.fillText('THE PERFECT WALL', W2/2, 152);
+  c.fillText(gr.perfect?'THE PERFECT WALL':'A WALL LOADED CLEAN', W2/2, 152);
 
   // the wall itself - the whole reason this is worth sharing
   var bx=70, by=190, bw=W2-140, bh=620;
@@ -6596,7 +6655,8 @@ function liDrawCert(){
   c.fillText("CONGRATULATIONS, YOU'RE LOCKED IN", W2/2, 880);
   c.fillStyle='#c0ad90';
   c.font="19px 'Share Tech Mono',monospace";
-  c.fillText('sealed a complete wall \u2014 every cell filled', W2/2, 912);
+  c.fillText(gr.perfect?'perfect load \u2014 every one of '+(GW*GH)+' cells filled'
+                       :'floor to ceiling \u00b7 nothing shifted \u00b7 nothing broken', W2/2, 912);
 
   c.fillStyle='#e0962e';
   c.font="46px 'Bebas Neue',sans-serif";
@@ -6606,10 +6666,13 @@ function liDrawCert(){
   c.fillText(when, W2/2, 1000);
 
   // the numbers off the wall they just built
-  var integ=Math.round((G&&G.integrity!=null)?G.integrity:100);
-  var pieces=(typeof gridPieceCount==='function')?gridPieceCount():0;
-  var inc=(S&&S.incidents)?S.incidents.length:0;
-  var stats=[['PACK','100%'],['INTEGRITY',integ+'%'],['PIECES',String(pieces)],['INCIDENTS',String(inc)]];
+  // v3.5.186 these come off the graded wall, not the session -- PACK was hardcoded
+  // '100%' because the old bar could only ever be met at 100, and INCIDENTS was
+  // reading the whole session's list onto a single wall's card.
+  var integ=(gr.integ!=null)?gr.integ:100;
+  var pieces=gr.pieces||((typeof gridPieceCount==='function')?gridPieceCount():0);
+  var inc=gr.inc||0;
+  var stats=[['PACK',(gr.pack||0)+'%'],['INTEGRITY',integ+'%'],['PIECES',String(pieces)],['INCIDENTS',String(inc)]];
   var i,colw=(W2-140)/stats.length;
   for(i=0;i<stats.length;i++){
     var cx2=70+colw*i+colw/2;
@@ -6630,7 +6693,8 @@ function liDrawCert(){
 }
 
 function liOpenCert(){
-  CERT_LAST=liWallShot();          // grab the wall BEFORE any overlay covers it
+  CERT_LAST=CERT_LAST||liWallShot();          // grab the wall BEFORE any overlay covers it
+  CERT_GRADE=CERT_GRADE||liCertGrade();
   var ov=document.getElementById('ov-cert'); if(!ov)return;
   ov.classList.add('vis');
   if(document.fonts&&document.fonts.ready){document.fonts.ready.then(liDrawCert).catch(liDrawCert);}
@@ -6641,7 +6705,7 @@ function liSaveCert(){
   try{
     var cv=document.getElementById('cert-canvas');
     var a=document.createElement('a');
-    a.download='LOCK-IN-perfect-wall-'+String((typeof zWho==='function')?zWho():'loader').replace(/[^a-z0-9_-]/gi,'')+'-'+new Date().toISOString().slice(0,10)+'.png';
+    a.download='LOCK-IN-'+((CERT_GRADE&&CERT_GRADE.perfect)?'perfect-wall':'locked-in')+'-'+String((typeof zWho==='function')?zWho():'loader').replace(/[^a-z0-9_-]/gi,'')+'-'+new Date().toISOString().slice(0,10)+'.png';
     a.href=cv.toDataURL('image/png');
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }catch(e){console.error('liSaveCert:',e);}
@@ -6649,11 +6713,13 @@ function liSaveCert(){
 // surface the earn on the completion popup, and only there
 function liCertOffer(){
   try{
-    if(!liCertEarned())return;
+    var gr=liCertGrade();
+    if(!gr)return;
+    CERT_GRADE=gr;
     CERT_LAST=liWallShot();
     var b=document.getElementById('cert-earn-btn');
-    if(b)b.style.display='';
-    if(typeof showBanner==='function')showBanner('\u2605 PERFECT WALL \u2014 EVERY CELL FILLED.<br><span style="font-size:.72em">YOUR CERTIFICATE IS READY ON THE WALL-COMPLETE CARD.</span>','ok',3200);
+    if(b){b.style.display='';b.textContent=gr.perfect?'\u2605 YOUR PERFECT-WALL CERTIFICATE':'\u2605 YOUR LOCKED-IN CERTIFICATE';}
+    if(typeof showBanner==='function')showBanner((gr.perfect?'\u2605 PERFECT WALL \u2014 EVERY CELL FILLED.':'\u2605 LOCKED IN \u2014 '+gr.pack+'% PACKED, FLOOR TO CEILING, NOTHING BROKEN.')+'<br><span style="font-size:.72em">YOUR CERTIFICATE IS READY ON THE WALL-COMPLETE CARD.</span>','ok',3200);
   }catch(e){console.error('liCertOffer:',e);}
 }
 
@@ -10500,7 +10566,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u2014':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.185</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.186</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
