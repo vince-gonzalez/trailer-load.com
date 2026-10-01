@@ -1,0 +1,9 @@
+# Keep the lab asset bundle to what a browser actually requests.
+# Production is GitHub Pages and ignores this file entirely.
+.git
+.github
+.claude
+.staging
+.tools
+*.md
+node_modules

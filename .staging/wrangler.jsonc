@@ -1,0 +1,47 @@
+// ═══════════════════════════════════════════════════════════════════════
+//  TRAILER-LOAD — PRIVATE TEST SUITE
+//  F-Keys Creative LLC
+//
+//  This deploys the WHOLE SITE to a Cloudflare Worker on *.workers.dev,
+//  completely separate from production.
+//
+//  Production is GitHub Pages, serving the `main` branch at
+//  www.trailer-load.com. Nothing in this folder can reach it. There is no
+//  shared pipeline, no shared host, and no shared DNS record.
+//
+//  Deploy from the repo root:   npx wrangler deploy -c .staging/wrangler.jsonc
+// ═══════════════════════════════════════════════════════════════════════
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "trailer-load-lab",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-01",
+
+  // Serve the repository root as static assets. Paths are relative to THIS
+  // file, so ".." is the repo root.
+  "assets": {
+    "directory": "..",
+    "binding": "ASSETS",
+
+    // GitHub Pages serves "/lock-in.html" literally. The Workers asset server
+    // defaults to "auto-trailing-slash", which 307-redirects that to
+    // "/lock-in" and breaks every .html link in the product. "none" makes the
+    // lab byte-match production routing, which is the entire point of a lab.
+    "html_handling": "none",
+    "not_found_handling": "404-page",
+
+    // Without this, a matching asset is returned BEFORE worker.js runs, so the
+    // robots override and the noindex header never fire. Measured: the first
+    // deploy served the live permissive robots.txt and no X-Robots-Tag at all.
+    "run_worker_first": true
+  },
+
+  // Never let the lab build be indexed, and never let it be mistaken for
+  // the live site. worker.js reads these.
+  "vars": {
+    "LAB": "1",
+    "LAB_LABEL": "TEST SUITE — NOT PRODUCTION"
+  },
+
+  "observability": { "enabled": true }
+}
