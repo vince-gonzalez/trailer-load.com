@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Today's Wall · The LOCK IN Daily | trailer-load.com</title>
+<meta name="description" content="One freight-loading puzzle a day. Every player gets the identical wall, and it resets at 00:00 UTC. Free in the browser, no download, no account. Built as a daily warm-up for CTE and logistics classrooms.">
+<link rel="canonical" href="https://www.trailer-load.com/daily/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LOCK IN">
+<meta property="og:title" content="Today's Wall · The LOCK IN Daily">
+<meta property="og:description" content="One freight-loading puzzle a day. Everybody gets the same wall. Fifteen minutes, free, in the browser.">
+<meta property="og:url" content="https://www.trailer-load.com/daily/">
+<meta property="og:image" content="https://www.trailer-load.com/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Today's Wall · The LOCK IN Daily">
+<meta name="twitter:description" content="One freight-loading puzzle a day. Everybody gets the same wall. Fifteen minutes, free, in the browser.">
+<meta name="twitter:image" content="https://www.trailer-load.com/logo.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23140d08'/%3E%3Crect x='16' y='16' width='32' height='32' rx='3' fill='%23c8791e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#c8791e">
+<!-- NO AD TECH ON TRAILER-LOAD.COM, EVER (2026-07-20). Student-privacy laws + district vetting. Do not re-add. -->
+<link rel="stylesheet" href="/fonts/fonts.css">
+<style>
+small,sub,sup{font-size:11px;}
+:root{--bg:#ece5d8;--bg2:#e3dac9;--ink:#211a12;--t1:#2a2018;--t2:#544738;--acc:#c8791e;--acc-bright:#e0962e;--acc-dim:#9a5c12;--acc-wash:#f6e9d3;--teal:#0a6a5e;--teal-bright:#19a594;--border:#cdbfa6;--border2:#bcaa8b;--acc-ink:#7d4a0e;}
+/* CONTRAST, COMPUTED NOT EYEBALLED, against --bg #ece5d8 (L=0.7883):
+   --t1 #2a2018 = 14.6:1   --t2 #544738 = 7.18:1   --acc-ink #7d4a0e = 5.9:1
+   --t3 #8a7c66 is 3.25:1 and FAILS AA for body text, so it is not used on this page. */
+*{box-sizing:border-box;}
+body{margin:0;background:radial-gradient(1100px 420px at 50% -160px,rgba(200,121,30,.12),transparent),var(--bg);color:var(--t1);font-family:'Barlow Condensed',sans-serif;font-size:18px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+a{color:var(--teal);}
+.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:10px 22px;background:rgba(236,229,216,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--ink);text-decoration:none;}
+.bar nav a{font-family:'Share Tech Mono',monospace;font-size:12px;text-decoration:none;margin-left:16px;color:var(--t2);}
+.bar nav a:hover{color:var(--acc-ink);}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px;}
+.hero{text-align:center;padding:52px 0 30px;}
+.kicker{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:3px;color:var(--acc-ink);}
+h1{font-family:'Bebas Neue',sans-serif;font-size:84px;line-height:.9;letter-spacing:1px;margin:12px 0 10px;color:var(--ink);}
+p.sub{font-size:21px;color:var(--t2);max-width:620px;margin:0 auto 26px;}
+.btn{display:inline-flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;font-family:'Bebas Neue',sans-serif;letter-spacing:2px;border-radius:8px;padding:16px 34px;font-size:26px;border:2px solid transparent;}
+.btn small{font-family:'Share Tech Mono',monospace;letter-spacing:1px;opacity:.9;}
+.btn.play{background:var(--acc);color:#1b1206;border-color:var(--acc-dim);font-size:32px;padding:20px 48px;}
+.btn.play:hover{background:var(--acc-bright);}
+.btn.ghost{background:transparent;color:var(--t1);border-color:var(--border2);font-size:22px;padding:14px 26px;}
+.btn.ghost:hover{border-color:var(--acc-dim);color:var(--acc-ink);}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+.facts{display:flex;gap:26px;flex-wrap:wrap;justify-content:center;margin:30px 0 0;}
+.facts div{min-width:120px;}
+.facts .n{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--acc-ink);line-height:1;}
+.facts .l{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--t2);letter-spacing:1px;}
+section{border-top:1px solid var(--border);padding:34px 0;}
+h2{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px;margin:0 0 12px;color:var(--ink);}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--acc);border-radius:8px;padding:16px 18px;}
+.card h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin:0 0 6px;color:var(--ink);}
+.card p{margin:0;color:var(--t2);font-size:17px;}
+ul.teach{margin:0;padding-left:20px;color:var(--t2);}
+ul.teach li{margin-bottom:5px;}
+.note{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--t2);margin-top:14px;}
+footer{border-top:1px solid var(--border);padding:22px 0 40px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--t2);}
+footer a{color:var(--teal);}
+@media(max-width:680px){h1{font-size:58px;}.cols{grid-template-columns:1fr;}.btn.play{font-size:26px;padding:17px 32px;}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <a class="logo" href="/">LOCK IN</a>
+  <nav><a href="/">Home</a><a href="/lock-in.html">Full game</a><a href="/for-districts/">Documentation</a><a href="/#facilities">For schools</a><a href="/me/" style="color:var(--acc-ink);font-weight:bold;">◕ Clock In</a></nav>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="kicker">THE DAILY · ONE WALL · RESETS 00:00 UTC</div>
+    <h1>TODAY'S<br>WALL.</h1>
+    <p class="sub">One freight-loading puzzle a day. Every player on Earth gets the identical wall, down to the order the boxes arrive. Fifteen minutes, in your browser.</p>
+    <div class="cta-row">
+      <a class="btn play" href="/lock-in.html#daily">PLAY TODAY'S WALL<small>FREE · NO LOGIN</small></a>
+      <a class="btn ghost" href="/lock-in.html">The full game<small>ENDLESS WALLS</small></a>
+    </div>
+    <div class="facts">
+      <div><div class="n">15 MIN</div><div class="l">Typical wall</div></div>
+      <div><div class="n">00:00 UTC</div><div class="l">New wall daily</div></div>
+      <div><div class="n">IDENTICAL</div><div class="l">Same for everyone</div></div>
+      <div><div class="n">FREE</div><div class="l">No download, no account</div></div>
+    </div>
+    <div class="note">Nothing to install. Your score saves only if you choose to make an account.</div>
+  </div>
+</div>
+
+<section><div class="wrap">
+  <h2>What it is</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>The same wall, everywhere</h3>
+      <p>The daily is seeded from the date. Every player gets the same freight in the same order, so two people who played today can compare the same decisions rather than two different piles of luck.</p>
+    </div>
+    <div class="card">
+      <h3>A real trade, as a puzzle</h3>
+      <p>The rules are the ones a freight dock actually runs on: support under every box, dangerous goods low, nothing heavy on a fragile, and a full course locks the wall. Getting it wrong has the consequence it has in the building.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>For instructors</h2>
+  <p style="color:var(--t2);margin:0 0 14px;max-width:640px;">A single link you can post Monday morning. It is the same board for the whole class, it takes about fifteen minutes, and it needs no account, no install, and no student data.</p>
+  <ul class="teach">
+    <li><strong>Spatial reasoning.</strong> Fitting irregular shapes into a fixed 17 by 20 bay with no undo that is free.</li>
+    <li><strong>Planning under constraint.</strong> Ten pieces are visible. Reaching past the front one costs you.</li>
+    <li><strong>Sequencing.</strong> A full row locks and protects everything above it, so when you close a course matters more than how fast you fill it.</li>
+    <li><strong>Regulatory reasoning.</strong> Dangerous goods load low and stay separated, drawn from 49 CFR.</li>
+    <li><strong>Working to a standard.</strong> Pace is measured against 250 pieces per hour, the real hub number.</li>
+  </ul>
+  <p class="note">Training supplement only. It builds intuition and tracks readiness. It does not replace employer safety training, OSHA training, or any certification requirement. See the <a href="/terms.html">Terms</a>.</p>
+  <p style="margin-top:16px;"><a href="/#facilities">Program pricing and the instructor dashboard</a> &nbsp;·&nbsp; <a href="/for-districts/">Technical documentation for district IT</a></p>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <a href="/">trailer-load.com</a> &nbsp;·&nbsp; <a href="/lock-in.html">Full game</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="/terms.html">Terms</a><br>
+    LOCK IN &nbsp;·&nbsp; F-Keys Creative LLC &nbsp;·&nbsp; © 2026
+  </div>
+</footer>
+</body>
+</html>

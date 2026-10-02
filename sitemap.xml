@@ -1,43 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Hosts are www.trailer-load.com to match the canonical tag on every page and the
+     CNAME record. This file listed the apex until 2026-10-02, which pointed crawlers
+     at a non-canonical host on every single URL. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://trailer-load.com/</loc>
-    <lastmod>2026-08-04</lastmod>
+    <loc>https://www.trailer-load.com/</loc>
+    <lastmod>2026-10-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://trailer-load.com/lock-in.html</loc>
+    <loc>https://www.trailer-load.com/daily/</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.trailer-load.com/lock-in.html</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://trailer-load.com/for-districts/</loc>
+    <loc>https://www.trailer-load.com/for-districts/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://trailer-load.com/for-districts/program-overview.html</loc>
+    <loc>https://www.trailer-load.com/for-districts/program-overview.html</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://trailer-load.com/ss/</loc>
+    <loc>https://www.trailer-load.com/ss/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://trailer-load.com/privacy.html</loc>
+    <loc>https://www.trailer-load.com/privacy.html</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://trailer-load.com/terms.html</loc>
+    <loc>https://www.trailer-load.com/terms.html</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>

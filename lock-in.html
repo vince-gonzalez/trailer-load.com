@@ -27,9 +27,18 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.187
+   LOCK IN v3.5.188
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.188 - THE ARROW HAD NO TAPE BEHIND IT. box.arrow was set by a bare Math.random()<0.38
+     with no connection to the label, so 38% of freight drew THIS-SIDE-UP chevrons while the shipping tag on
+     that same box read STANDARD or GROUND. The chevrons are not decoration: rotating one is tallied on every
+     placement and docked 16 in calcScore, so the game was enforcing a rule it never printed. v3.5.126 retired
+     DO NOT STACK and KEEP DRY for claiming handling the game does not model; THIS SIDE UP was swept out with
+     them, and it was the one that DID have a mechanic. It rejoins the pool, and arrow now reads off the label
+     instead of a coin flip. Tape and chevrons agree for the first time. Arrow pieces go from ~38% of the belt
+     to ~13%, so the sideways-shipping ding appears less often and means something when it does.
 
    CHANGE LOG v3.5.187 - THE CRUNCH BANNER LIED BY 3.75x. Crushing a box printed "-80 CUBES" and took 300.
      Two numbers for one rule: CRUNCH_PENALTY=80 was read ONLY by the banner, while calcScore carried a
@@ -2485,7 +2494,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.187 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.188 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2591,7 +2600,7 @@ body[data-cb="trit"]{
     </div>
   </div>
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.187 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.188 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -2749,7 +2758,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.187 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.188 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3239,7 +3248,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.187
+// LOCK IN v3.5.188
 // LOCK IN — V. Gonzalez — © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3636,7 +3645,7 @@ var LABELS=[
   {t:'STANDARD', s:'STD', ico:'',   bg:'rgba(240,238,228,.88)',tc:'#2a2010',isFrag:false},
   {t:'PRIORITY', s:'PRI', ico:'★',  bg:'rgba(255,235,140,.90)',tc:'#5a3a00',isFrag:false},
   {t:'FRAGILE',  s:'FRAG',ico:'⚠',  bg:'rgba(255,80,60,.88)', tc:'#fff',   isFrag:true},
-  {t:'THIS SIDE UP',s:'↑UP',ico:'↑',bg:'rgba(245,196,0,.90)',tc:'#2a1800', isFrag:false},
+  {t:'THIS SIDE UP',s:'↑UP',ico:'↑',bg:'rgba(245,196,0,.90)',tc:'#2a1800', isFrag:false,isUp:true},
   {t:'TOP LOAD', s:'TOP', ico:'↑',  bg:'rgba(100,200,255,.85)',tc:'#002040',isFrag:false},
   {t:'DO NOT STACK',s:'DNS',ico:'✕',bg:'rgba(255,90,30,.88)', tc:'#fff',   isFrag:false},
   {t:'KEEP DRY',  s:'DRY', ico:'💧', bg:'rgba(100,180,255,.85)',tc:'#001830',isFrag:false},
@@ -3667,12 +3676,18 @@ function pickLabel(type,isPanic,isNC,isGap){
   // and KEEP DRY — they claimed handling the game never models (pure cosmetic tape). What's left all MEANS something:
   // FRAGILE/GLASS = the crush mechanic, HEAVY = large freight, and the service speeds (GND/OVN/EXP...) are honest
   // routing tiers, not physical claims. No more "HVY / DO NOT STACK" on a box where it changes nothing.
+  // v3.5.188 THIS SIDE UP rejoins the pool, because unlike DO NOT STACK and KEEP DRY it
+  // IS modelled: box.arrow is tallied on every placement and a shipped-sideways piece is
+  // docked 16 in calcScore. It was the one label retired for being cosmetic that actually
+  // had a mechanic behind it. The arrow now COMES FROM this label (see genPiece) instead of
+  // a bare 38% coin flip, so the chevrons on a box and the tape on that same box finally
+  // agree. Net effect on the wall: arrow pieces drop from ~38% to ~13%.
   if(type==='large'){
-    add('STANDARD',34);add('HEAVY',14);add('GROUND',8);
+    add('STANDARD',34);add('HEAVY',14);add('GROUND',8);add('THIS SIDE UP',8);
     if(!isEarly){add('FRAGILE',6);add('GLASS',4);}
   } else {
     add('STANDARD',42);add('GROUND',10);add('PRIORITY',7);
-    add('OVERNIGHT',5);add('EXPRESS',5);add('MEDIA MAIL',5);
+    add('OVERNIGHT',5);add('EXPRESS',5);add('MEDIA MAIL',5);add('THIS SIDE UP',12);
     if(!isEarly){add('FRAGILE',6);add('GLASS',4);}
   }
   var tot=0,i;for(i=0;i<WL.length;i++)tot+=WL[i].w;
@@ -3701,7 +3716,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.187'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.188'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -4807,7 +4822,7 @@ function genPiece(isPanic,isGap){
   var pal=seedPal(seed,tmpl.type,tmpl.shape,tmpl.color||null);
   var labelDef=pickLabel(tmpl.type,isPanic,false,isGap);
   return{...tmpl,id:'P'+Date.now().toString(36)+Math.random().toString(36).slice(2,4),
-    pal,labelDef,label:labelDef.t,seed,isFrag:labelDef.isFrag||false,isPanic:!!isPanic,isGap:!!isGap,arrow:(Math.random()<0.38)};
+    pal,labelDef,label:labelDef.t,seed,isFrag:labelDef.isFrag||false,isPanic:!!isPanic,isGap:!!isGap,arrow:!!labelDef.isUp}; // v3.5.188 arrow was a bare 38% coin flip with NO label behind it, so a box could show this-side-up chevrons while its tape read STANDARD. The tape is the source now.
 }
 
 // ── v2.1.0 NC TAXONOMY + HAZMAT GOVERNOR ──
@@ -10578,7 +10593,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u2014':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.187</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.188</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
