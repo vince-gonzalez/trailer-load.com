@@ -1838,8 +1838,19 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 /* v3.5.68 SAFETY WRITE-UP — a clipboard document that STOPS the game; you must sign to continue */
 #ov-writeup{position:fixed;inset:0;z-index:520;display:none;align-items:center;justify-content:center;background:rgba(10,7,4,.82);padding:16px;}
 #ov-writeup.vis{display:flex;}
-.wu-clip{position:relative;background:#f5f0e8;border-radius:5px;width:min(460px,94vw);max-height:92vh;overflow-y:auto;padding:26px 26px 20px;box-shadow:0 22px 60px rgba(0,0,0,.6);border-top:6px solid #c8791e;font-family:'Barlow Condensed',sans-serif;color:#2a1c0e;}
-.wu-clip::before{content:'';position:absolute;top:-13px;left:50%;transform:translateX(-50%);width:80px;height:20px;background:#8a7a5e;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,.35);}
+/* v3.5.192 THE WRITE-UP ON THE REAL BOARD. This was a flat #f5f0e8 rectangle with a DRAWN clip
+   (a brown rounded bar on ::before) imitating the asset instead of using it. It is the document
+   that stops the game and the single most important image for an instructor, and it was the last
+   surface still faking the board. Same asset, same 619x905 aspect, same writing-area insets as
+   pause, briefing, social, profile, mini-games, the start menu and the post-sort report. */
+.wu-clip{position:relative;background:url('clipboard.png') center/contain no-repeat;
+  height:min(1060px,92vh);width:auto;max-width:94vw;aspect-ratio:619/905;
+  border:none;border-top:none;border-radius:0;box-shadow:none;padding:0;overflow:visible;
+  filter:drop-shadow(0 18px 50px rgba(0,0,0,.6));
+  font-family:'Barlow Condensed',sans-serif;color:#2a1c0e;}
+.wu-clip::before{content:none;}
+/* the writing area. Left aligned and full width, because this is a form, not a menu. */
+.wu-in{position:absolute;left:7%;right:7%;top:23%;bottom:4.5%;overflow-y:auto;text-align:left;}
 .wu-head{border-bottom:2px solid #2a1c0e;padding-bottom:8px;margin-bottom:12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
 .wu-brand{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:#2a1c0e;}
 .wu-brand b{color:#c8791e;}
@@ -2625,7 +2636,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.191 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.192 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2737,12 +2748,14 @@ body[data-cb="trit"]{
   </div>
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.191 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.192 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
 <div id="ov-writeup">
   <div class="wu-clip">
+  <!-- v3.5.192 the write-up sits in the board's writing area, same as every other surface -->
+  <div class="wu-in">
     <div class="wu-head"><span class="wu-brand">LOCK<b> IN</b></span><span class="wu-doc">SAFETY WRITE-UP</span></div>
     <div class="wu-meta">
       <div><span>LOADER</span><b id="wu-loader">GUEST</b></div>
@@ -2757,6 +2770,7 @@ body[data-cb="trit"]{
       <span id="wu-ack-note">By signing, you acknowledge the safety briefing. Repeat infractions escalate · five incidents put you on a practice trailer; four write-ups and you're sent home.</span>
       <button id="wu-signbtn" onclick="signWriteup()">✍ SIGN &amp; CONTINUE</button>
     </div>
+  </div>
   </div>
 </div>
 <!-- ═══════════════════ SETTINGS OVERLAY (v2.1.24) ═══════════════════ -->
@@ -2895,7 +2909,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.191 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.192 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3381,7 +3395,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.191
+// LOCK IN v3.5.192
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3849,7 +3863,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.191'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.192'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -5496,13 +5510,24 @@ function seedDailyTray(){
   function byName(n){var i;for(i=0;i<P_NC.length;i++)if(P_NC[i].n===n)return P_NC[i];return null;}
   function byCat(c){var o=[],i;for(i=0;i<P_NC.length;i++)if((P_NC[i].cat||'home')===c)o.push(P_NC[i]);return o;}
   var i;
-  // v2.7.4 STANDARD: 2 tires + 1 hazmat + 1 bag. Every bonus available (nest, corner-anchor,
-  // hazmat-seat), one scarce gap-filler. Tire TYPE varies by date; always exactly 2.
-  var tireTypes=['TIRE-DB','TIRE-MC','TIRE-STD'];
+  // v3.5.192 STANDARD DAILY LOADOUT: 4 TIRES + 2 HAZMATS OF DIFFERENT CLASSES. Vince's spec.
+  // FOUR tires, not two, because four is enough floor to actually close a bottom course, and a
+  // closed course is where a shelf comes from. TIRE-FARM joins the pool for the same reason:
+  // at 6x2 a pair of them covers 12 of the 17 floor cells, so the bottom row is reachable.
+  // TWO classes, not one, because SEGREGATION cannot exist with a single hazmat. The rule was
+  // in the game, printed in the briefing, and structurally impossible to meet or break in the
+  // only mode most people will ever play. The second draw is forced to a different hazClass.
+  // Every draw comes off the seeded stream `m` in a fixed order, so the daily stays identical
+  // for every player. 6 of the 8 tray slots, so nothing can overflow.
+  var tireTypes=['TIRE-DB','TIRE-MC','TIRE-STD','TIRE-FARM'];
   var tires=byName(tireTypes[Math.floor(m()*tireTypes.length)]);
-  for(i=0;i<2;i++)dailyNCStage(tires,false,m);          // 2 tires (floor + nest + anchor)
-  var hz=byCat('haz');
-  dailyNCStage(hz[Math.floor(m()*hz.length)],true,m);   // 1 hazmat (seat-low bonus)
+  for(i=0;i<4;i++)dailyNCStage(tires,false,m);          // 4 tires (floor course + nest + anchors)
+  var hz=byCat('haz'),k;
+  var hzA=hz[Math.floor(m()*hz.length)];
+  var alt=[];for(k=0;k<hz.length;k++){if((hz[k].hazClass||'9')!==(hzA.hazClass||'9'))alt.push(hz[k]);}
+  var hzB=alt.length?alt[Math.floor(m()*alt.length)]:null;
+  dailyNCStage(hzA,true,m);                            // hazmat 1 (seat low, shelf over it)
+  if(hzB)dailyNCStage(hzB,true,m);                     // hazmat 2, GUARANTEED a different class
   buildNCPanel();
   // v3.5.166 audit note: a spawnBag() call sat here claiming "1 bag" · spawnBag no-ops in daily
   // (guarded since the determinism fix), so the tray never had one. Daily bags ride the seeded belt stream (~1 in 8).
@@ -10737,7 +10762,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u2014':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.191</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.192</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
