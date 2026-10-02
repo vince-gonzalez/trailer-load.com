@@ -3,15 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <script>
-/* v1.4 (#46) THEME FOLLOW -- runs in <head>, before first paint, or the flash it exists
-   to prevent still happens. Reads the GAME's setting read-only; never writes it. */
-(function(){try{var s=JSON.parse(localStorage.getItem('liSettings')||'{}');
-if(s&&s.theme==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();
+/* keep the page out of a frame; student data behind a login */
+if (window.top !== window.self) { window.top.location = window.self.location; }
 </script>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LOCK IN · Program Dashboard | trailer-load.com</title>
-<meta name="description" content="LOCK IN program dashboard · student loading competency report for CTE, logistics, and workforce programs. Attention to detail, follow-through, throughput, and safety, per student.">
+<meta name="description" content="LOCK IN program dashboard · student loading competency report for CTE, logistics and warehouse training programs.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23140d08'/%3E%3Crect x='16' y='16' width='32' height='32' rx='3' fill='%23c8791e'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#c8791e">
 <link rel="canonical" href="https://www.trailer-load.com/dashboard/">
@@ -19,197 +16,322 @@ if(s&&s.theme==='dark')document.documentElement.setAttribute('data-theme','dark'
 <!-- NO AD TECH ON TRAILER-LOAD.COM · EVER (2026-07-20). Do not re-add. -->
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
-/* TYPE FLOOR: bare <small>/<sub>/<sup> otherwise inherit the browser's 0.8em
-   shrink and land under 11px with no declaration for the gate to catch.
-   Class-specific rules outrank this, so it only floors the uncovered ones. */
+/* ══════════════════════════════════════════════════════════════════════════
+   THE PROGRAM DASHBOARD · v2.0
+   Rebuilt 2026-10-02. The old one read lockin_cohort, which returned 0 walls
+   for 16 of 19 students, and showed 8 of the 30 metrics that exist.
+
+   CONTRAST, computed against the clipboard page #e8e4da (L=0.7657), never
+   eyeballed:  #241a0c 13.9:1 · #4a3c28 6.95:1 · #7d4a0e 5.73:1
+               #96270d 5.88:1 · #10663a 5.37:1
+   Nothing on the page uses a theme token, because the board art is light in
+   every theme and a token would invert.
+   ══════════════════════════════════════════════════════════════════════════ */
 small,sub,sup{font-size:11px;}
-
+*{box-sizing:border-box;}
 :root{
-  /* --ink3 was #9a8b72, which failed AA on ALL THREE grounds it paints (3.33 on #fff, 2.90 on --bg,
-     3.11 on the sticky header fill). It carries the competency sublabels · the $1,950 argument · and
-     the entire day-one empty state. #736550 measures 5.67 / 4.94 / 5.30. */
-  --bg:#ece5d8;--panel:#ffffff;--ink:#211a12;--ink2:#6a5c48;--ink3:#736550;
-  --acc:#c8791e;--acc-dim:#9a5c12;--acc-bright:#e0962e;--teal:#0a6a5e;--ok:#1f9d57;--warn:#d4820f;--danger:#c23a1a;
-  --line:#e3dac9;--line2:#d2c6ad;
+  --ground:#140d08; --paper:#e8e4da; --paper2:#f3f0e8; --ink:#241a0c;
+  --ink2:#4a3c28; --amber:#c8791e; --amberInk:#7d4a0e; --line:#c4b79c;
+  --line2:#a89877; --bad:#96270d; --good:#10663a; --warn:#8a5a0b;
 }
+html,body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:'Barlow Condensed',system-ui,sans-serif;font-size:17px;line-height:1.45;}
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background:url('/lockbackdrop.png') center/cover no-repeat;opacity:.13;}
+.wrap{max-width:1500px;margin:0 auto;padding:0 18px;}
+#topbar{position:relative;z-index:2;background:rgba(14,9,5,.9);border-bottom:2px solid var(--amber);
+  padding:9px 0;color:#f1e7d6;}
+#topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.brand{font-family:'Bebas Neue',sans-serif;font-size:25px;letter-spacing:3px;color:#f1e7d6;}
+.brand b{color:var(--amber);}
+#who{font-family:'Share Tech Mono',monospace;font-size:12px;color:#d6c6a8;text-align:right;}
+#who b{display:block;color:#f1e7d6;font-size:14px;}
 
-/* v1.4 (#46) WARM-DARK, mirroring lock-in.html's own [data-theme="dark"] tokens so the
-   two surfaces are the same product rather than two approximations of it. */
-[data-theme="dark"]{
-  --bg:#1c1410;--panel:#241a13;--ink:#f0e6d4;--ink2:#c0ad90;--ink3:#a2917a;
-  --acc:#e0962e;--acc-dim:#c8791e;--acc-bright:#f0ad4a;
-  --teal:#2dc0ad;--ok:#28b870;--warn:#e0962e;--danger:#e0593a;
-  --line:#3a2c20;--line2:#4a3826;
+/* ── LOGIN ───────────────────────────────────────────────────────────── */
+#login{position:relative;z-index:2;max-width:430px;margin:70px auto;background:var(--paper2);
+  border:1px solid var(--line2);border-radius:10px;padding:26px 26px 22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);}
+#login h1{font-family:'Bebas Neue',sans-serif;font-size:31px;letter-spacing:1px;margin:0 0 4px;color:var(--ink);}
+#login .sub{color:var(--ink2);margin:0 0 16px;font-size:16px;}
+.fld{display:block;margin-bottom:12px;}
+.fld span{display:block;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.4px;
+  color:var(--amberInk);margin-bottom:4px;text-transform:uppercase;}
+.fld input{width:100%;padding:10px 12px;min-height:40px;border:2px solid var(--line2);border-radius:6px;
+  background:#fff;color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-size:17px;}
+.fld input:focus{outline:none;border-color:var(--amber);}
+.btn{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;min-height:40px;
+  padding:9px 20px;border-radius:7px;cursor:pointer;border:2px solid var(--amberInk);
+  background:var(--amber);color:#1b1206;}
+.btn:hover{background:#e0962e;}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line2);}
+.btn.ghost:hover{border-color:var(--amberInk);color:var(--amberInk);}
+#login-msg{margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:12.5px;min-height:18px;}
+#login-msg.err{color:var(--bad);} #login-msg.good{color:var(--good);}
+#login-note{margin-top:14px;font-size:14.5px;color:var(--ink2);border-top:1px solid var(--line);padding-top:10px;}
+#login-note a{color:var(--amberInk);}
+
+/* ── THE BOARD ───────────────────────────────────────────────────────── */
+#dash{display:none;position:relative;z-index:2;padding:18px 0 60px;}
+.board{background:var(--paper);border:1px solid var(--line2);border-radius:10px;
+  box-shadow:0 18px 50px rgba(0,0,0,.45);padding:0 0 16px;overflow:hidden;}
+.clip{height:34px;background:linear-gradient(180deg,#cfcbc2,#b3aea3);
+  border-bottom:2px solid var(--line2);display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;letter-spacing:4px;font-size:15px;color:#3d342a;}
+.hdr{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;
+  padding:16px 18px 8px;border-bottom:3px solid var(--ink);margin:0 18px;}
+.hdr .t{font-family:'Bebas Neue',sans-serif;font-size:33px;letter-spacing:1px;line-height:1;}
+.hdr .stamp{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--amberInk);
+  border:2px solid var(--amberInk);border-radius:4px;padding:3px 9px;}
+
+/* summary tiles */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;padding:14px 18px 6px;}
+.card{background:var(--paper2);border:1px solid var(--line);border-left:5px solid var(--line2);
+  border-radius:7px;padding:9px 12px;}
+.card.ok{border-left-color:var(--good);} .card.warn{border-left-color:var(--warn);}
+.card.danger{border-left-color:var(--bad);}
+.card .k{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.3px;color:var(--amberInk);text-transform:uppercase;}
+.card .v{font-family:'Bebas Neue',sans-serif;font-size:31px;line-height:1;color:var(--ink);}
+.card .c{font-size:13.5px;color:var(--ink2);}
+
+/* sheets (paper tabs) */
+.sheets{display:flex;gap:4px;padding:12px 18px 0;flex-wrap:wrap;}
+.sheet{font-family:'Share Tech Mono',monospace;font-size:11.5px;letter-spacing:1.2px;
+  padding:9px 15px;min-height:38px;border:1px solid var(--line2);border-bottom:none;
+  border-radius:6px 6px 0 0;background:#dcd7cb;color:var(--ink2);cursor:pointer;text-transform:uppercase;}
+.sheet:hover{background:#e6e1d5;}
+.sheet.on{background:var(--paper2);color:var(--amberInk);font-weight:700;
+  border-color:var(--ink);border-bottom:2px solid var(--paper2);margin-bottom:-2px;}
+.sheetbar{border-bottom:2px solid var(--ink);margin:0 18px;}
+
+/* column-group switches */
+.scopes{display:flex;gap:6px;flex-wrap:wrap;padding:12px 18px 4px;align-items:center;}
+.scopes .lbl{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.3px;
+  color:var(--amberInk);text-transform:uppercase;margin-right:2px;}
+.scope{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.8px;
+  padding:6px 11px;min-height:32px;border:2px solid var(--line2);border-radius:5px;
+  background:transparent;color:var(--ink2);cursor:pointer;text-transform:uppercase;}
+.scope.on{background:var(--amber);color:#1b1206;border-color:var(--amberInk);font-weight:700;}
+
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 18px 6px;}
+.tools input[type=text]{flex:1;min-width:180px;padding:8px 11px;min-height:38px;
+  border:2px solid var(--line2);border-radius:6px;background:#fff;color:var(--ink);
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;}
+.tools input[type=text]:focus{outline:none;border-color:var(--amber);}
+
+/* the table */
+.tblwrap{overflow-x:auto;margin:6px 18px 0;border:1px solid var(--line);border-radius:7px;background:var(--paper2);}
+table{border-collapse:collapse;width:100%;font-size:15px;}
+thead th{position:sticky;top:0;z-index:1;background:#ddd8cc;border-bottom:2px solid var(--ink);
+  padding:7px 8px;text-align:right;white-space:nowrap;cursor:pointer;
+  font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;
+  color:var(--amberInk);text-transform:uppercase;}
+thead th:first-child{text-align:left;}
+thead th.sorted{background:#f0e5cf;color:#5e3607;}
+thead th .g{display:block;font-size:11px;letter-spacing:.8px;color:var(--ink2);font-weight:400;}
+tbody td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;
+  font-family:'Share Tech Mono',monospace;font-variant-numeric:tabular-nums;}
+tbody td:first-child{text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:16.5px;
+  font-weight:600;cursor:pointer;}
+tbody td:first-child:hover{color:var(--amberInk);text-decoration:underline;}
+tbody tr.zero td{background:#f7e2da;}
+tbody tr.guest td{background:#ece7f2;color:#413452;}
+tbody tr:hover td{background:#f6efdd;}
+.pill{display:inline-block;min-width:40px;padding:1px 6px;border-radius:4px;font-size:12.5px;
+  border:1px solid currentColor;}
+.pill.g{color:var(--good);} .pill.w{color:var(--warn);} .pill.d{color:var(--bad);}
+.tagsm{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.8px;border:1px solid currentColor;
+  border-radius:3px;padding:0 4px;margin-left:5px;}
+.tagsm.d{color:var(--bad);} .tagsm.g{color:#5a3f7a;}
+#empty{padding:22px 18px;color:var(--ink2);font-size:16px;}
+
+/* profile drill-down */
+#prof{display:none;margin:14px 18px 0;background:var(--paper2);border:1px solid var(--line2);
+  border-left:6px solid var(--amber);border-radius:8px;padding:14px 18px 16px;}
+#prof h3{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin:0 0 2px;}
+#prof .sub{font-family:'Share Tech Mono',monospace;font-size:11.5px;color:var(--ink2);margin-bottom:12px;}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;}
+.pcell{border:1px solid var(--line);border-radius:6px;padding:7px 10px;background:#fff;}
+.pcell .k{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.1px;
+  color:var(--amberInk);text-transform:uppercase;}
+.pcell .v{font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1.05;color:var(--ink);}
+.psec{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.6px;color:var(--amberInk);
+  text-transform:uppercase;margin:14px 0 6px;border-bottom:1px solid var(--line);padding-bottom:3px;}
+.foot{margin:18px 18px 0;padding-top:10px;border-top:1px solid var(--line);
+  font-family:'Share Tech Mono',monospace;font-size:11.5px;color:var(--ink2);}
+@media(max-width:700px){.hdr .t{font-size:26px;}.wrap{padding:0 10px;}}
+@media print{
+  body::before{display:none;} #topbar,.tools,.scopes,.sheets,.btn{display:none!important;}
+  body{background:#fff;} .board{box-shadow:none;border:none;}
 }
-/* #topbar is hardcoded #1c1410, which is EXACTLY the dark --bg · the whole bar vanished.
-   Its 3px amber border is what actually separates it; this just gives it a band to sit in. */
-[data-theme="dark"] #topbar{background:#2e2016;}
-[data-theme="dark"] th{background:#2e2016;}
-[data-theme="dark"] .fld input{background:#1c1410;color:var(--ink);}
-[data-theme="dark"] tr:hover td{background:#2e2016;}
-[data-theme="dark"] .pill.g{background:rgba(40,184,112,.16);color:#5fe0a0;}
-[data-theme="dark"] .pill.w{background:rgba(224,150,46,.18);color:#f0ad4a;}
-[data-theme="dark"] .pill.d{background:rgba(224,89,58,.18);color:#ff8e70;}
-[data-theme="dark"] .good{color:#5fe0a0;}
-[data-theme="dark"] .fld input::placeholder,[data-theme="dark"] #search::placeholder{color:#a2917a;}
-/* A competency report is a document an instructor hands to someone. Print it light. */
-@media print{:root,[data-theme="dark"]{--bg:#fff;--panel:#fff;--ink:#211a12;--ink2:#4a4034;--ink3:#5c5044;--line:#ccc;--line2:#999;}
-  [data-theme="dark"] th{background:#f2f2f2;}#topbar{background:#fff;color:#000;}.toolbar{display:none;}}
-
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-size:16px;line-height:1.4;min-height:100vh;}
-.wrap{max-width:1140px;margin:0 auto;padding:0 16px;}
-.mono{font-family:'Share Tech Mono',monospace;}
-/* ── TOPBAR ── */
-#topbar{background:#1c1410;border-bottom:3px solid var(--acc);color:#f0e6d4;}
-#topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;gap:12px;flex-wrap:wrap;}
-.brand{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:6px;color:var(--acc);line-height:1;}
-.brand small{display:block;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:#c0ad90;margin-top:2px;}
-#who{font-family:'Share Tech Mono',monospace;font-size:13px;color:#c0ad90;text-align:right;}
-#who b{color:#f0e6d4;display:block;font-size:15px;}
-.btn{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:1px;font-weight:bold;min-height:34px;border:1.5px solid var(--line2);background:var(--panel);color:var(--ink2);border-radius:6px;padding:8px 14px;cursor:pointer;transition:all .15s;}
-.btn:hover{border-color:var(--acc);color:var(--acc-dim);}
-.btn-acc{background:var(--acc);color:#241505;border-color:var(--acc);}
-/* was background:--acc-dim;color:#fff · white on amber, the one pairing the brand spec
-   forbids, on the primary button. Brightening on hover matches index.html. */
-.btn-acc:hover{background:var(--acc-bright);color:#241505;}
-.btn-ghost{background:transparent;color:#c0ad90;border-color:#4a3826;}
-.btn-ghost:hover{border-color:var(--acc);color:var(--acc);}
-/* ── LOGIN ── */
-#login{max-width:400px;margin:8vh auto;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:32px 28px;box-shadow:0 12px 40px rgba(40,28,14,.12);}
-#login h1{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:3px;color:var(--acc);line-height:1;}
-#login .sub{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;color:var(--ink3);text-transform:uppercase;margin:4px 0 22px;}
-.fld{display:block;margin-bottom:14px;}
-.fld span{display:block;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;color:var(--ink2);text-transform:uppercase;font-weight:bold;margin-bottom:5px;}
-.fld input{width:100%;padding:11px 13px;background:#fbf9f4;border:1px solid var(--line2);border-radius:7px;font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--ink);}
-.fld input:focus{outline:none;border-color:var(--acc);}
-/* No ::placeholder rule existed anywhere on the site, so every hint fell to Chrome's #a9a9a9 ,
-   2.23:1 on this panel, including 'you@school.edu' on the PAID product's front door.
-   opacity:1 is required or Firefox's default placeholder alpha undoes the fix. */
-.fld input::placeholder,#search::placeholder{color:#736550;opacity:1;}
-#login .btn-acc{width:100%;padding:12px;font-size:16px;margin-top:6px;}
-#login-note{font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--ink2);line-height:1.5;margin-top:16px;text-align:center;}
-#login-msg{font-family:'Share Tech Mono',monospace;font-size:13px;text-align:center;margin-top:12px;min-height:18px;}
-.err{color:var(--danger);}.good{color:#136b39;}/* --ok is a light green: 3.49:1. The success line is the one people look for. */
-/* ── DASHBOARD ── */
-#dash{display:none;padding:22px 0 60px;}
-.dash-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px;}
-.dash-hd h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:var(--ink);line-height:1;}
-.dash-hd .stamp{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--ink3);letter-spacing:1px;}
-.legend{font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--ink2);margin-bottom:18px;}
-.legend b{color:var(--acc-dim);}
-/* summary cards */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:22px;}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:15px 17px;box-shadow:0 3px 12px rgba(40,28,14,.05);}
-.card .k{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--ink2);text-transform:uppercase;font-weight:bold;}
-.card .v{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:1px;line-height:1;margin-top:4px;color:var(--acc);}
-.card .c{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--ink3);margin-top:2px;}
-.card.ok .v{color:var(--ok);}.card.warn .v{color:var(--warn);}.card.danger .v{color:var(--danger);}
-/* toolbar */
-.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
-#search{flex:1;min-width:160px;padding:9px 12px;background:var(--panel);border:1px solid var(--line2);border-radius:7px;font-family:'Barlow Condensed',sans-serif;font-size:15px;color:var(--ink);}
-#search:focus{outline:none;border-color:var(--acc);}
-/* table */
-/* The sticky headers never stuck: overflow-x:auto with no height constraint makes .tbl-wrap the sticky
-   containing block, and it never scrolled vertically · so top:0 resolved against a box that never moved
-   and the header row scrolled away with the page. Past ~15 students the director was reading eight
-   unlabelled numeric columns. Giving the wrapper a real height makes the declaration do its job. */
-.tbl-wrap{background:var(--panel);border:1px solid var(--line);border-radius:10px;max-height:min(70vh,640px);min-height:220px;overflow:auto;box-shadow:0 3px 12px rgba(40,28,14,.05);}
-table{width:100%;border-collapse:collapse;min-width:760px;}
-th{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;color:var(--ink2);text-transform:uppercase;text-align:right;padding:12px 14px;border-bottom:2px solid var(--line2);cursor:pointer;white-space:nowrap;user-select:none;background:#faf7f0;position:sticky;top:0;z-index:2;}
-th:first-child{text-align:left;}
-th:hover{color:var(--acc-dim);}
-th:focus{outline:2px solid var(--acc);outline-offset:-2px;}/* keyboard sorting needs a visible focus ring */
-th .comp{display:block;font-size:11px;color:var(--ink3);letter-spacing:.5px;font-weight:normal;text-transform:none;}/* 10px was under the product's 11px type floor */
-th.sorted{color:var(--acc-dim);}
-th .arr{color:var(--acc-dim);}/* --acc was 3.16:1 on the sticky th fill; this caret is how you know which column is sorted */
-[data-theme="dark"] th .arr{color:var(--acc);}
-td{font-family:'Share Tech Mono',monospace;font-size:15px;padding:11px 14px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;color:var(--ink);}
-td:first-child{text-align:left;font-weight:bold;font-family:'Barlow Condensed',sans-serif;font-size:17px;}
-tr:hover td{background:#fbf9f4;}
-.pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:bold;}
-.pill.g{background:rgba(31,157,87,.14);color:#127a41;}
-.pill.w{background:rgba(212,130,15,.16);color:#9a5c0c;}
-.pill.d{background:rgba(194,58,26,.16);color:#a02c17;}
-.muted{color:var(--ink3);}
-#empty{padding:40px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--ink3);}
-.foot{margin-top:26px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--ink3);text-align:center;}
-.foot a{color:var(--teal);}
-@media(max-width:560px){.brand{font-size:24px;letter-spacing:4px;}.dash-hd h1{font-size:26px;}}
 </style>
 </head>
 <body>
 
 <div id="topbar"><div class="wrap">
-  <div class="brand">LOCK IN<small>PROGRAM DASHBOARD</small></div>
+  <div class="brand">LOCK<b> IN</b> &nbsp;<span style="font-size:13px;letter-spacing:2px;">PROGRAM DASHBOARD</span></div>
   <div id="who" style="display:none;"></div>
 </div></div>
 
 <!-- LOGIN -->
 <div id="login">
-  <h1>Program Sign-In</h1>
-  <div class="sub">Facility / instructor access</div>
-  <form onsubmit="dLogin();return false;"><!-- v1.2 (MED funnel #5) ONE submit path: Enter and the button both land here; return false blocks the reload -->
+  <h1>PROGRAM SIGN-IN</h1>
+  <p class="sub">Your students' loading competency report.</p>
   <label class="fld"><span>Program email</span><input id="li-email" type="email" autocomplete="username" placeholder="you@school.edu"></label>
-  <label class="fld"><span>Password</span><input id="li-pw" type="password" autocomplete="current-password" placeholder="••••••••"></label>
-  <button type="submit" class="btn btn-acc">SIGN IN</button>
-  </form>
+  <label class="fld"><span>Password</span><input id="li-pw" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')dLogin();"></label>
+  <button class="btn" onclick="dLogin()">🔑 SIGN IN</button>
   <div id="login-msg"></div>
-  <div id="login-note">Program credentials are issued by LOCK IN. Forgot your password, or don't have access yet? Email <a href="mailto:vince@trailer-load.com">vince@trailer-load.com</a> and we'll sort it the same day.</div>
+  <div id="login-note">Program credentials are issued by LOCK IN. Forgot your password, or don't have access yet? Email <a href="mailto:vince@trailer-load.com">vince@trailer-load.com</a>.</div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dash"><div class="wrap">
-  <div class="dash-hd">
-    <h1>Competency Report</h1>
-    <div class="stamp" id="stamp"></div>
-  </div>
-  <div class="legend">Each student's loading performance, mapped to workplace competencies: <b>attention to detail</b> (load integrity), <b>follow-through</b> (walls completed), <b>throughput</b> (pieces/hour), and <b>safety</b> (incidents). Handles are anonymous · only your roster maps them to real students.</div>
+  <div class="board">
+    <div class="clip">LOCK-IN</div>
 
-  <div class="cards" id="cards"></div>
+    <div class="hdr">
+      <div>
+        <div class="t">COHORT REPORT</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11.5px;color:#4a3c28;">Sorted least engaged first · the students who need you are at the top</div>
+      </div>
+      <div class="stamp" id="stamp"></div>
+    </div>
 
-  <div class="toolbar">
-    <input id="search" type="text" aria-label="Filter students by handle" placeholder="Filter students…" oninput="dRender()">
-    <button class="btn" onclick="dExport()">⭳ EXPORT CSV</button>
-    <button class="btn" onclick="dReload()">↻ REFRESH</button>
-    <button class="btn btn-ghost" onclick="dSignOut()" style="border-color:var(--line2);color:var(--ink2);">SIGN OUT</button>
-  </div>
+    <div class="cards" id="cards"></div>
 
-  <div class="tbl-wrap">
-    <table>
-      <thead><tr id="thead"></tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
+    <div class="sheets" id="sheets">
+      <button class="sheet on" data-sheet="life"    onclick="dSheet('life')">📋 Lifetime</button>
+      <button class="sheet"    data-sheet="session" onclick="dSheet('session')">🕐 Most recent session</button>
+      <button class="sheet"    data-sheet="wall"    onclick="dSheet('wall')">🧱 Most recent wall</button>
+    </div>
+    <div class="sheetbar"></div>
+
+    <div class="scopes" id="scopes"></div>
+
+    <div class="tools">
+      <input id="search" type="text" aria-label="Filter students by handle" placeholder="Filter students…" oninput="dRender()">
+      <button class="btn ghost" onclick="dToggleGuests()" id="gbtn">👥 SHOW GUESTS</button>
+      <button class="btn ghost" onclick="dReload()">🔄 REFRESH</button>
+      <button class="btn ghost" onclick="dExport()">⭳ EXPORT CSV</button>
+      <button class="btn ghost" onclick="dSignOut()">🚪 SIGN OUT</button>
+    </div>
+
+    <div id="prof"></div>
+
+    <div class="tblwrap">
+      <table>
+        <thead><tr id="thead"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
     <div id="empty" style="display:none;"></div>
-  </div>
 
-  <div class="foot">LOCK IN · <a href="/">trailer-load.com</a> · a project of <a href="https://www.f-keys.com/">F-Keys</a> · <a href="/for-districts/">Documentation</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · data shown is opt-in student gameplay only · © 2026</div>
+    <div class="foot">
+      Training supplement only. Builds intuition and tracks readiness; it does not replace employer
+      safety training, OSHA training, or any certification requirement.<br>
+      LOCK IN · F-Keys Creative LLC
+    </div>
+  </div>
 </div></div>
 
 <script>
-// ============================================================
-// LOCK IN · PROGRAM DASHBOARD
-// Facility-facing competency report. Reuses the game's Supabase auth
-// (GoTrue password grant) + the RLS-scoped lockin_cohort view.
-// F-Keys | var-only, single STATE object, try/catch on async.
-// ============================================================
+/* ══════════════════════════════════════════════════════════════════════════
+   v2.0 · 2026-10-02
+
+   The old dashboard read eight columns off lockin_cohort, and that view
+   returned 0 walls / 0 sessions for 16 of 19 enrolled students because it
+   filtered on `since_join` and almost nobody has a crew-join date. An
+   instructor opened this and saw an empty class.
+
+   The view is rebuilt server-side. This reads it at full depth: 30 metrics
+   across six scopes, three sheets (lifetime / most recent session / most
+   recent wall), guests included as guest-1..n, and a per-student drill-down.
+
+   DEFAULT SORT IS WALLS ASCENDING. A scoreboard sorts by winner; a roster
+   sorts by who needs you.
+   ══════════════════════════════════════════════════════════════════════════ */
 var DASH={
-  authUrl:'https://igqpgsqogfrpujdgvefs.supabase.co/auth/v1',
   endpoint:'https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1',
+  authUrl:'https://igqpgsqogfrpujdgvefs.supabase.co/auth/v1',
   anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo',
-  session:null, rows:[], name:'', code:'', sortKey:'best_score', sortDir:-1
+  session:null, rows:[], guests:[], showGuests:false, sheet:'life',
+  name:'', code:'', sortKey:'walls', sortDir:1, scopes:{}
 };
-// columns: {key, label, competency, fmt}
-var DCOLS=[
-  {key:'username',   label:'Student',     comp:'handle'},
-  {key:'sessions',   label:'Sessions',    comp:'engagement'},
-  {key:'walls',      label:'Walls',       comp:'follow-through'},
-  {key:'avg_integrity',label:'Integrity', comp:'attention to detail'},
-  {key:'best_pph',   label:'Best PPH',    comp:'throughput'},
-  {key:'best_score', label:'Best Score',  comp:'overall'},
-  {key:'incidents',  label:'Incidents',   comp:'safety'},
-  {key:'last_seen',  label:'Last Active', comp:''}
-];
+
+/* ── COLUMN MODEL ────────────────────────────────────────────────────────
+   Every column the rebuilt views expose, grouped. A group can be switched
+   off so an instructor can scope the board down to the question they are
+   actually asking. ENGAGEMENT and QUALITY are on by default because those
+   are the two an instructor opens for. */
+var GROUPS={
+  engagement:{label:'Engagement', on:true},
+  quality:   {label:'Quality',    on:true},
+  throughput:{label:'Throughput', on:false},
+  craft:     {label:'Craft',      on:false},
+  faults:    {label:'Faults',     on:true},
+  habits:    {label:'Habits',     on:false}
+};
+var COLS={
+  life:[
+    {k:'username',      l:'Student',    g:'id',         t:'name'},
+    {k:'sessions',      l:'Sessions',   g:'engagement', t:'n'},
+    {k:'walls',         l:'Walls',      g:'engagement', t:'n'},
+    {k:'pieces',        l:'Pieces',     g:'engagement', t:'n'},
+    {k:'smalls_runs',   l:'Smalls runs',g:'engagement', t:'n'},
+    {k:'last_seen',     l:'Last active',g:'engagement', t:'ago'},
+    {k:'best_pph',      l:'Best PPH',   g:'throughput', t:'n'},
+    {k:'avg_pph',       l:'Avg PPH',    g:'throughput', t:'n'},
+    {k:'best_score',    l:'Best wall',  g:'throughput', t:'n'},
+    {k:'total_score',   l:'Total score',g:'throughput', t:'n'},
+    {k:'avg_integrity', l:'Integrity',  g:'quality',    t:'pctpill'},
+    {k:'avg_wall_pct',  l:'Wall %',     g:'quality',    t:'pct'},
+    {k:'density_pct',   l:'Density',    g:'quality',    t:'pct'},
+    {k:'cube_eff',      l:'Cube eff',   g:'quality',    t:'pct'},
+    {k:'nc_util_pct',   l:'NC use',     g:'quality',    t:'pct'},
+    {k:'smalls_util_pct',l:'Smalls use',g:'quality',    t:'pct'},
+    {k:'shelves_locked',l:'Shelves',    g:'craft',      t:'n'},
+    {k:'double_locks',  l:'Bulkheads',  g:'craft',      t:'n'},
+    {k:'nests',         l:'Nests',      g:'craft',      t:'n'},
+    {k:'recoveries',    l:'Recoveries', g:'craft',      t:'n'},
+    {k:'bonuses',       l:'Bonuses',    g:'craft',      t:'n'},
+    {k:'incidents',     l:'Incidents',  g:'faults',     t:'incpill'},
+    {k:'collapses',     l:'Collapses',  g:'faults',     t:'n'},
+    {k:'crunches',      l:'Crunches',   g:'faults',     t:'n'},
+    {k:'rejected_drops',l:'Rejects',    g:'faults',     t:'n'},
+    {k:'hydration_breaks',l:'Water',    g:'habits',     t:'n'},
+    {k:'nc_dwell_warnings',l:'NC dwell',g:'habits',     t:'n'},
+    {k:'smalls_dwell_warnings',l:'Sm dwell',g:'habits', t:'n'},
+    {k:'rotations',     l:'Rotations',  g:'habits',     t:'n'},
+    {k:'lifts',         l:'Lifts',      g:'habits',     t:'n'}
+  ],
+  session:[
+    {k:'username',      l:'Student',    g:'id',         t:'name'},
+    {k:'mode',          l:'Mode',       g:'engagement', t:'txt'},
+    {k:'walls',         l:'Walls',      g:'engagement', t:'n'},
+    {k:'duration_s',    l:'Duration',   g:'engagement', t:'dur'},
+    {k:'last_seen',     l:'When',       g:'engagement', t:'ago'},
+    {k:'best_pph',      l:'Best PPH',   g:'throughput', t:'n'},
+    {k:'score',         l:'Score',      g:'throughput', t:'n'},
+    {k:'avg_integrity', l:'Integrity',  g:'quality',    t:'pctpill'},
+    {k:'incidents',     l:'Incidents',  g:'faults',     t:'incpill'},
+    {k:'app_ver',       l:'Build',      g:'habits',     t:'txt'}
+  ],
+  wall:[
+    {k:'username',      l:'Student',    g:'id',         t:'name'},
+    {k:'mode',          l:'Mode',       g:'engagement', t:'txt'},
+    {k:'pieces',        l:'Pieces',     g:'engagement', t:'n'},
+    {k:'dur_s',         l:'Duration',   g:'engagement', t:'dur'},
+    {k:'loaded_at',     l:'When',       g:'engagement', t:'ago'},
+    {k:'pph',           l:'PPH',        g:'throughput', t:'n'},
+    {k:'score',         l:'Score',      g:'throughput', t:'n'},
+    {k:'integrity',     l:'Integrity',  g:'quality',    t:'pctpill'},
+    {k:'density',       l:'Density',    g:'quality',    t:'pct'},
+    {k:'incidents',     l:'Incidents',  g:'faults',     t:'incpill'},
+    {k:'collapses',     l:'Collapses',  g:'faults',     t:'n'}
+  ]
+};
+var SHEET_SRC={life:'lockin_cohort', session:'lockin_cohort_session', wall:'lockin_cohort_wall'};
+var SHEET_SORT={life:'walls', session:'last_seen', wall:'loaded_at'};
+
 function dHeaders(){
   var h={'apikey':DASH.anonKey,'Content-Type':'application/json'};
   h['Authorization']='Bearer '+((DASH.session&&DASH.session.access_token)||DASH.anonKey);
@@ -217,153 +339,241 @@ function dHeaders(){
 }
 function dMsg(t,cls){var e=document.getElementById('login-msg');if(e){e.textContent=t||'';e.className=cls||'';}}
 function dEsc(s){return (''+(s==null?'':s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function dNum(v){return (v==null||isNaN(v))?0:(+v);}
+function dSince(ts){
+  if(!ts)return 'never';
+  try{
+    var d=Math.floor((Date.now()-new Date(ts).getTime())/86400000);
+    if(d<=0)return 'today'; if(d===1)return '1d ago'; if(d<30)return d+'d ago';
+    return Math.floor(d/30)+'mo ago';
+  }catch(e){return '·';}
+}
+function dDur(s){s=dNum(s);if(!s)return '·';var m=Math.floor(s/60);return m?(m+'m '+(s%60)+'s'):(s+'s');}
+
 function dLogin(){
-  var em=document.getElementById('li-email'),pw=document.getElementById('li-pw');
-  var email=em?em.value.trim():'',pass=pw?pw.value:'';
-  if(!email||!pass){dMsg('Enter your program email + password.','err');return;}
+  var email=(document.getElementById('li-email')||{}).value||'';
+  var pw=(document.getElementById('li-pw')||{}).value||'';
+  if(!email||!pw){dMsg('Enter your program email and password.','err');return;}
   dMsg('Signing in…','');
   try{
-    fetch(DASH.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':DASH.anonKey},body:JSON.stringify({email:email,password:pass})})
+    fetch(DASH.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':DASH.anonKey},body:JSON.stringify({email:email,password:pw})})
       .then(function(r){return r.json();}).then(function(j){
         if(j&&j.access_token){
-          DASH.session={access_token:j.access_token,refresh_token:j.refresh_token,email:email,uid:(j.user&&j.user.id)||null};
+          DASH.session={access_token:j.access_token,refresh_token:j.refresh_token,email:email,uid:(j.user&&j.user.id)||''};
           try{localStorage.setItem('lockinDashAuth',JSON.stringify(DASH.session));}catch(e){}
           dMsg('','');dEnter();
-        } else {
-          // Never hand the customer the auth vendor's raw string. GoTrue says things like
-          // "Unable to validate email address: invalid format" and "For security purposes, you can
-          // only request this after 21 seconds." at the paid product's front door.
-          var raw=((j&&(j.error_description||j.msg||j.error))||'').toLowerCase();
-          var msg='Sign-in failed. Check your program email and password, or email vince@trailer-load.com and we will reset it.';
-          if(raw.indexOf('security purposes')>=0||raw.indexOf('rate')>=0)msg='Too many attempts. Wait a moment and try again.';
-          dMsg('✕ '+msg,'err');
-        }
-      }).catch(function(e){console.error('dLogin:',e);dMsg('✕ Network error · try again.','err');});
-  }catch(e){console.error('dLogin:',e);dMsg('✕ Error · try again.','err');}
+        } else { dMsg((j&&(j.error_description||j.msg))||'Sign-in failed. Check your program email and password, or email vince@trailer-load.com.','err'); }
+      }).catch(function(e){console.error('dLogin:',e);dMsg('Network error. Try again.','err');});
+  }catch(e){console.error('dLogin:',e);dMsg('Network error. Try again.','err');}
 }
 function dEnter(){
   document.getElementById('login').style.display='none';
   document.getElementById('dash').style.display='block';
-  var who=document.getElementById('who');if(who){who.style.display='block';who.innerHTML='<b>'+dEsc(DASH.name||'Your program')+'</b>'+dEsc(DASH.session&&DASH.session.email||'');}
-  dFetchFacility();dFetchCohort();
+  var who=document.getElementById('who');if(who){who.style.display='block';who.innerHTML='<b>'+dEsc(DASH.name||'Your program')+'</b>'+dEsc((DASH.session&&DASH.session.email)||'');}
+  dScopeBar(); dFetchFacility(); dFetchSheet();
 }
 function dFetchFacility(){
   try{
     fetch(DASH.endpoint+'/lockin_facilities?select=name,facility_code',{headers:dHeaders()})
       .then(function(r){if(r.status===401)return null;return r.json();}).then(function(j){
-        if(j===null)return; // 401 handled by the cohort path's dExpired
-        if(j&&j.length){DASH.name=j[0].name||j[0].facility_code||'Your program';DASH.code=j[0].facility_code||'';var who=document.getElementById('who');if(who)who.innerHTML='<b>'+dEsc(DASH.name)+'</b>'+dEsc(DASH.session&&DASH.session.email||'');}
+        if(j===null)return;
+        if(j&&j.length){DASH.name=j[0].name||j[0].facility_code||'Your program';DASH.code=j[0].facility_code||'';
+          var who=document.getElementById('who');if(who)who.innerHTML='<b>'+dEsc(DASH.name)+'</b>'+dEsc((DASH.session&&DASH.session.email)||'');}
       }).catch(function(e){console.error('dFetchFacility:',e);});
   }catch(e){console.error('dFetchFacility:',e);}
 }
-function dReload(){dFetchCohort();}
-function dFetchCohort(){
-  var tb=document.getElementById('tbody');if(tb)tb.innerHTML='';
-  var emp=document.getElementById('empty');if(emp){emp.style.display='block';emp.textContent='Loading roster…';}
-  try{
-    fetch(DASH.endpoint+'/lockin_cohort?select=*',{headers:dHeaders()})
-      .then(function(r){if(r.status===401){dExpired();return null;}return r.json();}).then(function(j){
-        if(j===null)return; // v1.1 (HIGH #3) a 401 is a session problem, never an empty roster
-        // drop the instructor's own handle (it comes back via the self-read policy with all zeros)
-        DASH.rows=(j&&j.length)?j.filter(function(r){return !(DASH.session&&r.user_id===DASH.session.uid);}):[];
-        var st=document.getElementById('stamp');if(st)st.textContent=DASH.rows.length+' students on roster';
-        dRender();
-      }).catch(function(e){console.error('dFetchCohort:',e);if(emp)emp.textContent='Could not load the roster · try REFRESH.';});
-  }catch(e){console.error('dFetchCohort:',e);}
+function dReload(){dFetchSheet();}
+function dSheet(s){
+  if(!SHEET_SRC[s])return;
+  DASH.sheet=s; DASH.sortKey=SHEET_SORT[s]; DASH.sortDir=(s==='life')?1:-1;
+  var b=document.querySelectorAll('.sheet'),i;
+  for(i=0;i<b.length;i++)b[i].classList.toggle('on', b[i].getAttribute('data-sheet')===s);
+  document.getElementById('prof').style.display='none';
+  dFetchSheet();
 }
-function dNum(v){return (v==null||isNaN(v))?0:(+v);}
-function dSince(ts){
-  if(!ts)return ',';
+function dToggleGuests(){
+  DASH.showGuests=!DASH.showGuests;
+  var b=document.getElementById('gbtn');
+  if(b)b.textContent=DASH.showGuests?'👥 HIDE GUESTS':'👥 SHOW GUESTS';
+  dRender();
+}
+function dScopeBar(){
+  var h='<span class="lbl">Columns</span>',g;
+  for(g in GROUPS){ if(!GROUPS.hasOwnProperty(g))continue;
+    h+='<button class="scope'+(GROUPS[g].on?' on':'')+'" data-g="'+g+'" onclick="dScope(\''+g+'\')">'+GROUPS[g].label+'</button>';
+  }
+  document.getElementById('scopes').innerHTML=h;
+}
+function dScope(g){ if(!GROUPS[g])return; GROUPS[g].on=!GROUPS[g].on; dScopeBar(); dRender(); }
+
+function dFetchSheet(){
+  var tb=document.getElementById('tbody');if(tb)tb.innerHTML='';
+  var emp=document.getElementById('empty');if(emp){emp.style.display='block';emp.textContent='Loading…';}
+  var src=SHEET_SRC[DASH.sheet];
   try{
-    var then=new Date(ts).getTime(),now=Date.now(),d=Math.floor((now-then)/86400000);
-    if(d<=0)return 'today';if(d===1)return '1d ago';if(d<30)return d+'d ago';
-    var mo=Math.floor(d/30);return mo+'mo ago';
-  }catch(e){return ',';}
+    fetch(DASH.endpoint+'/'+src+'?select=*',{headers:dHeaders()})
+      .then(function(r){if(r.status===401){dExpired();return null;}return r.json();})
+      .then(function(j){
+        if(j===null)return;
+        DASH.rows=(j&&j.length)?j.filter(function(r){return !(DASH.session&&r.user_id===DASH.session.uid&&r.username===undefined);}):[];
+        var st=document.getElementById('stamp');
+        if(st)st.textContent=DASH.rows.length+' on roster';
+        if(DASH.sheet==='life')dFetchGuests(); else dRender();
+      }).catch(function(e){console.error('dFetchSheet:',e);if(emp)emp.textContent='Could not load · try REFRESH.';});
+  }catch(e){console.error('dFetchSheet:',e);}
+}
+function dFetchGuests(){
+  try{
+    fetch(DASH.endpoint+'/lockin_guests?select=*',{headers:dHeaders()})
+      .then(function(r){return r.ok?r.json():[];})
+      .then(function(j){DASH.guests=j&&j.length?j:[];dRender();})
+      .catch(function(){DASH.guests=[];dRender();});
+  }catch(e){DASH.guests=[];dRender();}
 }
 function dSort(k){
   if(DASH.sortKey===k){DASH.sortDir*=-1;}else{DASH.sortKey=k;DASH.sortDir=(k==='username')?1:-1;}
   dRender();
 }
+function dActiveCols(){
+  return COLS[DASH.sheet].filter(function(c){return c.g==='id'||(GROUPS[c.g]&&GROUPS[c.g].on);});
+}
 function dCards(rows){
-  var n=rows.length;
-  var ai=0,walls=0,flagged=0,i;
-  for(i=0;i<rows.length;i++){ai+=dNum(rows[i].avg_integrity);walls+=dNum(rows[i].walls);if(dNum(rows[i].incidents)>=2)flagged++;}
-  var avgInt=n?Math.round(ai/n):0;
-  var intCls=avgInt>=80?'ok':avgInt>=60?'warn':(n?'danger':'');
+  var n=rows.length,ai=0,aiN=0,walls=0,flagged=0,never=0,i;
+  for(i=0;i<rows.length;i++){
+    var r=rows[i];
+    if(dNum(r.avg_integrity||r.integrity)>0){ai+=dNum(r.avg_integrity||r.integrity);aiN++;}
+    walls+=dNum(r.walls);
+    if(dNum(r.incidents)>=2)flagged++;
+    if(r.never_played)never++;
+  }
+  var avgInt=aiN?Math.round(ai/aiN):0;
   function card(k,v,c,cls){return '<div class="card '+(cls||'')+'"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="c">'+c+'</div></div>';}
-  return card('STUDENTS',n,'on your roster','')
-    +card('AVG INTEGRITY',(n?avgInt+'%':','),'attention to detail',intCls)
+  return card('ON ROSTER',n,'registered accounts','')
+    +card('NEVER STARTED',never,'signed up, no wall',never>0?'danger':'ok')
+    +card('AVG INTEGRITY',(aiN?avgInt+'%':'·'),'attention to detail',avgInt>=80?'ok':avgInt>=60?'warn':'danger')
     +card('WALLS LOADED',walls,'total follow-through','')
     +card('FLAGGED',flagged,'2+ safety incidents',flagged>0?'danger':'ok');
 }
+function dFmt(c,r){
+  var v=r[c.k];
+  if(c.t==='name'){
+    var tag='';
+    if(r.is_guest)tag='<span class="tagsm g">GUEST</span>';
+    else if(r.never_played)tag='<span class="tagsm d">NEVER PLAYED</span>';
+    return dEsc(v||'·')+tag;
+  }
+  if(c.t==='ago')return '<span style="color:#4a3c28">'+dSince(v)+'</span>';
+  if(c.t==='dur')return dDur(v);
+  if(c.t==='txt')return dEsc(v||'·');
+  if(c.t==='pct'){var p=dNum(v);return p?(p+'%'):'·';}
+  if(c.t==='pctpill'){var a=dNum(v);return a?('<span class="pill '+(a>=80?'g':a>=60?'w':'d')+'">'+a+'%</span>'):'·';}
+  if(c.t==='incpill'){var n=dNum(v);return '<span class="pill '+(n>=2?'d':n===1?'w':'g')+'">'+n+'</span>';}
+  var num=dNum(v); return num?num.toLocaleString():'0';
+}
 function dRender(){
-  var q=(document.getElementById('search')||{}).value||'';q=q.toLowerCase().trim();
-  var rows=DASH.rows.filter(function(r){return !q||(''+(r.username||'')).toLowerCase().indexOf(q)>=0;});
-  // sort
+  var q=((document.getElementById('search')||{}).value||'').toLowerCase().trim();
+  var base=DASH.rows.slice();
+  if(DASH.sheet==='life'&&DASH.showGuests)base=base.concat(DASH.guests);
+  var rows=base.filter(function(r){return !q||(''+(r.username||'')).toLowerCase().indexOf(q)>=0;});
   var k=DASH.sortKey,dir=DASH.sortDir;
-  rows=rows.slice().sort(function(a,b){
+  rows.sort(function(a,b){
     var av=a[k],bv=b[k];
-    if(k==='username'){av=(''+(av||'')).toLowerCase();bv=(''+(bv||'')).toLowerCase();return av<bv?-1*dir:av>bv?1*dir:0;}
-    if(k==='last_seen'){av=av?new Date(av).getTime():0;bv=bv?new Date(bv).getTime():0;return (av-bv)*dir;}
+    if(k==='username'||k==='mode'||k==='app_ver'){av=(''+(av||'')).toLowerCase();bv=(''+(bv||'')).toLowerCase();return av<bv?-dir:av>bv?dir:0;}
+    if(k==='last_seen'||k==='loaded_at'){av=av?new Date(av).getTime():0;bv=bv?new Date(bv).getTime():0;return (av-bv)*dir;}
     return (dNum(av)-dNum(bv))*dir;
   });
-  // summary cards (on the full roster, not the filtered view)
   document.getElementById('cards').innerHTML=dCards(DASH.rows);
-  // header
-  var th='',c;for(c=0;c<DCOLS.length;c++){var col=DCOLS[c];var isS=(DASH.sortKey===col.key);
-    // The roster's only data control was mouse-only: cursor:pointer and an onclick, with no
-    // tabindex, role, aria-sort or key handler · so sorting was impossible without a mouse on
-    // the one screen the institution is buying, while /for-districts/ advertises "full keyboard play".
-    th+='<th class="'+(isS?'sorted':'')+'" tabindex="0" role="columnheader" aria-sort="'+(isS?(DASH.sortDir<0?'descending':'ascending'):'none')+'" onclick="dSort(\''+col.key+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();dSort(\''+col.key+'\');}">'+col.label+(isS?(' <span class="arr">'+(DASH.sortDir<0?'▼':'▲')+'</span>'):'')+(col.comp?('<span class="comp">'+col.comp+'</span>'):'')+'</th>';}
+  var cols=dActiveCols(),th='',c;
+  for(c=0;c<cols.length;c++){
+    var col=cols[c],isS=(DASH.sortKey===col.k);
+    th+='<th class="'+(isS?'sorted':'')+'" tabindex="0" role="columnheader" aria-sort="'+(isS?(DASH.sortDir<0?'descending':'ascending'):'none')+'"'
+      +' onclick="dSort(\''+col.k+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();dSort(\''+col.k+'\');}">'
+      +dEsc(col.l)+(isS?(' '+(DASH.sortDir<0?'▼':'▲')):'')
+      +(col.g!=='id'?('<span class="g">'+dEsc(GROUPS[col.g].label)+'</span>'):'')+'</th>';
+  }
   document.getElementById('thead').innerHTML=th;
-  // body
   var emp=document.getElementById('empty');
-  if(!rows.length){document.getElementById('tbody').innerHTML='';if(emp){emp.style.display='block';emp.textContent=DASH.rows.length?'No students match that filter.':'Your roster is ready · it fills in as students join. Give your class your join code'+(DASH.code?(' · '+DASH.code):'')+'. In the game: PAUSE → ADMIN → ACCOUNT & DATA → enter the code and confirm sharing. Students appear here after their first wall.';}return;}
+  if(!rows.length){
+    document.getElementById('tbody').innerHTML='';
+    if(emp){emp.style.display='block';emp.textContent=DASH.rows.length?'No students match that filter.':'Your roster fills in as students sign up. Share your join code'+(DASH.code?(' · '+DASH.code):'')+'.';}
+    return;
+  }
   if(emp)emp.style.display='none';
-  var h='',i;
-  for(i=0;i<rows.length;i++){var r=rows[i];
-    var inc=dNum(r.incidents),ai=dNum(r.avg_integrity);
-    var incPill=inc>=2?'<span class="pill d">'+inc+'</span>':inc===1?'<span class="pill w">1</span>':'<span class="pill g">0</span>';
-    var intPill='<span class="pill '+(ai>=80?'g':ai>=60?'w':'d')+'">'+(ai||0)+'%</span>';
-    h+='<tr>'
-      +'<td>'+dEsc(r.username||',')+'</td>'
-      +'<td>'+dNum(r.sessions)+'</td>'
-      +'<td>'+dNum(r.walls)+'</td>'
-      +'<td>'+intPill+'</td>'
-      +'<td>'+dNum(r.best_pph)+'</td>'
-      +'<td>'+dNum(r.best_score)+'</td>'
-      +'<td>'+incPill+'</td>'
-      +'<td class="muted">'+dSince(r.last_seen)+'</td>'
-      +'</tr>';
+  var h='',i,j;
+  for(i=0;i<rows.length;i++){
+    var r=rows[i],cls=r.is_guest?'guest':(r.never_played?'zero':'');
+    h+='<tr class="'+cls+'">';
+    for(j=0;j<cols.length;j++){
+      var cc=cols[j];
+      h+='<td'+(cc.t==='name'?(' onclick="dProfile(\''+dEsc((''+(r.username||'')).replace(/'/g,"\\'"))+'\')"'):'')+'>'+dFmt(cc,r)+'</td>';
+    }
+    h+='</tr>';
   }
   document.getElementById('tbody').innerHTML=h;
 }
+/* click a name → that student's full record, every metric, grouped */
+function dProfile(name){
+  var base=DASH.rows.concat(DASH.guests),r=null,i;
+  for(i=0;i<base.length;i++){if((''+base[i].username)===(''+name)){r=base[i];break;}}
+  var p=document.getElementById('prof');
+  if(!r||!p){if(p)p.style.display='none';return;}
+  var secs=[
+    ['Engagement',['sessions','walls','pieces','smalls_runs']],
+    ['Throughput',['best_pph','avg_pph','best_score','total_score']],
+    ['Quality',   ['avg_integrity','avg_wall_pct','density_pct','cube_eff','nc_util_pct','smalls_util_pct']],
+    ['Craft',     ['shelves_locked','double_locks','nests','recoveries','bonuses']],
+    ['Faults',    ['incidents','collapses','crunches','rejected_drops']],
+    ['Habits',    ['hydration_breaks','nc_dwell_warnings','smalls_dwell_warnings','rotations','lifts']]
+  ];
+  var byKey={},i2;
+  for(i2=0;i2<COLS.life.length;i2++)byKey[COLS.life[i2].k]=COLS.life[i2];
+  var h='<h3>'+dEsc(r.username)+(r.is_guest?' <span class="tagsm g">GUEST</span>':'')+'</h3>'
+    +'<div class="sub">last active '+dSince(r.last_seen)+(r.facility_code?(' · '+dEsc(r.facility_code)):'')+'</div>';
+  var s,kk;
+  for(s=0;s<secs.length;s++){
+    var any=false,cells='';
+    for(kk=0;kk<secs[s][1].length;kk++){
+      var key=secs[s][1][kk]; if(!(key in r))continue; any=true;
+      var col=byKey[key]||{l:key,t:'n'};
+      cells+='<div class="pcell"><div class="k">'+dEsc(col.l)+'</div><div class="v">'+dFmt(col,r)+'</div></div>';
+    }
+    if(any)h+='<div class="psec">'+secs[s][0]+'</div><div class="pgrid">'+cells+'</div>';
+  }
+  h+='<div style="margin-top:14px;"><button class="btn ghost" onclick="document.getElementById(\'prof\').style.display=\'none\'">✕ CLOSE</button></div>';
+  p.innerHTML=h; p.style.display='block';
+  try{p.scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}
+}
 function dExport(){
-  var rows=DASH.rows.slice();
+  var cols=dActiveCols();
+  var base=DASH.rows.slice();
+  if(DASH.sheet==='life'&&DASH.showGuests)base=base.concat(DASH.guests);
   var _xb=document.querySelector('button[onclick="dExport()"]');
-  if(!rows.length){if(_xb){_xb.textContent='NO OPTED-IN STUDENTS YET';setTimeout(function(){if(_xb)_xb.textContent='⭳ EXPORT CSV';},2200);}return;} // v1.2 (LOW) no more silent header-only file
-  var head=['student','sessions','walls','avg_integrity_pct','best_pph','best_score','incidents','last_seen'];
-  var lines=[head.join(',')],i;
-  function q(v){v=(v==null?'':(''+v));if(/^[=+\-@\t\r]/.test(v))v="'"+v;/* a handle starting = + - @ evaluates as a formula when the instructor opens this in Excel on a district machine */return /[",\n]/.test(v)?('"'+v.replace(/"/g,'""')+'"'):v;}
-  for(i=0;i<rows.length;i++){var r=rows[i];
-    lines.push([r.username,dNum(r.sessions),dNum(r.walls),dNum(r.avg_integrity),dNum(r.best_pph),dNum(r.best_score),dNum(r.incidents),r.last_seen||''].map(q).join(','));}
+  if(!base.length){if(_xb){_xb.textContent='NOTHING TO EXPORT';setTimeout(function(){if(_xb)_xb.textContent='⭳ EXPORT CSV';},2200);}return;}
+  function q(v){v=(v==null?'':(''+v));
+    /* a handle starting = + - @ evaluates as a formula when an instructor opens this in Excel */
+    if(/^[=+\-@\t\r]/.test(v))v="'"+v;
+    return /[",\n]/.test(v)?('"'+v.replace(/"/g,'""')+'"'):v;}
+  var lines=[cols.map(function(c){return q(c.l);}).join(',')],i,j;
+  for(i=0;i<base.length;i++){var row=[];
+    for(j=0;j<cols.length;j++)row.push(q(base[i][cols[j].k]));
+    lines.push(row.join(','));}
   var blob=new Blob([lines.join('\n')],{type:'text/csv'});
   var url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='lockin-cohort-'+((DASH.name||'program').toLowerCase().replace(/[^a-z0-9]+/g,'-'))+'.csv';
+  a.href=url;a.download='lockin-'+DASH.sheet+'-'+((DASH.name||'program').toLowerCase().replace(/[^a-z0-9]+/g,'-'))+'.csv';
   document.body.appendChild(a);a.click();document.body.removeChild(a);
-  if(_xb){_xb.textContent='✓ EXPORTED ('+rows.length+' students)';setTimeout(function(){if(_xb)_xb.textContent='⭳ EXPORT CSV';},2200);} // v1.2 (LOW) the click is acknowledged
+  if(_xb){_xb.textContent='✓ EXPORTED ('+base.length+')';setTimeout(function(){if(_xb)_xb.textContent='⭳ EXPORT CSV';},2200);}
   setTimeout(function(){URL.revokeObjectURL(url);},1500);
 }
 function dSignOut(){
-  DASH.session=null;DASH.rows=[];DASH.name='';
+  DASH.session=null;DASH.rows=[];DASH.guests=[];DASH.name='';
   try{localStorage.removeItem('lockinDashAuth');var _e=document.getElementById('li-email');if(_e)_e.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
   document.getElementById('dash').style.display='none';
   document.getElementById('login').style.display='block';
   var who=document.getElementById('who');if(who)who.style.display='none';
   dMsg('Signed out.','good');
 }
-// v1.1 (HIGH #3) · GoTrue tokens live ~1h; restoring a stale one made every fetch 401 and the page rendered
-// "No students have opted in yet" · an apparently WIPED roster. Expired now means expired, said out loud.
+/* GoTrue tokens live ~1h; a stale one made every fetch 401 and the page rendered an
+   apparently WIPED roster. Expired means expired, said out loud. */
 function dJwtFresh(tok){try{var p=JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));return (p.exp||0)*1000>Date.now()+30000;}catch(e){return true;}}
 function dExpired(){
   try{localStorage.removeItem('lockinDashAuth');var _e=document.getElementById('li-email');if(_e)_e.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
@@ -374,7 +584,10 @@ function dExpired(){
   var m=document.getElementById('login-msg');if(m){m.textContent='Session expired · sign in again.';m.className='err';}
 }
 function dBoot(){
-  try{var r=localStorage.getItem('lockinDashAuth');if(r){DASH.session=JSON.parse(r);if(DASH.session&&DASH.session.access_token){if(!dJwtFresh(DASH.session.access_token)){dExpired();return;}dEnter();return;}}}catch(e){console.error('dBoot:',e);}
+  try{var r=localStorage.getItem('lockinDashAuth');if(r){DASH.session=JSON.parse(r);
+    if(DASH.session&&DASH.session.access_token){
+      if(!dJwtFresh(DASH.session.access_token)){dExpired();return;}
+      dEnter();return;}}}catch(e){console.error('dBoot:',e);}
 }
 dBoot();
 </script>
