@@ -27,7 +27,7 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.195
+   LOCK IN v3.5.196
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -46,7 +46,7 @@ small,sub,sup{font-size:11px;}
      themes and a token would invert the moment the dark toggle is on. The tab is now the only
      thing carrying mode identity, which is exactly why it had to actually be visible.
      THE SCROLLBAR THAT SCROLLED NOTHING: "the boxes also make the scroll bar that moves zero
-     pixels. lol." overflow-y:auto by itself let a 6px left border and a drop shadow sit one
+     pixels. lol." overflow-y:auto by itself allowed a 6px left border and a drop shadow one
      pixel past the box, which produced a horizontal scrollbar across the bottom of the board
      with nowhere to go. overflow-x:hidden. Verified scrollWidth === clientWidth.
 
@@ -2753,7 +2753,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.195 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.196 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2865,7 +2865,7 @@ body[data-cb="trit"]{
   </div>
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.195 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.196 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3026,7 +3026,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.195 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.196 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3512,7 +3512,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.195
+// LOCK IN v3.5.196
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3980,7 +3980,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.195'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.196'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -6146,7 +6146,12 @@ var _throwPending=false,_throwWinTO=null;
 function _openThrowWindow(pen){
   _throwPending=true;
   if(_throwWinTO)clearTimeout(_throwWinTO);
-  showBanner('\ud83d\udc77 MANAGER: HEY ,'+((pen>0)?(' (\u2212'+pen+' cubes)'):'')+'<br><span style="font-size:.72em">you flagged a coworker for a hand. DRINK WATER in the next 2s to play it off as a quick breather.</span>','warn',2200);
+  // v3.5.196 THE SECOND HALF OF THE WATER PROMOTION. v3.5.194 silenced the line that announced a
+  // drink had cleared a warning, but THIS one still taught the escape hatch outright: "DRINK WATER
+  // in the next 2s to play it off". Same instruction, louder, and it fires every single flag.
+  // The manager still calls out the flag, because that part is real. The coaching on how to dodge
+  // it is gone. A veteran finds the window by noticing it, which is the whole point.
+  showBanner('\ud83d\udc77 MANAGER: HEY ,'+((pen>0)?(' (\u2212'+pen+' cubes)'):'')+'<br><span style="font-size:.72em">you flagged a coworker for a hand.</span>','warn',2200);
   _throwWinTO=setTimeout(function(){
     _throwWinTO=null;
     if(!_throwPending||gOver)return;
@@ -10908,7 +10913,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.195</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.196</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
