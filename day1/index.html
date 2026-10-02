@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day One · How to Load a Trailer Wall | LOCK IN</title>
+<meta name="description" content="The rules of building a freight wall, in order, with pictures: support, the shelf, fragile, hazmat, the six ways a load collapses, and the pace standard. The first-day briefing for LOCK IN.">
+<link rel="canonical" href="https://www.trailer-load.com/day1/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="LOCK IN">
+<meta property="og:title" content="Day One · How to Load a Trailer Wall">
+<meta property="og:description" content="Support, the shelf, fragile, hazmat, the six ways a load collapses, and the pace standard. Every rule, in order, with pictures.">
+<meta property="og:url" content="https://www.trailer-load.com/day1/">
+<meta property="og:image" content="https://www.trailer-load.com/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day One · How to Load a Trailer Wall">
+<meta name="twitter:description" content="Every rule of building a freight wall, in order, with pictures.">
+<meta name="twitter:image" content="https://www.trailer-load.com/logo.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23140d08'/%3E%3Crect x='16' y='16' width='32' height='32' rx='3' fill='%23c8791e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#c8791e">
+<!-- NO AD TECH ON TRAILER-LOAD.COM, EVER (2026-07-20). Student-privacy laws + district vetting. Do not re-add. -->
+<link rel="stylesheet" href="/fonts/fonts.css">
+<style>
+/* DAY ONE. The first-day briefing, built to be read on a projector and printed
+   on paper. Light ground because this is a document, not a game screen.
+   CONTRAST computed against --bg #ece5d8 (L=0.7883), never eyeballed:
+     --t1 #2a2018 14.6:1 · --t2 #544738 7.18:1 · --acc-ink #7d4a0e 5.90:1
+     --danger-ink #96270d 6.05:1 · --ok-ink #136b39 5.26:1
+   --t3 #8a7c66 is 3.25:1 and FAILS AA for body text. Not used anywhere here. */
+small,sub,sup{font-size:11px;}
+:root{--bg:#ece5d8;--bg2:#e3dac9;--bg3:#d9cfbb;--ink:#211a12;--t1:#2a2018;--t2:#544738;
+      --acc:#c8791e;--acc-ink:#7d4a0e;--acc-wash:#f6e9d3;--teal:#0a6a5e;
+      --danger-ink:#96270d;--danger-wash:#fae3dc;--ok-ink:#136b39;--ok-wash:#dff0e4;
+      --border:#cdbfa6;--border2:#bcaa8b;}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--bg);color:var(--t1);font-family:'Barlow Condensed',sans-serif;
+     font-size:19px;line-height:1.52;-webkit-font-smoothing:antialiased;}
+a{color:var(--teal);}
+.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;
+     padding:10px 22px;background:rgba(236,229,216,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--ink);text-decoration:none;}
+.bar nav a{font-family:'Share Tech Mono',monospace;font-size:12px;text-decoration:none;margin-left:16px;color:var(--t2);}
+.bar nav a:hover{color:var(--acc-ink);}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px;}
+
+.head{padding:46px 0 26px;border-bottom:3px solid var(--acc);}
+.kicker{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:3px;color:var(--acc-ink);}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(50px,8vw,86px);line-height:.92;letter-spacing:1px;margin:10px 0 12px;color:var(--ink);}
+.standfirst{font-size:22px;color:var(--t2);max-width:660px;margin:0;}
+
+.toc{margin:26px 0 0;padding:16px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;}
+.toc b{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--acc-ink);display:block;margin-bottom:8px;}
+.toc a{display:inline-block;margin:0 14px 6px 0;font-family:'Share Tech Mono',monospace;font-size:13px;}
+
+.strip{padding:40px 0 10px;border-top:1px solid var(--border);}
+.strip:first-of-type{border-top:none;}
+.num{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--acc-ink);}
+h2{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:1px;margin:4px 0 4px;color:var(--ink);}
+.rule-line{font-size:23px;color:var(--ink);font-weight:600;margin:0 0 16px;max-width:680px;}
+p{max-width:680px;}
+h3{font-family:'Bebas Neue',sans-serif;font-size:25px;letter-spacing:1px;margin:24px 0 6px;color:var(--ink);}
+ul{max-width:680px;padding-left:20px;}
+li{margin-bottom:7px;}
+
+figure{margin:22px 0;}
+figure img{width:100%;display:block;border:1px solid var(--border2);border-radius:8px;background:var(--bg3);}
+figcaption{font-family:'Share Tech Mono',monospace;font-size:12.5px;color:var(--t2);margin-top:7px;letter-spacing:.3px;}
+figcaption b{color:var(--acc-ink);}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.pair figure{margin:22px 0 0;}
+
+.callout{border-left:5px solid var(--acc);background:var(--acc-wash);padding:14px 18px;border-radius:0 8px 8px 0;margin:20px 0;max-width:700px;}
+.callout.bad{border-left-color:var(--danger-ink);background:var(--danger-wash);}
+.callout.good{border-left-color:var(--ok-ink);background:var(--ok-wash);}
+.callout .lbl{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;display:block;margin-bottom:5px;color:var(--acc-ink);}
+.callout.bad .lbl{color:var(--danger-ink);}
+.callout.good .lbl{color:var(--ok-ink);}
+.callout p{margin:0;max-width:none;}
+
+table{border-collapse:collapse;width:100%;max-width:700px;margin:16px 0;font-size:17px;}
+th,td{text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);}
+th{font-family:'Share Tech Mono',monospace;font-size:11.5px;letter-spacing:1.5px;color:var(--acc-ink);
+   text-transform:uppercase;background:var(--bg2);}
+td.n{font-family:'Share Tech Mono',monospace;}
+
+.banner-quote{font-family:'Share Tech Mono',monospace;font-size:14px;background:var(--ink);color:#f2e9d8;
+  padding:10px 14px;border-radius:6px;display:inline-block;margin:6px 0;max-width:680px;}
+
+footer{border-top:3px solid var(--acc);margin-top:40px;padding:26px 0 46px;
+  font-family:'Share Tech Mono',monospace;font-size:12.5px;color:var(--t2);}
+footer a{color:var(--teal);}
+.disclaim{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:22px 0 0;font-size:16px;color:var(--t2);max-width:700px;}
+
+@media(max-width:700px){.pair{grid-template-columns:1fr;}h2{font-size:32px;}.rule-line{font-size:20px;}}
+@media print{
+  .bar,.toc{display:none;}
+  body{background:#fff;font-size:12pt;}
+  .strip{page-break-inside:avoid;border-top:1px solid #bbb;}
+  figure img{border:1px solid #999;}
+  a{color:#000;text-decoration:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a class="logo" href="/">LOCK IN</a>
+  <nav><a href="/">Home</a><a href="/daily/">★ Daily</a><a href="/lock-in.html">Play</a><a href="/programs/">Programs</a><a href="/for-districts/">Documentation</a></nav>
+</div>
+
+<div class="wrap">
+
+<div class="head">
+  <div class="kicker">DAY ONE · THE BRIEFING</div>
+  <h1>HOW TO BUILD<br>A FREIGHT WALL.</h1>
+  <p class="standfirst">Every rule the game enforces, in the order you meet them. This is what a loader learns in their first week on a dock, written down, which is not something that normally happens.</p>
+  <div class="toc">
+    <b>ON THIS PAGE</b>
+    <a href="#bay">1 The bay</a><a href="#sources">2 Where freight comes from</a><a href="#support">3 Support</a><a href="#shelf">4 The shelf</a><a href="#fragile">5 Fragile</a><a href="#hazmat">6 Hazmat</a><a href="#collapse">7 The six collapses</a><a href="#veteran">8 The veteran moves</a><a href="#pace">9 Pace</a><a href="#record">10 The record</a>
+  </div>
+</div>
+
+<!-- ─────────── 1 ─────────── -->
+<section class="strip" id="bay">
+  <div class="num">STRIP 01</div>
+  <h2>The bay</h2>
+  <p class="rule-line">Seventeen cells wide, twenty tall. Row zero is the ceiling.</p>
+  <p>Three hundred and forty cells. You are filling a wall from the floor up, and the wall seals once it reaches the top. Everything below is measured from the ceiling down, so when a rule says a piece must ride <em>low</em>, it means a high row number.</p>
+  <figure>
+    <img src="img/01-empty-bay.png" alt="The empty trailer bay before any freight is placed, seventeen cells wide and twenty tall.">
+    <figcaption><b>The bay, empty.</b> Every rule on this page is read against this frame.</figcaption>
+  </figure>
+  <figure>
+    <img src="img/02-sealed-wall.png" alt="A completed freight wall filling the trailer from floor to ceiling.">
+    <figcaption><b>A sealed wall.</b> Floor to ceiling, no voids, courses staggered. This is the target.</figcaption>
+  </figure>
+</section>
+
+<!-- ─────────── 2 ─────────── -->
+<section class="strip" id="sources">
+  <div class="num">STRIP 02</div>
+  <h2>Where freight comes from</h2>
+  <p class="rule-line">Three sources, and they do not behave the same.</p>
+  <figure>
+    <img src="img/03-full-hud.png" alt="The full game screen showing the belt, the non-conveyable tray, the bag tray and the readouts.">
+    <figcaption><b>The whole floor.</b> Belt along the chute, non-conveyables and bags in staging, your pace and score on the readout.</figcaption>
+  </figure>
+  <table>
+    <tr><th>Source</th><th>Holds</th><th>What it is</th></tr>
+    <tr><td><b>The belt</b></td><td class="n">10 visible</td><td>What the hub sends you. The front piece is free to take.</td></tr>
+    <tr><td><b>NC tray</b></td><td class="n">8 slots</td><td>Non-conveyables. Appliances, furniture, tires, hazmat. The only pieces that earn placement bonuses.</td></tr>
+    <tr><td><b>Bag tray</b></td><td class="n">8 slots</td><td>Bags of smalls. The scarce gap filler.</td></tr>
+  </table>
+  <div class="callout bad">
+    <span class="lbl">THIS ENDS YOUR RUN</span>
+    <p>Either tray filling all eight slots kills you. A new piece arrives with nowhere to spawn and the run is over. You get a warning at 85%. Three or four non-conveyables in play at once is comfortable. Hoarding them is not.</p>
+  </div>
+  <h3>Taking from the back costs you</h3>
+  <p>Reaching past the front of the belt to grab something you like better is charged per piece you reach through. Cherry-picking is a real habit on a real dock and it is a real drag on throughput.</p>
+  <figure>
+    <img src="img/05-reach-past.png" alt="The warning shown when a player takes a belt piece from behind the front of the queue.">
+    <figcaption><b>Reaching past the front.</b> Take the front piece whenever it fits.</figcaption>
+  </figure>
+</section>
+
+<!-- ─────────── 3 ─────────── -->
+<section class="strip" id="support">
+  <div class="num">STRIP 03</div>
+  <h2>Support</h2>
+  <p class="rule-line">A box goes down if three quarters of it has something underneath, or if it is wedged between neighbours on both sides.</p>
+  <p>That is the whole rule, and it has two halves. Most people find the first half immediately and never find the second.</p>
+  <div class="pair">
+    <figure>
+      <img src="img/06-refused.png" alt="A placement refused for having no support beneath it.">
+      <figcaption><b>Refused.</b> Nothing solid underneath. The placement is rejected before anything can break.</figcaption>
+    </figure>
+    <figure>
+      <img src="img/07-wedged.png" alt="A box held legally by neighbours on its left and right with little support beneath it.">
+      <figcaption><b>Wedged, and legal.</b> Keyed against stacks on both sides. This is how you fill a notch.</figcaption>
+    </figure>
+  </div>
+  <div class="callout">
+    <span class="lbl">WHY IT WORKS THIS WAY</span>
+    <p>A box braced hard on both sides is held by friction and pressure, not by what is under it. Loaders use this constantly to close a gap that nothing fits cleanly into. The game models it because the building does.</p>
+  </div>
+</section>
+
+<!-- ─────────── 4 ─────────── -->
+<section class="strip" id="shelf">
+  <div class="num">STRIP 04</div>
+  <h2>The shelf</h2>
+  <p class="rule-line">Fill all seventeen cells of a row and it locks. This is the whole game.</p>
+  <p>A locked shelf is not just points. It changes the physics of everything above it.</p>
+  <ul>
+    <li>It <b>heals the wall's integrity</b> on the spot.</li>
+    <li>It <b>sets a floor</b> the wall can no longer fall through.</li>
+    <li>It <b>protects everything above it</b> from being crushed, permanently.</li>
+    <li>It <b>reduces the penalty</b> carried by every piece sitting on top of it.</li>
+  </ul>
+  <table>
+    <tr><th>Shelves locked</th><th>Integrity cannot fall below</th></tr>
+    <tr><td class="n">1</td><td class="n">15</td></tr>
+    <tr><td class="n">2</td><td class="n">30</td></tr>
+    <tr><td class="n">3</td><td class="n">45</td></tr>
+    <tr><td class="n">4</td><td class="n">55</td></tr>
+    <tr><td class="n">5 or more</td><td class="n">65</td></tr>
+  </table>
+  <div class="pair">
+    <figure>
+      <img src="img/08-locked-flash.png" alt="The lock-in flash at the moment a full row completes.">
+      <figcaption><b>The lock.</b> Seventeen of seventeen.</figcaption>
+    </figure>
+    <figure>
+      <img src="img/10-bulkhead.png" alt="Two consecutive locked rows forming a bulkhead.">
+      <figcaption><b>A bulkhead.</b> Two locked rows back to back.</figcaption>
+    </figure>
+  </div>
+  <h3>Stagger your courses</h3>
+  <p>Seams stacked in a straight vertical column make a weak wall and are penalised. Offset them like bricklaying. Enough staggered seams earns a brick lock.</p>
+  <div class="pair">
+    <figure>
+      <img src="img/11-brick-lock.png" alt="The brick lock award for staggered courses.">
+      <figcaption><b>Staggered.</b> Courses offset like brickwork.</figcaption>
+    </figure>
+    <figure>
+      <img src="img/12-seam-warning.png" alt="The warning shown when vertical seams line up in a column.">
+      <figcaption><b>Stacked seams.</b> A straight column of edges is a fault line.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ─────────── 5 ─────────── -->
+<section class="strip" id="fragile">
+  <div class="num">STRIP 05</div>
+  <h2>Fragile</h2>
+  <p class="rule-line">You have been told fragile rides on top. That is incomplete, and it is why people lose fragiles on row three.</p>
+  <p>Here is what actually happens. <b>Only the heaviest class of freight can crush anything at all.</b> A mid-weight crate landing on a fragile does nothing. And a fragile is safe, at any height, if any one of these is true:</p>
+  <ul>
+    <li><b>A full shelf is locked anywhere below it.</b> Lock one row and everything above it is protected for the rest of the wall.</li>
+    <li><b>Its own row is a complete shelf.</b></li>
+    <li><b>It has a real box on its left and a real box on its right.</b></li>
+  </ul>
+  <div class="callout bad">
+    <span class="lbl">THE TRAP</span>
+    <p>The trailer wall is not a box. A fragile pressed against the left or right wall can never earn side protection, because there is nothing on one side to brace it. <b>The corners are the dangerous place, not the safe one.</b></p>
+  </div>
+  <div class="pair">
+    <figure>
+      <img src="img/14-crunch.png" alt="A fragile box being crushed by heavy freight placed on top of it.">
+      <figcaption><b>Crushed.</b> Unprotected, nothing either side, no shelf locked below.</figcaption>
+    </figure>
+    <figure>
+      <img src="img/15-fragile-safe.png" alt="The same fragile box surviving heavy freight because it is boxed in on both sides.">
+      <figcaption><b>Same box. Same weight on top. Survives.</b> Boxed in left and right.</figcaption>
+    </figure>
+  </div>
+  <div class="callout good">
+    <span class="lbl">WHAT TO DO INSTEAD</span>
+    <p>You do not need height. You need a closed course. Build fragiles into the middle of a row, put something flush on each side, and finish the row. A bag of smalls counts as crushable too, so the same rule protects your customers' packages.</p>
+  </div>
+</section>
+
+<!-- ─────────── 6 ─────────── -->
+<section class="strip" id="hazmat">
+  <div class="num">STRIP 06</div>
+  <h2>Hazmat</h2>
+  <p class="rule-line">Dangerous goods load low, stay apart, and get capped. Three rules, three consequences.</p>
+  <table>
+    <tr><th>Rule</th><th>What it means</th></tr>
+    <tr><td><b>Height</b></td><td>Below the waist line, which is the bottom half of the bay. Any part above it is a violation.</td></tr>
+    <tr><td><b>Segregation</b></td><td>Two different hazard classes need two clear cells between them.</td></tr>
+    <tr><td><b>Killer pairs</b></td><td>Some class combinations cannot be near each other at all.</td></tr>
+  </table>
+  <p>Height and segregation both cut your score hard, and both are checked live. <b>Move the piece and the score comes back.</b> That is deliberate: the point is to teach the correction, not to punish one misclick.</p>
+  <div class="pair">
+    <figure>
+      <img src="img/16-hazmat-low.png" alt="A hazmat piece correctly seated in the lower half of the trailer.">
+      <figcaption><b>Seated low.</b> Below the waist line, where it belongs.</figcaption>
+    </figure>
+    <figure>
+      <img src="img/17-hazmat-high.png" alt="The violation shown when hazmat is placed above the waist line.">
+      <figcaption><b>Too high.</b> The rule is drawn from 49 CFR, not invented for the game.</figcaption>
+    </figure>
+  </div>
+  <figure>
+    <img src="img/19-hazmat-shelf.png" alt="The hazmat shelf award for locking a full row above correctly seated dangerous goods.">
+    <figcaption><b>The veteran move.</b> Hazmat low, then a full shelf locked over the top of it. Loaded low, capped, secured.</figcaption>
+  </figure>
+  <div class="callout bad">
+    <span class="lbl">NO SECOND CHANCE ON THIS ONE</span>
+    <p>Crushing a hazmat is written up the first time it happens. Every other mistake in the game needs a pattern before it reaches paper. This one does not, because it is a hurt-somebody event.</p>
+  </div>
+</section>
+
+<!-- ─────────── 7 ─────────── -->
+<section class="strip" id="collapse">
+  <div class="num">STRIP 07</div>
+  <h2>The six ways it comes down</h2>
+  <p class="rule-line">Every collapse in the game is one of these six. Learn to recognise them and you stop having them.</p>
+  <h3>1 · No support</h3>
+  <p>Refused outright. Nothing breaks, you just lose the moment. This is the cheap one.</p>
+  <h3>2 · A tire on its edge</h3>
+  <p>A tire standing on edge rolls. Anything placed one row above it topples. Lay tires flat, every time.</p>
+  <figure>
+    <img src="img/20-collapse-tire.png" alt="A load toppling because it was stacked above a tire standing on its edge.">
+    <figcaption><b>Tire on edge.</b> It rolls the second the door cracks.</figcaption>
+  </figure>
+  <h3>3 · Heavy with no base</h3>
+  <p>Heavy freight needs something solid under <em>every</em> cell, not three quarters. It comes down, and it takes whatever it was crushing with it.</p>
+  <h3>4 · Column integrity</h3>
+  <p>A narrow pillar only carries so much above it. Go past the limit and the column snaps.</p>
+  <h3>5 · The staircase</h3>
+  <p>An overhang stacked on another overhang. Two hangs in a row and the packages come down. Build a full base or flag for a piece that lines up.</p>
+  <figure>
+    <img src="img/23-collapse-staircase.png" alt="Two overhanging boxes stacked into a staircase, collapsing.">
+    <figcaption><b>A staircase, not a wall.</b></figcaption>
+  </figure>
+  <h3>6 · The freestanding stack</h3>
+  <p>Same width, three high, nothing bracing it: it goes over. Any stack five high goes over regardless. A strict taper, each layer narrower than the one below, is the exception.</p>
+  <div class="pair">
+    <figure>
+      <img src="img/25-two-high-warning.png" alt="The warning shown at two boxes high with no support.">
+      <figcaption><b>The warning comes first.</b> Taper it or lock the shelf before one more.</figcaption>
+    </figure>
+    <figure>
+      <img src="img/24-collapse-stack.png" alt="A freestanding stack of equal-width boxes toppling.">
+      <figcaption><b>Ignored.</b> Three high, same width, over it goes.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ─────────── 8 ─────────── -->
+<section class="strip" id="veteran">
+  <div class="num">STRIP 08</div>
+  <h2>The veteran moves</h2>
+  <p class="rule-line">The things nobody writes down, which is the reason this page exists.</p>
+  <h3>Nest smalls in a tire</h3>
+  <p>A tire laid flat has a hollow in the middle. That hollow is dead air the belt can never fill. Drop a bag of smalls into it.</p>
+  <figure>
+    <img src="img/27-nest.png" alt="A bag of smalls nested into the hollow of a flat-laid tire.">
+    <figcaption><b>The nest.</b> Dead space turned into packed freight.</figcaption>
+  </figure>
+  <h3>Pack the roof</h3>
+  <p>The gap between the top of your wall and the trailer ceiling is wasted cube. Bags of smalls go up there. Five of them make a full ceiling course.</p>
+  <figure>
+    <img src="img/29-ceiling-course.png" alt="Five bags of smalls packed against the trailer ceiling forming a full course.">
+    <figcaption><b>A full ceiling course.</b> Five bags, fifteen of seventeen cells, reclaimed.</figcaption>
+  </figure>
+  <h3>Anchor your non-conveyables</h3>
+  <p>Appliances, furniture and tires do not stack like boxes, so put them where the trailer itself braces them. The first one you place anchors the whole load. One touching two edges at once is better still.</p>
+  <div class="pair">
+    <figure>
+      <img src="img/30-cornerstone.png" alt="The cornerstone award for the first non-conveyable placed on a fresh wall.">
+      <figcaption><b>Cornerstone.</b> The first spec piece sets the load.</figcaption>
+    </figure>
+    <figure>
+      <img src="img/31-corner-lock.png" alt="A non-conveyable anchored into a corner touching two edges.">
+      <figcaption><b>Corner lock.</b> Braced by the floor and the wall at once.</figcaption>
+    </figure>
+  </div>
+  <h3>Flagging for help</h3>
+  <p>You can wave a coworker over to take a piece you cannot use. The first few are free. After that it costs more each time, and it climbs fast. On a real dock the same thing is true, it just costs you differently.</p>
+</section>
+
+<!-- ─────────── 9 ─────────── -->
+<section class="strip" id="pace">
+  <div class="num">STRIP 09</div>
+  <h2>Pace</h2>
+  <p class="rule-line">Two hundred and fifty pieces an hour. That is the hub standard, and it counts freight only.</p>
+  <p>Smalls do not count toward your rate. Neither do bags. Stopping to break down a bag of smalls to chink your gaps is time you are not moving freight, and the clock keeps running while you do it.</p>
+  <div class="callout">
+    <span class="lbl">THIS IS NOT A GAME RULE</span>
+    <p>It works this way on the floor for the same reason. A supervisor counts pieces, and a bag of smalls is one piece whether you place it whole or spend four minutes distributing it.</p>
+  </div>
+  <figure>
+    <img src="img/32-pph-hud.png" alt="The pace readout showing pieces per hour during a wall.">
+    <figcaption><b>Your rate, live.</b> The clock starts on your first placement, not when the mode loads.</figcaption>
+  </figure>
+  <h3>Flow</h3>
+  <p>Clean placements in a row build a streak that pays more the longer it runs. A crush or a collapse resets it to nothing. Steady beats frantic.</p>
+</section>
+
+<!-- ─────────── 10 ─────────── -->
+<section class="strip" id="record">
+  <div class="num">STRIP 10</div>
+  <h2>The record</h2>
+  <p class="rule-line">The game separates a mistake from a pattern, because a workplace does.</p>
+  <ul>
+    <li><b>One broken box is a mistake.</b> It costs you, it breaks your streak, and that is the end of it. It is not a safety event.</li>
+    <li><b>A third broken box starts the ladder.</b> Eyes go on you when the trailer keeps having damage, not when it has some.</li>
+    <li><b>A warning needs a repeat to become an incident.</b> Paper lands on a pattern.</li>
+    <li><b>You can wash a warning</b> by locking a shelf, drinking, or flagging for help. The record still shows it was washed.</li>
+  </ul>
+  <figure>
+    <img src="img/34-write-up.png" alt="The safety write-up form issued after a repeated unmitigated infraction.">
+    <figcaption><b>A write-up.</b> Five incidents puts you on a practice trailer. Four write-ups and you are sent home.</figcaption>
+  </figure>
+  <h3>Dispatch</h3>
+  <p>Once the wall is nearly full, the truck is waiting. Seal it inside the window and you are paid for it. Miss it and the trailer leaves without a full wall.</p>
+  <figure>
+    <img src="img/35-dispatch.png" alt="The dispatch countdown bar running while the wall is finished.">
+    <figcaption><b>Dispatch.</b> Sixty seconds. There is a real truck on the other side of this.</figcaption>
+  </figure>
+  <h3>The certificate</h3>
+  <p>The hardest thing in the game, and it is deliberately hard. It needs a wall to the ceiling, packed tight, at full integrity, with <b>zero</b> collapses and <b>zero</b> incidents. Not a good wall. A perfect shift.</p>
+  <figure>
+    <img src="img/37-certificate.png" alt="The LOCK IN certificate awarded for a flawless wall.">
+    <figcaption><b>The certificate.</b> Measured across two hundred and three recorded walls, one has ever earned it.</figcaption>
+  </figure>
+</section>
+
+<div class="disclaim">
+  <b>Training supplement only.</b> LOCK IN builds intuition and tracks readiness. It does not replace employer safety training, OSHA training, or any certification requirement. See the <a href="/terms.html">Terms</a>.
+</div>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <a href="/">trailer-load.com</a> &nbsp;·&nbsp;
+    <a href="/lock-in.html">Play</a> &nbsp;·&nbsp;
+    <a href="/daily/">Today's wall</a> &nbsp;·&nbsp;
+    <a href="/programs/">For schools and employers</a> &nbsp;·&nbsp;
+    <a href="/for-districts/">Documentation</a> &nbsp;·&nbsp;
+    <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp;
+    <a href="/terms.html">Terms</a><br><br>
+    LOCK IN &nbsp;·&nbsp; a project of <a href="https://www.f-keys.com/">F-Keys Creative LLC</a> &nbsp;·&nbsp; © 2026
+  </div>
+</footer>
+
+<script>
+/* Any screenshot not shot yet gets a labelled slot instead of a broken-image icon,
+   so the layout reads correctly while the shot list is still being worked through.
+   Pure authoring aid: once every file exists this never fires. */
+(function(){
+  function slot(img){
+    if(!img.parentNode)return;
+    var f=img.getAttribute('src').split('/').pop();
+    var d=document.createElement('div');
+    d.setAttribute('style','display:flex;align-items:center;justify-content:center;text-align:center;'+
+      'aspect-ratio:16/9;border:2px dashed #bcaa8b;border-radius:8px;background:#e3dac9;'+
+      'font-family:\'Share Tech Mono\',monospace;font-size:13px;color:#7d4a0e;padding:16px;letter-spacing:1px;');
+    d.textContent='AWAITING SHOT  ·  img/'+f;
+    img.parentNode.replaceChild(d,img);
+  }
+  var imgs=document.querySelectorAll('figure img'),i,im;
+  for(i=0;i<imgs.length;i++){
+    im=imgs[i];
+    // An image that already 404'd before this script ran never fires `error` again,
+    // so the listener alone left the first slots showing a broken-image icon.
+    // complete && naturalWidth===0 is the "already failed" signal.
+    if(im.complete&&im.naturalWidth===0){slot(im);continue;}
+    im.addEventListener('error',function(){slot(this);});
+  }
+})();
+</script>
+</body>
+</html>
