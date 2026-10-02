@@ -1,310 +1,319 @@
-# DAY 1 — THE SHOT LIST
+# DAY 1 · THE SHOT LIST
 
-Screenshots for `/day1/`, the page a class gets on the first day.
+Screenshots for `/day1/`.
 
-Every trigger below was read out of `lock-in.html`. Where a banner is quoted, that
-is the literal string the game prints, so you know you got the right moment.
+**Rewritten 2026-10-02.** The first version described states that cannot exist.
+Every recipe below was checked against the actual condition in `lock-in.html`,
+and where a shot genuinely cannot be staged on demand it now says so instead of
+pretending.
+
+Filenames are unchanged, so anything already shot still counts.
 
 ---
 
 ## BEFORE YOU START
 
-**Mode: TRAILER-LOAD**, with two exceptions noted below.
+**Mode: TRAILER-LOAD**, with two exceptions marked below. Practice and Gauntlet
+are retired from the menu, so shooting in them would document a mode nobody can
+reach.
 
-Practice and Gauntlet are being retired from the menu, so shooting in them would
-document a mode nobody can reach. Trailer-Load has everything, runs endless walls,
-and its HUD is identical to the daily's. The dispatch clock only fires at 85%, and
-almost every shot here is set up well before that.
-
-**Shoot `03-full-hud.png` in DAILY, not Trailer-Load.** That is the one frame where
-the staging tray contents are visible, and the daily's tray is what a new player
-actually sees: two tires and one hazmat, nothing else all wall.
-
-**Shoot `35-dispatch.png` in DAILY or TRAILER-LOAD.** Either works.
-
-**The bag tray is not part of this page.** In the daily it never fills. Bags ride
-the belt. Any shot showing an empty bag tray is fine and accurate.
-
-**Window:** pick one size and never change it. 1600 x 1000 at 100% zoom is good.
-Every strip on the page sits in the same frame, and mismatched crops are the thing
-that makes a page look amateur.
+**Window:** pick one size and never change it. 1600 x 1000 at 100% zoom. Every
+strip sits in the same frame; mismatched crops are what makes a page look
+amateur.
 
 **Save to:** `C:\Users\Admin\OneDrive\Desktop\trailer-load\day1\img\`
 
-**Filenames matter.** Use exactly the names below. I am building the page against
-them, so a correctly named file drops in and works with no further work.
+**Use these exact filenames.** The page is built against them. A correctly named
+file drops in and works.
 
-**Banners auto-dismiss.** Most sit for 1.8 to 3.4 seconds. Have the capture tool
-armed before you make the placement.
+**Banners sit for 2 to 3 seconds.** Have the capture tool armed before you place.
 
----
-
-# STRIP 1 — THE BAY
-
-### `01-empty-bay.png`
-**What:** the trailer before a single piece is placed.
-**How:** start a wall, screenshot before placing anything.
-**Why:** establishes 17 wide, 20 tall, and that row 0 is the ceiling. Every later
-shot is read against this one.
-**Crop:** the full trailer, nothing else.
-
-### `02-sealed-wall.png`
-**What:** a finished wall, floor to ceiling.
-**How:** play one out. Any good wall.
-**Why:** this is the "what good looks like" image and it belongs near the top.
-**Crop:** full trailer.
+**Two kinds of shot below:**
+`STAGE` means you can build the situation on purpose, steps given.
+`CATCH` means it happens on its own and you grab it when it does.
 
 ---
 
-# STRIP 2 — WHERE FREIGHT COMES FROM
+# STRIP 1 · THE BAY
 
-### `03-full-hud.png`
-**What:** the whole screen with the belt loaded and both trays holding pieces.
-**How:** in DAILY, screenshot once the belt is full and the three staged pieces
-are visible.
-**Why:** the one orientation image. Belt, staging tray, score and pace in one
-frame. **Shoot this one in DAILY** so the three staged pieces are the real ones.
-**Crop:** the entire game viewport.
+### `01-empty-bay.png` · STAGE
+Start a wall, screenshot before placing anything.
+The full trailer, nothing else in frame.
 
-### `04-belt-closeup.png`
-**What:** just the chute with its ten visible pieces.
-**Crop:** tight on the belt strip only.
-
-### `05-reach-past.png`
-**What:** the cherry-picking warning.
-**Trigger:** select a belt piece that is **not** the front one and place it.
-**Banner:** `REACHED PAST THE NEXT PIECE — cherry-picking costs efficiency. Take the front when it fits.`
-**Note:** fires **once per wall**, on the first time you do it. If you miss it,
-restart.
+### `02-sealed-wall.png` · CATCH
+A wall you actually finished, floor to ceiling. Any good one.
 
 ---
 
-# STRIP 3 — SUPPORT, THE ONE RULE
+# STRIP 2 · WHERE FREIGHT COMES FROM
 
-### `06-refused.png`
-**What:** an illegal placement being rejected.
-**Trigger:** try to place a piece floating with nothing under it.
-**Banner:** `✕ NO SUPPORT THERE — every box needs something solid under it.`
-**Look for:** red shards burst at the cursor.
-**Note:** the banner is rate-limited to once per 2.5 seconds, so pause between
-attempts.
+### `03-full-hud.png` · STAGE · **SHOOT THIS IN DAILY**
+The whole screen once the belt is full and the three staged pieces are visible.
+Daily, so the tray shows the real two tires and one hazmat.
 
-### `07-wedged.png`
-**What:** a piece legally held with nothing beneath it, braced left and right.
-**How:** build two stacks with a gap between them, then drop a piece into the gap
-so it keys against both sides.
-**Why:** this is the rule nobody discovers alone, and a picture teaches it in a
-second.
+### `04-belt-closeup.png` · STAGE
+Tight crop on the chute alone, ten pieces visible.
+
+### `05-reach-past.png` · STAGE
+Select a belt piece that is **not** the front one, and place it.
+> REACHED PAST THE NEXT PIECE
+
+Fires **once per wall**, the first time only. Miss it and restart.
 
 ---
 
-# STRIP 4 — THE SHELF
+# STRIP 3 · SUPPORT
 
-### `08-locked-flash.png`
-**What:** the LOCKED IN flash the instant a full row completes.
-**Trigger:** fill all 17 cells of any row.
-**Note:** the flash is brief. Arm the capture first.
+### `06-refused.png` · STAGE
+Try to place a piece out in open space with nothing under it and nothing beside
+it. Red shards, no damage.
+> NO SUPPORT THERE
 
-### `09-locked-row.png`
-**What:** the wall a moment later, with the locked row visibly sealed.
-**Crop:** full trailer so the locked row reads against the rest.
+Rate-limited to once every 2.5 seconds, so pause between attempts.
 
-### `10-bulkhead.png`
-**What:** two consecutive locked rows.
-**Trigger:** lock a row directly above or below one already locked.
+### `07-wedged.png` · STAGE
 
-### `11-brick-lock.png`
-**What:** the staggered-courses award.
-**Trigger:** build with offset seams like bricklaying until 4 or more staggers
-register.
-**Banner:** `BRICK LOCK! 🏗`
-**Once per wall.**
+**This is the one I described wrong. Here is the actual rule.**
 
-### `12-seam-warning.png`
-**What:** the opposite, for contrast.
-**Trigger:** stack two pieces so their vertical edges line up in a column.
-**Banner:** `⚠ STACKED SEAMS LINE UP — stagger your courses like bricklaying, or it's a weak wall.`
-**Once per wall.**
+A placement is legal if **three quarters of its bottom columns** have something
+underneath. If it has less than that, it is **still legal** when all three of
+these are true at once:
 
----
+- some part of it is touching a piece on its **left**
+- some part of it is touching a piece on its **right**
+- **at least one** of its bottom columns is resting on something
 
-# STRIP 5 — FRAGILE
+So it is not "supported by nothing." It is **mostly** unsupported, bridging a
+gap, with one foot down and both shoulders braced.
 
-This is the most important strip on the page. Three shots, and they have to be
-in this order.
+**Build it on a fresh wall, four placements:**
 
-### `13-fragile-tape.png`
-**What:** a FRAGILE box sitting in the chute, tape clearly readable.
-**Crop:** tight. Close enough to read the tag.
+1. Stand a **tall narrow box against the left wall**, four or five cells tall.
+2. Stand **another tall box** five or six cells to its right, **the same
+   height**, so the two tops are level.
+3. Drop **one small piece on the floor** in the gap between them.
+4. Take a **long flat piece** off the belt (a BOARD, PLANK or RAIL-BOX, something
+   wide and one or two cells tall) and lay it **across the top of the gap**, so
+   its left end touches the left tower, its right end touches the right tower,
+   and it comes down on that one small piece in the middle.
 
-### `14-crunch.png`
-**What:** the moment one gets crushed.
-**Trigger:** place an **unprotected** fragile with nothing either side of it and
-**no locked shelf anywhere below**, then drop a **weight class 5** piece on it.
-Class 5 is the big stuff: OVR-LONG, OVR-TALL, OVR-WIDE, PALLET-L, DRUM-XL,
-CRATE-L, CRATE-T, BUNDLE, SKID, TIRE-STD.
-**Banner:** `💥 CRUNCH!` plus `FRAGILE goes on TOP — safety warning. Lock a shelf to protect it.`
-**Do it early in the wall, before you lock anything.** After your first locked
-shelf you cannot produce this shot at all.
-
-### `15-fragile-safe.png`
-**What:** a fragile boxed in on both sides, surviving a heavy piece on top.
-**How:** place a fragile, put a piece flush left of it and flush right of it, then
-drop a class 5 piece on it. Nothing happens.
-**Why:** this is the payoff image. It proves the real rule.
+Most of its underside is over open air. It goes down anyway, and that is the
+shot. If the towers are not the same height the ends will not both touch and it
+will be refused, which is the usual reason this fails.
 
 ---
 
-# STRIP 6 — HAZMAT
+# STRIP 4 · THE SHELF
 
-### `16-hazmat-low.png`
-**What:** a hazmat piece correctly seated in the bottom half.
-**How:** place any hazmat from the NC tray in rows 10 to 19.
+### `08-locked-flash.png` · STAGE
+Fill all seventeen cells of any row. The flash is brief, so arm first.
 
-### `17-hazmat-high.png`
-**What:** the violation.
-**Trigger:** place a hazmat so any part of it is above the waist line, rows 0 to 9.
-**Banner:** `☢ HAZMAT TOO HIGH! SCORE HALVED` plus `DANGEROUS GOODS LOAD LOW — BELOW WAIST (49 CFR). MOVE IT DOWN TO RESTORE.`
+### `09-locked-row.png` · STAGE
+The same wall a second later. Full trailer in frame.
 
-### `18-segregation.png`
-**What:** two hazard classes too close together.
-**Trigger:** place two hazmats of **different** classes with fewer than 2 clear
-cells between them.
-**Banner:** `☢ SEGREGATION BREACH — different hazmat classes need 2 clear cells between them. SCORE HALVED`
-**Once per wall.**
+### `10-bulkhead.png` · STAGE
+Lock a row **directly above or below** one already locked.
 
-### `19-hazmat-shelf.png`
-**What:** the big one.
-**Trigger:** hazmat loaded low, then complete a full shelf above it.
-**Banner:** `☢ HAZMAT SHELF LOCKED` plus `LOADED LOW, CAPPED, SECURED — THE VET MOVE.`
+### `11-brick-lock.png` · STAGE
+Place **four boxes, each one shifted sideways from the box directly under it**,
+by one to three cells. Not stacked square, not shifted miles, offset like
+brickwork.
+> BRICK LOCK
 
----
+Once per wall.
 
-# STRIP 7 — THE SIX WAYS IT COMES DOWN
+### `12-seam-warning.png` · STAGE
+The opposite, and it needs **three**, not two.
 
-One shot each. Each banner is distinct, which is the point of the strip.
+Stack **three pieces of the same width directly on top of each other**, each one
+landing exactly on the one below, edges flush in a straight vertical column. Two
+will not trigger it.
+> STACKED SEAMS LINE UP
 
-### `20-collapse-tire.png`
-**Trigger:** stand a tire on its edge, then place anything one row above it.
-
-### `21-collapse-heavy.png`
-**Trigger:** place a class 4 or heavier non-tire piece without something solid
-under **every** cell.
-**Banner:** `HEAVY FREIGHT, NO FULL BASE — heavy needs something solid under EVERY cell.`
-
-### `22-collapse-column.png`
-**Trigger:** build a narrow 2-wide pillar, then put something too tall on top.
-**Banner:** starts `COLUMN INTEGRITY —`
-
-### `23-collapse-staircase.png`
-**Trigger:** place a piece overhanging its support, then another overhanging that.
-**Banner:** `OVERHANG ON AN OVERHANG — that's a staircase, not a wall.`
-
-### `24-collapse-stack.png`
-**Trigger:** stack three same-width pieces freestanding, no taper.
-
-### `25-two-high-warning.png`
-**What:** the warning that comes **before** the collapse.
-**Trigger:** stack exactly two same-width pieces with no support.
-**Banner:** `TWO HIGH, SAME WIDTH, NO SUPPORT — that's the limit. Taper it (narrower on top) or lock the shelf before one more.`
+Once per wall.
 
 ---
 
-# STRIP 8 — THE VETERAN MOVES
+# STRIP 5 · FRAGILE
 
-### `26-tire-flat.png`
-**What:** a tire laid flat with its hollow visible.
+The most important strip on the page.
 
-### `27-nest.png`
-**What:** a bag of smalls dropped into a flat tire.
-**Trigger:** lay a tire flat on the wall, then get a bag of smalls in hand off the
-belt. The hint fires the first time both are true:
-**Banner:** `🛞 VETERAN MOVE — drop a SMALLS BAG onto a flat tire. The smalls NEST in the hollow for bonus cubes.`
+### `13-fragile-tape.png` · CATCH
+A FRAGILE box in the chute, tape readable. Tight crop.
 
-### `28-roof-bag.png`
-**Trigger:** place a smalls bag with its top edge on row 0, against the ceiling.
-**Banner:** `🌟 BAG ON THE ROOF`
+### `14-crunch.png` · STAGE · **DO THIS BEFORE YOU LOCK ANYTHING**
 
-### `29-ceiling-course.png`
-**What:** five roof bags making a full ceiling course.
-**Banner on the fifth:** `ROOF BAG 5/5 — FULL CEILING COURSE!`
-**Worth the effort. This is a striking image.**
+1. Early in a fresh wall, place a **fragile** on the floor with **open space on
+   both sides of it**.
+2. Drop one of the **heaviest pieces** on top of it. Those are the oversize and
+   pallet class: OVR-LONG, OVR-TALL, OVR-WIDE, PALLET-L, DRUM-XL, CRATE-L,
+   CRATE-T, BUNDLE, SKID, and the standard TIRE.
 
-### `30-cornerstone.png`
-**Trigger:** the **first** non-conveyable you place on a fresh wall.
-**Banner:** `CORNERSTONE! 🧱`
+> CRUNCH
 
-### `31-corner-lock.png`
-**Trigger:** place a non-conveyable touching two edges at once, floor plus a side
-wall.
-**Banner:** `CORNER LOCK! 🔩`
+**Nothing lighter will do it, and once any shelf locks this becomes impossible
+for the rest of the wall.** First course or restart.
+
+### `15-fragile-safe.png` · STAGE
+Same setup, one change: before the heavy piece lands, put **a box flush against
+the fragile's left side and another flush against its right**. Then drop the same
+heavy piece.
+
+Nothing happens. That is the shot.
 
 ---
 
-# STRIP 9 — PACE
+# STRIP 6 · HAZMAT
 
-### `32-pph-hud.png`
-**What:** the pace readout mid-wall.
-**Crop:** tight on the score and pace area of the HUD.
-**Try to catch it above 250**, the hub standard, so the number on the page is a
-good one.
+### `16-hazmat-low.png` · STAGE
+Place the staged hazmat anywhere in the **bottom half** of the bay.
 
-### `33-flow-streak.png`
-**What:** the flow pip with a streak running.
-**Trigger:** several clean placements in a row with no crunch and no collapse.
+### `17-hazmat-high.png` · STAGE
+Place it so any part reaches into the **top half**.
+> HAZMAT TOO HIGH, SCORE HALVED
 
----
+### `18-segregation.png` · CATCH
+Needs **two different hazard classes** on the wall with fewer than two clear
+cells between them. The daily stages only one hazmat, so this one needs
+Trailer-Load and a bit of luck on what the tray hands you.
+> SEGREGATION BREACH
 
-# STRIP 10 — THE RECORD
+Once per wall.
 
-### `34-write-up.png`
-**What:** the SAFETY WRITE-UP clipboard overlay.
-**Trigger:** repeat an unmitigated safety offense. The fastest route is tires: stand
-one on edge, let the warning land, then stand another on edge.
-**Why:** this is the single most important image for an instructor. It is the
-artifact that makes the game look like a workplace instead of a toy.
-
-### `35-dispatch.png` — **TRAILER-LOAD**
-**What:** the 60 second dispatch bar counting down.
-**Trigger:** get a wall to 85% fill or 85% height. Does **not** fire in Practice.
-**Banner:** `DISPATCH IN 60s! ⚡`
-
-### `36-post-sort.png`
-**What:** the end-of-wall report with the full stat breakdown.
-**How:** seal a wall and screenshot the report.
-
-### `37-certificate.png`
-**What:** the certificate.
-**Conditions, all of them:** 100% wall height, 85% or better pack, 100 integrity,
-zero collapses, zero incidents.
-**This is the hardest shot on the list.** One wall in 203 has ever earned it. If
-you cannot get it, say so and the page runs without it rather than faking one.
-
-### `38-start-menu.png`
-**What:** the mode menu, all four pillars.
-**How:** screenshot the start screen.
-**Note:** hold this one until the clipboard background goes on the start menu,
-or it will be the one dated image on the page.
+### `19-hazmat-shelf.png` · STAGE
+Hazmat seated low, then complete a full row **above** it.
+> HAZMAT SHELF LOCKED
 
 ---
 
-## PRIORITY, IF YOU ONLY DO SOME
+# STRIP 7 · THE SIX COLLAPSES
 
-The page works with these nine and nothing else:
+### `20-collapse-tire.png` · STAGE
+Rotate a tire so it stands **on its edge**, place it, then place anything in the
+row directly above it.
+
+### `21-collapse-heavy.png` · STAGE
+Take a **big** piece (crate, pallet, drum, oversize) and place it so **even one
+of its bottom columns is over a gap**. It does not need to be mostly unsupported.
+One unsupported column is enough.
+> HEAVY FREIGHT, NO FULL BASE
+
+### `22-collapse-column.png` · STAGE
+1. Stand a **narrow tall box** on the floor, two cells wide or less and at least
+   four tall. TALL-L (2x5) or PIPE-W (2x6) are ideal.
+2. Stand **another narrow tall box on top of it**.
+
+> COLUMN INTEGRITY
+
+A pillar that thin will not carry that much above it.
+
+### `23-collapse-staircase.png` · STAGE
+1. Place a box so it **hangs over the edge** of what is under it.
+2. Place a second box **hanging over the edge of that one**, the same direction.
+
+Two hangs in a row and both come down. Wide flat slabs are exempt, so use normal
+boxes, not planks.
+> OVERHANG ON AN OVERHANG
+
+### `24-collapse-stack.png` · STAGE
+Stack **three pieces of the same width** directly on each other, freestanding,
+away from the walls and not touching another stack. No taper, three high, over it
+goes.
+
+### `25-two-high-warning.png` · STAGE
+The warning that comes first. Same as above but **stop at two**.
+> TWO HIGH, SAME WIDTH, NO SUPPORT
+
+---
+
+# STRIP 8 · THE VETERAN MOVES
+
+### `26-tire-flat.png` · STAGE
+A tire laid flat, hollow visible.
+
+### `27-nest.png` · STAGE
+Lay a tire flat, then take a **bag of smalls off the belt** and drop it into the
+hollow. The hint fires the first time a flat tire is on the wall and a bag is in
+hand.
+> VETERAN MOVE
+
+Bags are not common on the belt. Flagging a coworker puts one there.
+
+### `28-roof-bag.png` · STAGE
+Place a bag with its **top edge on row 0**, hard against the ceiling.
+> BAG ON THE ROOF
+
+### `29-ceiling-course.png` · CATCH
+Five roof bags in one wall. Striking image, genuinely hard, needs the belt to
+cooperate. Do not burn a session chasing it.
+> ROOF BAG 5/5, FULL CEILING COURSE
+
+### `30-cornerstone.png` · STAGE
+The **first** staged piece you place on a fresh wall.
+> CORNERSTONE
+
+### `31-corner-lock.png` · STAGE
+A staged piece touching **two edges at once**, floor plus a side wall.
+> CORNER LOCK
+
+---
+
+# STRIP 9 · PACE
+
+### `32-pph-hud.png` · CATCH
+Tight crop on the score and pace readout, mid-wall. Catch it **above 250** if you
+can, so the number on the page is a good one.
+
+### `33-flow-streak.png` · CATCH
+The flow pip with a streak running. Several clean placements, no crunch, no
+collapse.
+
+---
+
+# STRIP 10 · THE RECORD
+
+### `34-write-up.png` · STAGE
+The write-up form. Fastest route is tires: stand one on edge, let the warning
+land, then stand **another** on edge. A warning needs a repeat to become paper.
+
+**Most important image on the page for an instructor.** It is the artifact that
+makes this read as a workplace instead of a toy.
+
+### `35-dispatch.png` · STAGE · **DAILY OR TRAILER-LOAD**
+Get a wall to 85% full or 85% tall. Does not fire in the learning modes.
+> DISPATCH IN 60s
+
+### `36-post-sort.png` · STAGE
+Seal a wall, screenshot the report.
+
+### `37-certificate.png` · CATCH
+**The bar moved to 95% pack on 2026-10-02.** Needs a wall to the ceiling, 95% or
+better packed, integrity 100, zero collapses, zero incidents.
+
+Hard on purpose. If you cannot get one, say so and the page ships without it
+rather than faking one.
+
+### `38-start-menu.png` · STAGE
+The mode menu. **The clipboard is on it now**, so this one is ready to shoot.
+
+---
+
+## IF YOU ONLY DO SOME
+
+The page stands up on these nine:
 
 `01` empty bay · `03` full HUD · `06` refused · `08` locked flash ·
 `14` crunch · `15` fragile safe · `17` hazmat high · `19` hazmat shelf ·
 `34` write-up
 
-The fragile pair, `14` and `15`, carries the whole argument. Get those two even if
-you get nothing else.
+**`14` and `15` carry the whole argument.** Get those two even if you get nothing
+else.
 
 ---
 
-## ONE WARNING ABOUT TIMING
+## HOLD THESE FIVE
 
-**Any shot showing a score or a point value will go stale when your scoring
-rewrite lands.** That is shots `14`, `19`, `28`, `32` and `36`.
+Any shot with a score or point value on screen goes stale when your scoring
+rewrite lands: `14`, `19`, `28`, `32`, `36`.
 
-Capture the structural ones now. Hold the five with numbers in them until the new
-scoring is in, or we reshoot them later.
+Shoot the structural ones now. Hold those five, or reshoot them later.

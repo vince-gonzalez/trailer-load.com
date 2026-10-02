@@ -10,13 +10,13 @@ if(s&&s.theme==='dark')document.documentElement.setAttribute('data-theme','dark'
 </script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LOCK IN — Program Dashboard | trailer-load.com</title>
-<meta name="description" content="LOCK IN program dashboard — student loading competency report for CTE, logistics, and workforce programs. Attention to detail, follow-through, throughput, and safety, per student.">
+<title>LOCK IN · Program Dashboard | trailer-load.com</title>
+<meta name="description" content="LOCK IN program dashboard · student loading competency report for CTE, logistics, and workforce programs. Attention to detail, follow-through, throughput, and safety, per student.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23140d08'/%3E%3Crect x='16' y='16' width='32' height='32' rx='3' fill='%23c8791e'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#c8791e">
 <link rel="canonical" href="https://www.trailer-load.com/dashboard/">
 <meta name="robots" content="noindex,nofollow"><!-- login wall over student data; never index -->
-<!-- NO AD TECH ON TRAILER-LOAD.COM — EVER (2026-07-20). Do not re-add. -->
+<!-- NO AD TECH ON TRAILER-LOAD.COM · EVER (2026-07-20). Do not re-add. -->
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 /* TYPE FLOOR: bare <small>/<sub>/<sup> otherwise inherit the browser's 0.8em
@@ -26,7 +26,7 @@ small,sub,sup{font-size:11px;}
 
 :root{
   /* --ink3 was #9a8b72, which failed AA on ALL THREE grounds it paints (3.33 on #fff, 2.90 on --bg,
-     3.11 on the sticky header fill). It carries the competency sublabels — the $1,950 argument — and
+     3.11 on the sticky header fill). It carries the competency sublabels · the $1,950 argument · and
      the entire day-one empty state. #736550 measures 5.67 / 4.94 / 5.30. */
   --bg:#ece5d8;--panel:#ffffff;--ink:#211a12;--ink2:#6a5c48;--ink3:#736550;
   --acc:#c8791e;--acc-dim:#9a5c12;--acc-bright:#e0962e;--teal:#0a6a5e;--ok:#1f9d57;--warn:#d4820f;--danger:#c23a1a;
@@ -41,7 +41,7 @@ small,sub,sup{font-size:11px;}
   --teal:#2dc0ad;--ok:#28b870;--warn:#e0962e;--danger:#e0593a;
   --line:#3a2c20;--line2:#4a3826;
 }
-/* #topbar is hardcoded #1c1410, which is EXACTLY the dark --bg — the whole bar vanished.
+/* #topbar is hardcoded #1c1410, which is EXACTLY the dark --bg · the whole bar vanished.
    Its 3px amber border is what actually separates it; this just gives it a band to sit in. */
 [data-theme="dark"] #topbar{background:#2e2016;}
 [data-theme="dark"] th{background:#2e2016;}
@@ -70,7 +70,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow Condensed',sans-s
 .btn{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:1px;font-weight:bold;min-height:34px;border:1.5px solid var(--line2);background:var(--panel);color:var(--ink2);border-radius:6px;padding:8px 14px;cursor:pointer;transition:all .15s;}
 .btn:hover{border-color:var(--acc);color:var(--acc-dim);}
 .btn-acc{background:var(--acc);color:#241505;border-color:var(--acc);}
-/* was background:--acc-dim;color:#fff — white on amber, the one pairing the brand spec
+/* was background:--acc-dim;color:#fff · white on amber, the one pairing the brand spec
    forbids, on the primary button. Brightening on hover matches index.html. */
 .btn-acc:hover{background:var(--acc-bright);color:#241505;}
 .btn-ghost{background:transparent;color:#c0ad90;border-color:#4a3826;}
@@ -83,7 +83,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow Condensed',sans-s
 .fld span{display:block;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;color:var(--ink2);text-transform:uppercase;font-weight:bold;margin-bottom:5px;}
 .fld input{width:100%;padding:11px 13px;background:#fbf9f4;border:1px solid var(--line2);border-radius:7px;font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--ink);}
 .fld input:focus{outline:none;border-color:var(--acc);}
-/* No ::placeholder rule existed anywhere on the site, so every hint fell to Chrome's #a9a9a9 —
+/* No ::placeholder rule existed anywhere on the site, so every hint fell to Chrome's #a9a9a9 ,
    2.23:1 on this panel, including 'you@school.edu' on the PAID product's front door.
    opacity:1 is required or Firefox's default placeholder alpha undoes the fix. */
 .fld input::placeholder,#search::placeholder{color:#736550;opacity:1;}
@@ -111,7 +111,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Barlow Condensed',sans-s
 #search:focus{outline:none;border-color:var(--acc);}
 /* table */
 /* The sticky headers never stuck: overflow-x:auto with no height constraint makes .tbl-wrap the sticky
-   containing block, and it never scrolled vertically — so top:0 resolved against a box that never moved
+   containing block, and it never scrolled vertically · so top:0 resolved against a box that never moved
    and the header row scrolled away with the page. Past ~15 students the director was reading eight
    unlabelled numeric columns. Giving the wrapper a real height makes the declaration do its job. */
 .tbl-wrap{background:var(--panel);border:1px solid var(--line);border-radius:10px;max-height:min(70vh,640px);min-height:220px;overflow:auto;box-shadow:0 3px 12px rgba(40,28,14,.05);}
@@ -155,7 +155,7 @@ tr:hover td{background:#fbf9f4;}
   <button type="submit" class="btn btn-acc">SIGN IN</button>
   </form>
   <div id="login-msg"></div>
-  <div id="login-note">Program credentials are issued by LOCK IN. Forgot your password, or don't have access yet? Email <a href="mailto:hello@trailer-load.com">hello@trailer-load.com</a> and we'll sort it the same day.</div>
+  <div id="login-note">Program credentials are issued by LOCK IN. Forgot your password, or don't have access yet? Email <a href="mailto:vince@trailer-load.com">vince@trailer-load.com</a> and we'll sort it the same day.</div>
 </div>
 
 <!-- DASHBOARD -->
@@ -164,7 +164,7 @@ tr:hover td{background:#fbf9f4;}
     <h1>Competency Report</h1>
     <div class="stamp" id="stamp"></div>
   </div>
-  <div class="legend">Each student's loading performance, mapped to workplace competencies: <b>attention to detail</b> (load integrity), <b>follow-through</b> (walls completed), <b>throughput</b> (pieces/hour), and <b>safety</b> (incidents). Handles are anonymous — only your roster maps them to real students.</div>
+  <div class="legend">Each student's loading performance, mapped to workplace competencies: <b>attention to detail</b> (load integrity), <b>follow-through</b> (walls completed), <b>throughput</b> (pieces/hour), and <b>safety</b> (incidents). Handles are anonymous · only your roster maps them to real students.</div>
 
   <div class="cards" id="cards"></div>
 
@@ -188,7 +188,7 @@ tr:hover td{background:#fbf9f4;}
 
 <script>
 // ============================================================
-// LOCK IN — PROGRAM DASHBOARD
+// LOCK IN · PROGRAM DASHBOARD
 // Facility-facing competency report. Reuses the game's Supabase auth
 // (GoTrue password grant) + the RLS-scoped lockin_cohort view.
 // F-Keys | var-only, single STATE object, try/catch on async.
@@ -234,12 +234,12 @@ function dLogin(){
           // "Unable to validate email address: invalid format" and "For security purposes, you can
           // only request this after 21 seconds." at the paid product's front door.
           var raw=((j&&(j.error_description||j.msg||j.error))||'').toLowerCase();
-          var msg='Sign-in failed. Check your program email and password, or email hello@trailer-load.com and we will reset it.';
+          var msg='Sign-in failed. Check your program email and password, or email vince@trailer-load.com and we will reset it.';
           if(raw.indexOf('security purposes')>=0||raw.indexOf('rate')>=0)msg='Too many attempts. Wait a moment and try again.';
           dMsg('✕ '+msg,'err');
         }
-      }).catch(function(e){console.error('dLogin:',e);dMsg('✕ Network error — try again.','err');});
-  }catch(e){console.error('dLogin:',e);dMsg('✕ Error — try again.','err');}
+      }).catch(function(e){console.error('dLogin:',e);dMsg('✕ Network error · try again.','err');});
+  }catch(e){console.error('dLogin:',e);dMsg('✕ Error · try again.','err');}
 }
 function dEnter(){
   document.getElementById('login').style.display='none';
@@ -268,17 +268,17 @@ function dFetchCohort(){
         DASH.rows=(j&&j.length)?j.filter(function(r){return !(DASH.session&&r.user_id===DASH.session.uid);}):[];
         var st=document.getElementById('stamp');if(st)st.textContent=DASH.rows.length+' students on roster';
         dRender();
-      }).catch(function(e){console.error('dFetchCohort:',e);if(emp)emp.textContent='Could not load the roster — try REFRESH.';});
+      }).catch(function(e){console.error('dFetchCohort:',e);if(emp)emp.textContent='Could not load the roster · try REFRESH.';});
   }catch(e){console.error('dFetchCohort:',e);}
 }
 function dNum(v){return (v==null||isNaN(v))?0:(+v);}
 function dSince(ts){
-  if(!ts)return '—';
+  if(!ts)return ',';
   try{
     var then=new Date(ts).getTime(),now=Date.now(),d=Math.floor((now-then)/86400000);
     if(d<=0)return 'today';if(d===1)return '1d ago';if(d<30)return d+'d ago';
     var mo=Math.floor(d/30);return mo+'mo ago';
-  }catch(e){return '—';}
+  }catch(e){return ',';}
 }
 function dSort(k){
   if(DASH.sortKey===k){DASH.sortDir*=-1;}else{DASH.sortKey=k;DASH.sortDir=(k==='username')?1:-1;}
@@ -292,7 +292,7 @@ function dCards(rows){
   var intCls=avgInt>=80?'ok':avgInt>=60?'warn':(n?'danger':'');
   function card(k,v,c,cls){return '<div class="card '+(cls||'')+'"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="c">'+c+'</div></div>';}
   return card('STUDENTS',n,'on your roster','')
-    +card('AVG INTEGRITY',(n?avgInt+'%':'—'),'attention to detail',intCls)
+    +card('AVG INTEGRITY',(n?avgInt+'%':','),'attention to detail',intCls)
     +card('WALLS LOADED',walls,'total follow-through','')
     +card('FLAGGED',flagged,'2+ safety incidents',flagged>0?'danger':'ok');
 }
@@ -312,13 +312,13 @@ function dRender(){
   // header
   var th='',c;for(c=0;c<DCOLS.length;c++){var col=DCOLS[c];var isS=(DASH.sortKey===col.key);
     // The roster's only data control was mouse-only: cursor:pointer and an onclick, with no
-    // tabindex, role, aria-sort or key handler — so sorting was impossible without a mouse on
+    // tabindex, role, aria-sort or key handler · so sorting was impossible without a mouse on
     // the one screen the institution is buying, while /for-districts/ advertises "full keyboard play".
     th+='<th class="'+(isS?'sorted':'')+'" tabindex="0" role="columnheader" aria-sort="'+(isS?(DASH.sortDir<0?'descending':'ascending'):'none')+'" onclick="dSort(\''+col.key+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();dSort(\''+col.key+'\');}">'+col.label+(isS?(' <span class="arr">'+(DASH.sortDir<0?'▼':'▲')+'</span>'):'')+(col.comp?('<span class="comp">'+col.comp+'</span>'):'')+'</th>';}
   document.getElementById('thead').innerHTML=th;
   // body
   var emp=document.getElementById('empty');
-  if(!rows.length){document.getElementById('tbody').innerHTML='';if(emp){emp.style.display='block';emp.textContent=DASH.rows.length?'No students match that filter.':'Your roster is ready — it fills in as students join. Give your class your join code'+(DASH.code?(' — '+DASH.code):'')+'. In the game: PAUSE → ADMIN → ACCOUNT & DATA → enter the code and confirm sharing. Students appear here after their first wall.';}return;}
+  if(!rows.length){document.getElementById('tbody').innerHTML='';if(emp){emp.style.display='block';emp.textContent=DASH.rows.length?'No students match that filter.':'Your roster is ready · it fills in as students join. Give your class your join code'+(DASH.code?(' · '+DASH.code):'')+'. In the game: PAUSE → ADMIN → ACCOUNT & DATA → enter the code and confirm sharing. Students appear here after their first wall.';}return;}
   if(emp)emp.style.display='none';
   var h='',i;
   for(i=0;i<rows.length;i++){var r=rows[i];
@@ -326,7 +326,7 @@ function dRender(){
     var incPill=inc>=2?'<span class="pill d">'+inc+'</span>':inc===1?'<span class="pill w">1</span>':'<span class="pill g">0</span>';
     var intPill='<span class="pill '+(ai>=80?'g':ai>=60?'w':'d')+'">'+(ai||0)+'%</span>';
     h+='<tr>'
-      +'<td>'+dEsc(r.username||'—')+'</td>'
+      +'<td>'+dEsc(r.username||',')+'</td>'
       +'<td>'+dNum(r.sessions)+'</td>'
       +'<td>'+dNum(r.walls)+'</td>'
       +'<td>'+intPill+'</td>'
@@ -362,8 +362,8 @@ function dSignOut(){
   var who=document.getElementById('who');if(who)who.style.display='none';
   dMsg('Signed out.','good');
 }
-// v1.1 (HIGH #3) — GoTrue tokens live ~1h; restoring a stale one made every fetch 401 and the page rendered
-// "No students have opted in yet" — an apparently WIPED roster. Expired now means expired, said out loud.
+// v1.1 (HIGH #3) · GoTrue tokens live ~1h; restoring a stale one made every fetch 401 and the page rendered
+// "No students have opted in yet" · an apparently WIPED roster. Expired now means expired, said out loud.
 function dJwtFresh(tok){try{var p=JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));return (p.exp||0)*1000>Date.now()+30000;}catch(e){return true;}}
 function dExpired(){
   try{localStorage.removeItem('lockinDashAuth');var _e=document.getElementById('li-email');if(_e)_e.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
@@ -371,7 +371,7 @@ function dExpired(){
   var d=document.getElementById('dash');if(d)d.style.display='none';
   var w=document.getElementById('who');if(w)w.style.display='none';
   var l=document.getElementById('login');if(l)l.style.display='block';
-  var m=document.getElementById('login-msg');if(m){m.textContent='Session expired — sign in again.';m.className='err';}
+  var m=document.getElementById('login-msg');if(m){m.textContent='Session expired · sign in again.';m.className='err';}
 }
 function dBoot(){
   try{var r=localStorage.getItem('lockinDashAuth');if(r){DASH.session=JSON.parse(r);if(DASH.session&&DASH.session.access_token){if(!dJwtFresh(DASH.session.access_token)){dExpired();return;}dEnter();return;}}}catch(e){console.error('dBoot:',e);}

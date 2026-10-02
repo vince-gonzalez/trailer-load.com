@@ -89,9 +89,9 @@ main{position:relative;z-index:1;max-width:680px;width:100%;}
   </div>
 
   <div class="counts">
-    <div><b id="stat-walls">—</b>Walls loaded</div>
-    <div><b id="stat-players">—</b>Loaders signed on</div>
-    <div><b id="stat-visits">—</b>Visits</div>
+    <div><b id="stat-walls">,</b>Walls loaded</div>
+    <div><b id="stat-players">,</b>Loaders signed on</div>
+    <div><b id="stat-visits">,</b>Visits</div>
   </div>
 </main>
 
@@ -106,7 +106,7 @@ main{position:relative;z-index:1;max-width:680px;width:100%;}
 </div>
 
 <script>
-/* LIVE COUNTER — public aggregate only (lockin_stats RPC returns counts, never a player record).
+/* LIVE COUNTER · public aggregate only (lockin_stats RPC returns counts, never a player record).
    Fails silently to the placeholders if the backend is unreachable; never blocks the page. */
 (function(){
   var EP='https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1/rpc/lockin_stats';

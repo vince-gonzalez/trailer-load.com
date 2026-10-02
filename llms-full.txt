@@ -1,4 +1,4 @@
-LOCK IN — Warehouse Loading Training That Plays Like a Game
+LOCK IN · Warehouse Loading Training That Plays Like a Game
 Source: https://trailer-load.com/  ·  Made by F-Keys Creative LLC (founder: Vince Gonzalez)
 
 === WHAT IT IS ===
@@ -7,13 +7,13 @@ LOCK IN is a free, browser-based warehouse trailer-loading training simulator. P
 It runs in any browser with no install and no login required. Gameplay is always free. Players can optionally create a free account to save their record, and can separately opt in to share their stats with a facility.
 
 === HOW IT WORKS ===
-1. Build the wall — Select freight, place it, rotate it. Floor-up, support underneath, no floating boxes. The physics won't let you cheat gravity.
-2. Load it right — Lock shelves, keep the center of gravity centered, fragile on top, hazmat below the waist line, and stuff dead air inside tires.
-3. Get your grade — Every wall is scored on integrity, density, pace, and safety, then ranked from Rookie to Yard Legend.
+1. Build the wall · Select freight, place it, rotate it. Floor-up, support underneath, no floating boxes. The physics won't let you cheat gravity.
+2. Load it right · Lock shelves, keep the center of gravity centered, fragile on top, hazmat below the waist line, and stuff dead air inside tires.
+3. Get your grade · Every wall is scored on integrity, density, pace, and safety, then ranked from Rookie to Yard Legend.
 
-Modes: Training (a trainer builds a full wall one placement at a time, with the reason for every move — then you load your own), Trailer-Load (the flagship: wall after wall at full tempo, chasing a personal best and a world rank), Daily (one shared deterministic wall for everyone on Earth, resetting 00:00 UTC).
+Modes: Training (a trainer builds a full wall one placement at a time, with the reason for every move · then you load your own), Trailer-Load (the flagship: wall after wall at full tempo, chasing a personal best and a world rank), Daily (one shared deterministic wall for everyone on Earth, resetting 00:00 UTC).
 
-Companion mini-game: Smalls Sort (https://trailer-load.com/ss/) — sorting and stacking small parcels, testing speed and accuracy on the smalls line.
+Companion mini-game: Smalls Sort (https://trailer-load.com/ss/) · sorting and stacking small parcels, testing speed and accuracy on the smalls line.
 
 === BUSINESS MODEL: FREE FOR WORKERS, DASHBOARD FOR FACILITIES ===
 The game is free forever. What schools and employers pay for is the data.
@@ -26,7 +26,7 @@ Workers play free:
 
 Facilities get the metrics (the paid product):
 - A dashboard of opted-in players' loading performance.
-- Load integrity (attention to detail), completed walls (follow-through), throughput (pieces per hour), and safety incidents — the numbers managers already track — per student, sortable, with CSV export.
+- Load integrity (attention to detail), completed walls (follow-through), throughput (pieces per hour), and safety incidents · the numbers managers already track · per student, sortable, with CSV export.
 - Built for CTE programs (Perkins-eligible), trade and technical schools, and warehouse operations teams.
 - Provisioned by F-Keys Creative LLC when a program comes aboard.
 
@@ -36,4 +36,4 @@ Who it's for: CTE high-school programs, trade and technical schools, warehouse a
 Training supplement only. LOCK IN builds intuition and tracks readiness. It does NOT replace employer safety training, OSHA training, or any certification requirement.
 
 === ABOUT ===
-LOCK IN is made by F-Keys Creative LLC, a Florida limited liability company (https://www.f-keys.com/). Founder: Vince Gonzalez. Contact: hello@trailer-load.com.
+LOCK IN is made by F-Keys Creative LLC, a Florida limited liability company (https://www.f-keys.com/). Founder: Vince Gonzalez. Contact: vince@trailer-load.com.

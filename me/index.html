@@ -10,11 +10,11 @@ if(s&&s.theme==='dark')document.documentElement.setAttribute('data-theme','dark'
 </script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clock In — Your Record | LOCK IN</title>
-<meta name="description" content="Clock in to LOCK IN and see your own loading record — walls loaded, integrity, pace, shelves, and safety, across every mode.">
+<title>Clock In · Your Record | LOCK IN</title>
+<meta name="description" content="Clock in to LOCK IN and see your own loading record · walls loaded, integrity, pace, shelves, and safety, across every mode.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23140d08'/%3E%3Crect x='16' y='16' width='32' height='32' rx='3' fill='%23c8791e'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#c8791e">
-<!-- NO AD TECH ON TRAILER-LOAD.COM — EVER (2026-07-20). Do not re-add. -->
+<!-- NO AD TECH ON TRAILER-LOAD.COM · EVER (2026-07-20). Do not re-add. -->
 <link rel="canonical" href="https://www.trailer-load.com/me/">
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
@@ -33,7 +33,7 @@ small,sub,sup{font-size:11px;}
   --teal:#2dc0ad;--ok:#28b870;--warn:#e0962e;--danger:#e0593a;
   --line:#3a2c20;--line2:#4a3826;
 }
-/* #topbar is hardcoded #1c1410, which is EXACTLY the dark --bg — the whole bar vanished. */
+/* #topbar is hardcoded #1c1410, which is EXACTLY the dark --bg · the whole bar vanished. */
 [data-theme="dark"] #topbar{background:#2e2016;}
 [data-theme="dark"] .fld input{background:#1c1410;color:var(--ink);}
 [data-theme="dark"] .good{color:#5fe0a0;}
@@ -111,7 +111,7 @@ tr:hover td{background:#fbf9f4;}
 .lb-unfollow{background:transparent;border:none;color:#736550;cursor:pointer;font-size:14px;min-width:26px;min-height:26px;line-height:1;padding:0 6px;}
 .lb-unfollow:hover{color:var(--danger);}
 .lb-msg{font-family:'Share Tech Mono',monospace;font-size:12px;min-height:16px;margin-bottom:6px;}
-/* the hall — fame/shame ledger, every board we track */
+/* the hall · fame/shame ledger, every board we track */
 .hall-colhd{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin:16px 0 9px;display:flex;align-items:center;gap:8px;}
 .hall-colhd:first-child{margin-top:0;}
 .hall-colhd::after{content:'';flex:1;height:1px;background:var(--line2);}
@@ -137,7 +137,7 @@ tr:hover td{background:#fbf9f4;}
 <body>
 
 <div id="topbar"><div class="wrap">
-  <div class="brand">LOCK IN<small>CLOCK IN — YOUR RECORD</small></div>
+  <div class="brand">LOCK IN<small>CLOCK IN · YOUR RECORD</small></div>
   <div class="tb-links"><a href="/">Home</a><a href="/lock-in.html">Play</a></div>
 </div></div>
 
@@ -151,14 +151,14 @@ tr:hover td{background:#fbf9f4;}
   <button type="submit" class="btn btn-acc">CLOCK IN</button>
   </form>
   <div id="login-msg"></div>
-  <div id="login-note">No account yet? It's free — <a href="/lock-in.html">play the game</a>, then create one under ADMIN → ACCOUNT &amp; DATA. Your stats only save if you opt in.</div>
+  <div id="login-note">No account yet? It's free · <a href="/lock-in.html">play the game</a>, then create one under ADMIN → ACCOUNT &amp; DATA. Your stats only save if you opt in.</div>
 </div>
 
 <!-- PROFILE -->
 <div id="me"><div class="wrap">
   <div class="me-hero">
     <div>
-      <div class="handle" id="me-handle">—</div>
+      <div class="handle" id="me-handle">,</div>
       <div class="rank" id="me-rank"></div>
     </div>
     <div class="actions">
@@ -202,12 +202,12 @@ tr:hover td{background:#fbf9f4;}
     <div id="lb-friends" class="lb-board"></div>
   </div>
 
-  <div class="foot">LOCK IN · trailer-load.com · your record, your device — saved only because you opted in · © 2026</div>
+  <div class="foot">LOCK IN · trailer-load.com · your record, your device · saved only because you opted in · © 2026</div>
 </div></div>
 
 <script>
 // ============================================================
-// LOCK IN — CLOCK IN (worker self-profile)
+// LOCK IN · CLOCK IN (worker self-profile)
 // Worker signs in and sees their own lifetime record. Reuses the game's
 // GoTrue password grant + the RLS-scoped lockin_lifetime view (self only).
 // F-Keys | var-only, single STATE object, try/catch on async.
@@ -239,10 +239,10 @@ function mLogin(){
           try{localStorage.setItem('lockinMeAuth',JSON.stringify(ME.session));}catch(e){}
           mMsg('','');mEnter();
         } else {
-          mMsg('✕ '+((j&&(j.error_description||j.msg||j.error))||'Sign-in failed — check your credentials.'),'err');
+          mMsg('✕ '+((j&&(j.error_description||j.msg||j.error))||'Sign-in failed · check your credentials.'),'err');
         }
-      }).catch(function(e){console.error('mLogin:',e);mMsg('✕ Network error — try again.','err');});
-  }catch(e){console.error('mLogin:',e);mMsg('✕ Error — try again.','err');}
+      }).catch(function(e){console.error('mLogin:',e);mMsg('✕ Network error · try again.','err');});
+  }catch(e){console.error('mLogin:',e);mMsg('✕ Error · try again.','err');}
 }
 function mEnter(){
   document.getElementById('login').style.display='none';
@@ -258,12 +258,12 @@ function mTab(which){
   for(k in panes){var p=document.getElementById(panes[k]);if(p)p.style.display=(k===which)?'':'none';var t=document.getElementById(tabs[k]);if(t)t.classList.toggle('active',k===which);}
   if(which==='daily')mDaily();else if(which==='hall')mHall();else mFriends();
 }
-// THE HALL — every board we track (Walls of Fame + Walls of Shame), medal rows. Same RPCs as the game.
+// THE HALL · every board we track (Walls of Fame + Walls of Shame), medal rows. Same RPCs as the game.
 var M_FAME=[{k:'best',e:'🏆',t:'BEST WALL',rpc:'lockin_alltime_board',fmt:'num'},{k:'total',e:'▲',t:'TOTAL LOADED',rpc:'lockin_total_board',fmt:'num'},{k:'fastest',e:'⚡',t:'FASTEST WALL',rpc:'wall',metric:'fastest',fmt:'time'},{k:'cleanest',e:'✦',t:'CLEANEST',rpc:'wall',metric:'cleanest',fmt:'pct'},{k:'fewest',e:'✂',t:'FEWEST PIECES',rpc:'wall',metric:'fewest',fmt:'pieces'}];
 var M_SHAME=[{k:'slowest',e:'🐌',t:'SLOWEST WALL',rpc:'wall',metric:'slowest',fmt:'time'},{k:'most_collapses',e:'🧱',t:'MOST COLLAPSES',rpc:'wall',metric:'most_collapses',fmt:'num'},{k:'most_pieces',e:'📦',t:'THE GRIND',rpc:'wall',metric:'most_pieces',fmt:'pieces'},{k:'messiest',e:'💀',t:'BARELY HELD',rpc:'wall',metric:'messiest',fmt:'pct'}];
-function mHallFmt(v,fmt){if(v==null)return '—';if(fmt==='time'){var s=+v,mm=Math.floor(s/60),ss=s%60;return mm+':'+(ss<10?'0':'')+ss;}if(fmt==='pct')return v+'%';if(fmt==='pieces')return v+' pc';return mNum(v).toLocaleString();}
+function mHallFmt(v,fmt){if(v==null)return ',';if(fmt==='time'){var s=+v,mm=Math.floor(s/60),ss=s%60;return mm+':'+(ss<10?'0':'')+ss;}if(fmt==='pct')return v+'%';if(fmt==='pieces')return v+' pc';return mNum(v).toLocaleString();}
 function mHallRows(rows,fmt,side){
-  if(!rows||!rows.length)return '<div class="hc-empty">'+(side==='shame'?'No one ranked yet.':'No one ranked yet — be the first.')+'</div>';
+  if(!rows||!rows.length)return '<div class="hc-empty">'+(side==='shame'?'No one ranked yet.':'No one ranked yet · be the first.')+'</div>';
   var me=(ME.session&&ME.session.handle)||'',medals=['🥇','🥈','🥉'],h='',i;
   for(i=0;i<rows.length&&i<5;i++){var r=rows[i];
     var v=(r.val!=null?r.val:(r.best_score!=null?r.best_score:(r.score!=null?r.score:null)));
@@ -305,13 +305,13 @@ function mDaily(){
   var b=document.getElementById('lb-daily');if(b)b.innerHTML='<div class="lb-empty">Loading…</div>';
   var key=new Date().toISOString().slice(0,10);
   try{fetch(ME.endpoint+'/lockin_daily_board?puzzle_date=eq.'+encodeURIComponent(key)+'&order=rank.asc&limit=15&select=rank,username,score,incidents',{headers:mHeaders()})
-    .then(function(r){return r.json();}).then(function(j){mBoardRows('lb-daily',Array.isArray(j)?j:[],'No scores on today’s board yet — play Daily and be the first.',false);})
+    .then(function(r){return r.json();}).then(function(j){mBoardRows('lb-daily',Array.isArray(j)?j:[],'No scores on today’s board yet · play Daily and be the first.',false);})
     .catch(function(e){console.error('mDaily:',e);mBoardRows('lb-daily',[],'Could not load the board.',false);});}catch(e){console.error('mDaily:',e);}
 }
 function mFriends(){
   var b=document.getElementById('lb-friends');if(b)b.innerHTML='<div class="lb-empty">Loading…</div>';
   try{fetch(ME.endpoint+'/rpc/lockin_friends_board',{method:'POST',headers:mHeaders(),body:'{}'})
-    .then(function(r){return r.json();}).then(function(j){mBoardRows('lb-friends',Array.isArray(j)?j:[],'Just you so far — follow a loader above to compare.',true);})
+    .then(function(r){return r.json();}).then(function(j){mBoardRows('lb-friends',Array.isArray(j)?j:[],'Just you so far · follow a loader above to compare.',true);})
     .catch(function(e){console.error('mFriends:',e);mBoardRows('lb-friends',[],'Could not load friends.',true);});}catch(e){console.error('mFriends:',e);}
 }
 function mFMsg(t,cls){var e=document.getElementById('lb-follow-msg');if(e){e.textContent=t||'';e.className='lb-msg '+(cls||'');}}
@@ -321,9 +321,9 @@ function mFollow(){
   mFMsg('Following…','');
   try{fetch(ME.endpoint+'/rpc/lockin_follow',{method:'POST',headers:mHeaders(),body:JSON.stringify({p_username:u})})
     .then(function(r){return r.json();}).then(function(j){
-      if(j&&j.ok){mFMsg('✓ Following '+u+'.','good');if(el)el.value='';mFriends();} // v1.1 the RPC returns {ok}/{err} (the game checks it correctly) — this page checked j.error, so following a NONEXISTENT user reported false success
+      if(j&&j.ok){mFMsg('✓ Following '+u+'.','good');if(el)el.value='';mFriends();} // v1.1 the RPC returns {ok}/{err} (the game checks it correctly) · this page checked j.error, so following a NONEXISTENT user reported false success
       else{var _fe=(j&&j.err)||'unknown';mFMsg('✕ '+({no_such_user:'No loader by that name.',cannot_follow_self:'That’s you.',not_logged_in:'Sign in first.'}[_fe]||_fe),'err');}
-    }).catch(function(e){console.error('mFollow:',e);mFMsg('✕ Network error — try again.','err');});}catch(e){console.error('mFollow:',e);}
+    }).catch(function(e){console.error('mFollow:',e);mFMsg('✕ Network error · try again.','err');});}catch(e){console.error('mFollow:',e);}
 }
 function mUnfollow(u){
   try{fetch(ME.endpoint+'/rpc/lockin_unfollow',{method:'POST',headers:mHeaders(),body:JSON.stringify({p_username:u})})
@@ -340,16 +340,16 @@ function mFetch(){
         // Same defect the flagship's post-sort report carried until v3.5.183.
         if(!res.ok||!Array.isArray(res.body)){
           console.error('mFetch:',res.status,res.body);
-          if(emp){emp.style.display='block';emp.textContent='Could not load your record — that is a connection problem, not an empty record. Try again in a moment.';}
+          if(emp){emp.style.display='block';emp.textContent='Could not load your record · that is a connection problem, not an empty record. Try again in a moment.';}
           return;
         }
         ME.rows=res.body;
         mRender();
-      }).catch(function(e){console.error('mFetch:',e);if(emp)emp.textContent='Could not load your record — try again.';});
+      }).catch(function(e){console.error('mFetch:',e);if(emp)emp.textContent='Could not load your record · try again.';});
   }catch(e){console.error('mFetch:',e);}
 }
 function mRank(ai){
-  // v1.2 (MED) aligned to the game's wall-report ladder — same titles, SAME cutoffs, same bottom rank (was 90/82/72/60/45 + "IN TRAINING")
+  // v1.2 (MED) aligned to the game's wall-report ladder · same titles, SAME cutoffs, same bottom rank (was 90/82/72/60/45 + "IN TRAINING")
   if(ai>=95)return 'YARD LEGEND';if(ai>=87)return 'DOCK VETERAN';if(ai>=76)return 'SOLID HAND';
   if(ai>=62)return 'GREENHORN+';if(ai>=48)return 'ROOKIE';return 'RE-TRAIN';
 }
@@ -372,19 +372,19 @@ function mRender(){
      card('WALLS',walls,'sealed','')
     +card('SESSIONS',sessions,'clocked in','')
     +card('BEST SCORE',bestScore.toLocaleString(),'personal best','teal')
-    +card('PEAK PPH',peak||'—','fastest pace','teal')
-    +card('AVG INTEGRITY',(ai?ai+'%':'—'),'attention to detail',intCls)
-    +card('DENSITY',(den?den+'%':'—'),'how tight you pack',den>=65?'ok':den>=40?'warn':(den>0?'danger':''))
+    +card('PEAK PPH',peak||',','fastest pace','teal')
+    +card('AVG INTEGRITY',(ai?ai+'%':','),'attention to detail',intCls)
+    +card('DENSITY',(den?den+'%':','),'how tight you pack',den>=65?'ok':den>=40?'warn':(den>0?'danger':''))
     +card('SHELVES',shelves.toLocaleString(),'locked in','')
     +card('PIECES',pieces.toLocaleString(),'total moved','')
     +card('INCIDENTS',inc,'lifetime safety',inc>=2?'danger':inc>=1?'warn':'ok');
   var emp=document.getElementById('empty');
-  if(!rows.length){document.getElementById('tbody').innerHTML='';if(emp){emp.style.display='block';emp.innerHTML='No walls on record yet. <a href="/lock-in.html">Load one</a> — with stats saving on — and it shows up here.';}return;}
+  if(!rows.length){document.getElementById('tbody').innerHTML='';if(emp){emp.style.display='block';emp.innerHTML='No walls on record yet. <a href="/lock-in.html">Load one</a> · with stats saving on · and it shows up here.';}return;}
   if(emp)emp.style.display='none';
   rows=rows.slice().sort(function(a,b){return mNum(b.walls)-mNum(a.walls);});
   var h='';
   for(i=0;i<rows.length;i++){var m=rows[i];var mi=mNum(m.avg_integrity);
-    h+='<tr><td>'+(m.mode||'—')+'</td><td>'+mNum(m.sessions)+'</td><td>'+mNum(m.walls)+'</td><td>'+mNum(m.pieces)+'</td><td>'+mNum(m.score).toLocaleString()+'</td><td>'+mNum(m.peak_pph)+'</td><td>'+(mi||0)+'%</td><td>'+mNum(m.incidents)+'</td></tr>';
+    h+='<tr><td>'+(m.mode||',')+'</td><td>'+mNum(m.sessions)+'</td><td>'+mNum(m.walls)+'</td><td>'+mNum(m.pieces)+'</td><td>'+mNum(m.score).toLocaleString()+'</td><td>'+mNum(m.peak_pph)+'</td><td>'+(mi||0)+'%</td><td>'+mNum(m.incidents)+'</td></tr>';
   }
   document.getElementById('tbody').innerHTML=h;
 }
@@ -392,7 +392,7 @@ function mSignOut(){
   ME.session=null;ME.rows=[];
   try{localStorage.removeItem('lockinMeAuth');var _u=document.getElementById('li-user');if(_u)_u.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
   // v1.3 an explicit sign-out must STICK. mBoot reads the game's shared liAuth first, so without
-  // this flag the next page load signed the previous student straight back in — on a shared
+  // this flag the next page load signed the previous student straight back in · on a shared
   // Chromebook that hands their named record to the next kid. We never delete liAuth (the game
   // owns its refresh); we just record that THIS page was signed out of deliberately.
   try{localStorage.setItem('meNoSSO','1');}catch(e){}
@@ -400,22 +400,22 @@ function mSignOut(){
   document.getElementById('login').style.display='block';
   mMsg('Clocked out.','good');
 }
-// v1.1 (HIGH #3) — honest session expiry: stale tokens said "No walls on record yet" instead of the truth.
+// v1.1 (HIGH #3) · honest session expiry: stale tokens said "No walls on record yet" instead of the truth.
 function mJwtFresh(tok){try{var p=JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));return (p.exp||0)*1000>Date.now()+30000;}catch(e){return true;}}
 function mExpired(){
   try{localStorage.removeItem('lockinMeAuth');var _u=document.getElementById('li-user');if(_u)_u.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
   ME.session=null;
   var d=document.getElementById('me');if(d)d.style.display='none';
   var l=document.getElementById('login');if(l)l.style.display='block';
-  var m=document.getElementById('login-msg');if(m){m.textContent='Session expired — sign in again.';m.className='err';}
+  var m=document.getElementById('login-msg');if(m){m.textContent='Session expired · sign in again.';m.className='err';}
 }
 function mBoot(){
-  // v1.2 (MED) ONE login for players: read the GAME's shared liAuth session first (read-only — never
+  // v1.2 (MED) ONE login for players: read the GAME's shared liAuth session first (read-only · never
   // write or delete it; the game owns the refresh). lockinMeAuth stays as this page's own fallback store.
   var _noSSO=false;try{_noSSO=localStorage.getItem('meNoSSO')==='1';}catch(e){}
   try{var g=_noSSO?null:localStorage.getItem('liAuth');if(g){var gs=JSON.parse(g);
     if(gs&&gs.access_token&&mJwtFresh(gs.access_token)){ME.session=gs;mEnter();return;}
-    if(gs&&gs.access_token)mMsg('Session expired — sign in again.','err');
+    if(gs&&gs.access_token)mMsg('Session expired · sign in again.','err');
   }}catch(e){}
   try{var r=localStorage.getItem('lockinMeAuth');if(r){ME.session=JSON.parse(r);if(ME.session&&ME.session.access_token){if(!mJwtFresh(ME.session.access_token)){mExpired();return;}mEnter();return;}}}catch(e){console.error('mBoot:',e);}
 }
