@@ -27,9 +27,30 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.193
+   LOCK IN v3.5.194
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.194 - IT NEVER TOLD YOU WHY IT FELL.
+     (1) THE CAUSE WAS ALWAYS BEING OVERWRITTEN. Vince: "it doesn't say why the box on top of the
+     tire fell. it just falls and says whoops, slipped." True, and far wider than tires. Every
+     physics sweep printed its own cause (HEAVY FREIGHT NO FULL BASE, COLUMN INTEGRITY, OVERHANG
+     ON AN OVERHANG) and THEN called collapseFreeStack 220ms later, which unconditionally printed
+     the generic slip line over the top of it. One or two pieces is a slip, and these sweeps drop
+     exactly one or two, so the reason was buried EVERY time. The player was told "widen the base
+     and it holds" for causes widening the base does not fix. The cause now travels with the
+     collapse as st.why and prints once, correctly, instead of being pre-announced and buried.
+     The vertical-tire path had no message at all, and the freestanding-stack rule had none in
+     either branch; both have one now, and the stack rule distinguishes three-high from five-high.
+     (2) BOLDER BUTTON OUTLINES. --btn-line was #8a6a2e, which computes 1.48:1 against the amber
+     button face it most often sits on. The floor for a non-text boundary is 3:1, so on every
+     filled button the outline was effectively not there. Light theme to #533a12 (3.13:1 on amber,
+     8.46:1 on the page), dark theme to #e8b65c, and all 15 rules go 1.5px to 2px.
+     (3) THE WATER WASH STOPS ADVERTISING ITSELF. Vince: "we should not announce that a drink
+     clears the safety incidents. that should be a veteran easter egg with zero promotion." The
+     mechanic is untouched and the record still shows the warning as washed; the sabotage ladder
+     still calls out anyone farming it. What is gone is the game teaching the escape hatch the
+     first time it fires. A drink reads as a drink now. You find the rest by noticing.
 
    CHANGE LOG v3.5.193 - THE HAZMAT SHELF WAS SWALLOWED BY ITS OWN SUPPRESSION WINDOW.
      Vince: "i didn't see the hazmat shelf when i made it." He was right, and it was not a near
@@ -939,7 +960,11 @@ small,sub,sup{font-size:11px;}
   --lg:#b04040;--lg-bright:#d86060;
   --panel-left-w:204px;--panel-right-w:226px;
   --pause-bg:rgba(236,229,216,.97);
-  --btn-line:#8a6a2e;
+  /* v3.5.194 BOLDER BUTTON OUTLINES (Vince). #8a6a2e computed 1.48:1 against the amber button
+     face it most often sits on, which is nowhere near the 3:1 floor for a non-text boundary, so
+     on every filled button the outline was effectively invisible. #533a12 is 3.13:1 on the amber
+     and 8.46:1 on the light page. Width goes 1.5px to 2px in the same pass. */
+  --btn-line:#533a12;
 }
 [data-theme="dark"]{
   --bg:#1c1410;--bg2:#241a13;--bg3:#2e2016;
@@ -950,7 +975,10 @@ small,sub,sup{font-size:11px;}
   --sm:#a07de8;--sm-bright:#c0a0ff;
   --lg:#d86060;--lg-bright:#e88080;
   --pause-bg:rgba(28,20,16,.97);
-  --btn-line:#c8963c;
+  /* v3.5.194 dark theme: brighter, not darker. Here the outline mostly sits on a dark panel,
+     where #c8963c read 6.96:1 but washed out on amber. #e8b65c lifts it on the panel and stays
+     legible on the button face. */
+  --btn-line:#e8b65c;
 }
 /* v3.5.154 BLOCKER FIX (Gatekeeper #5): these overlays have FIXED near-black backgrounds but drew ink from the
    ACTIVE theme's vars — in the default LIGHT theme --t1/--t2 resolve near-black, so rank/verdict/stat labels/
@@ -1214,15 +1242,15 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 .ops-pts span{font-size:13px;color:var(--t3);}
 .ops-sec{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--acc);text-transform:uppercase;font-weight:bold;margin:12px 0 7px;}
 .ops-sec.first{margin-top:0;}
-.crew-box{border:1.5px solid var(--btn-line);border-radius:8px;padding:11px 13px;margin:10px 0;background:rgba(0,0,0,.06);}
+.crew-box{border:2px solid var(--btn-line);border-radius:8px;padding:11px 13px;margin:10px 0;background:rgba(0,0,0,.06);}
 .crew-hd{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--acc);margin-bottom:7px;}
 .crew-state{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:var(--t2);margin-bottom:7px;}
 .crew-row{display:flex;gap:7px;align-items:center;}
-.crew-row input,.crew-create input{flex:1;min-width:0;padding:8px 10px;min-height:34px;border:1.5px solid var(--btn-line);border-radius:6px;background:var(--bg2);color:var(--t1);font-family:'Share Tech Mono',monospace;font-size:13px;}
+.crew-row input,.crew-create input{flex:1;min-width:0;padding:8px 10px;min-height:34px;border:2px solid var(--btn-line);border-radius:6px;background:var(--bg2);color:var(--t1);font-family:'Share Tech Mono',monospace;font-size:13px;}
 .crew-create input{width:100%;margin-bottom:7px;}
-.crew-btn{padding:8px 15px;min-height:34px;border:1.5px solid var(--btn-line);border-radius:6px;background:var(--acc);color:#241505;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;cursor:pointer;}
+.crew-btn{padding:8px 15px;min-height:34px;border:2px solid var(--btn-line);border-radius:6px;background:var(--acc);color:#241505;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;cursor:pointer;}
 .crew-btn.ghost{background:transparent;color:var(--t2);}
-.crew-mk{margin-top:9px;padding:7px 13px;min-height:34px;width:100%;border:1.5px solid var(--btn-line);border-radius:6px;background:transparent;color:var(--t2);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;}
+.crew-mk{margin-top:9px;padding:7px 13px;min-height:34px;width:100%;border:2px solid var(--btn-line);border-radius:6px;background:transparent;color:var(--t2);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;}
 .crew-mine{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--t3);line-height:1.7;}
 .crew-msg{font-family:'Share Tech Mono',monospace;font-size:12px;margin-top:6px;min-height:15px;color:var(--t3);}
 .crew-msg.err{color:var(--danger);} .crew-msg.ok{color:var(--ok);}
@@ -1613,7 +1641,7 @@ body.m-portrait #to-principle-card{overflow-y:auto;}
 #le-btn-row{display:flex;gap:10px;}
 .le-btn{
   font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;
-  padding:10px 22px;border-radius:6px;cursor:pointer;border:1.5px solid var(--btn-line);min-height:34px; /* v3.5.160 unified outline law reaches TOUR */
+  padding:10px 22px;border-radius:6px;cursor:pointer;border:2px solid var(--btn-line);min-height:34px; /* v3.5.160 unified outline law reaches TOUR */
 }
 .le-btn-restart{background:transparent;color:var(--t1);}
 .le-btn-restart:hover{color:var(--acc);border-color:var(--acc);}
@@ -1832,7 +1860,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 .pause-menu{display:flex;flex-direction:column;gap:8px;width:100%;max-width:280px;margin-top:6px;}
 .pmb{width:100%;padding:11px 0;border-radius:6px;cursor:pointer;
   font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:5px;
-  border:1.5px solid var(--btn-line);min-height:34px;text-align:center;transition:all .15s;} /* v3.5.159 --pause-border was DEFINED NOWHERE — the border shorthand collapsed to none, so the pause motif itself broke the outline law. Now on the unified --btn-line + the 34px height law. */
+  border:2px solid var(--btn-line);min-height:34px;text-align:center;transition:all .15s;} /* v3.5.159 --pause-border was DEFINED NOWHERE — the border shorthand collapsed to none, so the pause motif itself broke the outline law. Now on the unified --btn-line + the 34px height law. */
 .pmb-resume{background:linear-gradient(180deg,var(--acc-bright),var(--acc));color:#0a0600;border-color:var(--acc);}
 .pmb-resume:hover{filter:brightness(1.1);}
 .pmb-restart{background:transparent;color:var(--t1);border-color:var(--border2);}
@@ -2026,7 +2054,7 @@ body.m-portrait #conv-header{flex-wrap:wrap;row-gap:6px;justify-content:center;}
 /* v3.5.152 (The Juice) — press feedback on the console + staging controls that were missing it */
 .console-btn:active,.stg-light:active,.stg-sep:active,.pmb:active,#rot-btn:active,.bj-btn:active{transform:scale(.96);}
 /* v3.5.141 BUTTON UNIFICATION — every action + console button wears the SAME outline box (uniform --btn-line border, radius, height). Fills stay semantic (water blue, break-jam amber, alerts red) but the OUTLINE is identical everywhere, per Goyim. */
-.console-btn,.strip-act,.bj-btn,#rot-btn{border:1.5px solid var(--btn-line);border-radius:6px;padding:6px 14px;min-height:34px;line-height:1;display:inline-flex;align-items:center;justify-content:center;} /* v3.5.145 radius 5->6px = the one shared button radius */
+.console-btn,.strip-act,.bj-btn,#rot-btn{border:2px solid var(--btn-line);border-radius:6px;padding:6px 14px;min-height:34px;line-height:1;display:inline-flex;align-items:center;justify-content:center;} /* v3.5.145 radius 5->6px = the one shared button radius */
 .console-btn:hover,.strip-act:hover,.bj-btn:hover,#rot-btn:hover{border-color:var(--btn-line);filter:brightness(1.12);}
 .console-btn.on{border-color:var(--btn-line);}
 @keyframes bjpulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
@@ -2041,7 +2069,7 @@ body.m-portrait #conv-header{flex-wrap:wrap;row-gap:6px;justify-content:center;}
 .chute-light.cl-crit::after{content:'✕';}
 /* v3.4.12 NC/SMALLS pie-chart lights + wheel HUD */
 /* v3.5.112 NC/staging pill sized to match the strip buttons (was tiny 11px = "different game") */
-.stg-light{display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:6px 11px;min-height:34px;border-radius:6px;background:#1c1410;border:1.5px solid var(--btn-line);font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:bold;color:#e8d6b0;user-select:none;} /* v3.5.145 pulled into the unified --btn-line outline system + strip height */
+.stg-light{display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:6px 11px;min-height:34px;border-radius:6px;background:#1c1410;border:2px solid var(--btn-line);font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:bold;color:#e8d6b0;user-select:none;} /* v3.5.145 pulled into the unified --btn-line outline system + strip height */
 .stg-light b{color:var(--acc-bright);font-weight:bold;letter-spacing:.5px;font-size:14px;}
 .stg-pie{width:20px;height:20px;border-radius:50%;background:conic-gradient(#1f9d57 0%, rgba(255,255,255,.13) 0);border:1px solid rgba(0,0,0,.35);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);}
 .stg-light.s-crit{border-color:#c23a1a;animation:bjblink .5s steps(2) infinite;}
@@ -2058,7 +2086,7 @@ body.m-portrait .stg-wheel{bottom:288px;}
 /* v3.5.114 touch-friendly bag break: a tappable chip replaces the impossible-on-mobile double-click */
 .stg-brk{position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1px;color:#0d0805;background:var(--acc-bright);border:1.5px solid #7a4a12;border-radius:6px;padding:4px 10px;box-shadow:0 2px 7px rgba(0,0,0,.55);pointer-events:auto;cursor:pointer;z-index:2;}
 .stg-brk:active{background:#fff;}
-.stg-sep{cursor:pointer;padding:6px 12px;min-height:24px;border-radius:6px;background:rgba(200,121,30,.16);border:1.5px solid var(--btn-line);font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;color:var(--acc-bright);font-size:13px;white-space:nowrap;}
+.stg-sep{cursor:pointer;padding:6px 12px;min-height:24px;border-radius:6px;background:rgba(200,121,30,.16);border:2px solid var(--btn-line);font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;color:var(--acc-bright);font-size:13px;white-space:nowrap;}
 .stg-sep::after{content:' ✕';color:var(--t2);font-family:monospace;font-size:11px;}
 .stg-empty{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);white-space:nowrap;color:var(--t3);font-size:12px;background:rgba(20,14,9,.95);padding:6px 12px;border-radius:6px;pointer-events:auto;}
 
@@ -2396,13 +2424,13 @@ body[data-cb="trit"]{
 .lb-at-nm{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:bold;color:#5c4a30;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /* v3.5.111 2x2 grid, high-contrast (no more gray-on-gray) */
 .lb-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px;}
-.lb-tab{padding:11px 0;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;color:#4a3620;background:#fbf7ec;border:1.5px solid var(--btn-line);border-radius:6px;cursor:pointer;}
+.lb-tab{padding:11px 0;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;color:#4a3620;background:#fbf7ec;border:2px solid var(--btn-line);border-radius:6px;cursor:pointer;}
 .lb-tab.active{color:#241608;background:#fff;border-color:var(--btn-line);box-shadow:inset 0 -3px 0 #d4820f;}
 .lb-tab:hover{color:#241608;border-color:var(--btn-line);filter:brightness(1.06);}
 .lb-follow-row{display:flex;gap:6px;margin-bottom:12px;}
 #lb-follow-input{flex:1;min-width:0;padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:14px;color:#2a1a08;background:#fff;border:1px solid #c8b898;border-radius:4px;}
 #lb-follow-input:focus{outline:none;border-color:#8b4513;}
-#lb-follow-btn{padding:8px 16px;min-height:34px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;color:#fff;background:#8b4513;border:1.5px solid var(--btn-line);border-radius:6px;cursor:pointer;}
+#lb-follow-btn{padding:8px 16px;min-height:34px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;color:#fff;background:#8b4513;border:2px solid var(--btn-line);border-radius:6px;cursor:pointer;}
 #lb-follow-btn:hover{background:#a0531a;}
 .lb-unfollow{background:none;border:none;color:#c08b6a;font-size:16px;cursor:pointer;padding:4px 8px;min-width:24px;min-height:24px;line-height:1;margin-left:8px;}
 .lb-unfollow:hover{color:#c23a1a;}
@@ -2460,7 +2488,7 @@ body[data-cb="trit"]{
 .pf-note{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:#9a8a6e;margin-top:14px;line-height:1.4;}
 .pf-auth{padding:6px 2px 4px;}
 .pf-tabs{display:flex;gap:7px;margin-bottom:16px;}
-.pf-tab{flex:1;background:#e7e0d0;border:1.5px solid var(--btn-line);border-radius:6px;padding:9px 0;min-height:34px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1.5px;color:#8a7a5e;cursor:pointer;}
+.pf-tab{flex:1;background:#e7e0d0;border:2px solid var(--btn-line);border-radius:6px;padding:9px 0;min-height:34px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1.5px;color:#8a7a5e;cursor:pointer;}
 .pf-tab.on{background:#8b4513;color:#fff;border-color:var(--btn-line);box-shadow:inset 0 -3px 0 #d4820f;}
 .pf-fld{margin-bottom:11px;}
 .pf-fld label{display:block;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:#7a6a52;margin-bottom:3px;}
@@ -2511,11 +2539,11 @@ body[data-cb="trit"]{
   background:rgba(12,8,4,.92);padding:18px;overflow:auto;}
 #ov-cert.vis{display:flex;}
 .cert-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:min(560px,94vw);}
-#cert-canvas{width:100%;height:auto;border:1.5px solid var(--btn-line);border-radius:6px;
+#cert-canvas{width:100%;height:auto;border:2px solid var(--btn-line);border-radius:6px;
   box-shadow:0 14px 44px rgba(0,0,0,.6);background:#1c1410;}
 .cert-acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
 .cert-btn{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;min-height:34px;
-  border:1.5px solid var(--btn-line);border-radius:6px;background:var(--acc);color:#241505;
+  border:2px solid var(--btn-line);border-radius:6px;background:var(--acc);color:#241505;
   padding:9px 22px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
 .cert-btn.ghost{background:transparent;color:var(--t1);}
 .cert-note{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;
@@ -2598,7 +2626,7 @@ body[data-cb="trit"]{
 .ps-vsum .vr.l .va{color:#8a6a3a;}
 .ps-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;border-top:2px solid #cdbf9f;padding-top:7px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#9a8b72;letter-spacing:.05em;}
 .ps-tools{position:sticky;top:0;display:flex;gap:8px;justify-content:flex-end;margin:-12px -12px 8px 0;}
-.ps-tools button{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.05em;cursor:pointer;background:#2a2018;color:#f5eede;border:1.5px solid var(--btn-line);border-radius:6px;padding:7px 12px;min-height:34px;}
+.ps-tools button{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.05em;cursor:pointer;background:#2a2018;color:#f5eede;border:2px solid var(--btn-line);border-radius:6px;padding:7px 12px;min-height:34px;}
 .ps-login{color:#c23a1a;font-size:11px;}
 /* v3.5.190 PRINT RESULTS PRINTED THE MENU. The old rule restyled #ov-postsort for print but
    never hid anything else, so the start menu, the canvas and the whole HUD stayed in the print
@@ -2673,7 +2701,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.193 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.194 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2785,7 +2813,7 @@ body[data-cb="trit"]{
   </div>
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.193 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.194 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -2946,7 +2974,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.193 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.194 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3432,7 +3460,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.193
+// LOCK IN v3.5.194
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3900,7 +3928,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.193'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.194'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -5173,7 +5201,12 @@ function takeDrink(){
     S.waterSabotage=(S.waterSabotage||0)+1;
     showBanner('\ud83d\udeab OVER-HYDRATING TO DODGE SAFETIES IS SABOTAGE \u00b7 logged. \u2212'+_dpen+' CUBES'+(cleared?' (warning still cleared).':'.'),'danger',2400);
   }else if(_covered){showBanner('\ud83d\udc77 MANAGER: \u2026THANK YOU FOR STAYING HYDRATED. \ud83d\udca7','ok',2400);}
-  else if(cleared){showBanner('\ud83d\udca7 WATER BREAK \u00b7 warning cleared (still on the record as washed).','ok',1900);}
+  // v3.5.194 ZERO PROMOTION ON THE WASH. Vince: "we should not announce that a drink clears the
+  // safety incidents. that should be a veteran easter egg with zero promotion." The mechanic is
+  // untouched, the record still shows the warning as washed, and the sabotage ladder above still
+  // calls it out when somebody farms it. What is gone is the game TEACHING the escape hatch the
+  // first time it happens. A drink now reads as a drink. You find the rest by noticing it.
+  else if(cleared){showBanner('\ud83d\udca7 WATER BREAK.','',1200);}
   else if(G.drinks===1)showBanner('\ud83d\udca7 HYDRATED \u00b7 1 is par. A second nets a bonus.','',1400);
   else if(G.drinks===2)showBanner('\ud83d\udca7 TOPPED OFF \u00b7 hydration bonus secured.','ok',1400);
   updateWaterHUD();if(typeof updateSafetyHUD==='function')updateSafetyHUD();
@@ -5716,9 +5749,12 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   if(_onVT&&!collapseAnimating&&!gOver){
     collapseAnimating=true;
     var _vtIsTire=(box.cat==='tire'); // tire-on-tire = the escalating ladder; anything else just rolls off
+    // v3.5.194 this path printed NOTHING at all, so the piece simply fell and the generic slip
+    // line shrugged at it. Vince: "it doesn't say why the box on top of the tire fell."
+    var _vtWhy='🛞 THAT TIRE IS ON ITS EDGE · a tire stood on edge rolls, so nothing will sit on it. Lay tires FLAT and they hold whatever you put on them.';
     setTimeout(function(){
       if(_vtIsTire){_shedToBelt([cell,_onVT]);tireStackStrike();}
-      else{collapseFreeStack({boxes:[cell,_onVT],cx:cell.rx});} // a collapse (hazmat-checked inside)
+      else{collapseFreeStack({boxes:[cell,_onVT],cx:cell.rx,why:_vtWhy});} // a collapse (hazmat-checked inside)
       collapseAnimating=false;
     },200);
   } else {
@@ -5729,19 +5765,19 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     var _dv=null; // v3.5.97 SWEEP #5 diagonal/staircase (assigned in the chain below)
     if(_hu&&!collapseAnimating&&!gOver){
       collapseAnimating=true;
-      if(typeof showBanner==='function')showBanner('HEAVY FREIGHT, NO FULL BASE · heavy needs something solid under EVERY cell. Down it comes, and what it was crushing.','danger',2800);
+      var _huWhy='HEAVY FREIGHT, NO FULL BASE · heavy needs something solid under EVERY cell. Down it comes, and what it was crushing.';
       var _hb=[cell];if(_hu.under&&_hu.under.id!==cell.id)_hb.push(_hu.under);
-      setTimeout(function(){collapseFreeStack({boxes:_hb,cx:cell.rx});collapseAnimating=false;},220);
+      setTimeout(function(){collapseFreeStack({boxes:_hb,cx:cell.rx,why:_huWhy});collapseAnimating=false;},220);
     } else if(_tt&&!collapseAnimating&&!gOver){
       collapseAnimating=true;
-      if(typeof showBanner==='function')showBanner('COLUMN INTEGRITY · a 2×'+_tt.Bh+' pillar holds a 2×'+_tt.maxTop+' at most. A 2×'+_tt.Th+' up there snaps the column.','warn',2600);
-      setTimeout(function(){collapseFreeStack({boxes:[cell],cx:cell.rx});collapseAnimating=false;},220);
+      var _ttWhy='COLUMN INTEGRITY · a 2×'+_tt.Bh+' pillar holds a 2×'+_tt.maxTop+' at most. A 2×'+_tt.Th+' up there snaps the column.';
+      setTimeout(function(){collapseFreeStack({boxes:[cell],cx:cell.rx,why:_ttWhy});collapseAnimating=false;},220);
     } else if((_dv=(!_hu&&!_tt&&typeof diagonalViolation==='function')?diagonalViolation(cell):null)&&!collapseAnimating&&!gOver){
       // v3.5.97 SWEEP #5 · an overhang stacked on another overhang = the staircase/diagonal. Both fall.
       collapseAnimating=true;
-      if(typeof showBanner==='function')showBanner('OVERHANG ON AN OVERHANG · that’s a staircase, not a wall. Two hangs in a row and the packages come down. Build a full base or throw for a piece that lines up.','danger',2900);
+      var _dvWhy='OVERHANG ON AN OVERHANG · that’s a staircase, not a wall. Two hangs in a row and the packages come down. Build a full base or throw for a piece that lines up.';
       var _db=[cell];if(_dv.under&&_dv.under.id!==cell.id)_db.push(_dv.under);
-      setTimeout(function(){collapseFreeStack({boxes:_db,cx:cell.rx});collapseAnimating=false;},220);
+      setTimeout(function(){collapseFreeStack({boxes:_db,cx:cell.rx,why:_dvWhy});collapseAnimating=false;},220);
     } else {
     // v3.5.54 COLUMN RULE (taper-aware) · a freestanding stack topples if it's NON-tapering & 3+ high, or any stack 5+ high.
     // Strict taper (4x4/3x3/2x2/1x1) is exempt. The whole stack sheds back to the belt at once (resolves · no per-placement re-fire).
@@ -5749,6 +5785,10 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     var _unstable=_st&&_st.unstable;
     if(_unstable&&!collapseAnimating&&!gOver){
       collapseAnimating=true;
+      // v3.5.194 this one never had a reason at all, in either branch of the rule
+      _st.why=(_st.h>=5)
+        ? '📦 FIVE HIGH · nothing freestanding stands that tall. Taper it, or lock a shelf under it first.'
+        : '📦 SAME WIDTH, THREE HIGH · a column that never narrows has nothing holding its middle. Taper it, narrower each layer, or lock the shelf first.';
       setTimeout(function(){collapseFreeStack(_st);collapseAnimating=false;},220);
     } else if(_st&&!_st.tapering&&_st.h===2){
       if(!G._col2||Date.now()-G._col2>2600){G._col2=Date.now();showBanner('TWO HIGH, SAME WIDTH, NO SUPPORT · that’s the limit. Taper it (narrower on top) or lock the shelf before one more.','warn',1900);}
@@ -6397,9 +6437,16 @@ function collapseFreeStack(st){
     return;
   }
   if(_slip){ // a slip is forgiving: piece back on the belt, quick nudge, no record, no recovery lockout
-    if(typeof showBanner==='function')showBanner('😅 SLIP · a piece came loose, back on the belt. Widen the base and it holds.','warn',2000);
+    // v3.5.194 SAY WHY IT FELL. Every sweep printed its own cause (heavy with no base, column
+    // integrity, the staircase) and then called this 220ms later, where this line OVERWROTE all
+    // of them. The player watched a box drop and was told "a piece came loose, widen the base"
+    // no matter what actually happened, including on a tire standing on edge, which widening the
+    // base does not fix. The cause rides in on st.why now; this generic line is only the fallback
+    // for a stack that genuinely just lost its footing.
+    if(typeof showBanner==='function')showBanner(st.why||'😅 SLIP · a piece came loose, back on the belt. Widen the base and it holds.','warn',2600);
     return;
   }
+  if(st.why&&typeof showBanner==='function')showBanner(st.why,'danger',3000); // a real collapse earns the reason too
   if(typeof breakFlow==='function')breakFlow(); // v3.5.147 a real collapse breaks the FLOW streak (slips returned above, so they don't)
   recoveryActive=true;recoveryT=Date.now();recoveryCount=0;
   collapseEscalation(); // v3.5.66 whoopsie → trainer heads-up → safety warning → violation (was an instant incident)
@@ -10809,7 +10856,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.193</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.194</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
