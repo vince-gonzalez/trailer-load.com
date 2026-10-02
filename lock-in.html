@@ -27,9 +27,31 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.189
+   LOCK IN v3.5.190
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.190 - THREE DEFECTS VINCE CAUGHT BY PLAYING IT.
+     (1) THE CERTIFICATE WAS OFFERED EVERY WALL AND ITS PICTURE SHOWED HOLES. Not a wiring bug --
+     the BAR. v3.5.186 cut CERT_MIN_PACK to 85 to make the thing reachable after two clean walls
+     earned nothing, and it overshot. 85% leaves 51 of 340 cells empty, so the certificate printed
+     a photograph of a wall with gaps in it under the words "A WALL LOADED CLEAN", and a loader who
+     seals floor-to-ceiling cleanly earned one every single time. 95% leaves 18 empty, which reads
+     as a full wall in an image. The 340/340 "PERFECT WALL" tier is untouched above it.
+     certgate.js rewritten: it hardcoded the old 85 in BOTH its source lookup and its boundary
+     cases, so raising the bar would have broken the gate instead of testing it. It now READS the
+     constant out of this file and derives its own floor, plus a new assertion that the bar can
+     never again leave more than 20 cells empty -- the picture is part of the claim.
+     (2) PRINT RESULTS PRINTED THE MENU. The print stylesheet restyled #ov-postsort and never hid
+     anything else, so the start menu, canvas and HUD all stayed in the print flow -- and dropping
+     the report to position:static pulled it out of its overlay into normal document order, BELOW
+     all of it. #ov-postsort is a direct child of <body>, so hiding every body child and bringing
+     that one back is the whole fix. PRINT is what turns a score into a document an instructor
+     files, so it mattered more than it looked.
+     (3) A LOST NEWLINE ATE A STATEMENT. In nextTrailer(), the v3.5.185 comment ran straight into
+     the code after it, so the line that hides the MAX PACK finish button on a new trailer sat
+     inside the comment and never ran. Newline restored.
+     No mechanic changed. Bags ride the chute exactly as they did.
 
    CHANGE LOG v3.5.189 - THE START MENU GETS THE BOARD, AND TWO MODES LEAVE.
      (1) THE CLIPBOARD, asked for across versions and deferred every time with the same excuse:
@@ -2510,7 +2532,29 @@ body[data-cb="trit"]{
 .ps-tools{position:sticky;top:0;display:flex;gap:8px;justify-content:flex-end;margin:-12px -12px 8px 0;}
 .ps-tools button{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.05em;cursor:pointer;background:#2a2018;color:#f5eede;border:1.5px solid var(--btn-line);border-radius:6px;padding:7px 12px;min-height:34px;}
 .ps-login{color:#c23a1a;font-size:11px;}
-@media print{#ov-postsort{position:static;background:#fff;padding:0;}.ps-tools{display:none;}.ps-card{box-shadow:none;border:1px solid #999;max-width:none;}}
+/* v3.5.190 PRINT RESULTS PRINTED THE MENU. The old rule restyled #ov-postsort for print but
+   never hid anything else, so the start menu, the canvas and the whole HUD stayed in the print
+   flow -- and dropping the report to position:static pulled it out of its overlay and into
+   normal document order, which landed it BELOW all of that. Page one was the menu and the spec
+   sheet was somewhere further down. #ov-postsort is a direct child of <body>, so hiding every
+   body child and bringing just that one back is the whole fix. This matters more than it looks:
+   PRINT is the feature that turns a score into a document an instructor puts in a folder. */
+@media print{
+  body>*{display:none!important;}
+  body{background:#fff!important;}
+  #ov-postsort{display:block!important;position:static!important;inset:auto!important;
+    background:#fff;padding:0;overflow:visible!important;}
+  .ps-tools{display:none!important;}
+  /* Print the DOCUMENT, not the prop holding it. .ps-card is a drawn metal board and
+     .ps-sheet is the paper on it; on screen that reads as a clipboard, on A4 it is a
+     full-page gray gradient that eats toner and drops the contrast of everything on it.
+     The sheet carries its own LOCK IN masthead, so the brand survives the board leaving.
+     Three lines to revert if the board is wanted on paper after all. */
+  .ps-card{background:none!important;border:none!important;box-shadow:none!important;
+    padding:0!important;max-width:none;}
+  .ps-card::before{display:none!important;}
+  .ps-sheet{background:#fff!important;border:none!important;box-shadow:none!important;}
+}
 </style>
 </head>
 <body>
@@ -2547,7 +2591,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.189 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.190 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2659,7 +2703,7 @@ body[data-cb="trit"]{
   </div>
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.189 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.190 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -2817,7 +2861,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.189 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.190 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3303,7 +3347,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.189
+// LOCK IN v3.5.190
 // LOCK IN — V. Gonzalez — © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3771,7 +3815,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.189'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.190'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -6648,7 +6692,13 @@ function packPct(){return (typeof countFilled==='function'&&typeof GW!=='undefin
 // Calibration check on his two walls: the 88% daily earns it, the 84% shift with
 // one incident does not. Earnable, not automatic.
 // 100% pack keeps its own name on the card: PERFECT LOAD.
-var CERT_MIN_PACK=85;
+// v3.5.190 THE BAR, RAISED. v3.5.186 cut this to 85 to make the certificate reachable after two
+// clean walls earned nothing, and it overshot: 85% pack leaves 51 of 340 cells empty, so the
+// certificate printed a PHOTOGRAPH OF A WALL WITH HOLES IN IT under the words "A WALL LOADED
+// CLEAN". The picture argued against the claim, and a loader who seals floor-to-ceiling cleanly
+// was earning one every single wall. 95% leaves 17 empty cells, which reads as a full wall in an
+// image. The 100%-of-cells tier ("THE PERFECT WALL") is unchanged and still sits above this.
+var CERT_MIN_PACK=95;
 var CERT_LAST=null;
 var CERT_GRADE=null;
 // Called from EVERY path that starts a fresh wall. The first version only hooked the
@@ -10101,7 +10151,11 @@ function nextTrailer(){
   // v3.5.133 endGame(FALSE): the win-path bounced into sealWall and froze the game (no end screen, no admin).
   if(gameMode==='daily'){var _mf0=document.getElementById('maxpack-finish');if(_mf0)_mf0.style.display='none';if(!gOver)showDailyComplete();return;} // v3.5.139 FINISH in daily -> submit/keep/restart choice, not an auto-graded end
   if(G){G.sealed=false;G.maxPack=false;G.wallDone=false;}
-  try{liCertReset();}catch(_cr1){} // v3.5.185 new trailer = new wall = no inherited certificatevar _mf=document.getElementById('maxpack-finish');if(_mf){_mf.style.display='none';_mf.classList.remove('pulse');} // v3.5.4 reset seal/max-pack for the new wall; v3.5.98 clear the pulse
+  try{liCertReset();}catch(_cr1){} // v3.5.185 new trailer = new wall = no inherited certificate
+  // v3.5.190 A LOST NEWLINE ATE THIS STATEMENT. The v3.5.185 comment above ran straight into the
+  // code below it, so this entire line sat INSIDE the comment and never executed: on a new
+  // trailer the MAX PACK finish button was never hidden and its pulse was never cleared.
+  var _mf=document.getElementById('maxpack-finish');if(_mf){_mf.style.display='none';_mf.classList.remove('pulse');} // v3.5.4 reset seal/max-pack for the new wall; v3.5.98 clear the pulse
   var _kl2=document.querySelector('#next-popup button[onclick="npKeepLoading()"]');if(_kl2)_kl2.style.display=''; // v3.5.24 restore keep-loading for the next wall
   S.bestTrailerAvg=Math.max(S.bestTrailerAvg||0,getPPH()); // v2.1.9 best single-trailer rate
   if(gameMode==='shift'){
@@ -10648,7 +10702,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u2014':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.189</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.190</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
