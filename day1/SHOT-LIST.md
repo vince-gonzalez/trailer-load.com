@@ -9,9 +9,21 @@ is the literal string the game prints, so you know you got the right moment.
 
 ## BEFORE YOU START
 
-**Mode: PRACTICE.** It has the NC tray and the bag tray, and it has **no dispatch
-clock and no fail pressure**, so you can set up a shot without the trailer leaving.
-The three shots that need the dispatch bar are marked **TRAILER-LOAD**.
+**Mode: TRAILER-LOAD**, with two exceptions noted below.
+
+Practice and Gauntlet are being retired from the menu, so shooting in them would
+document a mode nobody can reach. Trailer-Load has everything, runs endless walls,
+and its HUD is identical to the daily's. The dispatch clock only fires at 85%, and
+almost every shot here is set up well before that.
+
+**Shoot `03-full-hud.png` in DAILY, not Trailer-Load.** That is the one frame where
+the staging tray contents are visible, and the daily's tray is what a new player
+actually sees: two tires and one hazmat, nothing else all wall.
+
+**Shoot `35-dispatch.png` in DAILY or TRAILER-LOAD.** Either works.
+
+**The bag tray is not part of this page.** In the daily it never fills. Bags ride
+the belt. Any shot showing an empty bag tray is fine and accurate.
 
 **Window:** pick one size and never change it. 1600 x 1000 at 100% zoom is good.
 Every strip on the page sits in the same frame, and mismatched crops are the thing
@@ -31,7 +43,7 @@ armed before you make the placement.
 
 ### `01-empty-bay.png`
 **What:** the trailer before a single piece is placed.
-**How:** start PRACTICE, screenshot immediately.
+**How:** start a wall, screenshot before placing anything.
 **Why:** establishes 17 wide, 20 tall, and that row 0 is the ceiling. Every later
 shot is read against this one.
 **Crop:** the full trailer, nothing else.
@@ -48,9 +60,10 @@ shot is read against this one.
 
 ### `03-full-hud.png`
 **What:** the whole screen with the belt loaded and both trays holding pieces.
-**How:** play until you have at least 3 non-conveyables and 2 bags staged.
-**Why:** the one orientation image. Belt, NC tray, bag tray, score, pace, all in
-one frame.
+**How:** in DAILY, screenshot once the belt is full and the three staged pieces
+are visible.
+**Why:** the one orientation image. Belt, staging tray, score and pace in one
+frame. **Shoot this one in DAILY** so the three staged pieces are the real ones.
 **Crop:** the entire game viewport.
 
 ### `04-belt-closeup.png`
@@ -204,8 +217,8 @@ under **every** cell.
 
 ### `27-nest.png`
 **What:** a bag of smalls dropped into a flat tire.
-**Trigger:** have a flat tire on the wall and a bag in staging. The hint fires the
-first time both are true:
+**Trigger:** lay a tire flat on the wall, then get a bag of smalls in hand off the
+belt. The hint fires the first time both are true:
 **Banner:** `🛞 VETERAN MOVE — drop a SMALLS BAG onto a flat tire. The smalls NEST in the hollow for bonus cubes.`
 
 ### `28-roof-bag.png`
