@@ -27,9 +27,18 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.186
+   LOCK IN v3.5.187
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.187 - THE CRUNCH BANNER LIED BY 3.75x. Crushing a box printed "-80 CUBES" and took 300.
+     Two numbers for one rule: CRUNCH_PENALTY=80 was read ONLY by the banner, while calcScore carried a
+     hardcoded 300. The code's own comment already said "-300 real score each", so the constant was the stale
+     half and nobody noticed because the two lines are 3,100 apart. Found while mapping the mechanics for a
+     recorded walkthrough -- the exact situation where reading the on-screen number aloud would have put a
+     wrong figure on camera, in a product sold to instructors. One source now: the constant is 300 and
+     calcScore reads it. Banner and score agree for the first time. No balance change: the real cost was
+     always 300 and still is.
 
    CHANGE LOG v3.5.186 - THE CERTIFICATE WAS UNEARNABLE. Vince played two walls on 3.5.185 and got nothing.
      Neither was a bug in the wiring: the BAR was wrong. 3.5.185 required all 340 cells. Measured against every
@@ -2476,7 +2485,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.186 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.187 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2582,7 +2591,7 @@ body[data-cb="trit"]{
     </div>
   </div>
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.186 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.187 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -2740,7 +2749,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.186 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.187 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3230,7 +3239,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.186
+// LOCK IN v3.5.187
 // LOCK IN — V. Gonzalez — © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3292,7 +3301,10 @@ var PANIC_THRESHOLD=0.85, PANIC_DURATION=60, PANIC_BONUS_MAX=800;
 var STOW_BONUS=200, TETRIS_BONUS=500, BULKHEAD_BONUS=500, BRICK_BONUS=300;
 var BAG_CEIL_BONUS=600; // v3.5.142 huge bonus per 3x3 smalls bag packed against the trailer roof (dead air up top reclaimed); a full ceiling course = 5 bags (15 of 17 cells)
 var FLOW_MIN=3, FLOW_STEP=25; // v3.5.147 FLOW streak: consecutive clean placements (no crunch/collapse) pay an escalating bonus from the 3rd on (+25, +50, +75 ...)
-var RECOVERY_BONUS=400, CRUNCH_PENALTY=80, COLLAPSE_INT_COST=18;
+// v3.5.187 CRUNCH_PENALTY was 80 and was ONLY ever read by the crunch banner, while calcScore
+// docked a hardcoded 300. The player was told a crushed box cost 80 and was charged 300 — the
+// banner understated the real penalty by 3.75x. One source now: this constant, read by both.
+var RECOVERY_BONUS=400, CRUNCH_PENALTY=300, COLLAPSE_INT_COST=18;
 var LOAD_SEALED_BONUS=2500, HAZMAT_SHELF_BONUS=1500; // v2.1.11 hierarchy: SEAL #1, HAZMAT SHELF #2
 var HYDRATION_BONUS=300; // v2.1.37 two-drink hydration bonus
 var PRESELECT_COST=25; // v2.1.3: per depth-step docked for reaching past the front belt piece
@@ -3689,7 +3701,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.186'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.187'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -6440,7 +6452,7 @@ function calcScore(segOverride){
   var recovB=(G.recoveryCount||0)*RECOVERY_BONUS;
   var bagCeilB=countCeilingBags()*BAG_CEIL_BONUS; // v3.5.142 ceiling smalls-bag shelf
   var flowB=(G.flowBonus||0); // v3.5.147 accumulated FLOW-streak bonus (reset per wall, broken by crunch/collapse)
-  var crunchP=(G.crunchCount||0)*300;
+  var crunchP=(G.crunchCount||0)*CRUNCH_PENALTY; // v3.5.187 was a hardcoded 300 that disagreed with the banner
   var voidP=voids*8;
   var cogP=Math.round(cogDev*200);
   var preselectP=(G.preselectDepth||0)*PRESELECT_COST; // v2.1.3 cherry-pick cost
@@ -10566,7 +10578,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u2014':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.186</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.187</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'

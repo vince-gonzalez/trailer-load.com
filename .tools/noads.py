@@ -46,6 +46,12 @@ ALLOWED = {
     'schema.org',                                 # JSON-LD vocabulary
     'www.w3.org',                                 # SVG/XML namespace
     'www.sitemaps.org',                           # sitemap schema
+    # Stripe card checkout for the published pricing tiers. A payment processor,
+    # not ad tech: no script is loaded from it, these are plain <a href> links the
+    # buyer clicks on purpose, and no card detail ever touches this domain. Added
+    # 2026-10-01 because the gate had flagged it on every run since the buy buttons
+    # shipped, and a gate with a standing false positive is a gate nobody reads.
+    'buy.stripe.com',
 }
 
 AD_SIGNATURES = [
