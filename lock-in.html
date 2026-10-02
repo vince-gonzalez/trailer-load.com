@@ -27,9 +27,28 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.194
+   LOCK IN v3.5.195
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.195 - PAPER, NOT BLACK BOXES.
+     Vince: "if the clipboard is there, we don't need black boxes, maybe just a paper or note.
+     we can significantly downsize it if we remove the black boxes." Correct on all three counts.
+     Four heavy dark panels sitting on a photographed clipboard read as UI dropped ON the art
+     rather than anything written on it. The cards are notes on the page now: cream stock,
+     hairline rule, the mode's colour kept as a tab down the left edge so the four stay telling
+     apart. Board drops from 86vh to 72vh, because it was sized to carry the weight of those
+     panels and no longer has to.
+     THE MODE COLOURS WERE CHOSEN FOR A DARK CARD and wash out on paper: the green computed
+     1.97:1 against the cream, nowhere near the 3:1 a non-text boundary needs. Paper gets its own
+     set, every one measured: amber 6.2:1, teal 5.5:1, green 4.6:1, magenta 5.9:1. Titles go
+     near-black (14.3:1) in explicit hex, not a theme token, because that page is light in BOTH
+     themes and a token would invert the moment the dark toggle is on. The tab is now the only
+     thing carrying mode identity, which is exactly why it had to actually be visible.
+     THE SCROLLBAR THAT SCROLLED NOTHING: "the boxes also make the scroll bar that moves zero
+     pixels. lol." overflow-y:auto by itself let a 6px left border and a drop shadow sit one
+     pixel past the box, which produced a horizontal scrollbar across the bottom of the board
+     with nowhere to go. overflow-x:hidden. Verified scrollWidth === clientWidth.
 
    CHANGE LOG v3.5.194 - IT NEVER TOLD YOU WHY IT FELL.
      (1) THE CAUSE WAS ALWAYS BEING OVERWRITTEN. Vince: "it doesn't say why the box on top of the
@@ -1300,7 +1319,9 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 #sm-logo{display:none;}
 #sm-board{
   position:relative;flex:none;
-  height:min(1040px,86vh);width:auto;max-width:94vw;
+  /* v3.5.195 DOWNSIZED. The board was sized for four heavy black panels. With the cards on paper
+     it carries far less weight and does not need to dominate the screen. */
+  height:min(820px,72vh);width:auto;max-width:94vw;
   aspect-ratio:619/905;
   background:url('clipboard.png') center/contain no-repeat;
   filter:drop-shadow(0 16px 42px rgba(0,0,0,.6));
@@ -1313,8 +1334,39 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 #sm-board #sm-modes{
   position:absolute;left:6.5%;right:6.5%;top:29.5%;bottom:5.5%;
   width:auto;max-width:none;margin:0;padding:0;
-  overflow-y:auto;gap:10px;
+  /* v3.5.195 overflow-y:auto by itself allowed a 6px left border and a drop shadow one pixel past
+     the box, which produced a HORIZONTAL scrollbar across the bottom of the board that scrolled
+     nothing. Vince: "the boxes also make the scroll bar that moves zero pixels. lol." */
+  overflow-y:auto;overflow-x:hidden;gap:9px;
 }
+/* ── v3.5.195 PAPER, NOT BLACK BOXES ─────────────────────────────────────────────
+   Vince: "if the clipboard is there, we don't need black boxes, maybe just a paper or note."
+   Right. Four heavy dark panels on a photographed clipboard read as UI dropped on top of art
+   instead of anything written on it. These are notes on the page now: cream stock, a hairline
+   rule, and the mode's own colour kept as the tab down the left edge so the four stay telling
+   apart at a glance.
+   CONTRAST, computed against the #f1ece0 card (L=0.8409), never eyeballed, and in EXPLICIT hex
+   because the page is light in BOTH themes and a theme token would invert on the dark toggle:
+     #2a1a08 title 14.3:1 · #5a4526 body 6.8:1. */
+#sm-board .sm-card,#ov-minigames .sm-card{
+  background:#f1ece0;
+  border:1px solid #cdbfa6;border-left-width:7px;border-radius:4px;
+  box-shadow:0 1px 2px rgba(42,26,8,.14);
+}
+#sm-board .sm-card:hover,#ov-minigames .sm-card:hover{background:#fbf7ee;border-color:#a98f63;}
+#sm-board .sm-card-name,#ov-minigames .sm-card-name{color:#2a1a08;}
+#sm-board .sm-card-desc,#ov-minigames .sm-card-desc{color:#5a4526;}
+/* The mode colours were chosen for a DARK card and wash out on paper: the green computed 1.97:1
+   against the cream, nowhere near the 3:1 a non-text boundary needs. Paper gets its own set, all
+   measured against #f1ece0. The tab is now the only thing carrying mode identity, since the
+   titles all went near-black for legibility, so it has to actually be visible. */
+#sm-board .sm-card.mode-flagship,#ov-minigames .sm-card.mode-flagship{border-left-color:#7d4a0e;} /* 6.2:1 */
+#sm-board .sm-card.mode-shift,#ov-minigames .sm-card.mode-shift{border-left-color:#7d4a0e;}
+#sm-board .sm-card.mode-daily,#ov-minigames .sm-card.mode-daily{border-left-color:#0a6a5e;}       /* 5.5:1 */
+#sm-board .sm-card.mode-training,#ov-minigames .sm-card.mode-training{border-left-color:#1a7a42;} /* 4.6:1 */
+#sm-board .sm-card.mode-minigames,#ov-minigames .sm-card.mode-minigames{border-left-color:#a3246b;} /* 5.9:1 */
+#sm-board .sm-card.mode-levels,#ov-minigames .sm-card.mode-levels{border-left-color:#4a4ab8;}
+#sm-board .sm-card.mode-smalls,#ov-minigames .sm-card.mode-smalls{border-left-color:#1a6a8a;}
 /* Short viewports: give the board the height it needs rather than clipping the cards. */
 @media(max-height:700px){#sm-board{height:min(1040px,94vh);}}
 /* Top-right account / settings (placeholders, visible for reference) */
@@ -2701,7 +2753,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.194 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.195 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2813,7 +2865,7 @@ body[data-cb="trit"]{
   </div>
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.194 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.195 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -2974,7 +3026,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.194 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.195 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3460,7 +3512,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.194
+// LOCK IN v3.5.195
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3928,7 +3980,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.194'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.195'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -10856,7 +10908,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.194</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.195</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
