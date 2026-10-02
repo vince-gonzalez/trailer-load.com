@@ -27,9 +27,43 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.190
+   LOCK IN v3.5.193
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.193 - THE HAZMAT SHELF WAS SWALLOWED BY ITS OWN SUPPRESSION WINDOW.
+     Vince: "i didn't see the hazmat shelf when i made it." He was right, and it was not a near
+     miss. v3.5.165 gave danger/warn lines a 1.6 second hold on the message feed so routine
+     chatter could not evict a safety callout. Correct idea, but it SILENTLY DROPPED every
+     non-warning message inside that window, and every award in this game is type 'ok'. The
+     hazmat shelf is the worst possible victim: you earn it by handling dangerous goods, and
+     handling dangerous goods is exactly what fires danger lines, so the second-largest award in
+     the product (+1500) landed inside a window its own prerequisite had just opened. Earn it
+     correctly, see nothing. New 'award' tier holds the feed the way danger does and can never be
+     evicted by it. Given to the hazmat shelf, the seal payout, the certificate offer and both
+     roof-bag lines. Amber, heavier rule, 11.6:1 on the feed ground (computed, not eyeballed).
+     ALSO: 118 ESCAPED EM DASHES. The v3.5.191 sweep matched the literal U+2014 character only;
+     118 more lived in the source as the six-character escape sequence inside JS string literals
+     and rendered to the player identically. Player-facing copy is now zero by both counts.
+     ALSO: this header block read v3.5.190 while the six live stamps read v3.5.192, because the
+     bump script matches "// LOCK IN vX" and never this CSS-comment form. Realigned.
+
+   CHANGE LOG v3.5.192 - THE WRITE-UP GETS THE REAL BOARD, AND THE DAILY GETS A LOADOUT.
+     (1) .wu-clip was a flat #f5f0e8 rectangle with a DRAWN clip, a brown rounded bar on
+     ::before, imitating clipboard.png instead of using it. It is the document that STOPS the
+     game and the single most important image for an instructor, and it was the last surface
+     still faking the board. Real asset now, 619x905, same writing-area insets as every other
+     surface. Found by searching every overlay card BY CLASS instead of by eye, after claiming
+     the sweep was complete twice.
+     (2) DAILY LOADOUT: 4 TIRES + 2 HAZMATS OF DIFFERENT CLASSES (Vince's spec). Four tires
+     because four is enough floor to close a bottom course and a closed course is where a shelf
+     comes from. TIRE-FARM joins the pool for the same reason: at 6x2 a pair covers 12 of the 17
+     floor cells. It had been excluded entirely, so the daily could never roll the one tire that
+     makes a floor course easy. TWO CLASSES because SEGREGATION CANNOT EXIST WITH ONE HAZMAT:
+     the rule is in the code, printed in the briefing, and was structurally impossible to meet or
+     break in the only mode most people will ever play. The second draw is forced to a different
+     hazClass. All draws off the seeded stream in fixed order, so the daily stays identical for
+     everyone. 6 of 8 slots, nothing can overflow.
 
    CHANGE LOG v3.5.191 - STOP DRAWING THINGS HE ALREADY MADE.
      (1) THE POST-SORT REPORT WAS A DRAWN BOARD. .ps-card was a CSS gradient imitating a metal
@@ -2245,6 +2279,9 @@ body[data-cb="trit"]{
 #msg-feed{display:flex;flex-direction:column;justify-content:center;min-height:34px;margin-bottom:5px;}
 .msg-line{font-family:'Share Tech Mono',monospace;font-size:13px;line-height:1.3;color:var(--t1);background:rgba(0,0,0,.22);border-left:3px solid var(--acc);padding:7px 11px;border-radius:0 5px 5px 0;animation:msgIn .22s ease-out both;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .msg-line.msg-ok{border-left-color:var(--ok);color:#9fe3ba;}
+/* v3.5.193 AWARD: the top tier. Amber like the brand, heavier rule, never evicted by a warning.
+   Contrast computed against the feed ground #1a120a (L=0.00662), not eyeballed: #ffd79a = 11.6:1. */
+.msg-line.msg-award{border-left-color:var(--acc-bright);border-left-width:5px;color:#ffd79a;font-weight:600;}
 .msg-line.msg-warn{border-left-color:var(--warn);color:#e8c890;}
 .msg-line.msg-danger{border-left-color:var(--danger);color:#f0a890;}
 .msg-line.msg-out{opacity:0;transform:translateX(10px);transition:opacity .5s ease,transform .5s ease;}
@@ -2636,7 +2673,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.192 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.193 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2748,7 +2785,7 @@ body[data-cb="trit"]{
   </div>
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.192 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.193 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -2909,7 +2946,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.192 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.193 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3395,7 +3432,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.192
+// LOCK IN v3.5.193
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3863,7 +3900,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.192'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.193'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -3932,7 +3969,7 @@ function zSessionDead(quiet){
   ZDATA.session=null;
   try{localStorage.removeItem('liAuth');}catch(e){}
   if(typeof zAuthStatus==='function')zAuthStatus();
-  if(!quiet&&typeof showBanner==='function')showBanner('\u26a0 SIGNED OUT \u2014 your session expired.<br><span style="font-size:.72em">Scores can\u2019t post until you sign in again \u2014 \u25c6 CLOCK-IN, top corner.</span>','danger',6000);
+  if(!quiet&&typeof showBanner==='function')showBanner('\u26a0 SIGNED OUT \u00b7 your session expired.<br><span style="font-size:.72em">Scores can\u2019t post until you sign in again \u00b7 \u25c6 CLOCK-IN, top corner.</span>','danger',6000);
 }
 // Runs cb(true) with a VALID token, or cb(false) if the player must sign in again.
 function zWithAuth(cb){
@@ -4023,8 +4060,8 @@ function zSetRecovery(){
   var rc=zHex6();
   try{fetch(ZDATA.endpoint+'/rpc/lockin_set_recovery',{method:'POST',headers:zAuthHeaders(),body:JSON.stringify({p_hex:rc})})
     .then(function(r){var nt=document.getElementById('auth-note');
-      if(r.ok){if(nt)nt.innerHTML='\u2713 Signed in. <b>RECOVERY CODE: '+rc+'</b> \u2014 write it down. It resets your password if you forget (no email needed).';
-        if(typeof showBanner==='function')showBanner('\ud83d\udd11 RECOVERY CODE: '+rc+' \u2014 WRITE IT DOWN.','ok',6000);}
+      if(r.ok){if(nt)nt.innerHTML='\u2713 Signed in. <b>RECOVERY CODE: '+rc+'</b> \u00b7 write it down. It resets your password if you forget (no email needed).';
+        if(typeof showBanner==='function')showBanner('\ud83d\udd11 RECOVERY CODE: '+rc+' \u00b7 WRITE IT DOWN.','ok',6000);}
     }).catch(function(e){console.error('zSetRecovery:',e);});}catch(e){console.error('zSetRecovery:',e);}
 }
 function zForgotToggle(){var d=document.getElementById('auth-reset');if(d)d.style.display=(d.style.display==='none'||!d.style.display)?'block':'none';}
@@ -4036,9 +4073,9 @@ function zDoReset(){
   try{fetch(ZDATA.endpoint+'/rpc/lockin_reset_with_hex',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey,'Authorization':'Bearer '+ZDATA.anonKey},body:JSON.stringify({p_username:un,p_hex:hx,p_newpass:np})})
     .then(function(r){return r.json();})
     .then(function(j){
-      if(j&&j.ok){if(nt)nt.textContent='\u2713 Password reset \u2014 now SIGN IN with your new password.';var d=document.getElementById('auth-reset');if(d)d.style.display='none';}
+      if(j&&j.ok){if(nt)nt.textContent='\u2713 Password reset \u00b7 now SIGN IN with your new password.';var d=document.getElementById('auth-reset');if(d)d.style.display='none';}
       else{if(nt)nt.textContent='\u2715 '+((j&&j.error)||'Reset failed.');}
-    }).catch(function(e){console.error('zDoReset:',e);if(nt)nt.textContent='\u2715 Network error \u2014 try again.';});}catch(e){console.error('zDoReset:',e);}
+    }).catch(function(e){console.error('zDoReset:',e);if(nt)nt.textContent='\u2715 Network error \u00b7 try again.';});}catch(e){console.error('zDoReset:',e);}
 }
 function zAuthLogin(){
   var em=document.getElementById('auth-email'),pw=document.getElementById('auth-pw');
@@ -4055,7 +4092,7 @@ function zAuthLogin(){
         if(typeof showBanner==='function')showBanner('\u2713 Signed in.'+(ZDATA.session.facility?' Facility access enabled.':' Your record will sync.'),'ok',2200);
         if(nt)nt.textContent='Signed in as '+(fac?email:handle)+'.';}
       else{if(nt)nt.textContent='\u2715 '+((j&&(j.error_description||j.msg||j.error))||'Sign-in failed · check your credentials.');}
-    }).catch(function(e){console.error('zAuthLogin:',e);if(nt)nt.textContent='\u2715 Network error \u2014 try again.';});}catch(e){console.error('zAuthLogin:',e);}
+    }).catch(function(e){console.error('zAuthLogin:',e);if(nt)nt.textContent='\u2715 Network error \u00b7 try again.';});}catch(e){console.error('zAuthLogin:',e);}
 }
 function zAuthSignup(){
   if(ZDATA.authMode==='facility'){if(typeof showBanner==='function')showBanner('Facility logins are issued by the publisher.','warn',1800);return;}
@@ -4064,10 +4101,10 @@ function zAuthSignup(){
   var handle=zHandleClean(idv),email=zHandleEmail(idv);
   if(!handle||handle.length<3){if(nt)nt.textContent='Pick a username (3+ chars: letters, numbers, underscore).';return;}
   if(pass.length<6){if(nt)nt.textContent='Password needs 6+ characters.';return;}
-  var _pw2=document.getElementById('auth-pw2');if(_pw2&&_pw2.value!==pass){if(nt)nt.textContent='Passwords don\u2019t match \u2014 re-type to confirm (a typo here = an account you can\u2019t recover).';return;} // v3.5.48
+  var _pw2=document.getElementById('auth-pw2');if(_pw2&&_pw2.value!==pass){if(nt)nt.textContent='Passwords don\u2019t match \u00b7 re-type to confirm (a typo here = an account you can\u2019t recover).';return;} // v3.5.48
   if(nt)nt.textContent='Creating your handle\u2026';
   // v3.5.40 SIGNUP FIX: use the lockin_worker_signup RPC (same working path as the profile pfDoSignup),
-  // NOT raw GoTrue /signup \u2014 GoTrue rejected the synthetic handle@players.lockin.app domain, which was
+  // NOT raw GoTrue /signup \u00b7 GoTrue rejected the synthetic handle@players.lockin.app domain, which was
   // THE "sign up not working" break. Creates a pre-confirmed user + handle row, returns a recovery hex.
   try{fetch(ZDATA.endpoint+'/rpc/lockin_worker_signup',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey,'Authorization':'Bearer '+ZDATA.anonKey},body:JSON.stringify({p_username:handle,p_password:pass})})
     .then(function(r){return r.json();})
@@ -4076,13 +4113,13 @@ function zAuthSignup(){
         if(nt)nt.textContent='Signing you in\u2026';
         fetch(ZDATA.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({email:email,password:pass})})
           .then(function(r2){return r2.json();}).then(function(t){
-            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();pl.email=email;pl.handle=handle;pl.consentSelf=true;pl.consentDecided=true;if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u2014 locked in.','ok',2200);
-              if(nt){if(j.recovery)nt.innerHTML='\u2713 Signed in as '+handle+'. <b>RECOVERY CODE: '+j.recovery+'</b> \u2014 write it down (resets your password, no email needed).';else nt.textContent='Signed in as '+handle+'.';}}
-            else{if(nt)nt.textContent='\u2713 Account made \u2014 tap SIGN IN to enter.';}
-          }).catch(function(e2){console.error('zAuthSignup login:',e2);if(nt)nt.textContent='\u2713 Account made \u2014 tap SIGN IN to enter.';});
+            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();pl.email=email;pl.handle=handle;pl.consentSelf=true;pl.consentDecided=true;if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u00b7 locked in.','ok',2200);
+              if(nt){if(j.recovery)nt.innerHTML='\u2713 Signed in as '+handle+'. <b>RECOVERY CODE: '+j.recovery+'</b> \u00b7 write it down (resets your password, no email needed).';else nt.textContent='Signed in as '+handle+'.';}}
+            else{if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';}
+          }).catch(function(e2){console.error('zAuthSignup login:',e2);if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';});
       }
-      else{if(nt)nt.textContent='\u2715 '+((j&&j.error)||'Sign-up failed \u2014 try another handle.');}
-    }).catch(function(e){console.error('zAuthSignup:',e);if(nt)nt.textContent='\u2715 Network error \u2014 try again.';});}catch(e){console.error('zAuthSignup:',e);}
+      else{if(nt)nt.textContent='\u2715 '+((j&&j.error)||'Sign-up failed \u00b7 try another handle.');}
+    }).catch(function(e){console.error('zAuthSignup:',e);if(nt)nt.textContent='\u2715 Network error \u00b7 try again.';});}catch(e){console.error('zAuthSignup:',e);}
 }
 function zAuthLogout(){ZDATA.session=null;try{localStorage.removeItem('liAuth');}catch(e){}zAuthStatus();var nt=document.getElementById('auth-note');if(nt)nt.textContent='Signed out.';if(typeof showBanner==='function')showBanner('Signed out.','',1400);}
 function zOpenData(){
@@ -5134,11 +5171,11 @@ function takeDrink(){
     var _dpen=(G.drinks-3)*100;
     bankScore(-_dpen); // v3.5.156 banked · persists through recomputes
     S.waterSabotage=(S.waterSabotage||0)+1;
-    showBanner('\ud83d\udeab OVER-HYDRATING TO DODGE SAFETIES IS SABOTAGE \u2014 logged. \u2212'+_dpen+' CUBES'+(cleared?' (warning still cleared).':'.'),'danger',2400);
+    showBanner('\ud83d\udeab OVER-HYDRATING TO DODGE SAFETIES IS SABOTAGE \u00b7 logged. \u2212'+_dpen+' CUBES'+(cleared?' (warning still cleared).':'.'),'danger',2400);
   }else if(_covered){showBanner('\ud83d\udc77 MANAGER: \u2026THANK YOU FOR STAYING HYDRATED. \ud83d\udca7','ok',2400);}
-  else if(cleared){showBanner('\ud83d\udca7 WATER BREAK \u2014 warning cleared (still on the record as washed).','ok',1900);}
-  else if(G.drinks===1)showBanner('\ud83d\udca7 HYDRATED \u2014 1 is par. A second nets a bonus.','',1400);
-  else if(G.drinks===2)showBanner('\ud83d\udca7 TOPPED OFF \u2014 hydration bonus secured.','ok',1400);
+  else if(cleared){showBanner('\ud83d\udca7 WATER BREAK \u00b7 warning cleared (still on the record as washed).','ok',1900);}
+  else if(G.drinks===1)showBanner('\ud83d\udca7 HYDRATED \u00b7 1 is par. A second nets a bonus.','',1400);
+  else if(G.drinks===2)showBanner('\ud83d\udca7 TOPPED OFF \u00b7 hydration bonus secured.','ok',1400);
   updateWaterHUD();if(typeof updateSafetyHUD==='function')updateSafetyHUD();
 }
 function updateWaterHUD(){
@@ -5237,7 +5274,7 @@ function tryNest(src,idx,tcell){
   var cap=getNestCap(tbox),used=getNestUsed(tbox);
   if(cap-used<cost){
     if(typeof playSfx==='function')playSfx('deny');
-    if(!G._nestFull||Date.now()-G._nestFull>2000){G._nestFull=Date.now();showBanner('TIRE HOLLOW FULL \u2014 no room to stuff that one.','warn',1400);}
+    if(!G._nestFull||Date.now()-G._nestFull>2000){G._nestFull=Date.now();showBanner('TIRE HOLLOW FULL \u00b7 no room to stuff that one.','warn',1400);}
     return false;
   }
   var isHaz=!!(sb.labelDef&&sb.labelDef.isHaz)||!!sb.hazClass;
@@ -5261,10 +5298,10 @@ function tryNest(src,idx,tcell){
   if(typeof playSfx==='function')playSfx(isHaz?'bonus':'nest');
   if(!G._nestTaught){
     G._nestTaught=true;
-    showBanner('\ud83d\udccb THAT\u2019S NOT IN THE TRAINING \u2014 YOU LEARNED THAT.<br><span style="font-size:.72em">Stuffing the tire hollow reclaims dead air. +'+bonus+' CUBES'+(isHaz?' \u00b7 HAZMAT LEAK-SHIELDED':'')+'</span>','ok',3200);
+    showBanner('\ud83d\udccb THAT\u2019S NOT IN THE TRAINING \u00b7 YOU LEARNED THAT.<br><span style="font-size:.72em">Stuffing the tire hollow reclaims dead air. +'+bonus+' CUBES'+(isHaz?' \u00b7 HAZMAT LEAK-SHIELDED':'')+'</span>','ok',3200);
   } else if(!G._nestLine||Date.now()-G._nestLine>4000){
     G._nestLine=Date.now();
-    showBanner((isHaz?'\u2622 SHIELDED IN THE HOLLOW':'\ud83d\udd29 STUFFED THE HOLLOW')+' \u2014 +'+bonus+' CUBES (dead air reclaimed).','ok',1500);
+    showBanner((isHaz?'\u2622 SHIELDED IN THE HOLLOW':'\ud83d\udd29 STUFFED THE HOLLOW')+' \u00b7 +'+bonus+' CUBES (dead air reclaimed).','ok',1500);
   }
   return true;
 }
@@ -5461,8 +5498,8 @@ function _srvClockSettled(){
     if(!DAILY.active||gameMode!=='daily')return;
     var k=dailyKey();
     if(k===DAILY.key)return;
-    if((placed||0)>0){if(typeof showBanner==='function')showBanner('\u23f1 The daily rolled over mid-wall \u2014 this run posts to '+DAILY.key+'.','warn',3200);return;}
-    if(typeof startDaily==='function'){startDaily();if(typeof showBanner==='function')showBanner('\u23f1 Clock synced \u2014 loading today\u2019s wall ('+k+').','',2600);}
+    if((placed||0)>0){if(typeof showBanner==='function')showBanner('\u23f1 The daily rolled over mid-wall \u00b7 this run posts to '+DAILY.key+'.','warn',3200);return;}
+    if(typeof startDaily==='function'){startDaily();if(typeof showBanner==='function')showBanner('\u23f1 Clock synced \u00b7 loading today\u2019s wall ('+k+').','',2600);}
   }catch(e){}
 } // UTC YYYY-MM-DD
 function keyToSeed(k){var h=2166136261>>>0,i=0;for(i=0;i<k.length;i++){h^=k.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
@@ -5552,7 +5589,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   else if(source==='nc')box=G.ncSlots[sourceIdx];
   else if(source==='bag')box=G.bagSlots[sourceIdx];
   if(!box)return false;
-  if(!isLegal(G.grid,box,gx,gy,rot)){S.rejects=(S.rejects||0)+1;if(typeof zLog==='function')zLog('reject',{x:gx,y:gy});if(typeof gcurFlash==='function')gcurFlash('bad',420);if(typeof playSfx==='function')playSfx('error');if(typeof addShake==='function')addShake(7);if(typeof spawnBurst==='function'&&typeof gridToCanvas==='function'){var _rj=gridToCanvas(gx+0.5,gy+0.5);spawnBurst(_rj.x,_rj.y,14,'rgba(214,64,40,.92)',150,0.5,60);} /* v3.5.24 misplace red shards */hapt('error');if(typeof showBanner==='function'&&(!G._rejWarn||Date.now()-G._rejWarn>2500)){G._rejWarn=Date.now();showBanner('\u2715 NO SUPPORT THERE \u2014 every box needs something solid under it.','warn',1800);}return false;} // v2.1.9 / v2.1.33 reject feedback
+  if(!isLegal(G.grid,box,gx,gy,rot)){S.rejects=(S.rejects||0)+1;if(typeof zLog==='function')zLog('reject',{x:gx,y:gy});if(typeof gcurFlash==='function')gcurFlash('bad',420);if(typeof playSfx==='function')playSfx('error');if(typeof addShake==='function')addShake(7);if(typeof spawnBurst==='function'&&typeof gridToCanvas==='function'){var _rj=gridToCanvas(gx+0.5,gy+0.5);spawnBurst(_rj.x,_rj.y,14,'rgba(214,64,40,.92)',150,0.5,60);} /* v3.5.24 misplace red shards */hapt('error');if(typeof showBanner==='function'&&(!G._rejWarn||Date.now()-G._rejWarn>2500)){G._rejWarn=Date.now();showBanner('\u2715 NO SUPPORT THERE \u00b7 every box needs something solid under it.','warn',1800);}return false;} // v2.1.9 / v2.1.33 reject feedback
   var _segB=countSegregationViolations(G.grid),_kB=anyKillerTooClose(G.grid); // v2.1.6 pre-commit state
 
   // LV9: Orientation requirement check · reject BEFORE any side-effects (v3.5.161: a rejected
@@ -5611,7 +5648,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   if(source==='belt'){
     if(sourceIdx>0){
       G.preselectDepth=(G.preselectDepth||0)+sourceIdx; // deeper reach = bigger cost
-      if(!G.preselectWarned){G.preselectWarned=true;showBanner('\u21a9 REACHED PAST THE NEXT PIECE \u2014 cherry-picking costs efficiency. Take the front when it fits.','warn',2800);}
+      if(!G.preselectWarned){G.preselectWarned=true;showBanner('\u21a9 REACHED PAST THE NEXT PIECE \u00b7 cherry-picking costs efficiency. Take the front when it fits.','warn',2800);}
     }
     G.belt.splice(sourceIdx,1);if(CHUTE_JAM){jamCheck();}else{refillBelt();}
   }
@@ -5630,8 +5667,8 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     if(typeof playSfx==='function')playSfx('bonus');
     if(typeof gcurFlash==='function')gcurFlash('nest',520);
     var _cb=countCeilingBags();
-    if(!G._bagCeilTaught){G._bagCeilTaught=true;showBanner('🌟 BAG ON THE ROOF · +'+BAG_CEIL_BONUS+' CUBES.<br><span style="font-size:.72em">Dead air up top is wasted space. Pack smalls bags against the ceiling · five make a full roof course.</span>','ok',3000);}
-    else showBanner('🌟 ROOF BAG '+_cb+(_cb>=5?'/5 · FULL CEILING COURSE!':'/5')+' · +'+BAG_CEIL_BONUS+' CUBES.','ok',1500);
+    if(!G._bagCeilTaught){G._bagCeilTaught=true;showBanner('🌟 BAG ON THE ROOF · +'+BAG_CEIL_BONUS+' CUBES.<br><span style="font-size:.72em">Dead air up top is wasted space. Pack smalls bags against the ceiling · five make a full roof course.</span>','award',3000);}
+    else showBanner('🌟 ROOF BAG '+_cb+(_cb>=5?'/5 · FULL CEILING COURSE!':'/5')+' · +'+BAG_CEIL_BONUS+' CUBES.','award',1500);
   }
   // v3.5.147 NESTING TEACH (one-shot) · the one mechanic the tutorial skips. First time a flat tire is on the wall AND a bag is in staging, surface the veteran move.
   if(!G._nestHintShown&&!TUTORIAL_MODE&&(G.bagSlots||[]).some(function(b){return b&&b.isBag;})&&_wallHasTire()){
@@ -5668,8 +5705,8 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   if(source==='nc'){checkKeystoneBonus(gx,gy,rot,box);}
 
   checkBulkhead();checkBrickLock();checkRecovery();
-  if(!G.seamWarned&&countColumnSeams(G.grid)>0){G.seamWarned=true;showBanner('\u26a0 STACKED SEAMS LINE UP \u2014 stagger your courses like bricklaying, or it\u2019s a weak wall.','warn',2800);}
-  if(!G.segWarned&&_segA>0){G.segWarned=true;if(typeof playSfx==='function')playSfx('segregation');showBanner('\u2622 SEGREGATION BREACH \u2014 different hazmat classes need 2 clear cells between them. SCORE HALVED \u2014 separate them to restore. (49 CFR)','danger',3400);}
+  if(!G.seamWarned&&countColumnSeams(G.grid)>0){G.seamWarned=true;showBanner('\u26a0 STACKED SEAMS LINE UP \u00b7 stagger your courses like bricklaying, or it\u2019s a weak wall.','warn',2800);}
+  if(!G.segWarned&&_segA>0){G.segWarned=true;if(typeof playSfx==='function')playSfx('segregation');showBanner('\u2622 SEGREGATION BREACH \u00b7 different hazmat classes need 2 clear cells between them. SCORE HALVED \u00b7 separate them to restore. (49 CFR)','danger',3400);}
   checkPanelFill();
   checkPanic();
   updateCoachTip();
@@ -5871,22 +5908,22 @@ function logIncident(type,cls){
 // Ladder: a warning you DON'T mitigate, repeated as the SAME offense, escalates to an
 // incident. SAFETY_PRACTICE_THRESHOLD incidents = sent to a fresh beginner "practice"
 // trailer (NOT game over). Mitigation: lock a shelf (instant), drink water (clears one),
-// or throw the piece (minor only). Hazmat-high and collapses are incidents outright \u2014 no
+// or throw the piece (minor only). Hazmat-high and collapses are incidents outright \u00b7 no
 // pardon. Washed safeties are STILL published (the "1501 safeties, 1490 for throwing" bit).
 var SAFETY_PRACTICE_THRESHOLD=5;
 var SAFETY_MINOR=['HYDRATION','TIRE_SIDEWAYS','SP_DWELL','SMALLS_DWELL','THROW','FRAGILE_CRUSH']; // warn-eligible + water-clearable
 function _sfMinor(o){return SAFETY_MINOR.indexOf(o)>=0;}
 function _sfInit(){S.warnings=S.warnings||[];S.incidents=S.incidents||[];}
 function _sfLabel(o){return {HYDRATION:'hydration',TIRE_SIDEWAYS:'sideways tire',TIRE_STACK:'stacked tires',THROW:'over-flagging for help',FRAGILE_CRUSH:'crushed fragile',SP_DWELL:'staging dwell',SMALLS_DWELL:'smalls dwell',HAZMAT_HIGH:'hazmat-high',HAZMAT_CRUSH:'hazmat-crush',SEGREGATION:'segregation',KILLER:'killer pair',COLLAPSE:'collapse',HYDRATION_100:'no-hydration'}[o]||(''+o).toLowerCase();}
-// v3.5.68 WRITE-UP SYSTEM \u2014 some infractions are "bad the first time" (obvious hazards \u2192 instant paperwork);
+// v3.5.68 WRITE-UP SYSTEM \u00b7 some infractions are "bad the first time" (obvious hazards \u2192 instant paperwork);
 // everything else accumulates and gets documented every 3rd violation. The write-up STOPS the game to be signed.
 var WRITEUP_POOL=['HAZMAT_HIGH','HAZMAT_CRUSH','KILLER','SEGREGATION','TIRE_STACK']; // immediate write-up
 var WRITEUP_DOCS={
-  HAZMAT_HIGH:{t:'HAZMAT LOADED ABOVE SHOULDER HEIGHT',w:'Hazardous freight rides LOW and LOCKED under a shelf so it can never fall. A high hazmat that comes down is a chemical-spill injury \u2014 an automatic write-up. You cannot leave hazmat loose.'},
-  HAZMAT_CRUSH:{t:'HAZMAT LOADED UNDER WEIGHT',w:'Never bury a hazmat under heavy freight \u2014 crushed containers leak. Load it low, cap it with a LOCKED shelf, put nothing heavy on top.'},
-  KILLER:{t:'INCOMPATIBLE HAZMAT CLASSES IN CONTACT',w:'These two classes react with each other. 49 CFR requires separation \u2014 a "killer pair" touching is the write-up every carrier fears.'},
+  HAZMAT_HIGH:{t:'HAZMAT LOADED ABOVE SHOULDER HEIGHT',w:'Hazardous freight rides LOW and LOCKED under a shelf so it can never fall. A high hazmat that comes down is a chemical-spill injury \u00b7 an automatic write-up. You cannot leave hazmat loose.'},
+  HAZMAT_CRUSH:{t:'HAZMAT LOADED UNDER WEIGHT',w:'Never bury a hazmat under heavy freight \u00b7 crushed containers leak. Load it low, cap it with a LOCKED shelf, put nothing heavy on top.'},
+  KILLER:{t:'INCOMPATIBLE HAZMAT CLASSES IN CONTACT',w:'These two classes react with each other. 49 CFR requires separation \u00b7 a "killer pair" touching is the write-up every carrier fears.'},
   SEGREGATION:{t:'HAZMAT SEGREGATION BREACH',w:'Different hazmat classes need clear cells between them (49 CFR segregation table). Keep them apart.'},
-  TIRE_STACK:{t:'TIRES STACKED VERTICALLY',w:'Tires stacked on their edge ROLL the second the door opens. Lay them flat \u2014 an obvious hazard is an immediate write-up.'},
+  TIRE_STACK:{t:'TIRES STACKED VERTICALLY',w:'Tires stacked on their edge ROLL the second the door opens. Lay them flat \u00b7 an obvious hazard is an immediate write-up.'},
   FRAGILE_CRUSH:{t:'REPEATED CRUSHED FRAGILES',w:'Fragile freight rides on TOP, nothing heavy above it. You keep burying them · crushed fragiles are damage claims. Lock a shelf over them or keep them high.'},
   COLLAPSE:{t:'REPEATED WALL COLLAPSES',w:'Your wall keeps coming down. Taper your stacks (wide base, narrow top) and lock shelves. Repeated collapses get documented.'},
   ACCUMULATED:{t:'MULTIPLE SAFETY VIOLATIONS',w:'You have stacked up safety violations this session. The manager is now documenting each one. Slow down and load it clean.'},
@@ -5937,7 +5974,7 @@ function _incidentEscalation(){ // shared by logIncident + safetyIncident + coll
   var offense=(n>0&&S.incidents[n-1])?S.incidents[n-1].type:'';
   if(WRITEUP_POOL.indexOf(offense)>=0){raiseWriteup(offense);} // "bad the first time" \u2192 instant paperwork
   else if(n%3===0){raiseWriteup(WRITEUP_DOCS[offense]?offense:'ACCUMULATED');} // otherwise every 3rd violation
-  else if(n===2)showBanner('\u26a0 SAFETY RECORD FLAGGED \u2014 second incident. On the floor, that\u2019s a documented discussion.','danger',3600);
+  else if(n===2)showBanner('\u26a0 SAFETY RECORD FLAGGED \u00b7 second incident. On the floor, that\u2019s a documented discussion.','danger',3600);
   if(n>=SAFETY_PRACTICE_THRESHOLD&&!(G&&G._practiceSent))sendToPractice();
   updateSafetyHUD();
 }
@@ -5946,9 +5983,9 @@ function safetyWarn(offense,msg){
   if(typeof zLog==='function')zLog('warn',{offense:offense}); // v3.5.132 raw timeline
   var i,prior=null;
   for(i=0;i<S.warnings.length;i++){if(S.warnings[i].offense===offense&&!S.warnings[i].mitigated){prior=S.warnings[i];break;}}
-  if(prior){safetyIncident(offense,'Repeat '+_sfLabel(offense)+' \u2014 an unmitigated warning became an incident.');return;}
+  if(prior){safetyIncident(offense,'Repeat '+_sfLabel(offense)+' \u00b7 an unmitigated warning became an incident.');return;}
   S.warnings.push({offense:offense,t:Date.now(),wall:(S.truck||1),mitigated:false,washedBy:null});
-  showBanner('\u26a0 SAFETY WARNING \u2014 '+msg+'<br><span style="font-size:.72em">FIX IT: 🔒 lock a shelf · 💧 WATER · 🙋 FLAG. Left open = INCIDENT.</span>','warn',3200);
+  showBanner('\u26a0 SAFETY WARNING \u00b7 '+msg+'<br><span style="font-size:.72em">FIX IT: 🔒 lock a shelf · 💧 WATER · 🙋 FLAG. Left open = INCIDENT.</span>','warn',3200);
   if(typeof playSfx==='function')playSfx('dwell');
   updateSafetyHUD();
 }
@@ -5956,7 +5993,7 @@ function safetyIncident(offense,msg){
   _sfInit();
   if(typeof zLog==='function')zLog('incident',{offense:offense}); // v3.5.132 raw timeline
   S.incidents.push({type:offense,cls:'',wall:(S.truck||1),t:Date.now()});
-  showBanner('\u26d4 SAFETY INCIDENT \u2014 '+msg,'danger',3400);
+  showBanner('\u26d4 SAFETY INCIDENT \u00b7 '+msg,'danger',3400);
   if(typeof playSfx==='function')playSfx('lose');
   _incidentEscalation();
 }
@@ -5973,7 +6010,7 @@ function mitigateWarn(source){
 function sendToPractice(){
   if(G&&G._practiceSent)return;if(G)G._practiceSent=true;
   S.practiceKicks=(S.practiceKicks||0)+1;
-  showBanner('\u26d4 SENT TO TRAINING \u2014 too many incidents.<br><span style="font-size:.72em">Fresh, clean practice trailer. Reset your habits \u2014 your record still stands.</span>','danger',4200);
+  showBanner('\u26d4 SENT TO TRAINING \u00b7 too many incidents.<br><span style="font-size:.72em">Fresh, clean practice trailer. Reset your habits \u00b7 your record still stands.</span>','danger',4200);
   setTimeout(function(){
     S.warnings=[]; // new wall, warnings reset (incidents/record persist)
     G.grid=makeGrid();placed=0;G.score=0;G.cog=.5;G.support=1;G.integrity=100;G._finalized=false;G._practiceSent=false;
@@ -5983,7 +6020,7 @@ function sendToPractice(){
     if(typeof wallBaseline==='function')wallBaseline(); // v3.5.81 per-wall stat baseline (practice trailer)
     selBeltIdx=null;selBeltRot=0;selNC=-1;selBag=-1;
     if(typeof refillBelt==='function')refillBelt();
-    if(typeof showBanner==='function')showBanner('\ud83d\udfe2 PRACTICE TRAILER \u2014 clean slate. Load it right.','ok',2600);
+    if(typeof showBanner==='function')showBanner('\ud83d\udfe2 PRACTICE TRAILER \u00b7 clean slate. Load it right.','ok',2600);
     if(typeof updateWaterHUD==='function')updateWaterHUD();
     updateSafetyHUD();
   },1400);
@@ -6000,24 +6037,24 @@ function updateSafetyHUD(){
   }
 }
 // HYDRATION as a safety: ~75% wall height with no drink = warning; topped-out dry = a second WARNING (nudge), NOT an incident.
-// v3.5.148 was an INCIDENT at 100% \u2014 but topping the wall is the GOAL (and a roof-bag tops it out for a +600 bonus), so it
+// v3.5.148 was an INCIDENT at 100% \u00b7 but topping the wall is the GOAL (and a roof-bag tops it out for a +600 bonus), so it
 // slapped a violation on a GOOD play the instant you finished (Vince: "safety violation for putting a smalls bag at the top").
 // DECISION: dehydration now only ever WARNS (drink next trailer); it no longer hits the incident ladder / write-up path.
 function checkHydrationSafety(){
   if(typeof G==='undefined'||!G||!G.grid)return;
   var pct=Math.round(wallH()/GH*100);
-  if(pct>=75&&pct<100&&(G.drinks||0)===0&&!G._hyd75){G._hyd75=true;safetyWarn('HYDRATION','you\u2019re most of the way up and haven\u2019t taken a water break \u2014 drink to stay sharp.');}
-  if(pct>=100&&(G.drinks||0)===0&&!G._hyd100){G._hyd100=true;safetyWarn('HYDRATION','topped the wall with no water all trailer \u2014 grab a break before the next one. (Nice roof, by the way.)');}
+  if(pct>=75&&pct<100&&(G.drinks||0)===0&&!G._hyd75){G._hyd75=true;safetyWarn('HYDRATION','you\u2019re most of the way up and haven\u2019t taken a water break \u00b7 drink to stay sharp.');}
+  if(pct>=100&&(G.drinks||0)===0&&!G._hyd100){G._hyd100=true;safetyWarn('HYDRATION','topped the wall with no water all trailer \u00b7 grab a break before the next one. (Nice roof, by the way.)');}
 }
-// v3.5.67 THE HEY WINDOW \u2014 throwing a box grabs you a smalls bag FAST, but the manager sees it. You get a
+// v3.5.67 THE HEY WINDOW \u00b7 throwing a box grabs you a smalls bag FAST, but the manager sees it. You get a
 // 2-second window to COVER it with a water break ("\u2026thank you for staying hydrated"). Miss it and the manager
 // escalates ("YOU ARE NOT ALLOWED TO THROW PACKAGES!") into a minor safety that can ladder to an incident.
-// The meta: grab a bag when you need one and get away with it \u2014 as long as it isn't every box.
+// The meta: grab a bag when you need one and get away with it \u00b7 as long as it isn't every box.
 var _throwPending=false,_throwWinTO=null;
 function _openThrowWindow(pen){
   _throwPending=true;
   if(_throwWinTO)clearTimeout(_throwWinTO);
-  showBanner('\ud83d\udc77 MANAGER: HEY \u2014'+((pen>0)?(' (\u2212'+pen+' cubes)'):'')+'<br><span style="font-size:.72em">you flagged a coworker for a hand. DRINK WATER in the next 2s to play it off as a quick breather.</span>','warn',2200);
+  showBanner('\ud83d\udc77 MANAGER: HEY ,'+((pen>0)?(' (\u2212'+pen+' cubes)'):'')+'<br><span style="font-size:.72em">you flagged a coworker for a hand. DRINK WATER in the next 2s to play it off as a quick breather.</span>','warn',2200);
   _throwWinTO=setTimeout(function(){
     _throwWinTO=null;
     if(!_throwPending||gOver)return;
@@ -6026,7 +6063,7 @@ function _openThrowWindow(pen){
     if(typeof safetyWarn==='function')safetyWarn('THROW','flagged a coworker for a hand and didn\u2019t cover it with a water break.');
   },2000);
 }
-// THROW \u2014 toss the selected piece; ALWAYS spawns a bag of smalls (a vet always has one to throw on).
+// THROW \u00b7 toss the selected piece; ALWAYS spawns a bag of smalls (a vet always has one to throw on).
 function throwBox(){
   if(gOver||typeof G==='undefined'||!G||!G.belt||!G.belt.length){if(typeof showBanner==='function'&&(!G||!G.belt||!G.belt.length))showBanner('Nothing in hand to flag for.','',1200);return;}
   if(Date.now()-_lastThrowT<THROW_CD){showBanner('🙋 FLAG ON COOLDOWN · you can’t wave a coworker over back-to-back.','warn',1200);return;}
@@ -6049,13 +6086,13 @@ function throwBox(){
     }
   } else if(typeof spawnBag==='function')spawnBag(); // throwing ALWAYS puts a bag of smalls on the belt
   if(typeof spawnThrow==='function')spawnThrow(); // v3.5.69 the tumbling-box ricochet
-  // v3.5.65 escalating throw penalty \u2014 PERFECT SYMMETRY with the drink rule (4th throw -100, 5th -200, 6th -300...).
+  // v3.5.65 escalating throw penalty \u00b7 PERFECT SYMMETRY with the drink rule (4th throw -100, 5th -200, 6th -300...).
   // Kills the "throw forever, place 1000 smalls from bags" exploit: you CAN do it, it just goes deep score-negative.
   var _tpen=0;
   if((G.throws||0)>3){_tpen=(G.throws-3)*100;bankScore(-_tpen);} // v3.5.156 banked
   if(typeof playSfx==='function')playSfx('place');
   if(typeof refillBelt==='function')refillBelt();
-  _openThrowWindow(_tpen); // v3.5.67 THE HEY WINDOW \u2014 a bag hits the belt, manager says "HEY \u2014"; DRINK within 2s to cover it or it's a violation
+  _openThrowWindow(_tpen); // v3.5.67 THE HEY WINDOW \u00b7 a bag hits the belt, manager says "HEY ,"; DRINK within 2s to cover it or it's a violation
   updateSafetyHUD();
 }
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -6402,7 +6439,7 @@ function checkTetris(){
       if(_hzc>0){
         bankScore(HAZMAT_SHELF_BONUS); // v3.5.156 banked · this +1500 was a PURE NO-OP before (added then overwritten inside the same placeBox call)
         G.hazShelfLocks=(G.hazShelfLocks||0)+1;S.hazShelfLocks=(S.hazShelfLocks||0)+1;if(typeof playSfx==='function')playSfx('hazmatlock');
-        showBanner('\u2622 HAZMAT SHELF LOCKED +'+HAZMAT_SHELF_BONUS+'<br><span style="font-size:.72em">LOADED LOW, CAPPED, SECURED \u2014 THE VET MOVE.</span>','ok',3400);
+        showBanner('\u2622 HAZMAT SHELF LOCKED +'+HAZMAT_SHELF_BONUS+'<br><span style="font-size:.72em">LOADED LOW, CAPPED, SECURED \u00b7 THE VET MOVE.</span>','award',3400);
       }
       } else if(typeof showBanner==='function')showBanner('🔒 SHELF RE-LOCKED · brace and shelf score restored','ok',1900); // v2.10.2 end lock-pay guard · v3.5.161 relock honesty
     }
@@ -6846,7 +6883,7 @@ function liDrawCert(){
   c.fillText("CONGRATULATIONS, YOU'RE LOCKED IN", W2/2, 880);
   c.fillStyle='#c0ad90';
   c.font="19px 'Share Tech Mono',monospace";
-  c.fillText(gr.perfect?'perfect load \u2014 every one of '+(GW*GH)+' cells filled'
+  c.fillText(gr.perfect?'perfect load \u00b7 every one of '+(GW*GH)+' cells filled'
                        :'floor to ceiling \u00b7 nothing shifted \u00b7 nothing broken', W2/2, 912);
 
   c.fillStyle='#e0962e';
@@ -6877,7 +6914,7 @@ function liDrawCert(){
   c.beginPath(); c.moveTo(70,1140); c.lineTo(W2-70,1140); c.stroke();
 
   c.fillStyle='#8a7860'; c.font="16px 'Share Tech Mono',monospace";
-  c.fillText('A GAME ACHIEVEMENT \u2014 NOT A SAFETY CERTIFICATION', W2/2, 1180);
+  c.fillText('A GAME ACHIEVEMENT \u00b7 NOT A SAFETY CERTIFICATION', W2/2, 1180);
   c.fillText('AND NOT A QUALIFICATION TO LOAD REAL FREIGHT', W2/2, 1206);
   c.fillStyle='#c8791e'; c.font="24px 'Share Tech Mono',monospace";
   c.fillText('trailer-load.com', W2/2, 1252);
@@ -6910,7 +6947,7 @@ function liCertOffer(){
     CERT_LAST=liWallShot();
     var b=document.getElementById('cert-earn-btn');
     if(b){b.style.display='';b.textContent=gr.perfect?'\u2605 YOUR PERFECT-WALL CERTIFICATE':'\u2605 YOUR LOCKED-IN CERTIFICATE';}
-    if(typeof showBanner==='function')showBanner((gr.perfect?'\u2605 PERFECT WALL \u2014 EVERY CELL FILLED.':'\u2605 LOCKED IN \u2014 '+gr.pack+'% PACKED, FLOOR TO CEILING, NOTHING BROKEN.')+'<br><span style="font-size:.72em">YOUR CERTIFICATE IS READY ON THE WALL-COMPLETE CARD.</span>','ok',3200);
+    if(typeof showBanner==='function')showBanner((gr.perfect?'\u2605 PERFECT WALL \u00b7 EVERY CELL FILLED.':'\u2605 LOCKED IN \u00b7 '+gr.pack+'% PACKED, FLOOR TO CEILING, NOTHING BROKEN.')+'<br><span style="font-size:.72em">YOUR CERTIFICATE IS READY ON THE WALL-COMPLETE CARD.</span>','award',3200);
   }catch(e){console.error('liCertOffer:',e);}
 }
 
@@ -6926,15 +6963,15 @@ function sealWall(reason){
   G.sealed=true;
   if(typeof zLog==='function')zLog('seal',{density:Math.round((typeof wallSolidity==='function'?wallSolidity(G.grid):0)*100),fill:packPct(),pph:getPPH(),pieces:(typeof gridPieceCount==='function'?gridPieceCount():placed)}); // v3.5.132 raw timeline
   if(typeof gcurFlash==='function')gcurFlash('finish',1300); // v3.5.22 finish-glove on sealing the wall
-  if((G.drinks||0)>=2){bankScore(HYDRATION_BONUS);showBanner('\ud83d\udca7 HYDRATED \u2014 +'+HYDRATION_BONUS+' CUBES (took your water breaks).','ok',2200);} // v3.5.156 banked
+  if((G.drinks||0)>=2){bankScore(HYDRATION_BONUS);showBanner('\ud83d\udca7 HYDRATED \u00b7 +'+HYDRATION_BONUS+' CUBES (took your water breaks).','ok',2200);} // v3.5.156 banked
   if(typeof playSfx==='function')playSfx('win');
   var _dens=Math.min(1,(typeof wallSolidity==='function')?wallSolidity(G.grid):(countFilled()/(GW*GH))); // v3.5.50 SOLIDITY (gapless fill up to wall height), not raw volume
-  var _sealPay=Math.round(LOAD_SEALED_BONUS*_dens); // seal payout SCALED BY FILL \u2014 a loose wall earns a loose payout (kills the panic-bail-at-threshold A+ exploit)
+  var _sealPay=Math.round(LOAD_SEALED_BONUS*_dens); // seal payout SCALED BY FILL \u00b7 a loose wall earns a loose payout (kills the panic-bail-at-threshold A+ exploit)
   try{finalizeWall();}catch(_dh){} // v3.5.57 capture this wall's integrity+density once (single source of truth)
   try{if(typeof zLogWall==='function')zLogWall();}catch(_lw){}
   try{liCertOffer();}catch(_ce){} // v3.5.185 perfect-wall certificate, only on a genuinely full wall // v3.5.83 post this sealed wall to the per-wall boards
   bankScore(_sealPay); // v2.1.11 #1 payout, v3.5.46 density-scaled; v3.5.156 BANKED · KEEP LOADING after a seal no longer erases the payout (the "improving a daily wall COSTS you ~3300 on the board" blocker)
-  showBanner('\u2713 LOAD SEALED +'+_sealPay+'<br><span style="font-size:.72em">'+packPct()+'% PACKED \u2014 PAYOUT SCALES WITH FILL.</span>','ok',3000);
+  showBanner('\u2713 LOAD SEALED +'+_sealPay+'<br><span style="font-size:.72em">'+packPct()+'% PACKED \u00b7 PAYOUT SCALES WITH FILL.</span>','award',3000);
   if(panicActive&&!panicSealed){
     panicSealed=true;
     var rem=Math.max(0,PANIC_DURATION-(Date.now()-panicStartT)/1000);
@@ -7012,8 +7049,8 @@ function _watchdog(){
         if(document.body)document.body.appendChild(d);
       }catch(e2){}}
       if((typeof W==='number')&&(W<50||(typeof H==='number'&&H<50))&&typeof resize==='function'){try{resize();}catch(e3){}}
-      if(_reviveN<=3){if(_reviveN===1){try{console.warn('[LOCK IN] loop stall \u2014 auto-reviving ::',st);}catch(e){}}lastLoopT=0;if(animF)cancelAnimationFrame(animF);animF=requestAnimationFrame(loop);}
-      else if(!_recoverShown){_recoverShown=true;try{console.warn('[LOCK IN] loop could not self-revive \u2014 recovery screen ::',st);}catch(e){}if(typeof showRecover==='function')showRecover(st);}
+      if(_reviveN<=3){if(_reviveN===1){try{console.warn('[LOCK IN] loop stall \u00b7 auto-reviving ::',st);}catch(e){}}lastLoopT=0;if(animF)cancelAnimationFrame(animF);animF=requestAnimationFrame(loop);}
+      else if(!_recoverShown){_recoverShown=true;try{console.warn('[LOCK IN] loop could not self-revive \u00b7 recovery screen ::',st);}catch(e){}if(typeof showRecover==='function')showRecover(st);}
     }else{_reviveN=0;}
     _hbLast=_hb;
   }catch(e){}
@@ -7107,7 +7144,7 @@ function tickChute(){
   if((placed||0)<1){updateChuteUI();return;}
   if(typeof isForgiving==='function'&&isForgiving()){if(jamWarnLevel!==1){jamWarnLevel=1;if(typeof playSfx==='function')playSfx('dwell');}updateChuteUI();return;}
   var dt=(Date.now()-jamStarvedT)/1000,WARN=4,FAIL=11;
-  if(dt>=FAIL){jamStarvedT=0;jamWarnLevel=0;endGame('CHUTE JAMMED \u2014 SENT HOME',false);return;}
+  if(dt>=FAIL){jamStarvedT=0;jamWarnLevel=0;endGame('CHUTE JAMMED \u00b7 SENT HOME',false);return;}
   var nl=(dt>=WARN)?2:1;
   if(nl!==jamWarnLevel){jamWarnLevel=nl;if(typeof playSfx==='function')playSfx(nl>=2?'error':'dwell');}
   updateChuteUI(Math.max(0,Math.ceil(FAIL-dt)));
@@ -7120,7 +7157,7 @@ function updateChuteUI(cd){
   var bl=(G&&G.belt)?G.belt.length:BELT_PIECE_COUNT;
   if(bl>=BELT_PIECE_COUNT){btn.style.display='none';lt.className='chute-light cl-ok';return;}
   btn.style.display='';
-  if(jamWarnLevel>=2){btn.className='bj-btn bj-crit';btn.textContent='\u26a1 BREAK JAM \u2014 '+(cd||0)+'s';lt.className='chute-light cl-crit';}
+  if(jamWarnLevel>=2){btn.className='bj-btn bj-crit';btn.textContent='\u26a1 BREAK JAM \u00b7 '+(cd||0)+'s';lt.className='chute-light cl-crit';}
   else if(jamWarnLevel>=1){btn.className='bj-btn bj-warn';btn.textContent='\u26a1 BREAK JAM';lt.className='chute-light cl-warn';}
   else{btn.className='bj-btn';btn.textContent='\u26a1 BREAK JAM';lt.className='chute-light cl-warn';}
 }
@@ -7153,11 +7190,11 @@ function stgRender(){
   if(!STG_OPEN)return;
   var slots=(STG_OPEN==='nc')?G.ncSlots:G.bagSlots, sel=(STG_OPEN==='nc')?selNC:selBag;
   if(slots&&slots.every(function(s){return !s;})){stgClose();return;} // v3.5.21 lane cleared -> popup goes away on its own
-  var sep=document.getElementById('stg-sep');if(sep)sep.textContent=(STG_OPEN==='nc')?'SPECIAL HANDLING \u00b7 TOO BIG, HEAVY OR HAZARDOUS FOR THE BELT \u2014 LOAD IT LOW':'SMALLS \u00b7 FILL THE GAPS';
+  var sep=document.getElementById('stg-sep');if(sep)sep.textContent=(STG_OPEN==='nc')?'SPECIAL HANDLING \u00b7 TOO BIG, HEAVY OR HAZARDOUS FOR THE BELT \u00b7 LOAD IT LOW':'SMALLS \u00b7 FILL THE GAPS';
   var box=document.getElementById('stg-tiles');if(!box)return;
   var items=[],i;for(i=0;i<slots.length;i++){if(slots[i])items.push({i:i,s:slots[i]});}
   var h;
-  if(!items.length){h='<div class="stg-empty">Lane clear \u2014 nothing staged.</div>';}
+  if(!items.length){h='<div class="stg-empty">Lane clear \u00b7 nothing staged.</div>';}
   else{
     // v3.4.14 FLATTER wheel; double-click a BAG tile to break it into smalls; innerHTML set only when it changes
     var n=items.length, Rx=64+Math.min(7,n)*14, Ry=40+Math.min(7,n)*4, spread=Math.min(150,n*24)*Math.PI/180, k;h='';
@@ -8280,7 +8317,7 @@ function updateRightHUD(pph){
         d=getDims(p,0);nm=(p.label||p.type||'BOX');
         html+='<div class="nu-row"><span class="nu-n">'+(i+1)+'</span><span class="nu-name">'+nm+'</span><span class="nu-dim">'+d.w+'\u00d7'+d.h+'</span></div>';
       }else{
-        html+='<div class="nu-row nu-empty"><span class="nu-n">'+(i+1)+'</span><span class="nu-name">\u2014</span><span class="nu-dim"></span></div>';
+        html+='<div class="nu-row nu-empty"><span class="nu-n">'+(i+1)+'</span><span class="nu-name">,</span><span class="nu-dim"></span></div>';
       }
     }
     var ncU=(G.ncSlots||[]).filter(function(x){return !!x;}).length;
@@ -8289,7 +8326,7 @@ function updateRightHUD(pph){
     nu.innerHTML=html;
   }
   var el=elapsed(),pcs=el>0?(placed/el):0,spm=el>0?((G.tetrisTotal||0)/(el/60)):0;
-  rset('perf-pph',pph||'\u2014');
+  rset('perf-pph',pph||',');
   rset('perf-peak',S.bestPPH||0);
   rset('perf-pcs',pcs.toFixed(1));
   rset('perf-spm',spm.toFixed(1));
@@ -8860,7 +8897,7 @@ function kbPlace(){
     if(hCell){
       var ex=G.grid[hCell.y]&&G.grid[hCell.y][hCell.x];
       if(ex){
-        if(typeof isLoadBearing==='function'&&isLoadBearing(ex)){if(typeof playSfx==='function')playSfx('deny');showBanner('\u2715 CAN\u2019T LIFT \u2014 IT\u2019S HOLDING A LOAD. Pull from the top down.','warn',1800);}
+        if(typeof isLoadBearing==='function'&&isLoadBearing(ex)){if(typeof playSfx==='function')playSfx('deny');showBanner('\u2715 CAN\u2019T LIFT \u00b7 IT\u2019S HOLDING A LOAD. Pull from the top down.','warn',1800);}
         else if(typeof liftBox==='function'){liftBox(ex);}
       }
     }
@@ -8968,7 +9005,7 @@ setInterval(function(){
 },250);
 function kbHint(){
   if(_kbHinted)return;_kbHinted=true;
-  if(typeof showBanner==='function')showBanner('\u2328 KEYBOARD \u2014 \u2190\u2191\u2193\u2192 aim \u00b7 [ ] switch piece \u00b7 R rotate \u00b7 ENTER drop','',2600);
+  if(typeof showBanner==='function')showBanner('\u2328 KEYBOARD \u00b7 \u2190\u2191\u2193\u2192 aim \u00b7 [ ] switch piece \u00b7 R rotate \u00b7 ENTER drop','',2600);
 }
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
@@ -9032,7 +9069,14 @@ function pushMsg(html,type,source,dur){
   }
   var feed=document.getElementById('msg-feed');if(!feed)return;
   // v3.5.165 (LOW) a DANGER/WARN line holds the feed for 1.6s · routine chatter can't evict it (LINEHAUL log has everything)
-  if(type==='danger'||type==='warn')_dangerHeldT=Date.now();
+  // v3.5.193 THE HAZMAT SHELF WAS BEING SWALLOWED. v3.5.165 gave danger/warn a 1.6s hold on the
+  // feed so routine chatter could not evict a safety line. Correct, but it silently DROPPED every
+  // non-warning message in that window, and the biggest awards in the game are type 'ok'. The
+  // hazmat shelf is the worst case by far: you earn it by handling hazmat, and handling hazmat is
+  // exactly what fires danger lines, so +1500 landed inside its own suppression window and the
+  // player never saw the award they just worked for. Vince: "i didn't see the hazmat shelf when I
+  // made it." An 'award' line now holds the feed the same way and is never evicted by one.
+  if(type==='danger'||type==='warn'||type==='award')_dangerHeldT=Date.now();
   else if(Date.now()-_dangerHeldT<1600)return;
   var el=document.createElement('div');el.className='msg-line'+(type?(' msg-'+type):'');
   // v3.5.116 live line = the message only (no COWORKER/MANAGER source chip); the full speakered log lives in LINEHAUL.
@@ -9042,7 +9086,10 @@ function pushMsg(html,type,source,dur){
   var dwell=(dur&&dur>0)?Math.max(1200,dur):((type==='danger'||type==='warn')?4400:2700); // v3.5.162 explicit durations win (1200ms floor); defaults unchanged
   setTimeout(function(){el.classList.add('msg-out');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},520);},dwell);
 }
-function _msgType(cls){if(!cls)return '';if(cls.indexOf('danger')>=0||cls.indexOf('panic')>=0)return 'danger';if(cls.indexOf('warn')>=0)return 'warn';if(cls.indexOf('ok')>=0)return 'ok';return '';}
+// v3.5.193 'award' added AHEAD of 'ok' in the chain, because 'award' contains no 'ok' but the
+// order still matters if a caller ever passes both. An award is the top tier: it holds the feed
+// like a danger line does and cannot be evicted by one.
+function _msgType(cls){if(!cls)return '';if(cls.indexOf('danger')>=0||cls.indexOf('panic')>=0)return 'danger';if(cls.indexOf('warn')>=0)return 'warn';if(cls.indexOf('award')>=0)return 'award';if(cls.indexOf('ok')>=0)return 'ok';return '';}
 function showBanner(html,cls,dur){pushMsg(html,_msgType(cls),null,dur);} // v3.5.162 (MED funnel #6) dur finally honored · was discarded at ~60 call sites
 function showPop(x,y,t,col){pushMsg(t,(col&&(''+col).indexOf('40,184')>=0)?'ok':'');}
 // ── v3.5.19 LINEHAUL BOARD (persistent dispatch record) ──
@@ -10210,7 +10257,7 @@ function nextTrailer(){
   // v3.5.133 endGame(FALSE): the win-path bounced into sealWall and froze the game (no end screen, no admin).
   if(gameMode==='daily'){var _mf0=document.getElementById('maxpack-finish');if(_mf0)_mf0.style.display='none';if(!gOver)showDailyComplete();return;} // v3.5.139 FINISH in daily -> submit/keep/restart choice, not an auto-graded end
   if(G){G.sealed=false;G.maxPack=false;G.wallDone=false;}
-  try{liWallSplash();}catch(_ws0){} // v3.5.191 Vince: "after max pack should be splash" — the LOCK IN mark between walls
+  try{liWallSplash();}catch(_ws0){} // v3.5.191 Vince: "after max pack should be splash" · the LOCK IN mark between walls
   try{liCertReset();}catch(_cr1){} // v3.5.185 new trailer = new wall = no inherited certificate
   // v3.5.190 A LOST NEWLINE ATE THIS STATEMENT. The v3.5.185 comment above ran straight into the
   // code below it, so this entire line sat INSIDE the comment and never executed: on a new
@@ -10312,7 +10359,7 @@ function snapWall(){
       cog:Math.round(Math.abs((G.cog||.5)-.5)*200)/100};
   }catch(e){return {score:0,pieces:0,pph:0,integrity:0,support:0,fillPct:0,cubePct:0,density:0,bal:0,voids:0,shelves:0,doubles:0,cog:0};}
 }
-function psTxt(id){var e=document.getElementById(id);return e?e.textContent:'\u2014';}
+function psTxt(id){var e=document.getElementById(id);return e?e.textContent:',';}
 function psFmtTime(sec){sec=Math.max(0,Math.round(sec||0));var m=Math.floor(sec/60),s2=sec%60;return m+':'+(s2<10?'0':'')+s2;}
 // v3.5.173 (Devs BLOCKER #1) THE ONE CANONICAL CAREER. Both the post-sort LIFETIME column and the
 // SOCIAL/ME panel now fold the same per-mode rows the same way: counts SUM, peak takes the MAX
@@ -10591,8 +10638,8 @@ function lbUnfollow(u){
 }
 function openLeaderboard(){ openSocial('daily'); if(typeof gaEvent==='function')gaEvent('leaderboard_open',{}); } // v3.5.85 alias → SOCIAL hub
 function pfEsc(x){x=(x==null?'':''+x);return x.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function pfNum(n){return (n==null||isNaN(+n))?'\u2014':Math.round(+n);}
-function pfDate(t){if(!t)return '\u2014';try{var d=new Date(t);return (d.getMonth()+1)+'/'+d.getDate()+'/'+(''+d.getFullYear()).slice(2);}catch(e){return '\u2014';}}
+function pfNum(n){return (n==null||isNaN(+n))?',':Math.round(+n);}
+function pfDate(t){if(!t)return ',';try{var d=new Date(t);return (d.getMonth()+1)+'/'+d.getDate()+'/'+(''+d.getFullYear()).slice(2);}catch(e){return ',';}}
 function fetchProfile(cb){var sx=ZDATA.session;if(!sx||!sx.uid){cb('anon',null);return;}
   try{var _r=null;fetch(ZDATA.endpoint+'/lockin_lifetime?user_id=eq.'+encodeURIComponent(sx.uid)+'&select=*',{headers:zAuthHeaders()})
     .then(function(r){_r=r;return r.json();})
@@ -10621,7 +10668,7 @@ function pfMode(m){PF_MODE=m;
 }
 function pfAuthFormHTML(){
   return '<div class="pf-auth">'+
-    '<div class="pf-authhero"><div class="pf-authbadge">\u25a3</div><div class="pf-authttl">CLOCK <b>IN</b></div><div class="pf-authsub">Bank your record across devices \u2014 walls, PPH, safety, rank. No email, always free.</div></div>'+
+    '<div class="pf-authhero"><div class="pf-authbadge">\u25a3</div><div class="pf-authttl">CLOCK <b>IN</b></div><div class="pf-authsub">Bank your record across devices \u00b7 walls, PPH, safety, rank. No email, always free.</div></div>'+
     '<div class="pf-tabs"><button id="pf-tab-w" class="pf-tab on" onclick="pfMode(\'worker\')">WORKER</button><button id="pf-tab-f" class="pf-tab" onclick="pfMode(\'facility\')">FACILITY</button></div>'+
     '<div class="pf-fld"><label id="pf-id-lbl">USERNAME</label><input id="pf-id" type="text" autocomplete="username" placeholder="pick a handle"></div>'+
     '<div class="pf-fld"><label>PASSWORD</label><input id="pf-pw" type="password" autocomplete="current-password" placeholder="password"></div>'+
@@ -10629,7 +10676,7 @@ function pfAuthFormHTML(){
     '<button class="pf-cta" onclick="pfDoLogin()">CLOCK IN<span>\u25b6</span></button>'+
     '<button id="pf-signup-btn" class="pf-ghost2" onclick="pfDoSignup()">Create a free account</button>'+
     '<div class="pf-auth-note" id="pf-auth-note">Pick a username + password to keep your record across devices. No email needed. Free, always.</div>'+
-    '<div class="pf-auth-foot">Gameplay is always free \u2014 your record is yours. Workers never pay.</div></div>';
+    '<div class="pf-auth-foot">Gameplay is always free \u00b7 your record is yours. Workers never pay.</div></div>';
 }
 function pfFootHTML(){var sx=ZDATA.session||{};return '<div class="pf-foot"><span class="pf-who">'+pfEsc(sx.handle||sx.email||'')+(sx.facility?' \u00b7 '+pfEsc(sx.facility):'')+'</span><button class="pf-signout" onclick="pfDoLogout()">SIGN OUT</button></div>';}
 // v3.5.87 AUTH SWEEP: read auth-form fields from the CURRENTLY VISIBLE profile surface, never a stale hidden
@@ -10652,8 +10699,8 @@ function pfDoLogin(){
     .then(function(r){return r.json();}).then(function(j){
       if(j&&j.access_token){zSaveSession(j,email,fac?email:handle);var pl=zLoadPlayer();pl.email=email;pl.handle=fac?'':handle;if(!fac){pl.consentSelf=true;pl.consentDecided=true;}if(ZDATA.session.facility)pl.facility=ZDATA.session.facility;zSavePlayer();
         if(typeof showBanner==='function')showBanner('\u2713 Signed in.','ok',1700);if(!(typeof _resumePendingLaunch==='function'&&_resumePendingLaunch()))openProfile();}
-      else{if(nt)nt.textContent='\u2715 '+((j&&(j.error_description||j.msg||j.error))||'Sign-in failed \u2014 check your credentials.');}
-    }).catch(function(e){console.error('pfDoLogin:',e);if(nt)nt.textContent='\u2715 Network error \u2014 try again.';});}catch(e){console.error('pfDoLogin:',e);}
+      else{if(nt)nt.textContent='\u2715 '+((j&&(j.error_description||j.msg||j.error))||'Sign-in failed \u00b7 check your credentials.');}
+    }).catch(function(e){console.error('pfDoLogin:',e);if(nt)nt.textContent='\u2715 Network error \u00b7 try again.';});}catch(e){console.error('pfDoLogin:',e);}
 }
 function pfDoSignup(){
   if(PF_MODE==='facility'){if(typeof showBanner==='function')showBanner('Facility logins are issued by the publisher.','warn',1800);return;}
@@ -10662,7 +10709,7 @@ function pfDoSignup(){
   var handle=zHandleClean(idv),email=zHandleEmail(idv);
   if(!handle||handle.length<3){if(nt)nt.textContent='Pick a username (3+ chars: letters, numbers, underscore).';return;}
   if(pass.length<6){if(nt)nt.textContent='Password needs 6+ characters.';return;}
-  var _pw2=pfFormEl('pf-pw2');if(_pw2&&_pw2.value!==pass){if(nt)nt.textContent='Passwords don\u2019t match \u2014 re-type to confirm (a typo here = an account you can\u2019t recover).';return;} // v3.5.48
+  var _pw2=pfFormEl('pf-pw2');if(_pw2&&_pw2.value!==pass){if(nt)nt.textContent='Passwords don\u2019t match \u00b7 re-type to confirm (a typo here = an account you can\u2019t recover).';return;} // v3.5.48
   if(nt)nt.textContent='Creating your handle\u2026';
   try{fetch(ZDATA.endpoint+'/rpc/lockin_worker_signup',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey,'Authorization':'Bearer '+ZDATA.anonKey},body:JSON.stringify({p_username:handle,p_password:pass})})
     .then(function(r){return r.json();}).then(function(j){
@@ -10670,16 +10717,16 @@ function pfDoSignup(){
         if(nt)nt.textContent='Signing you in\u2026';
         fetch(ZDATA.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({email:email,password:pass})})
           .then(function(r2){return r2.json();}).then(function(t){
-            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();pl.email=email;pl.handle=handle;pl.consentSelf=true;pl.consentDecided=true;if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u2014 locked in.','ok',2200);if(!(typeof _resumePendingLaunch==='function'&&_resumePendingLaunch()))openProfile();}
-            else{if(nt)nt.textContent='\u2713 Account made \u2014 tap SIGN IN to enter.';}
-          }).catch(function(e2){if(nt)nt.textContent='\u2713 Account made \u2014 tap SIGN IN to enter.';});
+            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();pl.email=email;pl.handle=handle;pl.consentSelf=true;pl.consentDecided=true;if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u00b7 locked in.','ok',2200);if(!(typeof _resumePendingLaunch==='function'&&_resumePendingLaunch()))openProfile();}
+            else{if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';}
+          }).catch(function(e2){if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';});
       }
-      else{if(nt)nt.textContent='\u2715 '+((j&&j.error)||'Sign-up failed \u2014 try another handle.');}
-    }).catch(function(e){console.error('pfDoSignup:',e);if(nt)nt.textContent='\u2715 Network error \u2014 try again.';});}catch(e){console.error('pfDoSignup:',e);}
+      else{if(nt)nt.textContent='\u2715 '+((j&&j.error)||'Sign-up failed \u00b7 try another handle.');}
+    }).catch(function(e){console.error('pfDoSignup:',e);if(nt)nt.textContent='\u2715 Network error \u00b7 try again.';});}catch(e){console.error('pfDoSignup:',e);}
 }
 function pfDoLogout(){if(typeof zAuthLogout==='function')zAuthLogout();PF_MODE='worker';openProfile();}
 var PF_BODY='pf-body'; // v3.5.85 render target so the SOCIAL "ME" tab can reuse the profile renderer
-// v3.5.87 AUTH SWEEP: the standalone ov-profile overlay is retired \u2014 SOCIAL \u25b8 ME is the ONE profile+sign-in
+// v3.5.87 AUTH SWEEP: the standalone ov-profile overlay is retired \u00b7 SOCIAL \u25b8 ME is the ONE profile+sign-in
 // surface. Routing here (post-login/logout refresh, pause PROFILE) to openSocial('me') guarantees exactly one
 // auth form in the DOM, so no duplicate #pf-id can hijack the login read. Old ov-profile renderer kept only as a
 // defensive fallback if openSocial is ever unavailable.
@@ -10695,7 +10742,7 @@ function openProfile(){
   });}
 function pfRenderPlayer(state,rows){var body=document.getElementById(PF_BODY);if(!body)return;
   if(state!=='ok'){body.innerHTML='<div class="pf-loading">Couldn\u2019t reach the yard server. Try again in a moment.</div>';return;}
-  if(!rows||!rows.length){body.innerHTML='<div class="pf-loading">No sealed sessions yet \u2014 load a wall and your record starts here.</div>';return;}
+  if(!rows||!rows.length){body.innerHTML='<div class="pf-loading">No sealed sessions yet \u00b7 load a wall and your record starts here.</div>';return;}
   // v3.5.173 (Devs BLOCKER #1) uses the SAME lifeAggregate() the post-sort report uses, so the two
   // surfaces are mathematically incapable of disagreeing again (this hand-rolled sum was the other half).
   var _A=lifeAggregate(rows),i,r;
@@ -10707,7 +10754,7 @@ function pfRenderPlayer(state,rows){var body=document.getElementById(PF_BODY);if
   var h='<div class="pf-hero"><div class="pf-hero-id">'+pfEsc(ZDATA.session.handle||ZDATA.session.email||'PLAYER')+'</div><div class="pf-hero-sub">Last loaded '+pfDate(last)+'</div></div>';
   h+='<div class="pf-tiles">'+tile('WALLS',pfNum(tot.walls))+tile('SESSIONS',pfNum(tot.sessions))+tile('PEAK PPH',pfNum(peak))+tile('AVG INTEGRITY',avgInt+'%')+tile('DOUBLE LOCKS',pfNum(tot.doubles))+tile('NESTS',pfNum(tot.nests))+tile('SHELVES',pfNum(tot.shelves))+tile('INCIDENTS',pfNum(tot.incidents))+'</div>';
   h+='<div class="pf-sec">BY MODE</div><table class="pf-table"><tr><th>MODE</th><th>WALLS</th><th>PEAK PPH</th><th>AVG INT</th><th>SCORE</th></tr>';
-  for(i=0;i<rows.length;i++){r=rows[i];h+='<tr><td>'+pfEsc((r.mode||'\u2014').toUpperCase())+'</td><td>'+pfNum(r.walls)+'</td><td>'+pfNum(sanePph(r.peak_pph))+'</td><td>'+pfNum(r.avg_integrity)+'%</td><td>'+pfNum(r.score)+'</td></tr>';}
+  for(i=0;i<rows.length;i++){r=rows[i];h+='<tr><td>'+pfEsc((r.mode||',').toUpperCase())+'</td><td>'+pfNum(r.walls)+'</td><td>'+pfNum(sanePph(r.peak_pph))+'</td><td>'+pfNum(r.avg_integrity)+'%</td><td>'+pfNum(r.score)+'</td></tr>';}
   h+='</table>'+pfFootHTML();body.innerHTML=h;}
 function pfRenderCohort(facs,rows){var body=document.getElementById(PF_BODY);if(!body)return;
   var fnames=[],k;for(k=0;k<facs.length;k++)fnames.push(pfEsc(facs[k].name||facs[k].facility_code));
@@ -10715,7 +10762,7 @@ function pfRenderCohort(facs,rows){var body=document.getElementById(PF_BODY);if(
   if(!rows||!rows.length){h+='<div class="pf-loading">No handles enrolled yet. Hand out usernames + dock hex-codes to start the roster.</div>';body.innerHTML=h;return;}
   h+='<table class="pf-table pf-cohort"><tr><th>HANDLE</th><th>SESS</th><th>WALLS</th><th>AVG INT</th><th>PEAK</th><th>BEST</th><th>FLAGS</th><th>LAST</th></tr>';
   var i,r;for(i=0;i<rows.length;i++){r=rows[i];h+='<tr><td class="pf-handle">'+pfEsc(r.username)+'</td><td>'+pfNum(r.sessions)+'</td><td>'+pfNum(r.walls)+'</td><td>'+pfNum(r.avg_integrity)+'%</td><td>'+pfNum(r.best_pph)+'</td><td>'+pfNum(r.best_score)+'</td><td'+((+r.incidents>0)?' class="pf-flag"':'')+'>'+pfNum(r.incidents)+'</td><td>'+pfDate(r.last_seen)+'</td></tr>';}
-  h+='</table><div class="pf-note">Handles are anonymous \u2014 only your roster maps them to real students. Sorting + export land in the enterprise build.</div>'+pfFootHTML();body.innerHTML=h;}
+  h+='</table><div class="pf-note">Handles are anonymous \u00b7 only your roster maps them to real students. Sorting + export land in the enterprise build.</div>'+pfFootHTML();body.innerHTML=h;}
 function psBuild(lifeState,life){
   try{
     var W=snapWall();
@@ -10729,25 +10776,25 @@ function psBuild(lifeState,life){
     function lwv(k){return (LW&&LW[k]!=null)?LW[k]:null;} // last-wall value helper
     var inc=S.incidents||[];
     function ic(t){var k=0,i;for(i=0;i<inc.length;i++){if(inc[i]&&inc[i].type===t)k++;}return k;}
-    var avgInt=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):'\u2014';
+    var avgInt=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):',';
     // LIFETIME cell
     function L(key,suf){
-      if(lifeState==='anon')return '\u2014';
+      if(lifeState==='anon')return ',';
       if(lifeState==='loading')return '\u2026';
       // v3.5.183 a failed read renders as UNKNOWN, never as a number. It used to print 0.
       if(lifeState==='expired'||lifeState==='err')return '?';
-      if(!life||life[key]==null||life[key]==='')return '\u2014';
+      if(!life||life[key]==null||life[key]==='')return ',';
       return life[key]+(suf||'');
     }
     function row(m,w,sv,lk,sub,suf){
       return '<div class="ps-row"><span class="m'+(sub?' sub':'')+'">'+m+'</span>'+
-        '<span class="n w">'+(w==null?'\u2014':w)+'</span>'+
-        '<span class="n s">'+(sv==null?'\u2014':sv)+'</span>'+
+        '<span class="n w">'+(w==null?',':w)+'</span>'+
+        '<span class="n s">'+(sv==null?',':sv)+'</span>'+
         '<span class="n l">'+L(lk,suf)+'</span></div>';
     }
     var pcsSec=durS>0?(pieces/durS).toFixed(2):'0.00';
     var shMin=durS>0?(((S.shelvesLocked||0)/durS)*60).toFixed(1):'0.0';
-    var tWall=walls>0?psFmtTime(durS/walls):'\u2014';
+    var tWall=walls>0?psFmtTime(durS/walls):',';
     var ncU=S.ncSpawned?Math.min(100,Math.round((S.ncPlaced||0)/S.ncSpawned*100)):null;
     var smU=S.smallsSpawned?Math.min(100,Math.round((S.bagsPlaced||0)/S.smallsSpawned*100)):null; // v3.5.81 cap at 100 (was showing 200%)
 
@@ -10756,18 +10803,18 @@ function psBuild(lifeState,life){
     H+='<div class="ps-mast"><div style="display:flex;align-items:baseline"><span class="lg">LOCK<b> IN</b></span><span class="doc">POST-SORT REPORT</span></div><span class="stamp">SESSION COMPLETE</span></div><div class="ps-rule"></div>';
     H+='<div class="ps-id">'+
       '<div><span class="k">LOADER</span><span class="v">'+zWho()+'</span></div>'+
-      '<div><span class="k">FACILITY</span><span class="v">'+(p.facility||'\u2014')+'</span></div>'+
-      '<div><span class="k">MODE</span><span class="v">'+(TRAILER_MODE?'TRAILER-LOAD':(gameMode||'\u2014').toUpperCase())+'</span></div>'+
+      '<div><span class="k">FACILITY</span><span class="v">'+(p.facility||',')+'</span></div>'+
+      '<div><span class="k">MODE</span><span class="v">'+(TRAILER_MODE?'TRAILER-LOAD':(gameMode||',').toUpperCase())+'</span></div>'+
       '<div><span class="k">DATE</span><span class="v">'+new Date().toISOString().slice(0,10)+'</span></div>'+
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
-      '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u2014':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.192</span></div></div>';
+      '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
+      '<div><span class="k">BUILD</span><span class="v">v3.5.193</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
-      :(lifeState==='expired')?'\u25c6 LIFETIME UNAVAILABLE \u2014 YOUR SESSION EXPIRED. SIGN IN AND REOPEN THIS REPORT.'
-      :(lifeState==='err')?'\u25c6 LIFETIME UNAVAILABLE \u2014 COULD NOT REACH THE YARD SERVER. THIS WALL AND SESSION ARE STILL ACCURATE.'
+      :(lifeState==='expired')?'\u25c6 LIFETIME UNAVAILABLE \u00b7 YOUR SESSION EXPIRED. SIGN IN AND REOPEN THIS REPORT.'
+      :(lifeState==='err')?'\u25c6 LIFETIME UNAVAILABLE \u00b7 COULD NOT REACH THE YARD SERVER. THIS WALL AND SESSION ARE STILL ACCURATE.'
       :(lifeState==='loading')?'\u25c6 LOADING YOUR CAREER\u2026'
       :'\u25c6 all metrics at three scopes';
     H+='<div class="ps-legend"><span class="sp">'+_legend+'</span><span class="h w">WALL</span><span class="h s">SESSION</span><span class="h l">LIFETIME</span></div>';
@@ -10812,12 +10859,12 @@ function psBuild(lifeState,life){
       row('\u00b7 Structure',lwv('integrity'),wlAvg('integrity'),null,true)+
       row('\u00b7 Balance',lwv('bal'),wlAvg('bal'),null,true)+
       row('\u00b7 Support',lwv('support'),wlAvg('support'),null,true)+
-      row('Density',lwv('density'),wlAvg('density'),'density_pct','','%')+ // v3.5.135 UNIFIED: this is the STRUCTURED density that drives the grade (was reading raw cubePct \u2014 the same number as Pack %)
-      row('Pack %',lwv('cubePct'),wlAvg('cubePct'),'cube_eff','','%')+     // v3.5.135 raw cube-fill \u2014 one canonical label (was "Cube fill %"); the scoreboard "PACK" is its live short form
+      row('Density',lwv('density'),wlAvg('density'),'density_pct','','%')+ // v3.5.135 UNIFIED: this is the STRUCTURED density that drives the grade (was reading raw cubePct \u00b7 the same number as Pack %)
+      row('Pack %',lwv('cubePct'),wlAvg('cubePct'),'cube_eff','','%')+     // v3.5.135 raw cube-fill \u00b7 one canonical label (was "Cube fill %"); the scoreboard "PACK" is its live short form
       row('Wall height %',lwv('fillPct'),wlAvg('fillPct'),'avg_wall_pct','','%')+
-      row('Avg pieces / wall',lwv('pieces'),(wl.length?wlAvg('pieces'):(walls>0?Math.round(pieces/walls):'\u2014')),null)+
-      row('SPEC freight used',null,(ncU==null?'\u2014':ncU),'nc_util_pct','','%')+
-      row('Smalls used',null,(smU==null?'\u2014':smU),'smalls_util_pct','','%')+
+      row('Avg pieces / wall',lwv('pieces'),(wl.length?wlAvg('pieces'):(walls>0?Math.round(pieces/walls):',')),null)+
+      row('SPEC freight used',null,(ncU==null?',':ncU),'nc_util_pct','','%')+
+      row('Smalls used',null,(smU==null?',':smU),'smalls_util_pct','','%')+
       row('Voids (open cells)',lwv('voids'),null,null)+
       row('Shelves locked',lwv('shelves'),S.shelvesLocked||0,'shelves_locked')+
       row('Double locks',lwv('doubles'),S.doubleLocks||0,'double_locks')+
@@ -10831,14 +10878,14 @@ function psBuild(lifeState,life){
       row('Rejected drops',lwv('rejects'),S.rejects||0,'rejected_drops')+
       row('Hazmat locks',lwv('hazShelfLocks'),S.hazShelfLocks||0,null)+
       row('Bonuses received',lwBonus,S.bonuses||((S.recoveries||0)+(S.doubleLocks||0)+(S.hazShelfLocks||0)+(S.nests||0)),'bonuses')+
-      row('Bags broken / placed',LW?((LW.bagsBroken||0)+'/'+(LW.bagsPlaced||0)):null,(S.bagsBroken||0)+'/'+(S.bagsPlaced||0),null)+'</div>'; // v3.5.11 dropped the two perma-"\u2014" rows (Slot occupancy / Pack-fill) \u2014 never implemented, read as slop
+      row('Bags broken / placed',LW?((LW.bagsBroken||0)+'/'+(LW.bagsPlaced||0)):null,(S.bagsBroken||0)+'/'+(S.bagsPlaced||0),null)+'</div>'; // v3.5.11 dropped the two perma-"," rows (Slot occupancy / Pack-fill) \u00b7 never implemented, read as slop
 
     H+='</div>'; // end blocks
 
     var g=psTxt('es-grade-big'),rk=psTxt('es-rank'),vd=psTxt('es-verdict');
     // v3.5.131 the ps-ring was hardcoded GREEN · an F showed a green ring ("f is green???"). Color it by the actual grade.
     var _g0=(g||'').charAt(0), _gclr=(g==='F')?'#cc3820':(_g0==='A')?'#1f9d57':(g==='B')?'#2a7d9a':(_g0==='C'||_g0==='D')?'#b8760f':(_g0==='F')?'#cc3820':'#1f9d57';
-    var lifeSum=(lifeState==='ok'&&life&&life.sessions)?((life.avg_pph||'\u2014')+' PPH \u00b7 '+(life.avg_integrity||'\u2014')+' INTEG \u00b7 '+(life.incidents||0)+' INC \u00b7 '+(life.sessions||0)+' SESS'):(lifeState==='anon'?'\u2014 log in to track \u2014':(lifeState==='loading'?'\u2026':'\u2014 unavailable, not zero \u2014'));
+    var lifeSum=(lifeState==='ok'&&life&&life.sessions)?((life.avg_pph||',')+' PPH \u00b7 '+(life.avg_integrity||',')+' INTEG \u00b7 '+(life.incidents||0)+' INC \u00b7 '+(life.sessions||0)+' SESS'):(lifeState==='anon'?', log in to track ,':(lifeState==='loading'?'\u2026':', unavailable, not zero ,'));
     H+='<div class="ps-verdict"><div class="ps-ring" style="border-color:'+_gclr+'"><span style="color:'+_gclr+'">'+g+'</span></div>'+
       '<div class="ps-vmid"><div class="rk">'+rk+'</div><div class="ln">'+vd+'</div></div>'+
       '<div class="ps-vsum"><div class="vr s"><span class="lb">SESSION</span><span class="va">'+g+' \u00b7 '+Math.round((typeof avgPPH==='function')?avgPPH():0)+' PPH \u00b7 '+avgInt+' INTEG \u00b7 '+inc.length+' INC</span></div>'+
@@ -11178,7 +11225,7 @@ function checkWin(){
       // v2.1.17 tall but loose: tell the player WHY it won't seal · never silent limbo
       if(Date.now()-winHintT>5000){
         winHintT=Date.now();
-        showBanner('WALL\u2019S TALL BUT LOOSE \u2014 pack it tighter to seal ('+Math.round(density*100)+'% / '+Math.round(targetD*100)+'% density).','warn',2600);
+        showBanner('WALL\u2019S TALL BUT LOOSE \u00b7 pack it tighter to seal ('+Math.round(density*100)+'% / '+Math.round(targetD*100)+'% density).','warn',2600);
       }
     }
   }
@@ -12285,7 +12332,7 @@ function zVerifyOnBoard(score,cb){
 }
 function renderDailyBoard(rows){
   var el=document.getElementById('dr-board');if(!el)return;
-  if(!rows||!rows.length){el.innerHTML='<div class="dr-empty">No scores posted yet today \u2014 be the first.</div>';return;}
+  if(!rows||!rows.length){el.innerHTML='<div class="dr-empty">No scores posted yet today \u00b7 be the first.</div>';return;}
   var me=(ZDATA.session&&ZDATA.session.email&&ZDATA.session.email.split('@')[0])||(ZDATA.session&&ZDATA.session.handle)||'';
   var h='',i;for(i=0;i<rows.length;i++){var mine=(me&&rows[i].username===me)?' dr-me':'';h+='<div class="dr-row'+mine+'"><span>'+rows[i].rank+'</span><span>'+drEsc(rows[i].username)+'</span><span>'+rows[i].score+'</span></div>';}
   el.innerHTML=h;
@@ -12296,7 +12343,7 @@ function shareDaily(){
   var txt='LOCK IN \u00b7 DAILY '+dailyKey()+'\n'+score+' cubes \u00b7 '+inc+' incident'+(inc===1?'':'s')+'\ntrailer-load.com';
   try{
     if(navigator.share){navigator.share({text:txt}).catch(function(){});}
-    else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){if(typeof showBanner==='function')showBanner('\u2713 Result copied \u2014 paste it anywhere','ok',1800);}).catch(function(){if(typeof showBanner==='function')showBanner(txt,'',2600);});}
+    else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){if(typeof showBanner==='function')showBanner('\u2713 Result copied \u00b7 paste it anywhere','ok',1800);}).catch(function(){if(typeof showBanner==='function')showBanner(txt,'',2600);});}
     else if(typeof showBanner==='function'){showBanner(txt,'',2600);}
   }catch(e){if(typeof showBanner==='function')showBanner('\u2713 copied','ok',1500);}
 }
@@ -12334,11 +12381,11 @@ function dailyFinish(){
       zVerifyOnBoard(score,function(state){
         if(!rk)return;
         if(state==='confirmed')rk.innerHTML+='<br><span style="font-size:.58em;color:var(--ok)">\u2713 CONFIRMED ON THE WORLD BOARD</span>';
-        else if(state==='missing')rk.innerHTML='\u26a0 <b>NOT ON THE BOARD</b><br><span style="font-size:.62em">The server took your score but it isn\u2019t showing. Sign out and back in, then replay \u2014 and tell Vince.</span>';
+        else if(state==='missing')rk.innerHTML='\u26a0 <b>NOT ON THE BOARD</b><br><span style="font-size:.62em">The server took your score but it isn\u2019t showing. Sign out and back in, then replay \u00b7 and tell Vince.</span>';
       });
     }
-    else if(j&&j.expired){if(rk)rk.innerHTML='\u26a0 <b>NOT POSTED \u2014 YOUR SESSION EXPIRED</b><br><span style="font-size:.62em">Sign in again (\u25c6 CLOCK-IN) and replay today\u2019s wall to claim your rank.</span>';}
-    else if(rk)rk.textContent='(could not post \u2014 played offline?)';
+    else if(j&&j.expired){if(rk)rk.innerHTML='\u26a0 <b>NOT POSTED \u00b7 YOUR SESSION EXPIRED</b><br><span style="font-size:.62em">Sign in again (\u25c6 CLOCK-IN) and replay today\u2019s wall to claim your rank.</span>';}
+    else if(rk)rk.textContent='(could not post \u00b7 played offline?)';
     zLoadDailyBoard(renderDailyBoard);
   });
 }
