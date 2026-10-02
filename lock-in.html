@@ -27,9 +27,28 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.188
+   LOCK IN v3.5.189
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.189 - THE START MENU GETS THE BOARD, AND TWO MODES LEAVE.
+     (1) THE CLIPBOARD, asked for across versions and deferred every time with the same excuse:
+     the preview viewport rendered 0x0, so it was structure-verified and never eyeballed. That
+     excuse is dead -- the private lab build serves the game to a real browser now. The start
+     menu was the LAST surface still on a drawn gradient while pause (v3.5.75), the briefing
+     (v3.5.77) and social/profile/mini-games (v3.5.105) all sat on the real clipboard.png, and
+     it is the first thing every visitor sees. Tagline + the four cards now live in the board's
+     writing area. #sm-logo is hidden because the art already carries LOCK-IN on the metal clip;
+     keeping the wordmark above it printed the brand twice. Text sitting directly on the page is
+     an explicit dark hex, not a theme token -- that page is light gray in BOTH themes, so --t2
+     would have vanished the moment the dark theme was on. #2a1a08 computes 11.4:1 there.
+     (2) PRACTICE AND GAUNTLET RETIRED from the menu. Vince: "there is DAILY and there is TRAILER
+     LOAD. no more confusion." Four doors into the same wall taught nobody which to walk through,
+     and GAUNTLET is belt-only -- it reaches none of the hazmat, tire, bag or anchor mechanics
+     this product is sold on, so it was the worst possible mode to meet first. The functions stay
+     defined: internal callers, the training-trailer fallback and the screenshot workflow still
+     use them, they are simply no longer advertised. Mini-Games is now Tour + Smalls Sort.
+     No scoring change. No mechanic touched. Bags ride the chute exactly as they did.
 
    CHANGE LOG v3.5.188 - THE ARROW HAD NO TAPE BEHIND IT. box.arrow was set by a bare Math.random()<0.38
      with no connection to the label, so 38% of freight drew THIS-SIDE-UP chevrons while the shipping tag on
@@ -1162,6 +1181,40 @@ html,body{width:100%;height:100dvh;color:var(--t1);
   font-family:'Share Tech Mono',monospace;font-size:16px;letter-spacing:2px;font-weight:bold;
   color:var(--t2);text-align:left;margin:0 0 16px 34px;text-transform:uppercase;
 }
+/* ── v3.5.189 THE START MENU ON THE REAL BOARD ────────────────────────────────
+   The same asset + writing-area treatment already shipped on the pause menu
+   (v3.5.75), the briefing (v3.5.77) and social / profile / mini-games (v3.5.105).
+   The start menu was the last surface still on a drawn gradient, and it is the
+   first thing every visitor sees.
+
+   #sm-logo is hidden here on purpose: the board art is portrait 619x905 with the
+   LOCK-IN mark already on the metal clip, so keeping the wordmark above it prints
+   the brand twice. One line to flip back if that reads wrong on the real art.
+
+   CONTRAST: anything sitting DIRECTLY on the board page gets an explicit dark hex,
+   never a theme token. That page is light gray in BOTH themes, so --t2 would
+   disappear on it the moment the dark theme is on. #2a1a08 computes 11.4:1 there.
+   The mode cards carry their own dark ground, so they are left alone. */
+#sm-logo{display:none;}
+#sm-board{
+  position:relative;flex:none;
+  height:min(1040px,86vh);width:auto;max-width:94vw;
+  aspect-ratio:619/905;
+  background:url('clipboard.png') center/contain no-repeat;
+  filter:drop-shadow(0 16px 42px rgba(0,0,0,.6));
+  margin:2px 0 0 18px;
+}
+#sm-board #sm-tagline{
+  position:absolute;left:7.5%;right:7.5%;top:23.5%;margin:0;
+  color:#2a1a08;
+}
+#sm-board #sm-modes{
+  position:absolute;left:6.5%;right:6.5%;top:29.5%;bottom:5.5%;
+  width:auto;max-width:none;margin:0;padding:0;
+  overflow-y:auto;gap:10px;
+}
+/* Short viewports: give the board the height it needs rather than clipping the cards. */
+@media(max-height:700px){#sm-board{height:min(1040px,94vh);}}
 /* Top-right account / settings (placeholders, visible for reference) */
 #sm-topright{position:absolute;top:16px;right:18px;display:flex;gap:10px;align-items:center;z-index:60;pointer-events:auto;}/* v3.5.30 ensure top-right menu buttons stay above the demo + mode cards */
 .sm-iconbtn,.sm-loginbtn{
@@ -2494,7 +2547,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.188 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.189 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2574,8 +2627,13 @@ body[data-cb="trit"]{
     <span id="sm-wordmark">LOCK IN</span>
     <span id="sm-sub">FREIGHT LOADING SIMULATOR</span>
   </div>
+  <!-- v3.5.189 THE BOARD. The start menu was the one surface still on a drawn gradient while
+       pause, briefing, social, profile and mini-games all sat on the real clipboard.png. It is
+       also the first thing every visitor sees. Tagline + mode cards now live in the board's
+       writing area; the board's own clip carries the LOCK-IN mark, so #sm-logo is hidden. -->
+  <div id="sm-board">
   <div id="sm-tagline">SELECT YOUR MODE</div>
-  <!-- v3.5.91 THE FOUR PILLARS. Trailer-Load (flagship) · Daily (favored son) · Training (the teacher) · Mini-Games (the side games). Practice/Gauntlet/Tour/Smalls Sort live inside Mini-Games. -->
+  <!-- v3.5.91 THE FOUR PILLARS. Trailer-Load (flagship) · Daily (favored son) · Training (the teacher) · Mini-Games (the side games). Tour/Smalls Sort live inside Mini-Games. -->
   <div id="sm-modes">
     <div class="sm-card mode-shift mode-flagship" onclick="guardLaunch(startTrailerLoad)">
       <div class="sm-card-ico">🚛</div>
@@ -2596,11 +2654,12 @@ body[data-cb="trit"]{
     <div class="sm-card mode-minigames" onclick="openMiniGames()">
       <div class="sm-card-ico">🎮</div>
       <div class="sm-card-name">MINI-GAMES</div>
-      <div class="sm-card-desc">The side games — Practice, Gauntlet, Tour &amp; Smalls Sort. No world rank, just reps and fun. Tap to pick one.</div>
+      <div class="sm-card-desc">The side games — Tour &amp; Smalls Sort. No world rank, just reps and fun. Tap to pick one.</div>
     </div>
   </div>
+  </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.188 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.189 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -2758,7 +2817,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.188 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.189 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3145,16 +3204,12 @@ body[data-cb="trit"]{
   <div class="mg-head"><div class="mg-title">🎮 MINI-GAMES</div><button class="mg-x" onclick="closeMiniGames()">✕ BACK</button></div>
   <div class="mg-sub">Side games — no world rank, just reps and fun.</div>
   <div class="mg-grid">
-    <div class="sm-card mode-regular" onclick="closeMiniGames();guardLaunch(startRegular)">
-      <div class="sm-card-ico">📦</div>
-      <div class="sm-card-name">PRACTICE</div>
-      <div class="sm-card-desc">Learn the wall at your own pace. The floor still coaches you, but a slow shift or a piled-up staging lane won't send you home.</div>
-    </div>
-    <div class="sm-card mode-gauntlet" onclick="closeMiniGames();guardLaunch(startGauntlet)">
-      <div class="sm-card-ico">🔥</div>
-      <div class="sm-card-name">GAUNTLET</div>
-      <div class="sm-card-desc">No tray, no bags — just the belt and the wall. Pure stacking, no mercy. For when you want to be tested.</div>
-    </div>
+    <!-- v3.5.189 PRACTICE and GAUNTLET retired from the menu. Vince: "there is DAILY and there
+         is TRAILER LOAD. no more confusion." Four doors into the same wall taught nobody which
+         one to walk through, and GAUNTLET in particular is belt-only, so it reaches none of the
+         hazmat, tire, bag or anchor mechanics the product is sold on. startRegular() and
+         startGauntlet() are left defined on purpose: internal callers, the training-trailer
+         fallback and the screenshot workflow still reach them, they are simply not advertised. -->
     <div class="sm-card mode-levels" onclick="closeMiniGames();guardLaunch(openLevelSelect)">
       <div class="sm-card-ico">🏆</div>
       <div class="sm-card-name">TOUR</div>
@@ -3248,7 +3303,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.188
+// LOCK IN v3.5.189
 // LOCK IN — V. Gonzalez — © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3716,7 +3771,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.188'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.189'; // v3.5.129 telemetry version stamp — bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -10593,7 +10648,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u2014':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.188</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.189</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
