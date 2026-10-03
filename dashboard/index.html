@@ -17,7 +17,12 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 /* ══════════════════════════════════════════════════════════════════════════
-   THE PROGRAM DASHBOARD · v2.1
+   THE PROGRAM DASHBOARD · v2.2
+   v2.2 · 2026-10-03: sign in with a GAME USERNAME. Game accounts are username + password
+   (stored as <username>@players.lockin.app); this login took only an email, so the
+   self-serve path (make a crew in the game, then open the dashboard) dead-ended at the
+   sign-in box. A value without "@" now maps through the game's own rule. The login note
+   tells an instructor how to start a class instead of "credentials are issued by LOCK IN".
    v2.1 · 2026-10-03: SHOWCASE. The demo account reads a pseudonymous mirror of the real
    roster (lockin_showcase*, FIX-05) so prospects see actual results, with a visible label
    saying so. One probe after sign-in picks the source; a missing view or zero rows means a
@@ -185,11 +190,11 @@ tbody tr:hover td{background:#f6efdd;}
 <div id="login">
   <h1>PROGRAM SIGN-IN</h1>
   <p class="sub">Your students' loading competency report.</p>
-  <label class="fld"><span>Program email</span><input id="li-email" type="email" autocomplete="username" placeholder="you@school.edu"></label>
+  <label class="fld"><span>LOCK IN username or program email</span><input id="li-email" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="your LOCK IN username"></label>
   <label class="fld"><span>Password</span><input id="li-pw" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')dLogin();"></label>
   <button class="btn" onclick="dLogin()">🔑 SIGN IN</button>
   <div id="login-msg"></div>
-  <div id="login-note">Program credentials are issued by LOCK IN. Forgot your password, or don't have access yet? Email <a href="mailto:vince@trailer-load.com">vince@trailer-load.com</a>.</div>
+  <div id="login-note">Use the same username and password you use in the game. To start a class: sign in to the game, open YOUR CREW, choose + CREATE A CREW, and give your students the join code. Forgot your password, or need help? Email <a href="mailto:vince@trailer-load.com">vince@trailer-load.com</a>.</div>
 </div>
 
 <!-- DASHBOARD -->
@@ -367,9 +372,14 @@ function dSince(ts){
 function dDur(s){s=dNum(s);if(!s)return '·';var m=Math.floor(s/60);return m?(m+'m '+(s%60)+'s'):(s+'s');}
 
 function dLogin(){
-  var email=(document.getElementById('li-email')||{}).value||'';
+  var email=((document.getElementById('li-email')||{}).value||'').trim();
+  // v2.2 game accounts are username + password; under the hood the game signs them up as
+  // <clean username>@players.lockin.app (lock-in.html zHandleEmail). The login only took an email, so an
+  // instructor who created a crew in the game could not sign in here without knowing that hidden address.
+  // A value with no "@" is now treated as a game username, cleaned by the game's own rule (zHandleClean).
+  if(email&&email.indexOf('@')<0)email=email.toLowerCase().replace(/[^a-z0-9_]/g,'')+'@players.lockin.app';
   var pw=(document.getElementById('li-pw')||{}).value||'';
-  if(!email||!pw){dMsg('Enter your program email and password.','err');return;}
+  if(!email||!pw){dMsg('Enter your username (or program email) and password.','err');return;}
   dMsg('Signing in…','');
   try{
     fetch(DASH.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':DASH.anonKey},body:JSON.stringify({email:email,password:pw})})
@@ -378,7 +388,7 @@ function dLogin(){
           DASH.session={access_token:j.access_token,refresh_token:j.refresh_token,email:email,uid:(j.user&&j.user.id)||''};
           try{localStorage.setItem('lockinDashAuth',JSON.stringify(DASH.session));}catch(e){}
           dMsg('','');dEnter();
-        } else { dMsg((j&&(j.error_description||j.msg))||'Sign-in failed. Check your program email and password, or email vince@trailer-load.com.','err'); }
+        } else { dMsg((j&&(j.error_description||j.msg))||'Sign-in failed. Check your username and password, or email vince@trailer-load.com.','err'); }
       }).catch(function(e){console.error('dLogin:',e);dMsg('Network error. Try again.','err');});
   }catch(e){console.error('dLogin:',e);dMsg('Network error. Try again.','err');}
 }
