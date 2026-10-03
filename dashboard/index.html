@@ -17,7 +17,12 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 /* ══════════════════════════════════════════════════════════════════════════
-   THE PROGRAM DASHBOARD · v2.0
+   THE PROGRAM DASHBOARD · v2.0.1
+   v2.0.1 · 2026-10-03: the instructor no longer appears in their own roster as a student
+   who never played. Found by impersonating the demo instructor's session in SQL: the view
+   returned their own account row (readable to them by lh_self_select) and the filter meant
+   to drop it never matched. Same check found the demo class empty under real auth: its
+   seeded sessions lacked consent_share, so RLS hid all of them. Seed data fixed in the DB.
    Rebuilt 2026-10-02. The old one read lockin_cohort, which returned 0 walls
    for 16 of 19 students, and showed 8 of the 30 metrics that exist.
 
@@ -415,7 +420,10 @@ function dFetchSheet(){
       .then(function(r){if(r.status===401){dExpired();return null;}return r.json();})
       .then(function(j){
         if(j===null)return;
-        DASH.rows=(j&&j.length)?j.filter(function(r){return !(DASH.session&&r.user_id===DASH.session.uid&&r.username===undefined);}):[];
+        // v2.0.1 the instructor's own account is readable to them (lh_self_select), so it arrived as a roster
+        // row and rendered as a student who NEVER PLAYED. The old test also required username===undefined,
+        // which is never true, so it filtered nothing. Drop the instructor's own row unless they enrolled in a class.
+        DASH.rows=(j&&j.length)?j.filter(function(r){return !(DASH.session&&r.user_id===DASH.session.uid&&!r.facility_code);}):[];
         var st=document.getElementById('stamp');
         if(st)st.textContent=DASH.rows.length+' on roster';
         if(DASH.sheet==='life')dFetchGuests(); else dRender();
