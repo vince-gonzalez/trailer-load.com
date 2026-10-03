@@ -27,9 +27,36 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.197
+   LOCK IN v3.5.198
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.198 - THE GAME STOPPED TEACHING THE FOLK RULE IT DOES NOT ENFORCE.
+     What was wrong: eleven places told the player "fragile rides on top". The code has never
+     enforced that. checkFragileCrush() crushes only weight class 5, and a fragile is safe at ANY
+     height if it has a real piece on both sides (hasLateralSupport) or a locked shelf at or below
+     its row (isRowLockedIn). The trailer wall is not a piece, so a fragile in a top corner is
+     the exposed one. /day1/ already taught this correctly; the game contradicted its own manual.
+     Worse, the trainer's commentary judged by HEIGHT (gy/GH < 0.5 = "fragile on top where it
+     belongs"), so it praised the exact placement that gets crushed, and the FRAGILE_CRUSH
+     write-up and the crunch banner told players to lock a shelf OVER the fragile, which protects
+     nothing. What it cost: the first rule a new player reads was wrong, and every grant
+     application that copied the site's "fragile on top" described a rule the game does not have.
+     What changed:
+       (1) Briefing rule 5 rewritten: a closed course, not height.
+       (2) fireCommentary: protected vs exposed now uses the same tests the crush code uses, plus a
+           row the fragile itself just completed (commentary fires before checkTetris() locks it).
+       (3) Both commentary voices' fragile / frag_bad pools rewritten to match.
+       (4) Crunch banner, FRAGILE_CRUSH safetyWarn line and its write-up text: "under", not "over".
+       (5) Tutorial tip and checklist label for the fragile step.
+       (6) Outside the game, same release: /programs/ (four lines incl. the FAQ structured data)
+           and llms-full.txt (two lines). /programs/ Employer Bay card no longer says "hiring screen":
+           a selection test with adverse impact must be validated under 29 CFR Part 1607, and no
+           validation study exists. It now reads "a trainee practice and progress gauge".
+       (7) New .tools/bump.py: moves all seven version stamps, refuses unless each is found exactly
+           once, writes through a temp file. The old scratchpad copy did not survive its session.
+     DECISION: the 55% "TOP ONLY" tape on fragiles (tapePreload) is untouched. It is cosmetic, no
+     rule enforces it, and it is the same class v3.5.126 retired; removing art is Vince's call.
 
    CHANGE LOG v3.5.195 - PAPER, NOT BLACK BOXES.
      Vince: "if the clipboard is there, we don't need black boxes, maybe just a paper or note.
@@ -2754,7 +2781,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.197 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.198 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2786,7 +2813,7 @@ body[data-cb="trit"]{
       <div class="brief-rule"><div class="brief-rule-num">2</div><div class="brief-rule-txt"><b>Build off the floor.</b> Every piece needs support under it · nothing floats.<span class="brief-why">A freestanding stack 4+ high with no wall beside it topples back to the belt.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">3</div><div class="brief-rule-txt"><b>Lock your shelves.</b> Fill a full row to lock it; a locked shelf braces the wall above.<span class="brief-why">Locked shelves also cap a hazmat safely beneath them.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">4</div><div class="brief-rule-txt"><b>🛞 SPEC freight loads low.</b> Too big, heavy or hazardous for the belt · tap <b>SPEC</b>, pick a piece, tap the wall.<span class="brief-why">Heavy on the floor anchors everything above it.</span></div></div>
-      <div class="brief-rule"><div class="brief-rule-num">5</div><div class="brief-rule-txt"><b>Fragile &amp; glass ride on top.</b> Never bury them · a crush is a write-up.<span class="brief-why">Load them near the top with only light pieces above.</span></div></div>
+      <div class="brief-rule"><div class="brief-rule-num">5</div><div class="brief-rule-txt"><b>Fragile &amp; glass need a closed course.</b> Height does not save them · a crush is a write-up.<span class="brief-why">Only the heaviest freight crushes. A fragile is safe at any height with a real box on its left and right, or a locked shelf at or below its row. The trailer wall is not a box, so the corners are the danger.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">6</div><div class="brief-rule-txt"><b>Hazmat low &amp; locked.</b> Floor it, cap it under a shelf.<span class="brief-why">A hazmat in ANY collapse ends the round · keep it stable.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">7</div><div class="brief-rule-txt"><b>Lay tires flat.</b> On its edge, a tire rolls the second the door opens.<span class="brief-why">Standing one up is a safety warning · lay it flat before the door opens.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">8</div><div class="brief-rule-txt"><b>📦 Bags break open.</b> Double-tap a bag on the chute · it spills six small pieces for gaps a box can’t reach.<span class="brief-why">Use them to fill the last voids before you seal.</span></div></div>
@@ -2876,7 +2903,7 @@ body[data-cb="trit"]{
   </div>
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.197 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.198 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3037,7 +3064,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.197 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.198 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3523,7 +3550,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.197
+// LOCK IN v3.5.198
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3991,7 +4018,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.197'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.198'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -5707,9 +5734,9 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     // (-300 real score each, flow broken, the freight itself ruined) · that is NOT a safety event. Eyes go on you
     // when the trailer KEEPS having broken boxes: from the 3rd crushed box of the session the safetyWarn ladder
     // starts (and safetyWarn itself still needs a repeat to become an incident · so paper lands on a PATTERN).
-    else if((S.crunches||0)>=3&&typeof safetyWarn==='function')safetyWarn('FRAGILE_CRUSH',_smCr?'you smashed a bag of smalls · those are customers’ packages.':'that’s not the first box you’ve broken · fragile rides on TOP.');
+    else if((S.crunches||0)>=3&&typeof safetyWarn==='function')safetyWarn('FRAGILE_CRUSH',_smCr?'you smashed a bag of smalls · those are customers’ packages.':'that’s not the first box you’ve broken · close fragiles in on both sides, or lock a shelf under them.');
     flash('fl-crunch');
-    showBanner('💥 CRUNCH! -'+(CRUNCH_PENALTY*crushed.length)+' CUBES<br><span style="font-size:.72em">'+(_hazCr?'HAZMAT CRUSHED · that’s a write-up.':_smCr?'NOTHING HEAVY ON SMALLS · you just smashed customers’ packages. Lock a shelf over them or keep them up top.':'FRAGILE goes on TOP · safety warning. Lock a shelf to protect it.')+'</span>','danger',3000);
+    showBanner('💥 CRUNCH! -'+(CRUNCH_PENALTY*crushed.length)+' CUBES<br><span style="font-size:.72em">'+(_hazCr?'HAZMAT CRUSHED · that’s a write-up.':_smCr?'NOTHING HEAVY ON SMALLS · you just smashed customers’ packages. Box them in on both sides or lock a shelf under them.':'EXPOSED FRAGILE · safety warning. Box it in left and right, or lock a shelf under it.')+'</span>','danger',3000);
   }
 
   // Hazmat height check · dangerous goods must load below waist height.
@@ -6027,7 +6054,7 @@ var WRITEUP_DOCS={
   KILLER:{t:'INCOMPATIBLE HAZMAT CLASSES IN CONTACT',w:'These two classes react with each other. 49 CFR requires separation \u00b7 a "killer pair" touching is the write-up every carrier fears.'},
   SEGREGATION:{t:'HAZMAT SEGREGATION BREACH',w:'Different hazmat classes need clear cells between them (49 CFR segregation table). Keep them apart.'},
   TIRE_STACK:{t:'TIRES STACKED VERTICALLY',w:'Tires stacked on their edge ROLL the second the door opens. Lay them flat \u00b7 an obvious hazard is an immediate write-up.'},
-  FRAGILE_CRUSH:{t:'REPEATED CRUSHED FRAGILES',w:'Fragile freight rides on TOP, nothing heavy above it. You keep burying them · crushed fragiles are damage claims. Lock a shelf over them or keep them high.'},
+  FRAGILE_CRUSH:{t:'REPEATED CRUSHED FRAGILES',w:'Only the heaviest freight crushes, and it keeps landing on exposed fragiles. Height does not protect them · crushed fragiles are damage claims. Put a real box on each side of every fragile, or lock a shelf under it first.'},
   COLLAPSE:{t:'REPEATED WALL COLLAPSES',w:'Your wall keeps coming down. Taper your stacks (wide base, narrow top) and lock shelves. Repeated collapses get documented.'},
   ACCUMULATED:{t:'MULTIPLE SAFETY VIOLATIONS',w:'You have stacked up safety violations this session. The manager is now documenting each one. Slow down and load it clean.'},
   SENT_HOME:{t:'SENT HOME · TOO MANY WRITE-UPS',w:'That is four documented write-ups this shift. The manager has seen enough · you are clocked out for the day. It is not the end of your career: come back, slow down, and load it clean. Sign to clock out.'},
@@ -9526,15 +9553,16 @@ var PLACE_CMT_STD={
     'Corner anchor in. Build off it.',
     'SPEC freight first. Always.',
   ],
-  fragile:[
-    'Fragile up top · protect it from above.',
-    'FRAGILE placed. Nothing heavy goes above this.',
-    'Good · fragile on top where it belongs.',
-    'Watch what you stack above that one.',
+  fragile:[ // v3.5.198 protected: a real piece on both sides, or a locked shelf at or below it
+    'Fragile closed in · that one is protected.',
+    'FRAGILE placed with cover. Heavy freight can land on it now.',
+    'Good · covered fragile. That is the habit.',
+    'Protected. Keep the boxes beside it where they are.',
   ],
-  frag_bad:[ // fragile placed low with open space above
-    'That fragile piece is exposed. Fill above it carefully.',
-    'Fragile piece mid-wall · you\'ll need to protect it.',
+  frag_bad:[ // v3.5.198 exposed: open on a side and no locked shelf under it, at ANY height
+    'That fragile is exposed. Box it in left and right.',
+    'Nothing beside that fragile yet. Close it in before anything heavy lands.',
+    'Height does not protect a fragile. A closed course does.',
   ],
   small:[
     'Good gap-fill. Every void counts.',
@@ -9576,18 +9604,18 @@ var PLACE_CMT_HUB={
     'That tray is not a parking spot for ICs.',
     'That NC was never gonna place itself.',
   ],
-  fragile:[
-    'Fragile. Top only. You know the rules.',
-    'Fragile up top? Good. Keep it protected.',
-    'GLASS goes on top. Not "somewhere in the middle."',
-    'Fragile on top. Write that down.',
+  fragile:[ // v3.5.198 protected, see PLACE_CMT_STD
+    'Fragile boxed in. That is how it is done.',
+    'Covered fragile. Good. Keep it that way.',
+    'Closed in on both sides. Write that down.',
+    'Shelf under it or boxes beside it. Either one saves it.',
     'That\'s the correct move. Make it a habit.',
   ],
-  frag_bad:[
+  frag_bad:[ // v3.5.198 exposed, at any height
     'That fragile piece is exposed. Something will land on it.',
-    'Something heavy is going above that. You know it.',
-    'You\'ll regret that placement. But you\'ll learn.',
-    'FRAG mid-wall is a claim waiting to happen. Load it high.',
+    'Something heavy is going to find that one. Close it in.',
+    'The trailer wall is not a box. A fragile needs a real one each side.',
+    'Exposed fragile is a claim waiting to happen. Close it in.',
   ],
   small:[
     'Smalls. The unsung heroes of a wall.',
@@ -9682,10 +9710,20 @@ function fireCommentary(source,box,gx,gy,rot){
   if(source==='nc'||box.isNC){
     lines=pool.nc;
   } else if(box.isFrag||box.labelDef&&box.labelDef.isFrag){
-    // v3.5.64 FIX (was inverted → "fragile on top, good job" for a fragile on the FLOOR):
-    // gy=0 is the CEILING, gy=GH-1 is the FLOOR. Low in the trailer = LARGE gy = risky (stuff stacks above it).
-    var pctH=gy/GH;
-    lines=(pctH>=0.5)?pool.frag_bad:pool.fragile;
+    // v3.5.198 FIX: the call now follows the crush rule checkFragileCrush() actually enforces, not height.
+    // Height was the folk rule: a fragile in a top corner was told "on top where it belongs" and could still
+    // be crushed, because the trailer wall gives no side protection. PROTECTED = a real piece on both sides
+    // (hasLateralSupport) OR a locked shelf at or below its top row (isRowLockedIn) OR one of its own rows
+    // complete right now (this fires before checkTetris() runs, so a row it just finished is not locked yet).
+    var _fd=getDims(box,rot),_fc=null,_fTop=GH,_fi,_fr,_fy,_fx,_fFull,_fSafe=false;
+    for(_fi=0;_fi<_fd.cells.length;_fi++){
+      _fy=gy+_fd.cells[_fi][1];_fr=G.grid[_fy];
+      if(!_fc&&_fr&&_fr[gx+_fd.cells[_fi][0]])_fc=_fr[gx+_fd.cells[_fi][0]];
+      if(_fy<_fTop)_fTop=_fy;
+      if(!_fSafe&&_fr){_fFull=true;for(_fx=0;_fx<GW;_fx++){if(!_fr[_fx]){_fFull=false;break;}}if(_fFull)_fSafe=true;}
+    }
+    if(!_fSafe&&_fc&&(isRowLockedIn(_fTop)||hasLateralSupport(_fc)))_fSafe=true;
+    lines=_fSafe?pool.fragile:pool.frag_bad;
   } else if(activeVoice==='hub'&&G.support&&G.support>0.90&&getPPH()<80&&elapsed()>60){
     // DECISION: "meticulous but slow" context · great wall quality, terrible pace
     // "I need you to pick it up." / "The clean work is there. Now find the speed."
@@ -10083,7 +10121,7 @@ var TUT_SCRIPT=[
   {tip:'Lay the TIRE FLAT. Stood on its edge it rolls when the door opens · that is a safety flag.', place:{w:2,h:2, cat:'tire'}, tx:0, ty:8, learn:'tire'},
   {tip:'STAGGER the seams like brickwork · offset this row from the one below so it can not split.', place:{w:3,h:2}, tx:3, ty:8, learn:'stagger'},
   {tip:'HAZMAT loads LOW and stays clear of other classes. Set it down here.', place:{src:'haz', w:2,h:2, haz:'3'}, tx:6, ty:8, learn:'hazmat'},
-  {tip:'FRAGILE rides on TOP · nothing heavy over it, or it crunches.', place:{w:2,h:2, label:'FRAGILE'}, tx:8, ty:8, learn:'fragile'},
+  {tip:'FRAGILE is safe at any height once a real box sits on BOTH sides. Set it in beside the last piece; the next one closes the other side.', place:{w:2,h:2, label:'FRAGILE'}, tx:8, ty:8, learn:'fragile'},
   {tip:'A bag of smalls fills tight gaps. Break it (✂ BREAK) or set it here to chink the last space.', place:{src:'bag'}, tx:10, ty:8, learn:'smalls', bag:true},
   // ── COLLAPSE (watch it fall), then BREAK JAM ──
   {tip:'Now stack THIN and tall on this stub · and WATCH. Pillars come down. Wide base, narrow top.', place:{w:1,h:2}, tx:13, ty:6, learn:'collapse', fall:true, pre:[{x:13,y:9,w:1,h:1},{x:13,y:8,w:1,h:1}]},
@@ -10094,7 +10132,7 @@ var TUT_SCRIPT=[
   {tip:'You are packed enough to dispatch. Hit ✓ FINISH (top-right) to SEAL the wall.', act:'seal', learn:'seal'}
 ];
 // checklist labels, in the sign-off order (LOCK IN culminates last, per Vince)
-var TUT_LEARN_LABELS=[['anchor','Anchor SP freight in a corner'],['balance','Balance both corners'],['foundation','Solid floor, no voids'],['place','Tile a shelf with the ghost'],['rotate','Rotate a piece (↻ ROT)'],['arrows','Keep arrows UP'],['heavy','Heavy freight low & flat'],['tire','Lay tires flat'],['stagger','Stagger the seams'],['hazmat','Hazmat low & apart'],['fragile','Fragile rides on top'],['smalls','Break bags → fill gaps'],['collapse','Pillars collapse · taper them'],['breakjam','Break a chute jam'],['water','Take water breaks'],['flag','Flag a hand when stuck'],['seal','Seal & dispatch'],['lockin','LOCK IN a full shelf']];
+var TUT_LEARN_LABELS=[['anchor','Anchor SP freight in a corner'],['balance','Balance both corners'],['foundation','Solid floor, no voids'],['place','Tile a shelf with the ghost'],['rotate','Rotate a piece (↻ ROT)'],['arrows','Keep arrows UP'],['heavy','Heavy freight low & flat'],['tire','Lay tires flat'],['stagger','Stagger the seams'],['hazmat','Hazmat low & apart'],['fragile','Close fragiles in, both sides'],['smalls','Break bags → fill gaps'],['collapse','Pillars collapse · taper them'],['breakjam','Break a chute jam'],['water','Take water breaks'],['flag','Flag a hand when stuck'],['seal','Seal & dispatch'],['lockin','LOCK IN a full shelf']];
 
 function tutMakePiece(spec){
   spec=spec||{};
@@ -10924,7 +10962,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.197</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.198</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'

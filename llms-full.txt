@@ -2,13 +2,13 @@ LOCK IN · Warehouse Loading Training That Plays Like a Game
 Source: https://trailer-load.com/  ·  Made by F-Keys Creative LLC (founder: Vince Gonzalez)
 
 === WHAT IT IS ===
-LOCK IN is a free, browser-based warehouse trailer-loading training simulator. Pieces ride in on a belt; you stack them into a trailer wall that has to physically hold up. It plays like a puzzle game but models real freight-loading: support and balance, load integrity, locking complete rows into shelves, hazmat placed low, fragile on top, non-conveyables staged, dead air stuffed inside tires, and a dispatch clock counting down. Every wall is scored on integrity, density, pace, and safety, and ranked from Rookie to Yard Legend.
+LOCK IN is a free, browser-based warehouse trailer-loading training simulator. Pieces ride in on a belt; you stack them into a trailer wall that has to physically hold up. It plays like a puzzle game but models real freight-loading: support and balance, load integrity, locking complete rows into shelves, hazmat placed low, fragiles boxed in on both sides, non-conveyables staged, dead air stuffed inside tires, and a dispatch clock counting down. Every wall is scored on integrity, density, pace, and safety, and ranked from Rookie to Yard Legend.
 
 It runs in any browser with no install and no login required. Gameplay is always free. Players can optionally create a free account to save their record, and can separately opt in to share their stats with a facility.
 
 === HOW IT WORKS ===
 1. Build the wall · Select freight, place it, rotate it. Floor-up, support underneath, no floating boxes. The physics won't let you cheat gravity.
-2. Load it right · Lock shelves, keep the center of gravity centered, fragile on top, hazmat below the waist line, and stuff dead air inside tires.
+2. Load it right · Lock shelves, keep the center of gravity centered, box fragiles in on both sides, keep hazmat below the waist line, and stuff dead air inside tires.
 3. Get your grade · Every wall is scored on integrity, density, pace, and safety, then ranked from Rookie to Yard Legend.
 
 Modes: Training (a trainer builds a full wall one placement at a time, with the reason for every move · then you load your own), Trailer-Load (the flagship: wall after wall at full tempo, chasing a personal best and a world rank), Daily (one shared deterministic wall for everyone on Earth, resetting 00:00 UTC).
