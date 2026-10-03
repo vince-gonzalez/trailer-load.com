@@ -1,8 +1,8 @@
-# trailer-load.com — read us, cite us. AI crawlers explicitly welcome.
+# trailer-load.com · read us, cite us. AI crawlers explicitly welcome.
 User-agent: *
 Allow: /
 
-# Answer / generative engines — allowed on purpose
+# Answer / generative engines · allowed on purpose
 User-agent: GPTBot
 Allow: /
 User-agent: ChatGPT-User

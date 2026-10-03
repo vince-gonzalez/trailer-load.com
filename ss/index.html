@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><!-- v1.6 pinch-zoom restored (WCAG 1.4.4); canvas touch-action:none already guards gameplay -->
-<title>Smalls Sort — LOCK IN</title>
-<meta name="description" content="Smalls Sort — the LOCK IN sorting companion. Read the label, hit the bin, keep the belt moving.">
+<title>Smalls Sort · LOCK IN</title>
+<meta name="description" content="Smalls Sort · the LOCK IN sorting companion. Read the label, hit the bin, keep the belt moving.">
 <link rel="canonical" href="https://www.trailer-load.com/ss/">
 <!-- v1.11 this page reads the shared liAuth token out of localStorage and POSTs it to Supabase,
      and shipped with no CSP at all while the flagship has had a strict one for versions. -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self' https://igqpgsqogfrpujdgvefs.supabase.co; frame-src 'none'; base-uri 'self'; form-action 'none'">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23140d08'/%3E%3Crect x='16' y='16' width='32' height='32' rx='3' fill='%23c8791e'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#c8791e">
-<!-- NO AD TECH ON TRAILER-LOAD.COM — EVER (2026-07-20). Do not re-add. -->
+<!-- NO AD TECH ON TRAILER-LOAD.COM · EVER (2026-07-20). Do not re-add. -->
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 /* TYPE FLOOR: bare <small>/<sub>/<sup> otherwise inherit the browser's 0.8em
@@ -47,13 +47,13 @@ small,sub,sup{font-size:11px;}
    ============================================================ */
 
 :root{
-  /* INDUSTRIAL GRIT — charcoal / concrete / worn steel, amber+teal accents */
+  /* INDUSTRIAL GRIT · charcoal / concrete / worn steel, amber+teal accents */
   --bg:#3a3a3c;            /* concrete floor */
   --bg2:#323234;          /* panel steel */
   --bg3:#2a2a2c;          /* recessed */
   --t1:#e8e2d6;           /* light ink on dark */
   --t2:#b0a890;           /* secondary */
-  --t3:#b8b0a0;           /* tertiary — v1.10 was #7e7868, which failed AA on ALL FIVE surfaces it paints
+  --t3:#b8b0a0;           /* tertiary · v1.10 was #7e7868, which failed AA on ALL FIVE surfaces it paints
                              (2.35:1 on the header, where it colored the only two links that leave the page).
                              #b8b0a0 measures 4.79:1 on the header's lightest stop, 5.26:1 on the overlay,
                              7.02:1 on the footer. The flagship did this sweep in v3.5.145; this file missed it. */
@@ -188,17 +188,17 @@ html,body{width:100%;height:100dvh;
   <div class="ov vis" id="ov-start">
     <h1>SMALLS SORT</h1>
     <h2>Sort · Survive · QA</h2>
-    <p>Packages ride down the belt. <b>Drag</b> each into the right bin — bins line both sides.</p>
+    <p>Packages ride down the belt. <b>Drag</b> each into the right bin · bins line both sides.</p>
     <div class="rules">
       ◆ ROUTE CODE → drag to that route's bin (6 routes)<br>
-      ★ NE has TWO bins, low by the pool — grab it up front OR cherry-pick from the pool<br>
+      ★ NE has TWO bins, low by the pool · grab it up front OR cherry-pick from the pool<br>
       ⚠ FRAGILE (yellow stripe) → GENTLE (◇) &nbsp; ▼ HEAVY → FLOOR (▼)<br>
       ✖ DAMAGED (torn/styrofoam) → the QA bin marked DAMAGE<br>
       ☣ HAZMAT (candy stripe) → the bin marked ☣ HAZMAT<br>
-      ✦ OVERNIGHT (purple flash) → OVN bin — beats the route<br>
-      ⬇ Misses fall into the POOL — dig from the top to recover<br>
+      ✦ OVERNIGHT (purple flash) → OVN bin · beats the route<br>
+      ⬇ Misses fall into the POOL · dig from the top to recover<br>
       ⛔ Pool fills to the belt = BELT STOPPAGE. Clear it to resume; downtime counts.<br>
-      <b style="color:#f07a5c;">✖ FOREVER: 3 strikes and you're out — a wrong bin OR a belt stoppage each cost a life. The belt just keeps getting faster.</b>
+      <b style="color:#f07a5c;">✖ FOREVER: 3 strikes and you're out · a wrong bin OR a belt stoppage each cost a life. The belt just keeps getting faster.</b>
     </div>
     <div class="start-modes">
       <button class="mode-btn fv" id="start-forever">FOREVER<small>3 STRIKES · ENDLESS</small></button>
@@ -224,7 +224,7 @@ html,body{width:100%;height:100dvh;
       <div id="r-posted" style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--t2);margin-top:8px;min-height:14px;"></div><!-- v1.8 (MED) run-recorded honesty -->
     </div>
     <!-- v1.10 RUN AGAIN replayed the mode you just played and nothing ever re-showed ov-start, so after
-         your first tap two-thirds of the game — the other mode and the rules card — was unreachable. -->
+         your first tap two-thirds of the game · the other mode and the rules card · was unreachable. -->
     <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center;">
       <button class="btn teal" id="again-btn">RUN AGAIN</button>
       <button class="btn" id="menu-btn">☰ MODES</button>
@@ -255,7 +255,7 @@ html,body{width:100%;height:100dvh;
 
     <div class="set-sec">DISPLAY</div>
     <div class="set-row" style="margin:8px 0;"><span>High-contrast bins</span><button class="tgl" id="tgl-hicon" onclick="smToggleHicon()">OFF</button></div>
-    <div class="set-note">Bolder bin outlines and brighter labels — easier to aim, colorblind-friendlier.</div>
+    <div class="set-note">Bolder bin outlines and brighter labels · easier to aim, colorblind-friendlier.</div>
 
     <div class="set-sec">SOUND</div>
     <div class="set-note" style="margin-bottom:6px;">Sort, miss, strike and line-resume cues. Set to 0 for a silent classroom.</div>
@@ -280,10 +280,10 @@ var TUNE={
   missPenalty:6, sortBase:10, comboBonusMax:20, stoppageHit:15,
   maxStrikes:3, foreverRampN:75, foreverRampMax:1.85   // v1.3 FOREVER: 3 mistakes out; speed ramps on packages sorted (past 1.0 for late-game pressure)
 };
-// v1.3 difficulty multipliers (settings) — spd scales belt speed, gap scales spawn interval (higher gap = calmer)
+// v1.3 difficulty multipliers (settings) · spd scales belt speed, gap scales spawn interval (higher gap = calmer)
 var DIFF_MULT={chill:{spd:0.82,gap:1.20},normal:{spd:1,gap:1},brutal:{spd:1.30,gap:0.80}};
 
-// ───── ROUTES (6) — industrial-saturated ─────
+// ───── ROUTES (6) · industrial-saturated ─────
 var ROUTES=[
   {code:'NE', name:'NORTH-E', col:'#1f9d8a',light:'#2dc0ad'},
   {code:'SW', name:'SOUTH-W', col:'#d4861f',light:'#e8a23a'},
@@ -329,7 +329,7 @@ try{var _ss0=JSON.parse(localStorage.getItem('smSettings')||'{}');if(_ss0){if(_s
 
 var cv=document.getElementById('cv');var cx=cv.getContext('2d');
 var W=1,H=1;
-// v1.10 the canvas backing store was sized in CSS pixels only — no devicePixelRatio anywhere in the file.
+// v1.10 the canvas backing store was sized in CSS pixels only · no devicePixelRatio anywhere in the file.
 // Every Chromebook at 1.25x/1.5x, every retina laptop and every mirrored projector rendered the whole
 // companion soft next to a crisp flagship. The flagship fixed this same defect in v2.6.4.
 var DPR=1;
@@ -425,7 +425,7 @@ function onDown(e){
 }
 // v1.10 MOUSE POINTERS GET NO IMPLICIT CAPTURE. pointerup was bound to the canvas only, so releasing over
 // the header/statbar/off-window never fired onUp: the package stayed grabbed, and a grabbed package is
-// skipped by BOTH the belt-advance loop and the draw loop — an invisible frozen item stuck in STATE.belt
+// skipped by BOTH the belt-advance loop and the draw loop · an invisible frozen item stuck in STATE.belt
 // for the rest of the run. Touch was unaffected, so this only bit on the exact hardware a district buys.
 // The top bin sits 5px from the canvas edge, so overshooting is the NORMAL way to reach it.
 function smCapture(e){if(STATE.drag&&cv.setPointerCapture&&e&&e.pointerId!==undefined){try{cv.setPointerCapture(e.pointerId);}catch(_e){}}}
@@ -459,7 +459,7 @@ function resolveSort(pkg,binIdx,from){
   else{var bi=STATE.belt.indexOf(pkg);if(bi>=0)STATE.belt.splice(bi,1);}
   updateHUD();
 }
-// v1.3 FOREVER strike — a wrong bin OR a belt stoppage each cost a life; 3 = struck out.
+// v1.3 FOREVER strike · a wrong bin OR a belt stoppage each cost a life; 3 = struck out.
 function addStrike(reason){
   if(STATE.mode!=='forever'||!STATE.running)return;
   STATE.strikes++;STATE.strikeFlash=Date.now();
@@ -508,7 +508,7 @@ function drawPool(){
   cx.strokeStyle='rgba(224,80,42,.5)';cx.lineWidth=1.5;cx.setLineDash([6,4]);
   cx.beginPath();cx.moveTo(BELT_X,zoneY+2);cx.lineTo(BELT_X+BELT_W,zoneY+2);cx.stroke();cx.setLineDash([]);
   cx.fillStyle='rgba(212,206,186,.95)';cx.font="bold 11px 'Share Tech Mono',monospace";cx.textAlign='center';cx.textBaseline='top';
-  cx.fillText('POOL — DIG FROM TOP',W/2,zoneY+4);
+  cx.fillText('POOL · DIG FROM TOP',W/2,zoneY+4);
   var step=PKG*0.42;
   for(var i=0;i<STATE.pool.length;i++){var pk=STATE.pool[i];if(STATE.drag&&STATE.drag.pkg===pk)continue;pk.x=pk.poolX;pk.y=H-PKG*0.5-i*step;drawPkg(pk);}
 }
@@ -530,7 +530,7 @@ function drawPkg(pkg){
     cx.restore();drawBadge(pkg,x,y,h,'✖','rgba(224,80,42,.95)','#fff');return;
   }
 
-  // v1.x PLAIN CARDBOARD skin (recycled from LOCK IN) — the box color was an early devmode cue; the ROUTE now
+  // v1.x PLAIN CARDBOARD skin (recycled from LOCK IN) · the box color was an early devmode cue; the ROUTE now
   // reads off a randomly-placed sticker, like a real parcel. Every box is the same cardboard; you read the label.
   var bg=cx.createLinearGradient(x,y,x+w,y+h);
   bg.addColorStop(0,'#cba079');bg.addColorStop(.5,'#b8895a');bg.addColorStop(1,'#8f6a42');
@@ -553,7 +553,7 @@ function drawPkg(pkg){
     cx.restore();
   }
   if(pkg.cond==='overnight'){
-    // purple flash — pulsing corner ribbon + glow
+    // purple flash · pulsing corner ribbon + glow
     cx.save();rr(x,y,w,h,7);cx.clip();
     var pulse=0.5+0.5*Math.sin(Date.now()/200);
     cx.fillStyle='rgba(122,60,224,'+(0.35+pulse*0.35)+')';
@@ -565,7 +565,7 @@ function drawPkg(pkg){
   cx.restore();
 
   if(!hidesRoute(pkg)){
-    // v1.x ROUTE STICKER — a manila label slapped at a seeded-random spot with a slight tilt (you have to FIND
+    // v1.x ROUTE STICKER · a manila label slapped at a seeded-random spot with a slight tilt (you have to FIND
     // and read it, like a real box). A thin route-colored stripe sits on the sticker as a secondary cue.
     var sw=w*0.52,sh=h*0.44;
     var sxr=x+5+((pkg.seed*29)%Math.max(1,Math.round(w-sw-10)));
@@ -597,7 +597,7 @@ function drawBins(){
     cx.fillStyle=g;rr(r.x,r.y,r.w,r.h,8);cx.fill();
     // top rim light
     cx.fillStyle='rgba(255,255,255,'+(hi?0.16:0.10)+')';rr(r.x,r.y,r.w,r.h*0.28,8);cx.fill();
-    // v1.3 CRISP DOUBLE OUTLINE — dark outer seat (separates neighboring bins) + bright inner rim (defines the mouth)
+    // v1.3 CRISP DOUBLE OUTLINE · dark outer seat (separates neighboring bins) + bright inner rim (defines the mouth)
     cx.strokeStyle='rgba(8,6,4,.85)';cx.lineWidth=hi?5:3.5;rr(r.x,r.y,r.w,r.h,8);cx.stroke();
     var rim=hot?'#ffffff':(b.target==='damaged'||b.target==='hazmat')?'#ffd24a':(b.target==='overnight')?'#c3a0ff':b.light;
     cx.strokeStyle=rim;cx.lineWidth=hot?4:(hi?3.2:2.2);
@@ -620,7 +620,7 @@ function drawStoppage(){
   cx.fillStyle='rgba(20,8,4,.94)';var bw=Math.min(W*0.86,460),bh=76,bx=W/2-bw/2,by=H*0.28;
   rr(bx,by,bw,bh,10);cx.fill();cx.strokeStyle='#ff5a3c';cx.lineWidth=3;rr(bx,by,bw,bh,10);cx.stroke();
   cx.fillStyle='#ff7a5c';cx.font="bold 22px 'Bebas Neue',sans-serif";cx.textAlign='center';cx.textBaseline='middle';cx.fillText('⚠ BELT STOPPAGE DETECTED',W/2,by+28);
-  cx.fillStyle='rgba(255,220,210,.95)';cx.font="bold 11px 'Share Tech Mono',monospace";cx.fillText('CLEAR THE POOL TO RESUME — DOWN '+((Date.now()-STATE.stopStart)/1000).toFixed(1)+'s',W/2,by+54);
+  cx.fillStyle='rgba(255,220,210,.95)';cx.font="bold 11px 'Share Tech Mono',monospace";cx.fillText('CLEAR THE POOL TO RESUME · DOWN '+((Date.now()-STATE.stopStart)/1000).toFixed(1)+'s',W/2,by+54);
 }
 function rr(x,y,w,h,r){cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath();}
 function rrI(x,y,w,h,r,ins){rr(x+ins,y+ins,w-2*ins,h-2*ins,Math.max(2,r-ins));} // inset rounded-rect path (crisp inner rim)
@@ -628,7 +628,7 @@ function rrI(x,y,w,h,r,ins){rr(x+ins,y+ins,w-2*ins,h-2*ins,Math.max(2,r-ins));} 
 // ── LOOP ──
 function loop(ts){
   if(!STATE.running)return;
-  // v1.6 UI PAUSE — the belt froze NOWHERE while BOARD/SETTINGS overlays were open, so in FOREVER mode you
+  // v1.6 UI PAUSE · the belt froze NOWHERE while BOARD/SETTINGS overlays were open, so in FOREVER mode you
   // could take a stoppage strike (or strike out entirely) while adjusting a slider. Frozen frame, zeroed clock.
   if(SM_UIPAUSE){STATE.lastTick=0;requestAnimationFrame(loop);return;}
   if(!STATE.lastTick)STATE.lastTick=ts;
@@ -638,7 +638,7 @@ function loop(ts){
     STATE.timeLeft-=dt/1000;
     if(STATE.timeLeft<=0){STATE.timeLeft=0;endGame('time');return;}
     ramp=(TUNE.shiftSec-STATE.timeLeft)/TUNE.shiftSec;
-  }else{ // FOREVER — no clock; ramp on packages sorted, past 1.0 for late-game pressure
+  }else{ // FOREVER · no clock; ramp on packages sorted, past 1.0 for late-game pressure
     STATE.survivalT+=dt/1000;
     ramp=Math.min(TUNE.foreverRampMax,STATE.sorted/TUNE.foreverRampN);
   }
@@ -659,7 +659,7 @@ function loop(ts){
 function updateHUD(){
   document.getElementById('s-score').textContent=STATE.score;
   var acc=STATE.attempts>0?Math.round((STATE.sorted/STATE.attempts)*100):100;
-  var ae=document.getElementById('s-acc');ae.textContent=STATE.attempts>0?(acc+'%'):'—';ae.className='val '+(STATE.attempts>0?(acc>=90?'ok':acc>=75?'warn':'danger'):'');
+  var ae=document.getElementById('s-acc');ae.textContent=STATE.attempts>0?(acc+'%'):' · ';ae.className='val '+(STATE.attempts>0?(acc>=90?'ok':acc>=75?'warn':'danger'):'');
   document.getElementById('s-combo').textContent=STATE.combo;
   var pe=document.getElementById('s-pool');pe.textContent=STATE.pool.length;var pf=poolFrac();pe.className='val '+(pf>=TUNE.poolJamFrac?'danger':pf>=0.6?'warn':'teal');
   var de=document.getElementById('s-down');
@@ -695,7 +695,7 @@ function startGame(mode){
 
 function gradeFor(acc,tput,downtime){var g=acc;if(tput>=26)g+=4;else if(tput>=18)g+=2;g-=Math.floor(downtime/TUNE.downtimeGradePer)*6;
   if(g>=97)return['A+','ok'];if(g>=92)return['A','ok'];if(g>=86)return['B+','ok'];if(g>=80)return['B','warn'];if(g>=72)return['C+','warn'];if(g>=64)return['C','warn'];if(g>=55)return['D','danger'];return['F','danger'];}
-// v1.3 FOREVER grade — survival is about VOLUME sorted before you struck out.
+// v1.3 FOREVER grade · survival is about VOLUME sorted before you struck out.
 function foreverGrade(sorted){
   if(sorted>=200)return['S','ok'];if(sorted>=150)return['A+','ok'];if(sorted>=110)return['A','ok'];
   if(sorted>=80)return['B','warn'];if(sorted>=50)return['C','warn'];if(sorted>=28)return['D','danger'];return['F','danger'];}
@@ -712,7 +712,7 @@ function endGame(reason){
   var gl=document.getElementById('result-grade-lbl');
   if(gl)gl.textContent=fv?((reason==='strikes'?'FOREVER · STRUCK OUT':'FOREVER')+' · SURVIVED '+fmtMS(STATE.survivalT)):'SORT PERFORMANCE';
   document.getElementById('r-score').textContent=STATE.score;
-  var ra=document.getElementById('r-acc');ra.textContent=STATE.attempts>0?(acc+'%'):'—';ra.className='res-val '+(STATE.attempts>0?(acc>=90?'ok':acc>=75?'warn':'danger'):'');
+  var ra=document.getElementById('r-acc');ra.textContent=STATE.attempts>0?(acc+'%'):' · ';ra.className='res-val '+(STATE.attempts>0?(acc>=90?'ok':acc>=75?'warn':'danger'):'');
   document.getElementById('r-tput').textContent=tput+'/min';
   document.getElementById('r-combo').textContent=STATE.bestCombo;
   document.getElementById('r-sorted').textContent=STATE.sorted;
@@ -724,18 +724,18 @@ function endGame(reason){
   smSubmitSession(acc,tput,gr[0]); // v1.1 post the smalls run to the ONE shared lifetime (signed-in only)
 }
 // v1.1 SMALLS -> the unified lifetime. A signed-in run posts a session (mode='smalls') to the SAME lockin_sessions
-// table the main game uses — RLS self-insert via the shared liAuth token — so smalls feeds the one record + boards.
+// table the main game uses · RLS self-insert via the shared liAuth token · so smalls feeds the one record + boards.
 var SM_ENDPOINT='https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1';
 var SM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo';
 function _smPostNote(t,ok){var e=document.getElementById('r-posted');if(e){e.textContent=t;e.style.color=ok?'var(--ok)':'var(--t2)';}} // v1.8 run-recorded honesty
 function smSubmitSession(acc,tput,grade){
   try{
     var s=smReadAuth();
-    if(!s||!s.uid||!s.access_token){_smPostNote('NOT RECORDED — sign in (in the game) to post runs',false);return;} // signed-in only — the same account as the game
+    if(!s||!s.uid||!s.access_token){_smPostNote('NOT RECORDED · sign in (in the game) to post runs',false);return;} // signed-in only · the same account as the game
     // v1.4 BLOCKER FIX (Gatekeeper #4): honor the game's save-my-stats consent switch (same-origin liPlayer).
-    // consent_self was HARDCODED true here — posting sessions the privacy policy promised stay on-device.
+    // consent_self was HARDCODED true here · posting sessions the privacy policy promised stay on-device.
     var _pl=null;try{_pl=JSON.parse(localStorage.getItem('liPlayer')||'null');}catch(e){}
-    if(!_pl||!_pl.consentSelf){_smPostNote('NOT RECORDED — stats saving is off (game → ACCOUNT & DATA)',false);return;} // no save without self-consent — identical rule to the game's zSendSession
+    if(!_pl||!_pl.consentSelf){_smPostNote('NOT RECORDED · stats saving is off (game → ACCOUNT & DATA)',false);return;} // no save without self-consent · identical rule to the game's zSendSession
     var dur=Math.max(1,Math.round((Date.now()-(STATE.startT||Date.now()))/1000));
     var rec={
       user_id:s.uid, mode:'smalls', app_ver:'ss-1.11',
@@ -750,7 +750,7 @@ function smSubmitSession(acc,tput,grade){
       incidents:[], events:[]
     };
     var h={'apikey':SM_ANON,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'};
-    fetch(SM_ENDPOINT+'/lockin_sessions',{method:'POST',headers:h,body:JSON.stringify(rec)}).then(function(r){_smPostNote(r.ok?'RUN RECORDED ✓ — on your lifetime record':'NOT RECORDED — server refused the post',r.ok);}).catch(function(e){console.error('smSubmitSession net:',e);_smPostNote('NOT RECORDED — offline',false);});
+    fetch(SM_ENDPOINT+'/lockin_sessions',{method:'POST',headers:h,body:JSON.stringify(rec)}).then(function(r){_smPostNote(r.ok?'RUN RECORDED ✓ · on your lifetime record':'NOT RECORDED · server refused the post',r.ok);}).catch(function(e){console.error('smSubmitSession net:',e);_smPostNote('NOT RECORDED · offline',false);});
   }catch(e){console.error('smSubmitSession:',e);}
 }
 function copyResult(){
@@ -758,15 +758,15 @@ function copyResult(){
   var fv=(STATE.mode==='forever');
   var tput=fv?Math.round(STATE.sorted/Math.max(1/60,STATE.survivalT/60)):STATE.sorted;
   var gr=fv?foreverGrade(STATE.sorted):gradeFor(acc,tput,STATE.downtime);
-  var head=fv?('SMALLS SORT — FOREVER\n--------------------------------\nSurvived:    '+fmtMS(STATE.survivalT)+'\nGrade:       '+gr[0]):('SMALLS SORT — 60-Sec Shift\n--------------------------------\nGrade:       '+gr[0]);
+  var head=fv?('SMALLS SORT · FOREVER\n--------------------------------\nSurvived:    '+fmtMS(STATE.survivalT)+'\nGrade:       '+gr[0]):('SMALLS SORT · 60-Sec Shift\n--------------------------------\nGrade:       '+gr[0]);
   var txt=head+'\nScore:       '+STATE.score+'\nAccuracy:    '+acc+'%\nThroughput:  '+tput+'/min\nBest Combo:  '+STATE.bestCombo+'\nSorted:      '+STATE.sorted+'\nMisroutes:   '+STATE.miss+'\nQA Caught:   '+STATE.qaCaught+'\nStoppages:   '+STATE.stoppages+'\nDowntime:    '+dts+'s\n--------------------------------\nLOCK IN · SMALLS SORT · trailer-load.com · © 2026';
   try{navigator.clipboard.writeText(txt);var b=document.getElementById('copy-btn');var o=b.textContent;b.textContent='✓ COPIED';setTimeout(function(){b.textContent=o;},1400);}
   catch(err){console.error('copyResult:',err);window.prompt('Copy result:',txt);}
 }
-// ── v1.2 LEADERBOARD (public lockin_smalls_board RPC — the same shared backend as LOCK IN) ──
+// ── v1.2 LEADERBOARD (public lockin_smalls_board RPC · the same shared backend as LOCK IN) ──
 var SM_BOARD_METRIC='rate';
 function smEsc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':'&quot;';});}
-var SM_UIPAUSE=false; // v1.6 true while a full-screen overlay (board/settings) is up — loop freezes, no strikes mid-menu
+var SM_UIPAUSE=false; // v1.6 true while a full-screen overlay (board/settings) is up · loop freezes, no strikes mid-menu
 function smOpenBoard(){SM_UIPAUSE=true;document.getElementById('ov-board').classList.add('vis');smLoadBoard(SM_BOARD_METRIC);}
 function smCloseBoard(){SM_UIPAUSE=false;document.getElementById('ov-board').classList.remove('vis');}
 function smBoardTab(m){SM_BOARD_METRIC=m;var tabs=document.querySelectorAll('.bd-tab'),i;for(i=0;i<tabs.length;i++)tabs[i].classList.toggle('active',tabs[i].getAttribute('data-m')===m);smLoadBoard(m);}
@@ -776,7 +776,7 @@ function smLoadBoard(metric){
     .then(function(r){return r.json();})
     .then(function(j){
       var rows=Array.isArray(j)?j:[];
-      if(!rows.length){el.innerHTML='<div class="bd-empty">No sorters ranked yet — play a signed-in run to claim the board.</div>';return;}
+      if(!rows.length){el.innerHTML='<div class="bd-empty">No sorters ranked yet · play a signed-in run to claim the board.</div>';return;}
       var h='',i;for(i=0;i<rows.length;i++){var r=rows[i];
         var val=(metric==='accuracy')?(r.accuracy+'%'):(metric==='rate')?(r.sort_rate+'/min'):r.score;
         var medal=(i===0)?'🥇':(i===1)?'🥈':(i===2)?'🥉':r.rank;
@@ -786,7 +786,7 @@ function smLoadBoard(metric){
 }
 // -- v1.11 SETTINGS (difficulty / display / sfx). The music engine was culled here: the tracks
 // were free-tier generated with no distribution licence and are not coming back in that form.
-// ── v1.7 (HIGH #16) SOUND EFFECTS — code-synthesized like the flagship's kit (zero assets, zero licensing) ──
+// ── v1.7 (HIGH #16) SOUND EFFECTS · code-synthesized like the flagship's kit (zero assets, zero licensing) ──
 var SM_AC=null;
 function smSfx(kind){
   if(!SM_SFXVOL)return;
@@ -853,13 +853,13 @@ function boot(){
   window.addEventListener('resize',resize);
   smAcctRender();
 }
-// v1.x ACCOUNT STATE — Smalls Sort shares the same origin (trailer-load.com) as LOCK IN, so it
+// v1.x ACCOUNT STATE · Smalls Sort shares the same origin (trailer-load.com) as LOCK IN, so it
 // reads the same localStorage session ('liAuth'). This is what makes SIGN OUT reachable from here
 // (was the reported gap). Sign-IN lives in the main game's profile, so we link there rather than
 // duplicate the whole auth form.
 function smReadAuth(){try{var r=localStorage.getItem('liAuth');if(!r)return null;var s=JSON.parse(r);
   // v1.7 (HIGH #3) stale-token honesty: a ~1h GoTrue token past exp means every POST silently 401s.
-  // Treat expired as signed-out here (SIGN IN link shows, runs don't silently vanish) — but NEVER delete
+  // Treat expired as signed-out here (SIGN IN link shows, runs don't silently vanish) · but NEVER delete
   // liAuth: it's the GAME's shared session and the game knows how to refresh it.
   try{var p=JSON.parse(atob((s.access_token||'').split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));if((p.exp||0)*1000<=Date.now()+30000)return null;}catch(e){}
   return s;}catch(e){return null;}}

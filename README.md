@@ -13,7 +13,7 @@
 ╚════════════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-[trailer-load.com](https://trailer-load.com) — load the trailer, brace the
+[trailer-load.com](https://trailer-load.com) · load the trailer, brace the
 load, and find out at the wall whether it holds. Free, in the browser, with a
 daily challenge that is the same trailer for everyone.
 
@@ -57,6 +57,6 @@ config rather than a build step.
 ╚════════════════════════════════════════════════════════════╝
 ```
 
-Part of [F-Keys](https://f-keys.com) — independent hardware, software
+Part of [F-Keys](https://f-keys.com) · independent hardware, software
 and internet products. See the [working log](https://f-keys.com/log/)
 and [live status](https://f-keys.com/status/).

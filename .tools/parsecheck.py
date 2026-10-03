@@ -18,6 +18,9 @@ PAGES = [
     'index.html', 'lock-in.html', 'privacy.html', 'terms.html',
     'ss/index.html', 'me/index.html', 'dashboard/index.html',
     'for-districts/index.html', 'for-districts/program-overview.html',
+    # 2026-10-03: the 10-02 rebuild added these and the list was never updated, so the gate
+    # silently skipped /programs/ (pricing + FAQ structured data) and /day1/, both with scripts.
+    'programs/index.html', 'daily/index.html', 'day1/index.html',
 ]
 OPEN_TAG = re.compile(r'<script\b([^>]*)>', re.I)
 

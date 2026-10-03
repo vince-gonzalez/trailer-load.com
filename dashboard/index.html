@@ -17,7 +17,11 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 /* ══════════════════════════════════════════════════════════════════════════
-   THE PROGRAM DASHBOARD · v2.0.1
+   THE PROGRAM DASHBOARD · v2.1
+   v2.1 · 2026-10-03: SHOWCASE. The demo account reads a pseudonymous mirror of the real
+   roster (lockin_showcase*, FIX-05) so prospects see actual results, with a visible label
+   saying so. One probe after sign-in picks the source; a missing view or zero rows means a
+   normal program, so this is inert until FIX-05 runs and invisible to every other program.
    v2.0.1 · 2026-10-03: the instructor no longer appears in their own roster as a student
    who never played. Found by impersonating the demo instructor's session in SQL: the view
    returned their own account row (readable to them by lh_self_select) and the filter meant
@@ -200,6 +204,8 @@ tbody tr:hover td{background:#f6efdd;}
       </div>
       <div class="stamp" id="stamp"></div>
     </div>
+    <!-- v2.1 SHOWCASE label · only the demo account sees it. #4a3c28 on #e8e4da = 6.95:1, border #7d4a0e = 5.73:1 -->
+    <div id="showcase-note" style="display:none;margin:10px 18px 0;padding:8px 12px;border:2px dashed #7d4a0e;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:12px;color:#4a3c28;">SHOWCASE · these are real LOCK IN players and their real results. Names are replaced with pseudonyms. A program's own dashboard shows only its students who joined its crew and agreed to share.</div>
 
     <div class="cards" id="cards"></div>
 
@@ -335,6 +341,11 @@ var COLS={
   ]
 };
 var SHEET_SRC={life:'lockin_cohort', session:'lockin_cohort_session', wall:'lockin_cohort_wall'};
+// v2.1 SHOWCASE: the demo account reads a pseudonymous mirror of the REAL roster instead of seeded students,
+// so a prospect sees actual results (Vince, 2026-10-03: "display the actual dashboard with real results").
+// The views return rows only for the demo crew's instructor (lockin_private.showcase_ok); everyone else gets
+// none and stays on their own class. No real user_id leaves the database; usernames become student-xyz.
+var SHEET_SRC_SHOW={life:'lockin_showcase', session:'lockin_showcase_session', wall:'lockin_showcase_wall'};
 var SHEET_SORT={life:'walls', session:'last_seen', wall:'loaded_at'};
 
 function dHeaders(){
@@ -375,7 +386,20 @@ function dEnter(){
   document.getElementById('login').style.display='none';
   document.getElementById('dash').style.display='block';
   var who=document.getElementById('who');if(who){who.style.display='block';who.innerHTML='<b>'+dEsc(DASH.name||'Your program')+'</b>'+dEsc((DASH.session&&DASH.session.email)||'');}
-  dScopeBar(); dFetchFacility(); dFetchSheet();
+  dScopeBar(); dFetchFacility(); dProbeShowcase(dFetchSheet);
+}
+// v2.1 one probe after sign-in decides the source. A missing view (404) or an empty answer means a normal program.
+function dProbeShowcase(cb){
+  // WRITES: DASH.showcase
+  try{
+    fetch(DASH.endpoint+'/lockin_showcase?select=username&limit=1',{headers:dHeaders()})
+      .then(function(r){return r.ok?r.json():[];})
+      .then(function(j){
+        DASH.showcase=!!(j&&j.length);
+        var n=document.getElementById('showcase-note');if(n)n.style.display=DASH.showcase?'block':'none';
+        cb();
+      }).catch(function(e){console.error('dProbeShowcase:',e);DASH.showcase=false;cb();});
+  }catch(e){console.error('dProbeShowcase:',e);DASH.showcase=false;cb();}
 }
 function dFetchFacility(){
   try{
@@ -414,7 +438,7 @@ function dScope(g){ if(!GROUPS[g])return; GROUPS[g].on=!GROUPS[g].on; dScopeBar(
 function dFetchSheet(){
   var tb=document.getElementById('tbody');if(tb)tb.innerHTML='';
   var emp=document.getElementById('empty');if(emp){emp.style.display='block';emp.textContent='Loading…';}
-  var src=SHEET_SRC[DASH.sheet];
+  var src=(DASH.showcase?SHEET_SRC_SHOW:SHEET_SRC)[DASH.sheet];
   try{
     fetch(DASH.endpoint+'/'+src+'?select=*',{headers:dHeaders()})
       .then(function(r){if(r.status===401){dExpired();return null;}return r.json();})
@@ -432,7 +456,7 @@ function dFetchSheet(){
 }
 function dFetchGuests(){
   try{
-    fetch(DASH.endpoint+'/lockin_guests?select=*',{headers:dHeaders()})
+    fetch(DASH.endpoint+'/'+(DASH.showcase?'lockin_showcase_guests':'lockin_guests')+'?select=*',{headers:dHeaders()})
       .then(function(r){return r.ok?r.json():[];})
       .then(function(j){DASH.guests=j&&j.length?j:[];dRender();})
       .catch(function(){DASH.guests=[];dRender();});
