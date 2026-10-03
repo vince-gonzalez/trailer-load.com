@@ -27,7 +27,7 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.196
+   LOCK IN v3.5.197
    LOCK IN — V. Gonzalez — © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -1365,6 +1365,7 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 #sm-board .sm-card.mode-daily,#ov-minigames .sm-card.mode-daily{border-left-color:#0a6a5e;}       /* 5.5:1 */
 #sm-board .sm-card.mode-training,#ov-minigames .sm-card.mode-training{border-left-color:#1a7a42;} /* 4.6:1 */
 #sm-board .sm-card.mode-minigames,#ov-minigames .sm-card.mode-minigames{border-left-color:#a3246b;} /* 5.9:1 */
+#sm-board .sm-card.mode-boards,#ov-minigames .sm-card.mode-boards{border-left-color:#8a5a0b;}      /* 5.1:1 */
 #sm-board .sm-card.mode-levels,#ov-minigames .sm-card.mode-levels{border-left-color:#4a4ab8;}
 #sm-board .sm-card.mode-smalls,#ov-minigames .sm-card.mode-smalls{border-left-color:#1a6a8a;}
 /* Short viewports: give the board the height it needs rather than clipping the cards. */
@@ -2753,7 +2754,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.196 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.197 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2857,6 +2858,16 @@ body[data-cb="trit"]{
       <div class="sm-card-name">TRAINING</div>
       <div class="sm-card-desc">Watch a perfect wall build itself, then load one yourself. Every placement teaches a real hub rule · no clock, no fails. New here? Start on this.</div>
     </div>
+    <!-- v3.5.197 THE LEADERBOARD GETS A DOOR. Vince asked for this repeatedly and I kept
+         answering with a reason not to: the boards were reachable only through CLOCK-IN, a
+         button in the top-right corner that reads as an account control, not as competition.
+         The daily is sold on "everyone on Earth gets the same wall" and the place you go to
+         SEE that was hidden behind an account menu. It is a pillar now. -->
+    <div class="sm-card mode-boards" onclick="openSocial('daily')">
+      <div class="sm-card-ico">🏅</div>
+      <div class="sm-card-name">LEADERBOARD</div>
+      <div class="sm-card-desc">Today's board, the hall of fame, your own record and the people you follow. See where the wall you just loaded actually landed.</div>
+    </div>
     <div class="sm-card mode-minigames" onclick="openMiniGames()">
       <div class="sm-card-ico">🎮</div>
       <div class="sm-card-name">MINI-GAMES</div>
@@ -2865,7 +2876,7 @@ body[data-cb="trit"]{
   </div>
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.196 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.197 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3026,7 +3037,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.196 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.197 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3512,7 +3523,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.196
+// LOCK IN v3.5.197
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3980,7 +3991,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.196'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.197'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -10913,7 +10924,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.196</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.197</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
