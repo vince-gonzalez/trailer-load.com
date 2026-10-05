@@ -17,7 +17,9 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 /* ══════════════════════════════════════════════════════════════════════════
-   THE PROGRAM DASHBOARD · v2.2.1
+   THE PROGRAM DASHBOARD · v2.2.2
+   v2.2.2 · 2026-10-05: vince is now the demo crew's instructor, so a showcase session is titled with the
+   demo crew's name (dWho), never whichever test crew the API returns first. Header shows the username.
    v2.2.1 · 2026-10-05: the SHOWCASE is opt-in (FIX-06: lockin_handles.showcase_consent) and the label says so.
    v2.2 · 2026-10-03: sign in with a GAME USERNAME. Game accounts are username + password
    (stored as <username>@players.lockin.app); this login took only an email, so the
@@ -396,8 +398,8 @@ function dLogin(){
 function dEnter(){
   document.getElementById('login').style.display='none';
   document.getElementById('dash').style.display='block';
-  var who=document.getElementById('who');if(who){who.style.display='block';who.innerHTML='<b>'+dEsc(DASH.name||'Your program')+'</b>'+dEsc((DASH.session&&DASH.session.email)||'');}
-  dScopeBar(); dFetchFacility(); dProbeShowcase(dFetchSheet);
+  var who=document.getElementById('who');if(who)who.style.display='block';
+  dWho(); dScopeBar(); dFetchFacility(); dProbeShowcase(dFetchSheet);
 }
 // v2.1 one probe after sign-in decides the source. A missing view (404) or an empty answer means a normal program.
 function dProbeShowcase(cb){
@@ -408,6 +410,7 @@ function dProbeShowcase(cb){
       .then(function(j){
         DASH.showcase=!!(j&&j.length);
         var n=document.getElementById('showcase-note');if(n)n.style.display=DASH.showcase?'block':'none';
+        dWho(); // v2.2.2 re-title once we know this is a showcase session
         cb();
       }).catch(function(e){console.error('dProbeShowcase:',e);DASH.showcase=false;cb();});
   }catch(e){console.error('dProbeShowcase:',e);DASH.showcase=false;cb();}
@@ -417,10 +420,23 @@ function dFetchFacility(){
     fetch(DASH.endpoint+'/lockin_facilities?select=name,facility_code',{headers:dHeaders()})
       .then(function(r){if(r.status===401)return null;return r.json();}).then(function(j){
         if(j===null)return;
-        if(j&&j.length){DASH.name=j[0].name||j[0].facility_code||'Your program';DASH.code=j[0].facility_code||'';
-          var who=document.getElementById('who');if(who)who.innerHTML='<b>'+dEsc(DASH.name)+'</b>'+dEsc((DASH.session&&DASH.session.email)||'');}
+        DASH.facilities=(j&&j.length)?j:[];
+        dWho();
       }).catch(function(e){console.error('dFetchFacility:',e);});
   }catch(e){console.error('dFetchFacility:',e);}
+}
+// v2.2.2 one place decides the header. An instructor can own several crews and the API returns them in no
+// fixed order; Vince owns the demo crew plus two test crews, one named "Legends of FedEx", which came back
+// FIRST and would have titled a prospect demo. In a SHOWCASE session the header is the demo crew's name.
+// The signed-in name shows the game username, not the hidden <username>@players.lockin.app address.
+function dWho(){
+  // READS: DASH.facilities, DASH.showcase, DASH.session | WRITES: DASH.name, DASH.code
+  var f=DASH.facilities||[],pick=null,i;
+  if(DASH.showcase){for(i=0;i<f.length;i++){if(f[i].facility_code==='ZG-DEMO-01')pick=f[i];}}
+  if(!pick&&f.length)pick=f[0];
+  if(pick){DASH.name=pick.name||pick.facility_code||'Your program';DASH.code=pick.facility_code||'';}
+  var em=((DASH.session&&DASH.session.email)||'').replace(/@players\.lockin\.app$/,'');
+  var who=document.getElementById('who');if(who)who.innerHTML='<b>'+dEsc(DASH.name||'Your program')+'</b>'+dEsc(em);
 }
 function dReload(){dFetchSheet();}
 function dSheet(s){
