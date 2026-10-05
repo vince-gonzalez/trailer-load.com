@@ -17,7 +17,8 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 /* ══════════════════════════════════════════════════════════════════════════
-   THE PROGRAM DASHBOARD · v2.2
+   THE PROGRAM DASHBOARD · v2.2.1
+   v2.2.1 · 2026-10-05: the SHOWCASE is opt-in (FIX-06: lockin_handles.showcase_consent) and the label says so.
    v2.2 · 2026-10-03: sign in with a GAME USERNAME. Game accounts are username + password
    (stored as <username>@players.lockin.app); this login took only an email, so the
    self-serve path (make a crew in the game, then open the dashboard) dead-ended at the
@@ -210,7 +211,7 @@ tbody tr:hover td{background:#f6efdd;}
       <div class="stamp" id="stamp"></div>
     </div>
     <!-- v2.1 SHOWCASE label · only the demo account sees it. #4a3c28 on #e8e4da = 6.95:1, border #7d4a0e = 5.73:1 -->
-    <div id="showcase-note" style="display:none;margin:10px 18px 0;padding:8px 12px;border:2px dashed #7d4a0e;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:12px;color:#4a3c28;">SHOWCASE · these are real LOCK IN players and their real results. Names are replaced with pseudonyms. A program's own dashboard shows only its students who joined its crew and agreed to share.</div>
+    <div id="showcase-note" style="display:none;margin:10px 18px 0;padding:8px 12px;border:2px dashed #7d4a0e;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:12px;color:#4a3c28;">SHOWCASE · real LOCK IN players who agreed to be shown, with their real results, under pseudonyms. A program's own dashboard shows only its students who joined its crew and agreed to share.</div>
 
     <div class="cards" id="cards"></div>
 
