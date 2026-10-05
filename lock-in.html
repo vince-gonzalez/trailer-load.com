@@ -41,9 +41,15 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.200
+   LOCK IN v3.5.201
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.201 - NO FORMER EMPLOYER IN THE CREW SCREEN.
+     The crew-name box told every instructor creating a crew "e.g. Legends of FedEx", the name of
+     Vince's own test crew. It now reads "e.g. Logistics 101, Period 3", which is what a program
+     would actually call a class. The test crew itself was renamed "Test crew" in the database.
+     Code comments that name carriers as industry context (pace standards, yard vocabulary) stay.
 
    CHANGE LOG v3.5.200 - TRAILER-LOAD.COM OPENS ON THE GAME'S MAIN MENU.
      Vince: "when you go, is it not the game main menu? because it should be." Measured on
@@ -2853,7 +2859,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.200 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.201 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2976,7 +2982,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></div>
-  <div id="sm-footer">LOCK IN v3.5.200 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.201 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3137,7 +3143,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.200 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.201 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3273,7 +3279,7 @@ body[data-cb="trit"]{
       <div id="crew-msg" class="crew-msg"></div>
       <button class="crew-mk" id="crew-mk" onclick="crewShowCreate()" style="display:none;">+ CREATE A CREW</button>
       <div id="crew-create" class="crew-create" style="display:none;">
-        <input id="crew-name-in" type="text" maxlength="48" placeholder="crew name (e.g. Legends of FedEx)">
+        <input id="crew-name-in" type="text" maxlength="48" placeholder="crew name (e.g. Logistics 101, Period 3)">
         <input id="crew-code-in" type="text" maxlength="24" placeholder="join code (e.g. moregooder)" autocapitalize="off" autocorrect="off" spellcheck="false">
         <div class="crew-row"><button class="crew-btn" onclick="crewCreate()">CREATE</button><button class="crew-btn ghost" onclick="crewHideCreate()">CANCEL</button></div>
       </div>
@@ -3623,7 +3629,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.200
+// LOCK IN v3.5.201
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -4091,7 +4097,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.200'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.201'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -11054,7 +11060,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.200</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.201</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
