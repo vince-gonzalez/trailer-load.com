@@ -1513,13 +1513,16 @@ html,body{width:100%;height:100dvh;color:var(--t1);
    buyers, documentation, privacy, terms. It floats over the live demo, so it sits on its own plate instead of
    trusting whatever is rendering behind it. CONTRAST, worst case = plate over pure white
    (0.88 x #0b0805 + 0.12 x #fff = rgb(40,38,35), L=0.0193): cream #ece5d8 (L=0.777) = 11.4:1. */
+/* Placed IN FLOW directly under the clipboard (same 18px left edge as #sm-board), not pinned to the bottom:
+   the bottom center belongs to #menu-demo-cap, which covered a pinned row on the first lab check. In flow it
+   scrolls with the menu on short screens and cannot collide with the caption or the version footer. */
 #sm-links{
-  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);white-space:nowrap;
-  font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;color:#ece5d8;
-  background:rgba(11,8,5,.88);border-radius:6px;padding:5px 12px;
+  position:relative;flex:none;margin:10px 0 0 18px;max-width:min(380px,94vw);
+  font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;line-height:1.7;color:#ece5d8;
+  background:rgba(11,8,5,.88);border-radius:6px;padding:5px 12px;text-align:left;
 }
 #sm-links a{color:#ece5d8;text-decoration:underline;text-underline-offset:2px;}
-@media (max-width:640px){#sm-links{font-size:11px;letter-spacing:.5px;padding:4px 8px;white-space:normal;width:max-content;max-width:94vw;text-align:center;}}
+@media (max-width:640px){#sm-links{font-size:11px;letter-spacing:.5px;padding:4px 8px;}}
 /* v3.5.43 MOBILE MENU · compact, semi-transparent cards so the (crispy) demo shows THROUGH instead of being blanketed; top-right cleared off the logo; briefing clipboard stretched a touch taller so its text stops clipping top/bottom. Desktop untouched. */
 @media (max-width:640px){
   #start-menu{background:linear-gradient(90deg,rgba(11,8,5,.92) 0%,rgba(11,8,5,.6) 52%,rgba(11,8,5,.1) 100%);padding:16px 0 22px;}
