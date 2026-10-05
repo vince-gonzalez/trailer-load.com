@@ -13,7 +13,21 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="LOCK·IN">
 <link rel="apple-touch-icon" href="ring-logo.png">
-<title>LOCK IN</title>
+<title>LOCK IN · Freight Loading, As a Game | trailer-load.com</title>
+<!-- v3.5.200 the site's front door now opens HERE (index.html forwards to this page), so this page carries
+     the description, canonical and link-preview tags the splash used to carry. -->
+<meta name="description" content="A free browser freight-loading game. Play the daily wall, the same one everybody gets, or load endless trailers. No download, no account. Program pricing and an instructor dashboard for CTE schools, trade programs and employers.">
+<link rel="canonical" href="https://www.trailer-load.com/lock-in.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LOCK IN">
+<meta property="og:title" content="LOCK IN · Freight Loading, As a Game">
+<meta property="og:description" content="A free browser freight-loading game. One daily wall everybody shares, or endless trailers. No download, no account.">
+<meta property="og:url" content="https://www.trailer-load.com/lock-in.html">
+<meta property="og:image" content="https://www.trailer-load.com/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LOCK IN · Freight Loading, As a Game">
+<meta name="twitter:description" content="A free browser freight-loading game. One daily wall everybody shares, or endless trailers.">
+<meta name="twitter:image" content="https://www.trailer-load.com/logo.png">
 <!-- NO THIRD-PARTY ANALYTICS ON TRAILER-LOAD.COM (v3.5.169). GA4 was removed before the first K-12 district
      vetting packet: reviewers scan for googletagmanager.com the same way they scan for ad tech, and "we ship zero
      third-party analytics" is a one-line answer instead of a meeting. Usage lives in our own consent-gated
@@ -27,9 +41,33 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.199
+   LOCK IN v3.5.200
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.200 - TRAILER-LOAD.COM OPENS ON THE GAME'S MAIN MENU.
+     Vince: "when you go, is it not the game main menu? because it should be." Measured on
+     production 2026-10-05: a first-time visitor saw FOUR screens before the menu (the splash
+     page at /, the F-Keys + LOCK IN boot cards, the pre-sort meeting, then the menu). A
+     returner still got the splash. What changed:
+       (1) / now forwards here before it renders (index.html), keeping the once-per-tab visit
+           count (keepalive) and any #daily/#shift/#training/#signin deep link.
+       (2) Boot shows the main menu for everyone. The pre-sort meeting now appears in front of
+           a first-timer's first LOADING wall (guardLaunch: Trailer-Load or Daily), then
+           launches the mode they picked. Training and the mini-games skip it. Deep links are
+           honoured for first-timers too, for the same reason.
+       (3) The menu carries the links the splash carried: For schools & employers,
+           Documentation, Privacy, Terms (#sm-links, on its own plate: 11.4:1 worst case).
+       (4) This page now has the description, canonical and link-preview tags, since it is
+           what search results and shared links show.
+       (5) FALSE NOTICE FIXED: the briefing footer said "Uses Google Analytics cookies only ...
+           by continuing you consent". GA was removed in v3.5.169 and gaEvent is an empty stub;
+           the privacy policy says no GA. It now reads "No ads and no analytics. Nothing you play
+           leaves this device unless you choose to save your stats".
+     Kept: the F-Keys and LOCK IN boot cards (about 2 seconds, tap to skip; returners skip
+     the F-Keys card). privacy.html: "Our home page also shows three aggregate totals" became
+     "Our front page also keeps one aggregate total, visits", since no page shows them now.
+     sitemap.xml: the forwarding root is out; lock-in.html is priority 1.0.
 
    CHANGE LOG v3.5.199 - THE LAST HINT OF THE FOLK RULE, AND THE DASH RULE MEANT LITERALLY.
      (1) 55% of fragiles still wore a TOP ONLY tape (boxTapes). No rule enforces it, and after
@@ -1471,6 +1509,17 @@ html,body{width:100%;height:100dvh;color:var(--t1);
   font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;
   color:var(--t3);
 }
+/* v3.5.200 the menu is now the site's front door, so it carries the links the splash used to: pricing for
+   buyers, documentation, privacy, terms. It floats over the live demo, so it sits on its own plate instead of
+   trusting whatever is rendering behind it. CONTRAST, worst case = plate over pure white
+   (0.88 x #0b0805 + 0.12 x #fff = rgb(40,38,35), L=0.0193): cream #ece5d8 (L=0.777) = 11.4:1. */
+#sm-links{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;color:#ece5d8;
+  background:rgba(11,8,5,.88);border-radius:6px;padding:5px 12px;
+}
+#sm-links a{color:#ece5d8;text-decoration:underline;text-underline-offset:2px;}
+@media (max-width:640px){#sm-links{font-size:11px;letter-spacing:.5px;padding:4px 8px;white-space:normal;width:max-content;max-width:94vw;text-align:center;}}
 /* v3.5.43 MOBILE MENU · compact, semi-transparent cards so the (crispy) demo shows THROUGH instead of being blanketed; top-right cleared off the logo; briefing clipboard stretched a touch taller so its text stops clipping top/bottom. Desktop untouched. */
 @media (max-width:640px){
   #start-menu{background:linear-gradient(90deg,rgba(11,8,5,.92) 0%,rgba(11,8,5,.6) 52%,rgba(11,8,5,.1) 100%);padding:16px 0 22px;}
@@ -2797,7 +2846,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.199 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.200 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -2842,7 +2891,7 @@ body[data-cb="trit"]{
 </div>
 <div id="brief-legal">
   Training supplement only · not a substitute for employer safety training or certification. &nbsp;·&nbsp;
-  Uses Google Analytics cookies only · no advertising on this service; by continuing you consent per our
+  No ads and no analytics. Nothing you play leaves this device unless you choose to save your stats · see our
   <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>. &nbsp;·&nbsp; &copy; 2026
 </div>
 </div>
@@ -2919,7 +2968,8 @@ body[data-cb="trit"]{
   </div>
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-footer">LOCK IN v3.5.199 · © 2026</div>
+  <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></div>
+  <div id="sm-footer">LOCK IN v3.5.200 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3080,7 +3130,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.199 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.200 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3566,7 +3616,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.199
+// LOCK IN v3.5.200
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -4034,7 +4084,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.199'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.200'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -9449,6 +9499,9 @@ function acknowledgeBriefing(){
   var b=document.getElementById('briefing');
   if(b){b.classList.add('gone');b.style.display='none';}
   setVoice(activeVoice);
+  // v3.5.200 the briefing now sits in front of a launch, so finish that launch instead of returning to the menu
+  _briefAckThisLoad=true;
+  if(_briefPending){var _bp=_briefPending;_briefPending=null;guardLaunch(_bp);return;}
   showStartMenu();
 }
 
@@ -10374,7 +10427,18 @@ function startShift(){
 var _pendingLaunch=null,_guestAck=false;
 try{_guestAck=localStorage.getItem('liGuestAck')==='1';}catch(e){} // v3.5.162 (MED funnel #2) the guest choice is remembered across loads, not re-asked forever
 function isSignedIn(){return (typeof zSessionAlive==='function')?zSessionAlive():!!(typeof ZDATA!=='undefined'&&ZDATA.session&&ZDATA.session.uid);} // v3.5.169 alive, not merely present
+// v3.5.200 MENU FIRST (Vince: trailer-load.com should open on the game main menu). The pre-sort meeting used to
+// stand between a first-timer and the menu. It now shows right before their first LOADING wall (Trailer-Load or
+// Daily), then launches the mode they picked. Training and the mini-games teach on their own and skip it.
+var _briefPending=null,_briefAckThisLoad=false;
+function _briefingSeen(){var s=false;try{s=localStorage.getItem('liBriefingDone')==='1';}catch(e){}return s||_briefAckThisLoad;}
+function showBriefing(){
+  var b=document.getElementById('briefing');
+  if(b){b.style.display='';b.classList.remove('gone');}
+  try{briefTab(activeVoice);}catch(e){console.error('showBriefing:',e);}
+}
 function guardLaunch(fn){
+  if((fn===startTrailerLoad||fn===startDaily)&&!_briefingSeen()){_briefPending=fn;showBriefing();return;}
   if(isSignedIn()||_guestAck){if(typeof fn==='function')fn();return;}
   _pendingLaunch=fn;
   var ov=document.getElementById('ov-signin-prompt');if(ov)ov.classList.add('vis');
@@ -10980,7 +11044,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.199</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.200</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
@@ -12683,19 +12747,14 @@ var _briefingDone=false;
 try{_briefingDone=localStorage.getItem('liBriefingDone')==='1';}catch(e){}
 
 var _br=document.getElementById('briefing');
-if(_briefingDone){
-  if(_br)_br.classList.add('gone');
-  showStartMenu();
-} else {
-  // v2.1.39 · force the clipboard visible on first load even if a prior step threw
-  if(_br){_br.style.display='';_br.classList.remove('gone');}
-  try{briefTab(activeVoice);}catch(e){console.error('briefTab:',e);}
-}
+// v3.5.200 MENU FIRST for everyone. The briefing waits for a first-timer's first loading wall (guardLaunch).
+if(_br){_br.classList.add('gone');_br.style.display='none';}
+showStartMenu();
 // v3.5.58 · SmallsSort's "SIGN IN →" links here with #signin; open the profile/sign-in panel.
 try{
   var _dlh=location.hash;
   if(_dlh==='#signin'&&typeof openProfile==='function')setTimeout(openProfile,300);
-  else if(_briefingDone){ // v3.5.162 (MED funnel #4) homepage CTAs land in the promised mode; first-timers still get the briefing first
+  else { // v3.5.162 deep links land in the promised mode. v3.5.200: for everyone now; guardLaunch puts the briefing in front of a first-timer's first loading wall
     if(_dlh==='#daily')setTimeout(function(){guardLaunch(startDaily);},380);
     else if(_dlh==='#shift')setTimeout(function(){guardLaunch(startTrailerLoad);},380);
     else if(_dlh==='#training')setTimeout(function(){startTrainDemo();},380);

@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LOCK IN · Freight Loading, As a Game | trailer-load.com</title>
 <meta name="description" content="A free browser freight-loading game. Play the daily wall, the same one everybody gets, or load endless trailers. No download, no account. Program pricing and an instructor dashboard for CTE schools, trade programs and employers.">
-<link rel="canonical" href="https://www.trailer-load.com/">
+<link rel="canonical" href="https://www.trailer-load.com/lock-in.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="LOCK IN">
 <meta property="og:title" content="LOCK IN · Freight Loading, As a Game">
 <meta property="og:description" content="A free browser freight-loading game. One daily wall everybody shares, or endless trailers. No download, no account.">
-<meta property="og:url" content="https://www.trailer-load.com/">
+<meta property="og:url" content="https://www.trailer-load.com/lock-in.html">
 <meta property="og:image" content="https://www.trailer-load.com/logo.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="LOCK IN · Freight Loading, As a Game">
@@ -19,123 +19,54 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23140d08'/%3E%3Crect x='16' y='16' width='32' height='32' rx='3' fill='%23c8791e'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#140d08">
 <!-- NO AD TECH ON TRAILER-LOAD.COM, EVER (2026-07-20). Student-privacy laws + district vetting. Do not re-add. -->
-<link rel="preload" as="image" href="lockbackdrop.png">
+<!-- ════════════════════════════════════════════════════════════════════════
+     THE FRONT DOOR · 2026-10-05
+     Vince: "when you go [to trailer-load.com], is it not the game main menu? because it
+     should be." The splash that lived here (wordmark, PLAY, today's wall, three counters)
+     was a screen between the visitor and the game. This page now forwards to the game's
+     main menu before anything renders. Its links moved onto the menu itself; pricing and
+     the long marketing copy stay at /programs/.
+     The visit counter is kept: once per tab session it bumps the single integer that the
+     privacy policy describes (keepalive, so the request survives the page change). No row,
+     no cookie, no IP. Deep links (#daily, #shift, #training, #signin) carry through.
+     ════════════════════════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  try{
+    var counted=false;
+    try{counted=sessionStorage.getItem('liVisited')==='1';}catch(e){}
+    if(!counted){
+      try{sessionStorage.setItem('liVisited','1');}catch(e){}
+      var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo';
+      fetch('https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1/rpc/lockin_visit',{method:'POST',keepalive:true,
+        headers:{'apikey':K,'Authorization':'Bearer '+K,'Content-Type':'application/json'},body:'{}'}).catch(function(){});
+    }
+  }catch(e){}
+  try{location.replace('/lock-in.html'+(location.hash||''));}catch(e){location.href='/lock-in.html';}
+})();
+</script>
+<noscript><meta http-equiv="refresh" content="0; url=/lock-in.html"></noscript>
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
-/* THE SPLASH. One screen, one decision. The marketing page moved to /programs/ on
-   2026-10-02: a wall of text at the front door is where people leave.
-   CONTRAST, computed against the #140d08 ground (L=0.00429), never eyeballed:
-     #ece5d8 cream 15.4:1 · #c8791e amber 5.72:1 · #b8ab97 muted 8.57:1
-     #1b1206 on the amber button 5.47:1. All pass AA. */
+/* Seen only if the forward fails (no JavaScript, or a blocked redirect).
+   CONTRAST on #140d08 (L=0.00429): cream #ece5d8 15.4:1 · amber #c8791e 5.72:1. */
 small,sub,sup{font-size:11px;}
-*{box-sizing:border-box;}
-html,body{height:100%;}
-body{
-  margin:0;background:#140d08;color:#ece5d8;
-  font-family:'Barlow Condensed',sans-serif;font-size:18px;line-height:1.45;
-  -webkit-font-smoothing:antialiased;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:24px;
-}
-body::before{
-  content:'';position:fixed;inset:0;z-index:0;
-  background:url('lockbackdrop.png') center/cover no-repeat;
-  opacity:.17;filter:saturate(.6);
-}
-body::after{
-  content:'';position:fixed;inset:0;z-index:0;
-  background:radial-gradient(900px 520px at 50% 38%,rgba(200,121,30,.18),transparent 70%);
-}
-main{position:relative;z-index:1;max-width:680px;width:100%;}
-.wordmark{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(66px,15vw,142px);line-height:.86;letter-spacing:6px;
-  margin:0;color:#ece5d8;text-shadow:0 0 70px rgba(200,121,30,.35);
-}
-.rule{height:3px;width:120px;margin:16px auto 14px;
-  background:repeating-linear-gradient(90deg,#c8791e 0,#c8791e 12px,transparent 12px,transparent 22px);}
-.tag{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:4px;color:#c8791e;margin:0 0 26px;}
-.cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
-.btn{display:inline-flex;flex-direction:column;align-items:center;gap:1px;text-decoration:none;
-  font-family:'Bebas Neue',sans-serif;letter-spacing:3px;border-radius:10px;padding:18px 44px;
-  font-size:34px;border:2px solid transparent;transition:transform .12s,background .15s;}
-.btn small{font-family:'Share Tech Mono',monospace;letter-spacing:1px;font-size:11px;}
-.btn.play{background:#c8791e;color:#1b1206;border-color:#8f550f;}
-.btn.play:hover{background:#e0962e;transform:translateY(-2px);}
-.btn.alt{background:transparent;color:#ece5d8;border-color:#6d5c45;font-size:26px;padding:16px 30px;}
-.btn.alt:hover{border-color:#c8791e;color:#c8791e;transform:translateY(-2px);}
-.counts{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin:30px 0 0;
-  font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;color:#b8ab97;}
-.counts b{display:block;font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:#ece5d8;font-weight:normal;}
-.foot{position:relative;z-index:1;margin-top:40px;font-family:'Share Tech Mono',monospace;font-size:12px;color:#b8ab97;}
-.foot a{color:#c8791e;text-decoration:none;}
-.foot a:hover{text-decoration:underline;}
-.foot .admin{display:inline-block;border:1px solid #6d5c45;border-radius:6px;padding:8px 16px;margin-bottom:14px;color:#ece5d8;}
-.foot .admin:hover{border-color:#c8791e;color:#c8791e;}
-.foot .legal{margin-top:10px;}
-@media(max-width:560px){.btn.play{font-size:28px;padding:15px 30px;}.counts{gap:16px;}}
+body{margin:0;background:#140d08;color:#ece5d8;font-family:'Barlow Condensed',sans-serif;font-size:18px;
+  line-height:1.5;text-align:center;padding:48px 16px;}
+a{color:#c8791e;}
+.foot{font-family:'Share Tech Mono',monospace;font-size:13px;margin-top:28px;}
 </style>
 </head>
 <body>
-
-<main>
-  <h1 class="wordmark">LOCK<br>IN</h1>
-  <div class="rule"></div>
-  <p class="tag">LOAD THE TRAILER &nbsp;·&nbsp; FREIGHT LOADING, AS A GAME</p>
-
-  <div class="cta">
-    <a class="btn play" href="lock-in.html">PLAY<small>FREE · NO LOGIN · NO DOWNLOAD</small></a>
-    <a class="btn alt" href="daily/">★ TODAY'S WALL<small>SAME ONE FOR EVERYBODY</small></a>
-  </div>
-
-  <div class="counts">
-    <div><b id="stat-walls">,</b>Walls loaded</div>
-    <div><b id="stat-players">,</b>Loaders signed on</div>
-    <div><b id="stat-visits">,</b>Visits</div>
-  </div>
-</main>
-
-<div class="foot">
-  <a class="admin" href="programs/">Administrators &amp; faculty &nbsp;→</a><br>
-  <a href="for-districts/">Documentation</a> &nbsp;·&nbsp;
-  <a href="ss/">Smalls Sort</a> &nbsp;·&nbsp;
-  <a href="privacy.html">Privacy</a> &nbsp;·&nbsp;
-  <a href="terms.html">Terms</a> &nbsp;·&nbsp;
-  <a href="/me/">Clock In</a>
-  <div class="legal">LOCK IN &nbsp;·&nbsp; a project of <a href="https://www.f-keys.com/">F-Keys Creative LLC</a> &nbsp;·&nbsp; © 2026</div>
-</div>
-
-<script>
-/* LIVE COUNTER · public aggregate only (lockin_stats RPC returns counts, never a player record).
-   Fails silently to the placeholders if the backend is unreachable; never blocks the page. */
-(function(){
-  var EP='https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1/rpc/lockin_stats';
-  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo';
-  var BUMP='https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1/rpc/lockin_visit';
-  var H={'apikey':K,'Authorization':'Bearer '+K,'Content-Type':'application/json'};
-  function put(id,v){var e=document.getElementById(id);if(e&&v!=null)e.textContent=(+v).toLocaleString();}
-  function readStats(){
-    fetch(EP,{method:'POST',headers:H,body:'{}'})
-      .then(function(r){return r.ok?r.json():null;})
-      .then(function(j){if(!j)return;put('stat-walls',j.walls);put('stat-players',j.players);put('stat-visits',j.visits);})
-      .catch(function(){});
-  }
-  try{
-    // Count this visit ONCE per browser tab-session. sessionStorage only (cleared when the tab
-    // closes, never sent anywhere) so a refresh doesn't inflate the number. The server stores a
-    // single integer - no row per visit, nothing that identifies anyone.
-    var counted=false;
-    try{counted=sessionStorage.getItem('liVisited')==='1';}catch(e){}
-    if(counted){readStats();}
-    else{
-      try{sessionStorage.setItem('liVisited','1');}catch(e){}
-      fetch(BUMP,{method:'POST',headers:H,body:'{}'})
-        .then(function(r){return r.ok?r.json():null;})
-        .then(function(n){if(n!=null)put('stat-visits',n);readStats();})
-        .catch(function(){readStats();});
-    }
-  }catch(e){}
-})();
-</script>
+  <p>Opening LOCK IN. If nothing happens, <a href="/lock-in.html">play here</a>.</p>
+  <p class="foot">
+    <a href="/programs/">For schools &amp; employers</a> &nbsp;·&nbsp;
+    <a href="/for-districts/">Documentation</a> &nbsp;·&nbsp;
+    <a href="/daily/">Today's wall</a> &nbsp;·&nbsp;
+    <a href="/ss/">Smalls Sort</a> &nbsp;·&nbsp;
+    <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp;
+    <a href="/terms.html">Terms</a><br>
+    LOCK IN &nbsp;·&nbsp; a project of <a href="https://www.f-keys.com/">F-Keys Creative LLC</a> &nbsp;·&nbsp; © 2026
+  </p>
 </body>
 </html>
