@@ -64,6 +64,10 @@ small,sub,sup{font-size:11px;}
            by continuing you consent". GA was removed in v3.5.169 and gaEvent is an empty stub;
            the privacy policy says no GA. It now reads "No ads and no analytics. Nothing you play
            leaves this device unless you choose to save your stats".
+       (6) /sfx/ 404s FIXED. The sound-file override probed four formats for every sound event and no
+           sfx/ folder exists, so the first wall threw four 404s per event. Overrides are now listed in
+           SFX_FILES (empty = synth only, which is what always played anyway). An earlier note that
+           called this defect "gone" was wrong: it was checked on a menu-only load, where no sound fires.
      Kept: the F-Keys and LOCK IN boot cards (about 2 seconds, tap to skip; returners skip
      the F-Keys card). privacy.html: "Our home page also shows three aggregate totals" became
      "Our front page also keeps one aggregate total, visits", since no page shows them now.
@@ -4536,19 +4540,22 @@ function sfxVol(){
   var s=(typeof SETTINGS!=='undefined'&&typeof SETTINGS.volSfx==='number')?SETTINGS.volSfx:80;
   return (m/100)*(s/100);
 }
+// v3.5.200 SOUND OVERRIDES ARE LISTED, NOT GUESSED. The v2.11.1 override probed sfx/<event>.mp3, .m4a, .wav
+// and .ogg for EVERY sound event, but no sfx/ folder has ever existed, so the first wall of every session
+// threw four red 404s per event into the console (measured on the lab 2026-10-05: stage.mp3/m4a/wav/ogg),
+// on the product district IT inspects in devtools. The synth plays either way. To use a recorded sound:
+// put the file in sfx/ and list it here as {eventName:'ext'}, for example {stage:'mp3'}. Empty = synth only.
+var SFX_FILES={};
 function sfxFile(name){
-  // v2.11.1 file-override: drop sfx/<event>.mp3|m4a|wav|ogg in the repo and it plays instead of the synth. Lazy + graceful.
   if(!SND.ctx)return null;
+  var ext=SFX_FILES.hasOwnProperty(name)?SFX_FILES[name]:'';
+  if(!ext)return null;
   if(SND.buffers[name]===undefined){
     SND.buffers[name]='pending';
-    var exts=['mp3','m4a','wav','ogg'],ei=0;
-    (function tryNext(){
-      if(ei>=exts.length){SND.buffers[name]=false;return;}
-      var ext=exts[ei++];
-      fetch('sfx/'+name+'.'+ext).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer();})
-        .then(function(ab){return SND.ctx.decodeAudioData(ab);})
-        .then(function(buf){SND.buffers[name]=buf;}).catch(function(){tryNext();});
-    })();
+    fetch('sfx/'+name+'.'+ext).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer();})
+      .then(function(ab){return SND.ctx.decodeAudioData(ab);})
+      .then(function(buf){SND.buffers[name]=buf;})
+      .catch(function(e){SND.buffers[name]=false;console.error('sfxFile:',name,e);});
     return null;
   }
   return (SND.buffers[name]&&SND.buffers[name]!=='pending')?SND.buffers[name]:null;
