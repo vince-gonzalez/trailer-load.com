@@ -41,9 +41,43 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.202
+   LOCK IN v3.5.203
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.203 - THE WATER BOTTLE. WATER FIXES THIRST, NOT UNSAFE LOADING.
+     Vince (2026-10-15): "install a water-meter (vertical, looks like the shape of a water bottle, with
+     blue (filled-bottle) as indicator of how much hydration you have/need. 4 drinks per wall, 1 and 2
+     are given bonuses, 3 is normal, no bonus, 4 is 'fully hydrated'."
+       (1) THE BOTTLE. A vertical bottle stands left of the trailer, level with the middle of the wall.
+           The blue fill rises a quarter per drink. It is a button: press it to drink. Under it: 0/4 up
+           to FULL. On a phone it tucks into the top-left corner at 70% size. The WATER strip button now
+           reads WATER n/4. Hidden in the watch-only Training demo. Fixed light colors in both themes,
+           because the canvas behind it is beige in both.
+       (2) THE RULES. 4 drinks a trailer. Drink 1: +150. Drink 2: +150 only if at least 3 boxes were
+           loaded since drink 1 (his floor rhythm: drink, load, drink, load); bunched, it says why and
+           pays nothing. Drink 3: no bonus. Drink 4: FULLY HYDRATED. After 4 the bottle is done for that
+           trailer, with no penalty. The 300-cube seal bonus for 2+ drinks is retired: the same 300 is
+           now paid at the drink. The 6-second cooldown stays.
+       (3) WATER NO LONGER ERASES SAFETY WARNINGS. Since v3.5.59 every drink cleared the newest open
+           warning of any kind (v3.5.194 kept that as an unannounced veteran trick). In a training
+           product, a drink that makes a violation disappear teaches the wrong habit. A drink now
+           resolves a HYDRATION warning and nothing else; a locked shelf clears the others and no longer
+           clears thirst. The warning banner names the real fix for that offense.
+       (4) THE 2-SECOND "COVER IT WITH WATER" WINDOW IS GONE, and so is the tumbling-box ricochet. A FLAG
+           is a plain ask for a hand: a coworker takes the box you are holding and leaves a bag of
+           smalls. Its cost is the cooldown and the cube penalty past three flags. The manager lines
+           "HEY ," (stray comma included) and "STOP PULLING PEOPLE OFF THEIR OWN TRAILERS!" are gone.
+           Next pass: FLAG becomes STAGE, the box set down on the floor where it can be picked up again.
+       (5) The 4th-drink "OVER-HYDRATING ... IS SABOTAGE" penalty is gone; it contradicted his design.
+       (6) BUG FIX: not drinking could become an INCIDENT although the comment said it only warns. The
+           100% check called safetyWarn() a second time, and a repeated open warning escalates. A dry
+           wall now gets one warning, then a reminder.
+       (7) Post-sort: the "No-hydration", "thrown-away" and "Water sabotage flags" rows are removed (none
+           can be non-zero now); "with the rhythm bonus" is added under Hydration breaks. The tutorial
+           and the Training ladder say what the buttons now do.
+     Tested headless against the local file: 27 checks (desktop and phone layout, every drink, warnings,
+     the 100% check, FLAG, the demo), 0 failures, no page errors.
 
    CHANGE LOG v3.5.202 - SIGN THE WALL, AND KNOWING WHAT IS WORKING WITHOUT TRACKING ANYONE.
      Vince: "after the wall is built, there should be an option to put your 'name' on the leaderboard
@@ -1317,16 +1351,27 @@ html,body{width:100%;height:100dvh;color:var(--t1);
   display:block;line-height:1;
 }
 #sm-sub{display:none;}            /* retired from the menu */
-.sp-water{display:flex;flex-direction:column;gap:4px;margin-top:6px;}
-.sp-water{display:none!important;} /* v2.6.8 water shelved */
-.water-btn{width:100%;padding:7px 4px;background:var(--teal-wash,#def0ec);color:var(--teal,#138578);border:1.5px solid var(--teal,#138578);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.06em;cursor:pointer;transition:background .15s,transform .1s;}
-.water-btn:hover{background:var(--teal,#138578);color:#fff;}
-.water-btn:active{transform:scale(.97);}
-.water-btn.dry{background:var(--danger,#c23a1a);color:#fff;border-color:var(--danger,#c23a1a);animation:waterPulse 1s infinite;}
-@keyframes waterPulse{0%,100%{opacity:1;}50%{opacity:.55;}}
-.water-meter{height:7px;background:rgba(0,0,0,.35);border-radius:4px;overflow:hidden;}
-.water-fill{height:100%;width:0%;background:var(--t3);border-radius:4px;transition:width .25s,background .25s;}
-.water-lbl{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--t3);text-align:center;}/* v3.5.34 9->11 waterline */
+.sp-water{display:none!important;} /* v2.6.8 the old side-panel water meter, retired */
+/* v3.5.203 THE WATER BOTTLE · stands left of the trailer; the blue fill is drinks taken this trailer (4 max). Fixed light-palette
+   colors in BOTH themes: the canvas behind it is painted beige even when the page is dark, so theme ink would vanish. */
+.water-bottle{position:absolute;z-index:25;display:block;width:46px;padding:0;margin:0;background:none;border:0;cursor:pointer;line-height:1;font-family:'Share Tech Mono',monospace;
+  --wb-line:#1f5f94;--wb-glass:rgba(255,255,255,.62);--wb-fill:#2b8be0;--wb-tick:rgba(20,60,95,.5);--wb-ink:#2a2018;--wb-full:#1d6b45;--wb-dry:#b3261e;}
+.water-bottle svg{display:block;width:100%;height:auto;overflow:visible;}
+.water-bottle .wb-glass-bg{fill:var(--wb-glass);}
+.water-bottle .wb-glass{fill:none;stroke:var(--wb-line);stroke-width:2;}
+.water-bottle .wb-cap{fill:var(--wb-line);stroke:var(--wb-line);stroke-width:1.5;}
+.water-bottle .wb-fill{fill:var(--wb-fill);transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform .35s ease;}
+.water-bottle .wb-tick{stroke:var(--wb-tick);stroke-width:1.2;}
+.water-bottle .wb-shine{fill:rgba(255,255,255,.35);}
+.water-bottle .wb-n{display:block;margin-top:4px;text-align:center;font-size:13px;font-weight:bold;letter-spacing:.06em;color:var(--wb-ink);}
+.water-bottle.small .wb-n{font-size:11px;}
+.water-bottle:hover .wb-glass{stroke-width:3;}
+.water-bottle:focus-visible{outline:2px solid var(--wb-line);outline-offset:3px;border-radius:6px;}
+.water-bottle.dry .wb-glass{stroke:var(--wb-dry);animation:waterPulse 1s infinite;}
+.water-bottle.dry .wb-n{color:var(--wb-dry);}
+.water-bottle.full .wb-n{color:var(--wb-full);}
+@keyframes waterPulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+@media (prefers-reduced-motion:reduce){.water-bottle .wb-fill{transition:none;}.water-bottle.dry .wb-glass{animation:none;}}
 .data-tab{position:fixed;left:8px;bottom:90px;z-index:60;background:var(--bg2);color:var(--t2);border:1px solid var(--border2);border-radius:6px;padding:5px 9px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer;opacity:.7;}/* v3.5.17 raised above the footer so it no longer covers the chute green light */
 .data-tab:hover{opacity:1;border-color:var(--acc);color:var(--acc);}
 /* ── v3.5.37 BOTTOM CONSOLE · OPERATIONS / LINEHAUL / ADMIN collapsible drawers ── */
@@ -2896,7 +2941,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.202 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.203 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -3019,7 +3064,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 5)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. Back to "Privacy" after 2026-11-05. -->
-  <div id="sm-footer">LOCK IN v3.5.202 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.203 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3180,7 +3225,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.202 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.203 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3358,7 +3403,6 @@ body[data-cb="trit"]{
       <span id="fp-grade"></span>
       <span id="fp-sg-struct"></span><span id="fp-sg-struct-v"></span><span id="fp-sg-bal"></span><span id="fp-sg-bal-v"></span><span id="fp-sg-dens"></span><span id="fp-sg-dens-v"></span><span id="fp-sg-sup"></span><span id="fp-sg-sup-v"></span>
       <span id="fp-voids"></span><span id="fp-shelves"></span><span id="fp-bulkheads"></span><span id="fp-nc"></span><span id="fp-crunches"></span>
-      <button id="water-btn"></button><span id="water-fill"></span><span id="water-lbl"></span>
       <span id="perf-pph"></span><span id="perf-peak"></span><span id="perf-pcs"></span><span id="perf-spm"></span>
     </div>
   </div>
@@ -3413,6 +3457,19 @@ body[data-cb="trit"]{
         <button id="maxpack-finish" onclick="nextTrailer()" style="display:none;position:absolute;top:10px;right:10px;z-index:30;background:linear-gradient(180deg,#50d890,#28b870);color:#040f06;border:1.5px solid #0d3a1e;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;padding:7px 14px;min-height:34px;border-radius:6px;cursor:pointer;box-shadow:0 0 16px rgba(40,184,112,.4);">✓ FINISH TRAILER ▶</button>
         <!-- v3.5.147 FLOW streak pip -->
         <div id="flow-pip" aria-hidden="true"></div>
+        <!-- v3.5.203 THE WATER BOTTLE (Vince's design): blue fill = drinks this trailer, 4 max. Press it to drink. -->
+        <button id="water-bottle" class="water-bottle" type="button" onclick="takeDrink()" title="Water · 4 drinks a trailer. The first two pay a bonus when you load a few boxes between them." aria-label="Water bottle: 0 of 4 drinks this trailer. Press to drink">
+          <svg viewBox="0 0 48 124" aria-hidden="true" focusable="false">
+            <defs><clipPath id="wb-clip"><path d="M18 11 L18 18 C18 24 8 26 8 34 L8 113 Q8 120 15 120 L33 120 Q40 120 40 113 L40 34 C40 26 30 24 30 18 L30 11 Z"/></clipPath></defs>
+            <path class="wb-glass-bg" d="M18 11 L18 18 C18 24 8 26 8 34 L8 113 Q8 120 15 120 L33 120 Q40 120 40 113 L40 34 C40 26 30 24 30 18 L30 11 Z"/>
+            <g clip-path="url(#wb-clip)"><rect id="wb-fill" class="wb-fill" x="0" y="20" width="48" height="100"/></g>
+            <line class="wb-tick" x1="9" y1="45" x2="15" y2="45"/><line class="wb-tick" x1="9" y1="70" x2="15" y2="70"/><line class="wb-tick" x1="9" y1="95" x2="15" y2="95"/>
+            <rect class="wb-shine" x="33" y="38" width="3.5" height="66" rx="1.75"/>
+            <path class="wb-glass" d="M18 11 L18 18 C18 24 8 26 8 34 L8 113 Q8 120 15 120 L33 120 Q40 120 40 113 L40 34 C40 26 30 24 30 18 L30 11 Z"/>
+            <rect class="wb-cap" x="16" y="2" width="16" height="10" rx="2.5"/>
+          </svg>
+          <span class="wb-n" id="wb-count">0/4</span>
+        </button>
         <!-- v3.5.146 seal-readiness meter · fill both bars (height 92% + pack 35%) to auto-seal -->
         <div id="seal-rdy" aria-hidden="true">
           <div class="sr-cap">FILL BOTH BARS TO SEAL</div>
@@ -3436,7 +3493,7 @@ body[data-cb="trit"]{
       </div>
       <div id="conv-header">
                 <div class="conv-lbl" style="display:flex;align-items:center;gap:8px;"><span id="chute-light" class="chute-light cl-ok" title="Chute flow"></span><button id="breakjam-btn" class="bj-btn" onclick="breakJam()" style="display:none">📦 BREAK JAM</button></div>
-        <button id="water-side" class="strip-act sa-water" onclick="takeDrink()" title="Clears one warning · 6s">💧 WATER</button>
+        <button id="water-side" class="strip-act sa-water" onclick="takeDrink()" title="Drink water · 4 a trailer · 6s between drinks" aria-label="Drink water. 0 of 4 drinks this trailer">💧 WATER 0/4</button>
         <div class="conv-lbl" style="display:flex;align-items:center;gap:7px;">
           <span class="stg-light" id="stg-nc" onclick="openStagingPopup('nc')" title="Special handling · too big, heavy, or hazardous for the belt. Load it low."><b>SPEC</b><span class="stg-pie" id="stg-nc-pie"></span><span id="stg-nc-n">0/8</span></span>
           <span class="stg-sep" id="stg-sep" onclick="stgClose()" style="display:none;"></span>
@@ -3561,7 +3618,7 @@ body[data-cb="trit"]{
     <div class="td-hdr">LOCK IN <span class="td-badge">TRAINING RECORD</span></div>
     <div class="td-sub">You watched a trainer load a full wall · the way it's done. Everything you saw is checked off. Sign to clock in.</div>
     <div id="tutdone-list" class="td-list"></div>
-    <div class="td-ladder"><b>⚠ THE LADDER</b><br>SLIP → ⚠ WARNING → ⛔ INCIDENT → ✍ WRITE-UP<br><small>5 incidents = practice trailer · 4 write-ups = shift over</small><br><small>💧 water or 🔒 lock clears a warning</small></div>
+    <div class="td-ladder"><b>⚠ THE LADDER</b><br>SLIP → ⚠ WARNING → ⛔ INCIDENT → ✍ WRITE-UP<br><small>5 incidents = practice trailer · 4 write-ups = shift over</small><br><small>🔒 a locked shelf clears a warning · 💧 water fixes a thirst warning</small></div>
     <button class="td-sign" onclick="tutSign()">✍ SIGN HERE · TRAINING COMPLETE</button>
     <button class="td-skip" onclick="tutExit()">Skip · back to menu</button>
   </div>
@@ -3684,7 +3741,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.202
+// LOCK IN v3.5.203
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3751,7 +3808,7 @@ var FLOW_MIN=3, FLOW_STEP=25; // v3.5.147 FLOW streak: consecutive clean placeme
 // banner understated the real penalty by 3.75x. One source now: this constant, read by both.
 var RECOVERY_BONUS=400, CRUNCH_PENALTY=300, COLLAPSE_INT_COST=18;
 var LOAD_SEALED_BONUS=2500, HAZMAT_SHELF_BONUS=1500; // v2.1.11 hierarchy: SEAL #1, HAZMAT SHELF #2
-var HYDRATION_BONUS=300; // v2.1.37 two-drink hydration bonus
+// v3.5.203 HYDRATION_BONUS (300 at the seal) retired: drinks 1 and 2 pay WATER_BONUS when you take them (takeDrink)
 var PRESELECT_COST=25; // v2.1.3: per depth-step docked for reaching past the front belt piece
 var COLUMN_SEAM_PENALTY=100; // v2.1.4: per aligned-seam (running-bond) violation
 // HAZMAT: dangerous goods must load low. HAZMAT_MAX_FRAC=0.5 => bottom half only.
@@ -4152,7 +4209,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.202'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.203'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -4842,6 +4899,7 @@ function computeGeom(){
     NW.tl={x:_bl,y:_bt};NW.tr={x:_br,y:_bt};NW.bl={x:_bl,y:_bb};NW.br={x:_br,y:_bb};
   }
   computeFloorSlots();
+  if(typeof positionWaterBottle==='function')positionWaterBottle(); // v3.5.203 the bottle stands beside the wall at any size
 }
 
 // ── FLOOR SLOT GEOMETRY ──
@@ -5407,46 +5465,78 @@ function isForgiving(){return gameMode!=='shift';}
 // optional and now has to be STRATEGIC: a real cooldown + the escalating score penalties keep it honest.
 var THROW_CD=5000,DRINK_CD=6000,_lastThrowT=0,_lastDrinkT=0;
 function _coolBtn(id,ms){var b=document.getElementById(id);if(!b)return;b.style.opacity='.4';b.style.pointerEvents='none';setTimeout(function(){var e=document.getElementById(id);if(e){e.style.opacity='';e.style.pointerEvents='';}},ms);}
+// v3.5.203 THE WATER BOTTLE (Vince's design, 2026-10-15): "vertical, looks like the shape of a water bottle,
+// with blue (filled-bottle) as indicator of how much hydration you have/need. 4 drinks per wall, 1 and 2 are
+// given bonuses, 3 is normal, no bonus, 4 is 'fully hydrated'." His floor rhythm is drink, load, drink, load,
+// so drink 2 pays only when you loaded a few boxes since drink 1. Two drinks back to back is a stall, not a
+// break. RULE: water fixes thirst, not unsafe loading. A drink resolves a HYDRATION warning and nothing else.
+// Gone: the wash (any drink erased the newest open warning, v3.5.194 kept it as an unannounced veteran trick),
+// the 2-second "cover the flag with a drink" window, and the 4th-drink SABOTAGE penalty. In a safety course a
+// drink that makes a violation disappear teaches the wrong habit.
+var WATER_PER_WALL=4,WATER_BONUS=150,WATER_RHYTHM=3; // drinks 1-2 pay WATER_BONUS; drink 2 needs WATER_RHYTHM boxes loaded since drink 1
 function takeDrink(){
   if(gOver)return;
-  if(Date.now()-_lastDrinkT<DRINK_CD&&!(typeof _throwPending!=='undefined'&&_throwPending)){showBanner('💧 EASY · you just drank. Give it a few seconds.','',1100);return;} // v3.5.161 the HEY window bypasses the cooldown · the cover play must ALWAYS be possible
-  _lastDrinkT=Date.now();_coolBtn('water-side',DRINK_CD);
+  if((G.drinks||0)>=WATER_PER_WALL){showBanner('💧 FULLY HYDRATED · your bottle is done for this trailer. A fresh one comes with the next wall.','',1600);return;}
+  if(Date.now()-_lastDrinkT<DRINK_CD){showBanner('💧 EASY · you just drank. Load a few boxes, then drink again.','',1300);return;}
+  _lastDrinkT=Date.now();_coolBtn('water-side',DRINK_CD); // the bottle itself never fades: its count must stay readable right after a drink
   if(typeof zLog==='function')zLog('water',{n:(S.drinks||0)+1}); // v3.5.132 raw timeline
   if(TUTORIAL_MODE&&typeof tutAct==='function')tutAct('water');
+  var _since=(S.totalPieces||0)-(G._lastDrinkPieces==null?0:G._lastDrinkPieces); // boxes loaded since the last drink
+  G._lastDrinkPieces=(S.totalPieces||0);
   G.drinks=(G.drinks||0)+1;
   S.drinks=(S.drinks||0)+1;
   if(typeof playSfx==='function')playSfx('drink');
-  var cleared=(typeof mitigateWarn==='function')&&mitigateWarn('water'); // water clears ONE open minor warning
-  // v3.5.67 THE HEY WINDOW · a drink inside the 2s window COVERS the throw you just made ("...thank you for staying hydrated").
-  var _covered=false;
-  if(typeof _throwPending!=='undefined'&&_throwPending){_throwPending=false;if(typeof _throwWinTO!=='undefined'&&_throwWinTO){clearTimeout(_throwWinTO);_throwWinTO=null;}S.throwsCovered=(S.throwsCovered||0)+1;_covered=true;}
-  if((G.drinks||0)>3){ // over-hydrating to farm warning-washes = sabotage (logged + published)
-    // v3.5.64 escalating SCORE penalty: 4th drink -100, 5th -200, 6th -300... you CAN still drink your way
-    // out of a warning, but it costs you. Keeps the escape valve honest instead of free.
-    var _dpen=(G.drinks-3)*100;
-    bankScore(-_dpen); // v3.5.156 banked · persists through recomputes
-    S.waterSabotage=(S.waterSabotage||0)+1;
-    showBanner('\ud83d\udeab OVER-HYDRATING TO DODGE SAFETIES IS SABOTAGE \u00b7 logged. \u2212'+_dpen+' CUBES'+(cleared?' (warning still cleared).':'.'),'danger',2400);
-  }else if(_covered){showBanner('\ud83d\udc77 MANAGER: \u2026THANK YOU FOR STAYING HYDRATED. \ud83d\udca7','ok',2400);}
-  // v3.5.194 ZERO PROMOTION ON THE WASH. Vince: "we should not announce that a drink clears the
-  // safety incidents. that should be a veteran easter egg with zero promotion." The mechanic is
-  // untouched, the record still shows the warning as washed, and the sabotage ladder above still
-  // calls it out when somebody farms it. What is gone is the game TEACHING the escape hatch the
-  // first time it happens. A drink now reads as a drink. You find the rest by noticing it.
-  else if(cleared){showBanner('\ud83d\udca7 WATER BREAK.','',1200);}
-  else if(G.drinks===1)showBanner('\ud83d\udca7 HYDRATED \u00b7 1 is par. A second nets a bonus.','',1400);
-  else if(G.drinks===2)showBanner('\ud83d\udca7 TOPPED OFF \u00b7 hydration bonus secured.','ok',1400);
+  var fixedThirst=resolveHydrationWarn(); // the ONLY warning a drink can settle is "you haven't had water"
+  var d=G.drinks,msg='',kind='';
+  if(d===1||(d===2&&_since>=WATER_RHYTHM)){
+    bankScore(WATER_BONUS); // v3.5.156 banked · persists through recomputes
+    S.drinkBonuses=(S.drinkBonuses||0)+1;
+    msg=(d===1?'💧 HYDRATED':'💧 GOOD RHYTHM')+' · '+d+' of '+WATER_PER_WALL+' · +'+WATER_BONUS+' CUBES';kind='ok';
+  }
+  else if(d===2){msg='💧 2 of '+WATER_PER_WALL+' · no bonus. Load a few boxes between drinks: drink, load, drink, load.';}
+  else if(d<WATER_PER_WALL){msg='💧 '+d+' of '+WATER_PER_WALL+' · staying hydrated.';}
+  else {msg='💧 FULLY HYDRATED · '+d+' of '+WATER_PER_WALL+'. Your bottle is done for this trailer.';kind='ok';}
+  if(fixedThirst)msg+='<br><span style="font-size:.72em">Hydration warning resolved.</span>';
+  showBanner(msg,kind,1600);
   updateWaterHUD();if(typeof updateSafetyHUD==='function')updateSafetyHUD();
 }
+// resolve the newest open HYDRATION warning (a drink is the correct fix for not drinking). Nothing else.
+function resolveHydrationWarn(){
+  if(typeof S==='undefined'||!S||!S.warnings)return false;
+  var i,w;
+  for(i=S.warnings.length-1;i>=0;i--){w=S.warnings[i];if(w.offense==='HYDRATION'&&!w.mitigated){w.mitigated=true;w.washedBy='water';return true;}}
+  return false;
+}
+// draw the bottle: the blue fill rises one quarter per drink. The strip button mirrors the count in words,
+// so a keyboard or screen-reader player gets the same information as the picture.
 function updateWaterHUD(){
-  var d=G.drinks||0;
-  var fill=document.getElementById('water-fill'),lbl=document.getElementById('water-lbl'),btn=document.getElementById('water-btn');
-  if(!fill||!lbl)return;
-  var shelves=G.tetrisTotal||0, dry=(d===0&&shelves>=2);
-  fill.style.width=(d<=0?0:d===1?55:100)+'%';
-  fill.style.background=d>=2?'var(--teal-bright,#19a594)':d===1?'var(--ok)':dry?'var(--danger)':'var(--t3)';
-  lbl.textContent=d===0?(dry?'DRINK!':'HYDRATION'):d===1?'HYDRATED':'TOPPED OFF';
-  if(btn)btn.className='water-btn'+(dry?' dry':'');
+  var d=Math.min(WATER_PER_WALL,G.drinks||0);
+  var dry=(d===0&&(G.tetrisTotal||0)>=2); // two shelves locked and not one drink yet
+  var full=(d>=WATER_PER_WALL);
+  var fill=document.getElementById('wb-fill'),cnt=document.getElementById('wb-count'),bot=document.getElementById('water-bottle');
+  if(fill)fill.style.transform='scaleY('+(d/WATER_PER_WALL)+')'; // the fill rect grows up from the bottle's floor
+  if(cnt)cnt.textContent=full?'FULL':(d+'/'+WATER_PER_WALL);
+  if(bot){
+    bot.style.display=(typeof gameMode!=='undefined'&&gameMode==='training')?'none':''; // the watch-only demo has no player to drink
+    bot.classList.toggle('dry',dry);bot.classList.toggle('full',full);
+    bot.setAttribute('aria-label','Water bottle: '+d+' of '+WATER_PER_WALL+' drinks this trailer'+(full?', fully hydrated':'. Press to drink'));
+  }
+  var side=document.getElementById('water-side');
+  if(side){side.textContent='💧 WATER '+d+'/'+WATER_PER_WALL;side.setAttribute('aria-label','Drink water. '+d+' of '+WATER_PER_WALL+' drinks this trailer');}
+}
+// the bottle stands beside the trailer, left of it, level with the middle of the wall. Wide screens have an
+// open dock gutter there. Without one it stands between the trailer frame and the wall; on a phone, where
+// neither fits, it tucks into the top-left corner at a smaller size.
+function positionWaterBottle(){
+  var el=document.getElementById('water-bottle');if(!el||typeof NW==='undefined'||!NW||!NW.tl)return;
+  var bw=46,bh=140,gap=14,midY=(NW.tl.y+NW.bl.y)/2,left,top,roomy=true;
+  if(DL>=bw+gap*2){left=Math.round(Math.max(gap,DL-gap*2-bw));}            // dock gutter left of the trailer
+  else if(NW.tl.x-DL>=bw+gap*2){left=Math.round(NW.tl.x-gap-bw);}         // inside the frame, left of the wall
+  else{roomy=false;}
+  var sc=roomy?1:0.7,w=Math.round(bw*sc),h=Math.round(bh*sc);
+  if(roomy)top=Math.round(Math.max(48,midY-h/2));
+  else{left=6;top=Math.round(Math.max(48,NW.tl.y+8));}
+  el.style.left=left+'px';el.style.top=top+'px';el.style.width=w+'px';el.classList.toggle('small',!roomy);
 }
 // gate the seal: returns false (and blocks/ends) if the loader never drank this wall
 function hydrationOK(){return true;} // v2.6.8 WATER SHELVED to Season 2 - never blocks seal or ends the game (was the glitch source)
@@ -5897,7 +5987,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   if(_kA&&!_kB)logIncident('KILLER',box.hazClass||'');
   else if(_segA>_segB)logIncident('SEGREGATION',box.hazClass||'');
   // v3.5.64 SIDEWAYS TIRE · a tire stood on edge (rotated off its natural flat orientation) is a minor safety.
-  // safetyWarn() escalates a 2nd unmitigated one to an incident; water/throw/shelf-lock washes it. A ROW draws extra heat.
+  // safetyWarn() escalates a 2nd unmitigated one to an incident; a locked shelf clears it (v3.5.203: water no longer does). A ROW draws extra heat.
   if(box.cat==='tire'&&(rot%2===1)){
     safetyWarn('TIRE_SIDEWAYS','tire stood on edge · load tires flat.');
     var _stc=0,_sy,_sx,_ssn={};
@@ -6175,11 +6265,11 @@ function logIncident(type,cls){
 // Two tracked categories: WARNINGS (recoverable) and INCIDENTS (on the record).
 // Ladder: a warning you DON'T mitigate, repeated as the SAME offense, escalates to an
 // incident. SAFETY_PRACTICE_THRESHOLD incidents = sent to a fresh beginner "practice"
-// trailer (NOT game over). Mitigation: lock a shelf (instant), drink water (clears one),
-// or throw the piece (minor only). Hazmat-high and collapses are incidents outright \u00b7 no
+// trailer (NOT game over). Mitigation: lock a full shelf (clears one minor warning). v3.5.203: water
+// resolves only a HYDRATION warning, and FLAG no longer opens a cover window. Hazmat-high and collapses are incidents outright \u00b7 no
 // pardon. Washed safeties are STILL published (the "1501 safeties, 1490 for throwing" bit).
 var SAFETY_PRACTICE_THRESHOLD=5;
-var SAFETY_MINOR=['HYDRATION','TIRE_SIDEWAYS','SP_DWELL','SMALLS_DWELL','THROW','FRAGILE_CRUSH']; // warn-eligible + water-clearable
+var SAFETY_MINOR=['HYDRATION','TIRE_SIDEWAYS','SP_DWELL','SMALLS_DWELL','THROW','FRAGILE_CRUSH']; // warn-eligible; a locked shelf clears one (HYDRATION clears only by drinking)
 function _sfMinor(o){return SAFETY_MINOR.indexOf(o)>=0;}
 function _sfInit(){S.warnings=S.warnings||[];S.incidents=S.incidents||[];}
 function _sfLabel(o){return {HYDRATION:'hydration',TIRE_SIDEWAYS:'sideways tire',TIRE_STACK:'stacked tires',THROW:'over-flagging for help',FRAGILE_CRUSH:'crushed fragile',SP_DWELL:'staging dwell',SMALLS_DWELL:'smalls dwell',HAZMAT_HIGH:'hazmat-high',HAZMAT_CRUSH:'hazmat-crush',SEGREGATION:'segregation',KILLER:'killer pair',COLLAPSE:'collapse',HYDRATION_100:'no-hydration'}[o]||(''+o).toLowerCase();}
@@ -6253,7 +6343,8 @@ function safetyWarn(offense,msg){
   for(i=0;i<S.warnings.length;i++){if(S.warnings[i].offense===offense&&!S.warnings[i].mitigated){prior=S.warnings[i];break;}}
   if(prior){safetyIncident(offense,'Repeat '+_sfLabel(offense)+' \u00b7 an unmitigated warning became an incident.');return;}
   S.warnings.push({offense:offense,t:Date.now(),wall:(S.truck||1),mitigated:false,washedBy:null});
-  showBanner('\u26a0 SAFETY WARNING \u00b7 '+msg+'<br><span style="font-size:.72em">FIX IT: 🔒 lock a shelf · 💧 WATER · 🙋 FLAG. Left open = INCIDENT.</span>','warn',3200);
+  var _fix=(offense==='HYDRATION')?'FIX IT: 💧 drink water.':'FIX IT: 🔒 lock a full shelf.'; // v3.5.203 the real fix for THIS offense (water no longer washes everything)
+  showBanner('⚠ SAFETY WARNING · '+msg+'<br><span style="font-size:.72em">'+_fix+' Repeat it before it\u2019s fixed = INCIDENT.</span>','warn',3200);
   if(typeof playSfx==='function')playSfx('dwell');
   updateSafetyHUD();
 }
@@ -6268,7 +6359,7 @@ function safetyIncident(offense,msg){
 // clear the most-recent unmitigated MINOR warning; returns true if one was washed.
 function mitigateWarn(source){
   _sfInit();var i,w=null;
-  for(i=S.warnings.length-1;i>=0;i--){if(!S.warnings[i].mitigated&&_sfMinor(S.warnings[i].offense)){w=S.warnings[i];break;}}
+  for(i=S.warnings.length-1;i>=0;i--){if(!S.warnings[i].mitigated&&_sfMinor(S.warnings[i].offense)&&S.warnings[i].offense!=='HYDRATION'){w=S.warnings[i];break;}} // v3.5.203 thirst is fixed by water, not by a shelf
   if(!w)return false;
   w.mitigated=true;w.washedBy=source;
   S.safetiesWashed=(S.safetiesWashed||0)+1;   // STILL PUBLISHED on the record
@@ -6304,39 +6395,29 @@ function updateSafetyHUD(){
     el.title=w+' open warning(s), '+inc+' incident(s) on record';
   }
 }
-// HYDRATION as a safety: ~75% wall height with no drink = warning; topped-out dry = a second WARNING (nudge), NOT an incident.
-// v3.5.148 was an INCIDENT at 100% \u00b7 but topping the wall is the GOAL (and a roof-bag tops it out for a +600 bonus), so it
-// slapped a violation on a GOOD play the instant you finished (Vince: "safety violation for putting a smalls bag at the top").
-// DECISION: dehydration now only ever WARNS (drink next trailer); it no longer hits the incident ladder / write-up path.
+// HYDRATION as a safety: ~75% wall height with no drink = one WARNING, and a drink resolves it.
+// v3.5.148 topping the wall is the GOAL, so a dry roof must never land on the incident ladder.
+// v3.5.203 BUG FIX: the 100% check called safetyWarn() again, and safetyWarn() turns a repeat of an
+// unresolved warning into an INCIDENT, so a dry wall that reached the top DID get an incident despite the
+// comment above. Now 100% only warns when this wall has no hydration warning yet; otherwise it reminds.
 function checkHydrationSafety(){
   if(typeof G==='undefined'||!G||!G.grid)return;
   var pct=Math.round(wallH()/GH*100);
-  if(pct>=75&&pct<100&&(G.drinks||0)===0&&!G._hyd75){G._hyd75=true;safetyWarn('HYDRATION','you\u2019re most of the way up and haven\u2019t taken a water break \u00b7 drink to stay sharp.');}
-  if(pct>=100&&(G.drinks||0)===0&&!G._hyd100){G._hyd100=true;safetyWarn('HYDRATION','topped the wall with no water all trailer \u00b7 grab a break before the next one. (Nice roof, by the way.)');}
+  if(pct>=75&&pct<100&&(G.drinks||0)===0&&!G._hyd75){G._hyd75=true;safetyWarn('HYDRATION','you\u2019re most of the way up and haven\u2019t had any water \u00b7 take a drink.');}
+  if(pct>=100&&(G.drinks||0)===0&&!G._hyd100){G._hyd100=true;
+    if(G._hyd75)showBanner('💧 STILL NO WATER THIS TRAILER \u00b7 drink before the next one. (Nice roof, by the way.)','warn',2600);
+    else safetyWarn('HYDRATION','topped the wall with no water all trailer \u00b7 drink before the next one. (Nice roof, by the way.)');
+  }
 }
-// v3.5.67 THE HEY WINDOW \u00b7 throwing a box grabs you a smalls bag FAST, but the manager sees it. You get a
-// 2-second window to COVER it with a water break ("\u2026thank you for staying hydrated"). Miss it and the manager
-// escalates ("YOU ARE NOT ALLOWED TO THROW PACKAGES!") into a minor safety that can ladder to an incident.
-// The meta: grab a bag when you need one and get away with it \u00b7 as long as it isn't every box.
-var _throwPending=false,_throwWinTO=null;
-function _openThrowWindow(pen){
-  _throwPending=true;
-  if(_throwWinTO)clearTimeout(_throwWinTO);
-  // v3.5.196 THE SECOND HALF OF THE WATER PROMOTION. v3.5.194 silenced the line that announced a
-  // drink had cleared a warning, but THIS one still taught the escape hatch outright: "DRINK WATER
-  // in the next 2s to play it off". Same instruction, louder, and it fires every single flag.
-  // The manager still calls out the flag, because that part is real. The coaching on how to dodge
-  // it is gone. A veteran finds the window by noticing it, which is the whole point.
-  showBanner('\ud83d\udc77 MANAGER: HEY ,'+((pen>0)?(' (\u2212'+pen+' cubes)'):'')+'<br><span style="font-size:.72em">you flagged a coworker for a hand.</span>','warn',2200);
-  _throwWinTO=setTimeout(function(){
-    _throwWinTO=null;
-    if(!_throwPending||gOver)return;
-    _throwPending=false;
-    showBanner('\ud83d\udc77 MANAGER: STOP PULLING PEOPLE OFF THEIR OWN TRAILERS!','danger',3200);
-    if(typeof safetyWarn==='function')safetyWarn('THROW','flagged a coworker for a hand and didn\u2019t cover it with a water break.');
-  },2000);
+// v3.5.203 THE HEY WINDOW IS GONE. Since v3.5.67 a FLAG opened a 2-second window: drink inside it and the
+// manager "didn't see" it; miss it and it became a THROW safety warning. That paid out for hiding a violation,
+// and water no longer settles anything but thirst. A FLAG is now a plain ask for a hand: a coworker takes the
+// box you are holding and leaves a bag of smalls. Its cost is the 5s cooldown and the escalating cube penalty
+// past three flags a wall. (Next pass: FLAG becomes STAGE, the box set down on the floor where you can get it back.)
+function _flagNote(pen){
+  showBanner('🙋 HAND FLAGGED \u00b7 a coworker took that box and left you a bag of smalls.'+((pen>0)?('<br><span style="font-size:.72em">More than three flags this trailer: \u2212'+pen+' cubes.</span>'):''),(pen>0)?'warn':'',2000);
 }
-// THROW \u00b7 toss the selected piece; ALWAYS spawns a bag of smalls (a vet always has one to throw on).
+// FLAG (the function keeps its old name, throwBox) \u00b7 a coworker takes the box in your hand and leaves a bag of smalls.
 function throwBox(){
   if(gOver||typeof G==='undefined'||!G||!G.belt||!G.belt.length){if(typeof showBanner==='function'&&(!G||!G.belt||!G.belt.length))showBanner('Nothing in hand to flag for.','',1200);return;}
   if(Date.now()-_lastThrowT<THROW_CD){showBanner('🙋 FLAG ON COOLDOWN · you can’t wave a coworker over back-to-back.','warn',1200);return;}
@@ -6358,14 +6439,14 @@ function throwBox(){
       G.belt.push(_tb);
     }
   } else if(typeof spawnBag==='function')spawnBag(); // throwing ALWAYS puts a bag of smalls on the belt
-  if(typeof spawnThrow==='function')spawnThrow(); // v3.5.69 the tumbling-box ricochet
-  // v3.5.65 escalating throw penalty \u00b7 PERFECT SYMMETRY with the drink rule (4th throw -100, 5th -200, 6th -300...).
+  // v3.5.203 no tumbling-box ricochet (spawnThrow) any more: nothing gets thrown, the coworker takes the box by hand
+  // v3.5.65 escalating flag penalty: 4th flag -100, 5th -200, 6th -300... (v3.5.203 the matching drink penalty is gone).
   // Kills the "throw forever, place 1000 smalls from bags" exploit: you CAN do it, it just goes deep score-negative.
   var _tpen=0;
   if((G.throws||0)>3){_tpen=(G.throws-3)*100;bankScore(-_tpen);} // v3.5.156 banked
   if(typeof playSfx==='function')playSfx('place');
   if(typeof refillBelt==='function')refillBelt();
-  _openThrowWindow(_tpen); // v3.5.67 THE HEY WINDOW \u00b7 a bag hits the belt, manager says "HEY ,"; DRINK within 2s to cover it or it's a violation
+  _flagNote(_tpen); // v3.5.203 a plain note; the 2-second cover-it-with-water window is gone
   updateSafetyHUD();
 }
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -6998,7 +7079,7 @@ function getPPH(){var el=elapsed();if(el<PPH_FLOOR_S)return 0;var wb=(S._wallBas
 // v3.5.81 PER-WALL STATS · the report's WALL column must show the LAST SEALED wall, not the empty live one,
 // and MECHANICS/SAFETY need per-wall numbers. We baseline the cumulative counters at each wall START, then
 // store the DELTA (this wall's own totals) + the wall's quality snapshot in wallLog on finalize.
-var _WALL_COUNTERS=['rotations','lifts','rejects','stagingActions','crunches','collapses','recoveries','drinks','hazShelfLocks','nests','doubleLocks','shelvesLocked','bagsPlaced','bagsBroken','totalPieces','boxPieces','throws','safetiesWashed','safetiesThrown','waterSabotage'];
+var _WALL_COUNTERS=['rotations','lifts','rejects','stagingActions','crunches','collapses','recoveries','drinks','hazShelfLocks','nests','doubleLocks','shelvesLocked','bagsPlaced','bagsBroken','totalPieces','boxPieces','throws','safetiesWashed','drinkBonuses'];
 function wallBaseline(){ // call at each wall START
   S._wallBase=S._wallBase||{};var i;
   for(i=0;i<_WALL_COUNTERS.length;i++)S._wallBase[_WALL_COUNTERS[i]]=S[_WALL_COUNTERS[i]]||0;
@@ -7244,7 +7325,7 @@ function sealWall(reason){
   if(gameMode==='daily'||gameMode==='shift')liCount('wall_done',gameMode); // v3.5.202 daily total, first seal of a wall only
   if(typeof zLog==='function')zLog('seal',{density:Math.round((typeof wallSolidity==='function'?wallSolidity(G.grid):0)*100),fill:packPct(),pph:getPPH(),pieces:(typeof gridPieceCount==='function'?gridPieceCount():placed)}); // v3.5.132 raw timeline
   if(typeof gcurFlash==='function')gcurFlash('finish',1300); // v3.5.22 finish-glove on sealing the wall
-  if((G.drinks||0)>=2){bankScore(HYDRATION_BONUS);showBanner('\ud83d\udca7 HYDRATED \u00b7 +'+HYDRATION_BONUS+' CUBES (took your water breaks).','ok',2200);} // v3.5.156 banked
+  // v3.5.203 the hydration bonus is paid at the drink now (takeDrink), not here at the seal
   if(typeof playSfx==='function')playSfx('win');
   var _dens=Math.min(1,(typeof wallSolidity==='function')?wallSolidity(G.grid):(countFilled()/(GW*GH))); // v3.5.50 SOLIDITY (gapless fill up to wall height), not raw volume
   var _sealPay=Math.round(LOAD_SEALED_BONUS*_dens); // seal payout SCALED BY FILL \u00b7 a loose wall earns a loose payout (kills the panic-bail-at-threshold A+ exploit)
@@ -9940,6 +10021,7 @@ var trainingState={playing:false,speed:1,stepIdx:0,stepTimer:null,loopCount:0};
 var _demoMenuMode=false,_demoScript=null;
 function startMenuDemo(){
   gameMode='training';
+  if(typeof updateWaterHUD==='function')updateWaterHUD(); // v3.5.203 the watch-only demo hides the bottle
   G={grid:makeGrid(),belt:[],ncSlots:Array(MAX_NC_SLOTS).fill(null),drinks:0,
      bagSlots:Array(MAX_BAG_SLOTS).fill(null),
      score:0,cog:.5,support:1,integrity:100,tetrisTotal:0,tetrisRows:{},
@@ -10273,8 +10355,8 @@ var TUT_SCRIPT=[
   {tip:'Now stack THIN and tall on this stub · and WATCH. Pillars come down. Wide base, narrow top.', place:{w:1,h:2}, tx:13, ty:6, learn:'collapse', fall:true, pre:[{x:13,y:9,w:1,h:1},{x:13,y:8,w:1,h:1}]},
   {tip:'The chute backed up while you watched that. Hit ⚡ BREAK JAM to release the next batch onto the belt.', act:'breakjam', learn:'breakjam'},
   // ── SAFETY + FINISH ──
-  {tip:'Take a WATER break · staying hydrated clears an open warning. Tap 💧 WATER.', act:'water', learn:'water'},
-  {tip:'Stuck reaching the top? FLAG a hand for a smalls bag · but leaning on it draws heat. Tap 🙋 FLAG.', act:'flag', learn:'flag'},
+  {tip:'Take a WATER break. Your bottle holds 4 drinks a trailer, and the first two pay a bonus when you load a few boxes between them. Tap 💧 WATER or the bottle.', act:'water', learn:'water'},
+  {tip:'Stuck reaching the top? FLAG a hand: a coworker takes the box you are holding and leaves a bag of smalls. More than three a trailer costs cubes. Tap 🙋 FLAG.', act:'flag', learn:'flag'},
   {tip:'You are packed enough to dispatch. Hit ✓ FINISH (top-right) to SEAL the wall.', act:'seal', learn:'seal'}
 ];
 // checklist labels, in the sign-off order (LOCK IN culminates last, per Vince)
@@ -10309,7 +10391,7 @@ var TRAIN_LEARN=[
 ];
 function startTrainDemo(){
   hideStartMenu();
-  gameMode='training';_demoMenuMode=false;
+  gameMode='training';_demoMenuMode=false;if(typeof updateWaterHUD==='function')updateWaterHUD(); // v3.5.203 the watch-only demo hides the bottle
   liCount('mode_start','training'); // v3.5.202 daily total
   TRAIN={script:DEMO_SCRIPT.slice(0,17).concat(DEMO_TOP).concat([DEMO_SCRIPT[17]]),step:0};
   _demoScript=TRAIN.script;
@@ -11207,7 +11289,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.202</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.203</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
@@ -11239,16 +11321,14 @@ function psBuild(lifeState,life){
       row('\u00b7 Segregation',null,ic('SEGREGATION'),null,true)+
       row('\u00b7 Killer',null,ic('KILLER'),null,true)+
       row('\u00b7 Collapse',null,ic('COLLAPSE'),null,true)+
-      row('\u00b7 No-hydration',null,ic('HYDRATION_100'),null,true)+
       row('Warnings (total)',lwv('warningsWall'),(S.warnings||[]).length,null)+
       row('\u00b7 washed / mitigated',lwv('safetiesWashed'),S.safetiesWashed||0,null,true)+
-      row('\u00b7 thrown-away',lwv('safetiesThrown'),S.safetiesThrown||0,null,true)+
-      row('Water sabotage flags',lwv('waterSabotage'),S.waterSabotage||0,null)+
       row('Sent to training',null,S.practiceKicks||0,null)+
       row('Crunches',lwv('crunches'),S.crunches||0,'crunches')+
       row('Collapses',lwv('collapses'),S.collapses||0,'collapses')+
       row('Recoveries',lwv('recoveries'),S.recoveries||0,'recoveries')+
       row('Hydration breaks',lwv('drinks'),S.drinks||0,'hydration_breaks')+
+      row('\u00b7 with the rhythm bonus',lwv('drinkBonuses'),S.drinkBonuses||0,null,true)+
       row('SPEC left sitting',null,S.ncDwellWarn||0,'nc_dwell_warnings')+
       row('Smalls dwell warnings',null,S.smallsDwellWarn||0,'smalls_dwell_warnings')+'</div>';
 
