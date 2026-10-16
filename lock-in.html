@@ -45,6 +45,39 @@ small,sub,sup{font-size:11px;}
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
+   CHANGE LOG v3.5.206 - STAGE REPLACES FLAG, A REAL SPECIAL HANDLING BUTTON, AND THE AUDIT FIXES.
+     Vince (2026-10-16): "we need to remove the 'flag' for 'stage' and find somewhere to put the staged boxes, limit
+     the amount that can be staged" / SPEC "should be a big white background, red-candy-striped hazmat looking button
+     with clear, legible text that says SPECIAL HANDLING" / "F stage, H special handling, R rotate, B break jam, P
+     pause, W water. AND MOVEMENT IS ARROWS-BASED." / special handling at wall start: "At most 4".
+     PART 1, audit fixes:
+       (1) The seal meter is readable: its text joins the dark-surface ink scope (the % values measured 1.03:1).
+       (2) 27 empty values in the game and 5 in /me/ showed a bare "," left by an old dash sweep; they show "·".
+       (3) BREAK JAM no longer hangs over from the last wall: the chute tick refreshes it every frame, and
+           updateChuteUI writes to the page only when something changed.
+       (4) A Trailer-Load or shift wall starts with at most NC_START_MAX=4 special-handling pieces (it opened at
+           6/8 or fuller in 57% of fresh walls). Carried pieces count toward the 4; a capped spawn never raises the
+           overload. The daily keeps its fixed 6-piece loadout (v3.5.192).
+       (5) The smalls counter counts only real smalls; (6) a click on a play control hands focus back to the wall.
+     PART 2, STAGE:
+       (7) F (or the STAGE button) sets the box in your hand down on the staging floor: STAGE_MAX=3 spots, the
+           front chute box free, a deeper one PRESELECT_COST per box reached past. Full = refused, box stays in hand.
+           F with empty hands picks up the box that has waited longest; the button with empty hands opens the
+           staging wheel. Holding a chute box, pick a staged one in the wheel and they trade places.
+       (8) A staged box scores like a fresh box. All spots full while you load STAGE_DWELL=5 more = an AISLE
+           warning, settled only by loading a staged box; a second one while it is open is an incident.
+       (9) Staged boxes ride to the next wall. When the run ends, each one is left on the dock: -STAGE_LEFT_COST
+           (100) each, never taking the wall below 0, with a line on the end screen.
+      (10) FLAG is gone: its cooldown, its charge past three a wall, the coworker bag, and the daily DTB bag.
+           Staging draws no random numbers, so every daily player still gets the same boxes in the same order.
+      (11) SPECIAL HANDLING is a real button: black words on a white plate inside a red and white candy-stripe
+           border (19.4:1), a count chip that turns red at 8/8 FULL, no blink. H takes the next piece.
+      (12) The wheel tiles show the box itself, are buttons, and their caption floats above the wheel instead of
+           pushing ROT off the strip. Keys: F stage, H special handling, W water, P pause, with R and B as before.
+      (13) The saved session records stageSets, stagePlaced, stageLeft and aisleWarnings. privacy.html says the game
+           saves "boxes you staged, picked up again, or left on the dock" (his words) in place of "flags for help".
+     Tests (every network call blocked): t206a 22/22, t206b 39/39, water 27/27, t205 101/101.
+
    CHANGE LOG v3.5.205 - READY FOR GOODWILL: SIGN-OUT STICKS, NO HALL OF SHAME, ONE COACH VOICE, LESS DATA KEPT.
      Vince (2026-10-16): "if someone signs out they should remain signed out." / "hall of shame. probably need to
      remove anything negative before public-facing real talk." / "remove the hub voice lines too ... I'LL BRING
@@ -2409,6 +2442,32 @@ body.m-portrait .stg-wheel{bottom:288px;}
 .stg-brk:active{background:#fff;}
 .stg-sep{cursor:pointer;padding:6px 12px;min-height:24px;border-radius:6px;background:rgba(200,121,30,.16);border:2px solid var(--btn-line);font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;color:var(--acc-bright);font-size:13px;white-space:nowrap;}
 .stg-sep::after{content:' ✕';color:var(--t2);font-family:monospace;font-size:11px;}
+/* v3.5.206 SPECIAL HANDLING plate (Vince: a big white, red candy-striped hazmat-looking button). Black words on a
+   solid white plate inside a red and white stripe border. Full = a red count chip and a ring, never an opacity blink
+   (the old pill's blink dropped its label to 1.36:1). #0d0d0d on #fff = 19.4:1; white on #0d0d0d = 19.4:1; on #a00d24 = 8.2:1. */
+.sh-plate{display:inline-flex;align-items:stretch;flex:none;padding:5px;min-height:44px;border:0;border-radius:6px;cursor:pointer;background:repeating-linear-gradient(45deg,#c8101e 0 7px,#ffffff 7px 14px);}
+.sh-plate .sh-face{display:inline-flex;align-items:center;gap:8px;background:#ffffff;border-radius:3px;padding:2px 9px;}
+.sh-word{font-family:'Barlow Condensed',system-ui,sans-serif;font-weight:700;font-size:19px;line-height:1;letter-spacing:.4px;color:#0d0d0d;white-space:nowrap;}
+.sh-chip{font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:bold;color:#ffffff;background:#0d0d0d;border-radius:4px;padding:3px 6px;white-space:nowrap;}
+.sh-plate .stg-pie{border-color:#0d0d0d;}
+.sh-plate.s-crit .sh-chip{background:#a00d24;}
+.sh-plate.s-crit{box-shadow:0 0 0 2px #a00d24;animation:shring 1.2s ease-in-out infinite;}
+@keyframes shring{0%,100%{box-shadow:0 0 0 2px #a00d24;}50%{box-shadow:0 0 0 6px rgba(160,13,36,.45);}}
+@media (prefers-reduced-motion:reduce){.sh-plate.s-crit{animation:none;}}
+.sh-plate:active{transform:scale(.97);}
+.sh-plate:focus-visible,#stage-btn:focus-visible,.stg-tile:focus-visible{outline:3px solid #2f7de1;outline-offset:2px;}
+body.m-portrait .sh-word{font-size:15px;}
+/* v3.5.206 STAGE · yellow floor-tape button with a fixed width so the count never shifts the strip.
+   #141414 on #ffd21a = 13.1:1; on the FULL state #b8950f = 6.6:1. */
+.strip-act.sa-stage{background:#ffd21a;color:#141414;min-width:150px;gap:7px;} /* gap: inline-flex drops the space before the count */
+.strip-act.sa-stage.s-full{background:#b8950f;color:#141414;}
+/* v3.5.206 the tray caption floats above the wheel instead of sitting inside the strip (it pushed FLAG and ROT off screen) */
+#ov-staging .stg-sep{position:fixed;left:50%;transform:translateX(-50%);bottom:232px;pointer-events:auto;background:#1c1410;color:#f3c98a;border-color:#c8791e;z-index:1;}
+body.m-portrait #ov-staging .stg-sep{bottom:404px;max-width:92vw;white-space:normal;text-align:center;}
+/* v3.5.206 wheel tiles carry the box art; fixed light ink (the theme ink measured 1.12:1 on the dark tile) */
+.stg-tile{width:64px;height:62px;color:#f0e6d4;}
+.stg-tile .d{color:#f3c98a;}
+.stg-art{display:block;width:52px;height:34px;pointer-events:none;}
 .stg-empty{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);white-space:nowrap;color:var(--t3);font-size:12px;background:rgba(20,14,9,.95);padding:6px 12px;border-radius:6px;pointer-events:auto;}
 
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
@@ -3567,12 +3626,11 @@ body[data-cb="trit"]{
                 <div class="conv-lbl" style="display:flex;align-items:center;gap:8px;"><span id="chute-light" class="chute-light cl-ok" title="Chute flow"></span><button id="breakjam-btn" class="bj-btn" onclick="breakJam()" style="display:none">📦 BREAK JAM</button></div>
         <button id="water-side" class="strip-act sa-water" onclick="takeDrink()" title="Drink water · 4 a trailer · 6s between drinks" aria-label="Drink water. 0 of 4 drinks this trailer">💧 WATER 0/4</button>
         <div class="conv-lbl" style="display:flex;align-items:center;gap:7px;">
-          <span class="stg-light" id="stg-nc" onclick="openStagingPopup('nc')" title="Special handling · too big, heavy, or hazardous for the belt. Load it low."><b>SPEC</b><span class="stg-pie" id="stg-nc-pie"></span><span id="stg-nc-n">0/8</span></span>
-          <span class="stg-sep" id="stg-sep" onclick="stgClose()" style="display:none;"></span>
+          <button type="button" class="sh-plate" id="stg-nc" onclick="openStagingPopup('nc')" title="Special handling (H): too big, heavy or hazardous for the belt. Load it low." aria-label="Special handling. 0 of 8. Too big, heavy or hazardous for the belt. Load it low. Key H."><span class="sh-face"><span class="sh-word">SPECIAL HANDLING</span><span class="stg-pie" id="stg-nc-pie"></span><span class="sh-chip" id="stg-nc-n">0/8</span></span></button>
           <span class="stg-light" id="stg-bag" onclick="openStagingPopup('bag')" title="Smalls staging" style="display:none;"><b>SM</b><span class="stg-pie" id="stg-bag-pie"></span><span id="stg-bag-n">0/8</span></span>
         </div>
         <span class="conv-lbl" id="safety-live" style="font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:bold;letter-spacing:.5px;" title="Live safety · open warnings / incidents on record"></span>
-        <button id="throw-side" class="strip-act sa-throw" onclick="throwBox()" title="Coworker tosses you a bag · overuse draws heat · 5s.">🙋 FLAG</button>
+        <button id="stage-btn" class="strip-act sa-stage" type="button" onclick="stageButton()" title="STAGE (F): set the box in your hand down beside the wall. 3 spots. With empty hands, choose a staged box to pick back up." aria-label="Stage. 0 of 3 staged. Key F.">⬇ STAGE <span id="stage-n">0/3</span></button>
         <button id="rot-btn" onclick="rotateSel()">↻ ROT [R]</button>
       </div>
       <canvas id="belt-canvas" style="display:none;width:100%;touch-action:none;"></canvas>
@@ -3580,7 +3638,7 @@ body[data-cb="trit"]{
   </div>
 
   <!-- v3.4.11 NC/SMALLS staging popup (selector replaces the floor-corner slots) -->
-  <div id="ov-staging"><div class="stg-wheel"><div class="stg-tiles" id="stg-tiles"></div></div></div>
+  <div id="ov-staging"><button type="button" class="stg-sep" id="stg-sep" onclick="stgClose()" style="display:none;"></button><div class="stg-wheel"><div class="stg-tiles" id="stg-tiles"></div></div></div>
 
   <!-- v3.5.37 BOTTOM CONSOLE DRAWER · hosts OPERATIONS (live stats) + LINEHAUL (full log); ADMIN opens the pause surface -->
   <div id="console-drawer">
@@ -3884,6 +3942,7 @@ var FLOW_MIN=3, FLOW_STEP=25; // v3.5.147 FLOW streak: consecutive clean placeme
 var RECOVERY_BONUS=400, CRUNCH_PENALTY=300, COLLAPSE_INT_COST=18;
 var LOAD_SEALED_BONUS=2500, HAZMAT_SHELF_BONUS=1500; // v2.1.11 hierarchy: SEAL #1, HAZMAT SHELF #2
 // v3.5.203 HYDRATION_BONUS (300 at the seal) retired: drinks 1 and 2 pay WATER_BONUS when you take them (takeDrink)
+var STAGE_MAX=3,STAGE_DWELL=5,STAGE_LEFT_COST=100; // v3.5.206 STAGE: spots, placements at full before an AISLE warning, cost per box left on the dock
 var PRESELECT_COST=25; // v2.1.3: per depth-step docked for reaching past the front belt piece
 var COLUMN_SEAM_PENALTY=100; // v2.1.4: per aligned-seam (running-bond) violation
 // HAZMAT: dangerous goods must load low. HAZMAT_MAX_FRAC=0.5 => bottom half only.
@@ -4317,7 +4376,8 @@ function zBuildSession(){
       hydrationBreaks:S.drinks||0, ncDwellWarn:S.ncDwellWarn||0, smallsDwellWarn:S.smallsDwellWarn||0,
       rotations:S.rotations||0, lifts:S.lifts||0, rejectedDrops:S.rejects||0,
       bagsBroken:S.bagsBroken||0, bagsPlaced:S.bagsPlaced||0, hazmatLocks:S.hazShelfLocks||0,
-      stagingActions:S.stagingActions||0, bonuses:_bonuses
+      stagingActions:S.stagingActions||0, bonuses:_bonuses,
+      stageSets:S.stageSets||0, stagePlaced:S.stagePlaced||0, stageLeft:S.stageLeft||0, aisleWarnings:S.aisleWarnings||0
     },
     incidents:inc, events:ZDATA.events||[]};
 }
@@ -6139,7 +6199,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   placed++;
   if(!startT)startT=Date.now(); // v3.5.144 THE CLOCK STARTS ON THE FIRST PIECE · elapsed / PPH never count the time before you place anything (fair on mobile, where the opening piece is slower). startT is null from mode-start until here.
   if(typeof gcurFlash==='function')gcurFlash('drop',420); // v3.5.20 drop-glove on a successful place
-  S.totalPieces=(S.totalPieces||0)+1; if(source==='bag'&&(box.isBag||box.type==='small'))S.bagsPlaced=(S.bagsPlaced||0)+1; // v2.1.7; v3.5.206 only real smalls (a regular box from that lane counted too)
+  S.totalPieces=(S.totalPieces||0)+1; if(source==='bag'||box._fromStage){S.stagePlaced=(S.stagePlaced||0)+1;box._fromStage=false;} if(source!=='bag')stageAisleTick(); if(source==='bag'&&(box.isBag||box.type==='small'))S.bagsPlaced=(S.bagsPlaced||0)+1; // v2.1.7; v3.5.206 only real smalls (a regular box from that lane counted too)
   if(!(box.type==='small'||box.isBag)&&!((box._gen||0)>0))S.boxPieces=(S.boxPieces||0)+1; // v3.5.90 PPH = REAL freight only; v3.5.99 first placement ONLY · a re-placed (churned) box earns ZERO pph, so the autoclicker's place-lift-place spam gains nothing
   // v3.5.142 CEILING SMALLS-BAG BONUS · a 3x3 bag stuffed against the trailer roof (top edge at row 0) reclaims the dead air up top. Huge, once per bag (feedback only; calcScore scores the live wall). 5 bags fill a ceiling course (15 of 17 cells).
   if(box.isBag&&gy===0&&!box._bagCeilAwarded){
@@ -6399,10 +6459,10 @@ function logIncident(type,cls){
 // resolves only a HYDRATION warning, and FLAG no longer opens a cover window. Hazmat-high and collapses are incidents outright \u00b7 no
 // pardon. Washed safeties are STILL published (the "1501 safeties, 1490 for throwing" bit).
 var SAFETY_PRACTICE_THRESHOLD=5;
-var SAFETY_MINOR=['HYDRATION','TIRE_SIDEWAYS','SP_DWELL','SMALLS_DWELL','THROW','FRAGILE_CRUSH']; // warn-eligible; a locked shelf clears one (HYDRATION clears only by drinking)
+var SAFETY_MINOR=['HYDRATION','TIRE_SIDEWAYS','SP_DWELL','SMALLS_DWELL','THROW','FRAGILE_CRUSH','AISLE']; // warn-eligible; a locked shelf clears one (HYDRATION clears only by drinking)
 function _sfMinor(o){return SAFETY_MINOR.indexOf(o)>=0;}
 function _sfInit(){S.warnings=S.warnings||[];S.incidents=S.incidents||[];}
-function _sfLabel(o){return {HYDRATION:'hydration',TIRE_SIDEWAYS:'sideways tire',TIRE_STACK:'stacked tires',THROW:'over-flagging for help',FRAGILE_CRUSH:'crushed fragile',SP_DWELL:'staging dwell',SMALLS_DWELL:'smalls dwell',HAZMAT_HIGH:'hazmat-high',HAZMAT_CRUSH:'hazmat-crush',SEGREGATION:'segregation',KILLER:'killer pair',COLLAPSE:'collapse',HYDRATION_100:'no-hydration'}[o]||(''+o).toLowerCase();}
+function _sfLabel(o){return {HYDRATION:'hydration',TIRE_SIDEWAYS:'sideways tire',TIRE_STACK:'stacked tires',THROW:'over-flagging for help',AISLE:'blocked aisle',FRAGILE_CRUSH:'crushed fragile',SP_DWELL:'staging dwell',SMALLS_DWELL:'smalls dwell',HAZMAT_HIGH:'hazmat-high',HAZMAT_CRUSH:'hazmat-crush',SEGREGATION:'segregation',KILLER:'killer pair',COLLAPSE:'collapse',HYDRATION_100:'no-hydration'}[o]||(''+o).toLowerCase();}
 // v3.5.68 WRITE-UP SYSTEM \u00b7 some infractions are "bad the first time" (obvious hazards \u2192 instant paperwork);
 // everything else accumulates and gets documented every 3rd violation. The write-up STOPS the game to be signed.
 var WRITEUP_POOL=['HAZMAT_HIGH','HAZMAT_CRUSH','KILLER','SEGREGATION','TIRE_STACK']; // immediate write-up
@@ -6473,7 +6533,7 @@ function safetyWarn(offense,msg){
   for(i=0;i<S.warnings.length;i++){if(S.warnings[i].offense===offense&&!S.warnings[i].mitigated){prior=S.warnings[i];break;}}
   if(prior){safetyIncident(offense,'Repeat '+_sfLabel(offense)+' \u00b7 an unmitigated warning became an incident.');return;}
   S.warnings.push({offense:offense,t:Date.now(),wall:(S.truck||1),mitigated:false,washedBy:null});
-  var _fix=(offense==='HYDRATION')?'FIX IT: 💧 drink water.':'FIX IT: 🔒 lock a full shelf.'; // v3.5.203 the real fix for THIS offense (water no longer washes everything)
+  var _fix=(offense==='HYDRATION')?'FIX IT: 💧 drink water.':(offense==='AISLE')?'FIX IT: ⬇ load a staged box.':'FIX IT: 🔒 lock a full shelf.'; // v3.5.203 the real fix for THIS offense (water no longer washes everything)
   showBanner('⚠ SAFETY WARNING · '+msg+'<br><span style="font-size:.72em">'+_fix+' Repeat it before it\u2019s fixed = INCIDENT.</span>','warn',3200);
   if(typeof playSfx==='function')playSfx('dwell');
   updateSafetyHUD();
@@ -6489,7 +6549,7 @@ function safetyIncident(offense,msg){
 // clear the most-recent unmitigated MINOR warning; returns true if one was washed.
 function mitigateWarn(source){
   _sfInit();var i,w=null;
-  for(i=S.warnings.length-1;i>=0;i--){if(!S.warnings[i].mitigated&&_sfMinor(S.warnings[i].offense)&&S.warnings[i].offense!=='HYDRATION'){w=S.warnings[i];break;}} // v3.5.203 thirst is fixed by water, not by a shelf
+  for(i=S.warnings.length-1;i>=0;i--){if(!S.warnings[i].mitigated&&_sfMinor(S.warnings[i].offense)&&S.warnings[i].offense!=='HYDRATION'&&S.warnings[i].offense!=='AISLE'){w=S.warnings[i];break;}} // v3.5.203 thirst is fixed by water, not by a shelf
   if(!w)return false;
   w.mitigated=true;w.washedBy=source;
   S.safetiesWashed=(S.safetiesWashed||0)+1;   // STILL PUBLISHED on the record
@@ -6504,7 +6564,7 @@ function sendToPractice(){
     S.warnings=[]; // new wall, warnings reset (incidents/record persist)
     G.grid=makeGrid();placed=0;G.score=0;G.cog=.5;G.support=1;G.integrity=100;G._finalized=false;G._practiceSent=false;
   try{liCertReset();}catch(_cr0){} // v3.5.185 the certificate never carries to the next wall
-    G.drinks=0;G.throws=0;G._hyd75=false;G._hyd100=false;G.tetrisTotal=0;G.tetrisRows={};G.tetrisPaid={};G.bulkheadRows={};G.bulkheadCount=0;
+    G.drinks=0;G.throws=0;G.stageDwell=0;G._hyd75=false;G._hyd100=false;G.tetrisTotal=0;G.tetrisRows={};G.tetrisPaid={};G.bulkheadRows={};G.bulkheadCount=0;
     G.practice=true;startT=null; // v3.5.144 clock deferred to first piece
     if(typeof wallBaseline==='function')wallBaseline(); // v3.5.81 per-wall stat baseline (practice trailer)
     selBeltIdx=null;selBeltRot=0;selNC=-1;selBag=-1;
@@ -6539,45 +6599,169 @@ function checkHydrationSafety(){
     else safetyWarn('HYDRATION','topped the wall with no water all trailer \u00b7 drink before the next one. (Nice roof, by the way.)');
   }
 }
-// v3.5.203 THE HEY WINDOW IS GONE. Since v3.5.67 a FLAG opened a 2-second window: drink inside it and the
-// manager "didn't see" it; miss it and it became a THROW safety warning. That paid out for hiding a violation,
-// and water no longer settles anything but thirst. A FLAG is now a plain ask for a hand: a coworker takes the
-// box you are holding and leaves a bag of smalls. Its cost is the 5s cooldown and the escalating cube penalty
-// past three flags a wall. (Next pass: FLAG becomes STAGE, the box set down on the floor where you can get it back.)
-function _flagNote(pen){
-  showBanner('🙋 HAND FLAGGED \u00b7 a coworker took that box and left you a bag of smalls.'+((pen>0)?('<br><span style="font-size:.72em">More than three flags this trailer: \u2212'+pen+' cubes.</span>'):''),(pen>0)?'warn':'',2000);
+// ═══ v3.5.206 STAGE (replaces FLAG) ═══
+// Vince 2026-10-16 ("STAGE rules: yes, as written"). A box that does not fit yet is set down on the staging floor
+// beside the wall. The floor is G.bagSlots (the old smalls lane, which nothing else fills any more), capped at STAGE_MAX
+// spots: OSHA 1910.176(a) says keep the aisle clear, and three average boxes cover the open floor in front of the wall.
+// Staging the front chute box is free; a deeper box costs PRESELECT_COST per box reached past, the same as placing it
+// from there. Picking a staged box up is free and it scores like a fresh box. All spots full while you load STAGE_DWELL
+// more boxes = an AISLE warning, fixed only by loading a staged box. Staged boxes ride to the next wall; any left when
+// the run ends cost STAGE_LEFT_COST each. Nothing here draws a random number, so every daily player gets the same boxes.
+// FLAG is gone with its cooldown, its escalating charge past three, and the coworker bag (the daily's DTB bag too).
+function stageCount(){if(typeof G==='undefined'||!G||!G.bagSlots)return 0;var n=0,i;for(i=0;i<G.bagSlots.length;i++)if(G.bagSlots[i])n++;return n;}
+function _stageFree(){var i;for(i=0;i<G.bagSlots.length;i++)if(!G.bagSlots[i])return i;return -1;}
+function _stageDeny(msg){if(typeof playSfx==='function')playSfx('deny');showBanner(msg,'warn',2200);}
+function stageHolding(){
+  if(typeof G==='undefined'||!G)return '';
+  if(selBeltIdx!==null&&G.belt&&G.belt[selBeltIdx])return 'belt';
+  if(selNC>=0&&G.ncSlots&&G.ncSlots[selNC])return 'nc';
+  if(selBag>=0&&G.bagSlots&&G.bagSlots[selBag])return 'bag';
+  return '';
 }
-// FLAG (the function keeps its old name, throwBox) \u00b7 a coworker takes the box in your hand and leaves a bag of smalls.
-function throwBox(){
-  if(gOver||typeof G==='undefined'||!G||!G.belt||!G.belt.length){if(typeof showBanner==='function'&&(!G||!G.belt||!G.belt.length))showBanner('Nothing in hand to flag for.','',1200);return;}
-  if(Date.now()-_lastThrowT<THROW_CD){showBanner('🙋 FLAG ON COOLDOWN · you can’t wave a coworker over back-to-back.','warn',1200);return;}
-  _lastThrowT=Date.now();_coolBtn('throw-side',THROW_CD);
-  if(typeof zLog==='function')zLog('flag',{n:(S.throws||0)+1}); // v3.5.132 raw timeline
-  if(TUTORIAL_MODE&&typeof tutAct==='function')tutAct('flag');
-  var idx=(selBeltIdx!=null)?selBeltIdx:0;if(idx<0||idx>=G.belt.length)idx=0;
-  G.belt.splice(idx,1);selBeltIdx=null;selBeltRot=0;
-  S.throws=(S.throws||0)+1;G.throws=(G.throws||0)+1;
-  // v3.5.168 (Gatekeeper) in DAILY spawnBag() no-ops (it would fork the seeded stream), so THROW silently
-  // returned nothing in the only ranked mode · full penalty, no bag. The daily bag is minted off the date seed
-  // + this wall's throw index, so it is identical for every player who throws the same number of times.
-  if(gameMode==='daily'){
-    G.throwN=(G.throwN||0)+1;
-    if(G.belt.length<BELT_PIECE_COUNT+5&&typeof makeBagPiece==='function'){
-      var _tb=makeBagPiece();
-      _tb.seed=100+Math.floor(mulberry32((DAILY.seed^Math.imul(G.throwN,0x27D4EB2F))>>>0)()*9800);
-      _tb.id='DTB'+G.throwN;
-      G.belt.push(_tb);
-    }
-  } else if(typeof spawnBag==='function')spawnBag(); // throwing ALWAYS puts a bag of smalls on the belt
-  // v3.5.203 no tumbling-box ricochet (spawnThrow) any more: nothing gets thrown, the coworker takes the box by hand
-  // v3.5.65 escalating flag penalty: 4th flag -100, 5th -200, 6th -300... (v3.5.203 the matching drink penalty is gone).
-  // Kills the "throw forever, place 1000 smalls from bags" exploit: you CAN do it, it just goes deep score-negative.
-  var _tpen=0;
-  if((G.throws||0)>3){_tpen=(G.throws-3)*100;bankScore(-_tpen);} // v3.5.156 banked
+// the reach charge a chute box at position idx costs, exactly as placeBox charges it
+function _stageReach(idx){
+  if(idx>0){
+    G.preselectDepth=(G.preselectDepth||0)+idx;
+    if(!G.preselectWarned){G.preselectWarned=true;showBanner('↩ REACHED PAST THE NEXT PIECE · cherry-picking costs efficiency. Take the front when it fits.','warn',2800);}
+  }
+}
+function _stageBeltOk(idx){
+  if(typeof isBeltFrozen==='function'&&isBeltFrozen()){_stageDeny('⛔ The belt is stopped · nothing comes off it right now.');return false;}
+  if(typeof isBeltHeld==='function'&&isBeltHeld(idx)){_stageDeny('⛔ That box is on an inspection hold · it stays on the chute.');return false;}
+  return true;
+}
+// set the chute box in hand down on the staging floor
+function stageSet(){
+  var idx=selBeltIdx;
+  if(!_stageBeltOk(idx))return false;
+  var slot=(stageCount()<STAGE_MAX)?_stageFree():-1;
+  if(slot<0){_stageDeny('STAGING FULL · '+STAGE_MAX+' of '+STAGE_MAX+'. Load a staged box first.');return false;}
+  _stageReach(idx);
+  var box=G.belt.splice(idx,1)[0];
+  box._stg=(box._stg||0)+1;box._stgT=Date.now();box._fromStage=true;
+  G.bagSlots[slot]=box;selBeltIdx=null;selBeltRot=0;hCell=null;
+  S.stageSets=(S.stageSets||0)+1;S.stagingActions=(S.stagingActions||0)+1;
+  if(typeof zLog==='function')zLog('stage',{n:S.stageSets});
+  if(CHUTE_JAM){jamCheck();}else{refillBelt();}
+  if(box._stg>=3&&typeof productivityLadder==='function')productivityLadder(box._stg); // the same box set down again and again
   if(typeof playSfx==='function')playSfx('place');
-  if(typeof refillBelt==='function')refillBelt();
-  _flagNote(_tpen); // v3.5.203 a plain note; the 2-second cover-it-with-water window is gone
-  updateSafetyHUD();
+  showBanner('⬇ STAGED · '+stageCount()+' of '+STAGE_MAX+' on the floor. F with empty hands picks it back up.','',1800);
+  if(TUTORIAL_MODE&&typeof tutAct==='function')tutAct('stage');
+  return true;
+}
+// holding a chute box, take a staged one: the two trade places (the staged box comes to the front of the chute, in hand)
+function stageSwap(idx){
+  var bi=selBeltIdx;
+  if(bi===null||!G.belt[bi]||!G.bagSlots[idx])return false;
+  if(!_stageBeltOk(bi))return false;
+  _stageReach(bi);
+  var cb=G.belt.splice(bi,1)[0],sb=G.bagSlots[idx];
+  cb._stg=(cb._stg||0)+1;cb._stgT=Date.now();cb._fromStage=true;
+  G.bagSlots[idx]=cb;sb._fromStage=true;
+  G.belt.unshift(sb);
+  selBeltIdx=0;selBeltRot=0;selBag=-1;selNC=-1;
+  S.stageSets=(S.stageSets||0)+1;S.stagingActions=(S.stagingActions||0)+1;
+  if(typeof zLog==='function')zLog('stage',{n:S.stageSets,swap:1});
+  if(typeof kbCenterCursor==='function')kbCenterCursor();
+  if(typeof playSfx==='function')playSfx('select');
+  showBanner('⇄ TRADED · the chute box is on the floor, the staged box is in your hand.','',1600);
+  if(TUTORIAL_MODE&&typeof tutAct==='function')tutAct('stage');
+  return true;
+}
+// empty hands: pick up the box that has waited longest
+function stagePickUp(){
+  var best=-1,bt=Infinity,i,b;
+  for(i=0;i<G.bagSlots.length;i++){b=G.bagSlots[i];if(b&&(b._stgT||0)<bt){bt=b._stgT||0;best=i;}}
+  if(best<0)return false;
+  selBag=best;selBeltIdx=null;selNC=-1;selBeltRot=0;
+  if(typeof kbCenterCursor==='function')kbCenterCursor();
+  if(typeof playSfx==='function')playSfx('select');
+  return true;
+}
+// F. Holding a chute box: set it down. Holding a staged box: set it back. Holding special handling: back on its rack.
+// Empty hands: pick up the box that has waited longest.
+function stageToggle(){
+  if(gOver||paused||typeof G==='undefined'||!G||!G.bagSlots)return;
+  var h=stageHolding();
+  if(h==='belt'){stageSet();}
+  else if(h==='bag'){selBag=-1;hCell=null;if(typeof playSfx==='function')playSfx('select');}
+  else if(h==='nc'){selNC=-1;selNCRot=0;hCell=null;if(typeof buildNCPanel==='function')buildNCPanel();if(typeof playSfx==='function')playSfx('select');}
+  else if(!stagePickUp()){showBanner('Nothing in hand. Pick a box on the chute, then press STAGE (F) to set it down.','',1800);}
+  if(STG_OPEN==='bag')stgRender();
+}
+// the STAGE button: sets down what you hold; with empty hands it opens the staging wheel so you can choose a box
+function stageButton(){
+  if(gOver||paused||typeof G==='undefined'||!G)return;
+  if(stageHolding()){stageToggle();return;}
+  if(stageCount()>0){openStagingPopup('bag');return;}
+  showBanner('Nothing in hand. Pick a box on the chute, then press STAGE to set it down.','',1800);
+}
+function throwBox(){stageButton();} // the old FLAG name, kept for any stale caller
+// AISLE: one placement from the chute or the special-handling rack while every spot is full
+function stageAisleTick(){
+  if(typeof G==='undefined'||!G)return;
+  if(stageCount()<STAGE_MAX){G.stageDwell=0;return;}
+  G.stageDwell=(G.stageDwell||0)+1;
+  if(G.stageDwell>=STAGE_DWELL){
+    G.stageDwell=0;S.aisleWarnings=(S.aisleWarnings||0)+1;
+    safetyWarn('AISLE','all '+STAGE_MAX+' staging spots stayed full while you kept loading · the aisle is blocked.');
+  }
+}
+// the floor dropped below full: the aisle is clear again, and an open AISLE warning is settled
+function stageAisleClear(){
+  if(typeof G==='undefined'||!G||stageCount()>=STAGE_MAX)return;
+  G.stageDwell=0;
+  if(typeof S==='undefined'||!S||!S.warnings)return;
+  var i,w,hit=false;
+  for(i=S.warnings.length-1;i>=0;i--){w=S.warnings[i];if(w.offense==='AISLE'&&!w.mitigated){w.mitigated=true;w.washedBy='aisle';hit=true;}}
+  if(hit&&typeof updateSafetyHUD==='function')updateSafetyHUD();
+}
+// the run is over: every box still staged was left on the dock. Once per run; it never takes this wall below 0.
+function stageLeftOnDock(){
+  if(typeof S==='undefined'||!S||S._stageLeftDone)return 0;
+  S._stageLeftDone=true;
+  var n=stageCount();S.stageLeft=n;S._stageLeftCost=0;
+  if(!n||typeof G==='undefined'||!G)return n;
+  var cost=Math.min(n*STAGE_LEFT_COST,Math.max(0,(typeof calcScore==='function')?calcScore():(G.score||0)));
+  if(cost>0)bankScore(-cost);
+  S._stageLeftCost=cost;
+  if(typeof zLog==='function')zLog('stageleft',{n:n,cost:cost});
+  return n;
+}
+function stageEndNote(){
+  if(typeof S==='undefined'||!S||!S.stageLeft)return '';
+  return ' · '+S.stageLeft+' box'+(S.stageLeft>1?'es':'')+' left on the dock'+((S._stageLeftCost||0)>0?(': −'+S._stageLeftCost):'');
+}
+// H: take the next special-handling piece into hand (cycles through the rack)
+function takeSpecialHandling(){
+  if(gOver||paused||typeof G==='undefined'||!G||!G.ncSlots)return;
+  var n=G.ncSlots.length,start=(selNC>=0)?selNC+1:0,k,i;
+  for(k=0;k<n;k++){
+    i=(start+k)%n;
+    if(G.ncSlots[i]){
+      selNC=i;selNCRot=0;selBeltIdx=null;selBag=-1;
+      if(typeof buildNCPanel==='function')buildNCPanel();
+      if(typeof kbCenterCursor==='function')kbCenterCursor();
+      if(typeof playSfx==='function')playSfx('select');
+      if(STG_OPEN)stgRender();
+      return;
+    }
+  }
+  if(typeof playSfx==='function')playSfx('deny');
+  showBanner('No special handling waiting.','',1200);
+}
+// the strip's STAGE count, every frame (writes only on a change)
+function stageHUD(){
+  var sb=document.getElementById('stage-btn'),sn=document.getElementById('stage-n');
+  if(sb&&sn){
+    var c=stageCount(),t=c+'/'+STAGE_MAX+(c>=STAGE_MAX?' FULL':'');
+    if(sn.textContent!==t){
+      sn.textContent=t;
+      sb.setAttribute('aria-label','Stage. '+c+' of '+STAGE_MAX+' staged'+(c>=STAGE_MAX?', full':'')+'. Key F.');
+      sb.classList.toggle('s-full',c>=STAGE_MAX);
+    }
+  }
+  stageAisleClear();
 }
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 
@@ -7209,7 +7393,7 @@ function getPPH(){var el=elapsed();if(el<PPH_FLOOR_S)return 0;var wb=(S._wallBas
 // v3.5.81 PER-WALL STATS · the report's WALL column must show the LAST SEALED wall, not the empty live one,
 // and MECHANICS/SAFETY need per-wall numbers. We baseline the cumulative counters at each wall START, then
 // store the DELTA (this wall's own totals) + the wall's quality snapshot in wallLog on finalize.
-var _WALL_COUNTERS=['rotations','lifts','rejects','stagingActions','crunches','collapses','recoveries','drinks','hazShelfLocks','nests','doubleLocks','shelvesLocked','bagsPlaced','bagsBroken','totalPieces','boxPieces','throws','safetiesWashed','drinkBonuses'];
+var _WALL_COUNTERS=['rotations','lifts','rejects','stagingActions','crunches','collapses','recoveries','drinks','hazShelfLocks','nests','doubleLocks','shelvesLocked','bagsPlaced','bagsBroken','totalPieces','boxPieces','throws','safetiesWashed','drinkBonuses','stageSets','stagePlaced'];
 function wallBaseline(){ // call at each wall START
   S._wallBase=S._wallBase||{};var i;
   for(i=0;i<_WALL_COUNTERS.length;i++)S._wallBase[_WALL_COUNTERS[i]]=S[_WALL_COUNTERS[i]]||0;
@@ -7478,6 +7662,7 @@ function sealWall(reason){
   if(gameMode==='level'){
     gOver=true;
     if(animF)cancelAnimationFrame(animF);
+    if(typeof stageLeftOnDock==='function')stageLeftOnDock(); // v3.5.206
     setTimeout(function(){showLevelEnd(reason,false);},800);
     return;
   }
@@ -7667,6 +7852,7 @@ function updateStagingLights(){
   if((gOver||paused)&&STG_OPEN)stgClose();
   _stgSet('nc',G.ncSlots.filter(Boolean).length,MAX_NC_SLOTS,NC_HAZARD_FILL,ncHazardFired);
   _stgSet('bag',G.bagSlots.filter(Boolean).length,MAX_BAG_SLOTS,BAG_DWELL_FILL,bagDwellFired);
+  stageHUD(); // v3.5.206 STAGE count + the AISLE all-clear
   if(STG_OPEN)stgRender(); // v3.4.14 recompute every frame; stgRender only touches the DOM when the HTML changes (no flicker, no stale lane-clear)
 }
 function _stgSet(key,used,max,warnFill,critFired){
@@ -7675,8 +7861,12 @@ function _stgSet(key,used,max,warnFill,critFired){
   var pct=Math.round(used/max*100), crit=(critFired||used>=max);
   var col=crit?'#c23a1a':(used>=Math.ceil(warnFill*max)?'#d4820f':'#1f9d57');
   if(pie)pie.style.background='conic-gradient('+col+' '+pct+'%, rgba(255,255,255,.13) 0)';
-  if(n)n.textContent=used+'/'+max;
-  el.className='stg-light'+(crit?' s-crit':'');
+  var _nt=used+'/'+max+((key==='nc'&&used>=max)?' FULL':'');if(n&&n.textContent!==_nt)n.textContent=_nt;
+  if(key==='nc'){ // v3.5.206 the SPECIAL HANDLING plate: no blink, a spoken count
+    var _cn='sh-plate'+(crit?' s-crit':'');if(el.className!==_cn)el.className=_cn;
+    var _al='Special handling. '+used+' of '+max+(used>=max?', full':'')+'. Too big, heavy or hazardous for the belt. Load it low. Key H.';
+    if(el.getAttribute('aria-label')!==_al)el.setAttribute('aria-label',_al);
+  } else el.className='stg-light'+(crit?' s-crit':'');
 }
 function openStagingPopup(type){
   if(gOver||paused)return;
@@ -7690,24 +7880,40 @@ function stgRender(){
   if(!STG_OPEN)return;
   var slots=(STG_OPEN==='nc')?G.ncSlots:G.bagSlots, sel=(STG_OPEN==='nc')?selNC:selBag;
   if(slots&&slots.every(function(s){return !s;})){stgClose();return;} // v3.5.21 lane cleared -> popup goes away on its own
-  var sep=document.getElementById('stg-sep');if(sep)sep.textContent=(STG_OPEN==='nc')?'SPECIAL HANDLING \u00b7 TOO BIG, HEAVY OR HAZARDOUS FOR THE BELT \u00b7 LOAD IT LOW':'SMALLS \u00b7 FILL THE GAPS';
+  var sep=document.getElementById('stg-sep');
+  if(sep){
+    var st=(STG_OPEN==='nc')?'SPECIAL HANDLING · TOO BIG, HEAVY OR HAZARDOUS FOR THE BELT · LOAD IT LOW':('STAGING · '+stageCount()+' OF '+STAGE_MAX+((selBeltIdx!==null)?' · PICK ONE TO TRADE':''));
+    if(sep.textContent!==st)sep.textContent=st;
+  }
   var box=document.getElementById('stg-tiles');if(!box)return;
   var items=[],i;for(i=0;i<slots.length;i++){if(slots[i])items.push({i:i,s:slots[i]});}
   var h;
-  if(!items.length){h='<div class="stg-empty">Lane clear \u00b7 nothing staged.</div>';}
+  if(!items.length){h='<div class="stg-empty">Lane clear · nothing staged.</div>';}
   else{
-    // v3.4.14 FLATTER wheel; double-click a BAG tile to break it into smalls; innerHTML set only when it changes
+    // v3.4.14 FLATTER wheel; v3.5.206 every tile shows the box itself (the old name text measured 1.12:1) and is a button
     var n=items.length, Rx=64+Math.min(7,n)*14, Ry=40+Math.min(7,n)*4, spread=Math.min(150,n*24)*Math.PI/180, k;h='';
     for(k=0;k<n;k++){
       var theta=(n===1)?0:(-spread/2+spread*(k/(n-1)));
       var x=Math.round(Math.sin(theta)*Rx), y=Math.round(-Math.cos(theta)*Ry);
-      var it=items[k], dim=(it.s.w||2)+'\u00d7'+(it.s.h||2), lbl=pfEsc(it.s.label||it.s.n||(STG_OPEN==='nc'?'SPEC':'BAG'));
-      // v3.5.114 tap-to-break chip (was ondblclick, which never fires on touch); event.stopPropagation so the tap doesn't also pick the tile
-      var brk=(STG_OPEN==='bag'&&it.s.isBag)?'<div class="stg-brk" onclick="event.stopPropagation();stgBreak('+it.i+')" title="Break the bag into loose smalls to fill gaps (costs PPH)">\u2702 BREAK</div>':'';
-      h+='<div class="stg-tile'+(sel===it.i?' sel':'')+'" style="left:'+x+'px;top:'+y+'px;" onclick="stgPick('+it.i+')"><div class="d">'+dim+'</div><div>'+lbl+'</div>'+brk+'</div>';
+      var it=items[k], dim=(it.s.w||2)+'×'+(it.s.h||2);
+      var nm=(STG_OPEN==='nc')?'Special handling':(it.s.isBag?'Staged bag of smalls':'Staged box');
+      // v3.5.114 tap-to-break chip; event.stopPropagation so the tap doesn't also pick the tile
+      var brk=(STG_OPEN==='bag'&&it.s.isBag)?'<div class="stg-brk" onclick="event.stopPropagation();stgBreak('+it.i+')" title="Break the bag into loose smalls to fill gaps (costs PPH)">✂ BREAK</div>':'';
+      h+='<div class="stg-tile'+(sel===it.i?' sel':'')+'" role="button" tabindex="0" aria-label="'+nm+', '+(it.s.w||2)+' by '+(it.s.h||2)+'" style="left:'+x+'px;top:'+y+'px;" onclick="stgPick('+it.i+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();stgPick('+it.i+');}"><canvas class="stg-art" width="52" height="34" data-i="'+it.i+'"></canvas><div class="d">'+dim+'</div>'+brk+'</div>';
     }
   }
-  if(box.innerHTML!==h)box.innerHTML=h;
+  if(box._stgH!==h||box._stgLane!==STG_OPEN){box._stgH=h;box._stgLane=STG_OPEN;box.innerHTML=h;_stgDrawArt(slots);}
+}
+// v3.5.206 paint each tile's own box with the chute's renderer, scaled to fit
+function _stgDrawArt(slots){
+  var cs=document.querySelectorAll('#stg-tiles canvas.stg-art'),k;
+  for(k=0;k<cs.length;k++){
+    var c=cs[k],i=+c.getAttribute('data-i'),p=slots&&slots[i];if(!p)continue;
+    var x=c.getContext('2d');if(!x)continue;
+    var dw=p.w||2,dh=p.h||2,cell=Math.min((c.width-4)/dw,(c.height-4)/dh),pw=dw*cell,ph=dh*cell;
+    x.clearRect(0,0,c.width,c.height);
+    try{drawBeltPiece(x,p,(c.width-pw)/2,(c.height-ph)/2,pw,ph,false,i,0);}catch(e){console.error('_stgDrawArt:',e);}
+  }
 }
 function stgBreak(idx){
   if(STG_OPEN!=='bag')return;
@@ -7716,7 +7922,11 @@ function stgBreak(idx){
 function stgPick(idx){
   if(!STG_OPEN)return;
   if(STG_OPEN==='nc'){if(!G.ncSlots[idx])return;selNC=(selNC===idx)?-1:idx;selBeltIdx=null;selBag=-1;selNCRot=0;}
-  else{if(!G.bagSlots[idx])return;selBag=(selBag===idx)?-1:idx;selBeltIdx=null;selNC=-1;}
+  else{
+    if(!G.bagSlots[idx])return;
+    if(selBeltIdx!==null&&G.belt[selBeltIdx]){stageSwap(idx);stgRender();return;} // v3.5.206 holding a chute box: trade places
+    selBag=(selBag===idx)?-1:idx;selBeltIdx=null;selNC=-1;
+  }
   if(typeof playSfx==='function')playSfx('select');stgRender();
 }
 function drawChuteImg(c){
@@ -9494,12 +9704,21 @@ document.addEventListener('keydown',function(e){
   }
   var ae=document.activeElement,tag=ae?ae.tagName:'';
   if(/^(INPUT|TEXTAREA|SELECT)$/.test(tag))return; // typing · never hijack (also stops R rotating mid-type)
+  if(e.code==='KeyP'&&!e.repeat&&(kbPlayActive()||(paused&&_shown('ov-pause')))){togglePause();e.preventDefault();return;} // v3.5.206 P pauses and resumes
   // v3.5.119 GATE R/B (and everything) BEHIND ACTIVE GAMEPLAY. kremsicle: "holding r makes the home-screen chat go
   // crazy; hold r + right-click on home screen, site reloads." R/rotateSel + B/breakJam fired on the MENU because they
   // sat ABOVE this gate. Now nothing keyboard-driven fires unless a wall is actually loading.
   if(!kbPlayActive())return;
   if(e.key==='r'||e.key==='R'){rotateSel();return;}
   if(e.key==='b'||e.key==='B'){if(typeof breakJam==='function')breakJam();return;}
+  // v3.5.206 F stage, H special handling, W water. e.code, so they work on any keyboard layout; a held key never repeats.
+  if(e.code==='KeyF'||e.code==='KeyH'||e.code==='KeyW'){
+    e.preventDefault();if(e.repeat)return;
+    if(e.code==='KeyF')stageToggle();
+    else if(e.code==='KeyH')takeSpecialHandling();
+    else if(typeof takeDrink==='function')takeDrink();
+    return;
+  }
   var act=/^(BUTTON|A)$/.test(tag);
   if(e.key==='ArrowLeft'){kbMove(-1,0);e.preventDefault();kbHint();}
   else if(e.key==='ArrowRight'){kbMove(1,0);e.preventDefault();kbHint();}
@@ -10260,7 +10479,7 @@ function runDemoStep(){
     if(pEl2)pEl2.textContent='THAT\'S A LOCKED-IN WALL';
     if(rEl2)rEl2.textContent='Every principle you just watched is a real hub loading rule. The wall is about to reset · study it again, or hit EXIT and load one yourself in SHIFT mode.';
     trainingState.stepTimer=setTimeout(function(){
-      G.grid=makeGrid();placed=0;G.cog=.5;G.tetrisRows={};G.tetrisPaid={};G.drinks=0;G.throws=0;
+      G.grid=makeGrid();placed=0;G.cog=.5;G.tetrisRows={};G.tetrisPaid={};G.drinks=0;G.throws=0;G.stageDwell=0;
       trainingState.stepIdx=0;
       if(trainingState.playing)runDemoStep();
     },4000/trainingState.speed);
@@ -10316,11 +10535,11 @@ var TUT_SCRIPT=[
   {tip:'The chute backed up while you watched that. Hit ⚡ BREAK JAM to release the next batch onto the belt.', act:'breakjam', learn:'breakjam'},
   // ── SAFETY + FINISH ──
   {tip:'Take a WATER break. Your bottle holds 4 drinks a trailer, and the first two pay a bonus when you load a few boxes between them. Tap 💧 WATER or the bottle.', act:'water', learn:'water'},
-  {tip:'Stuck reaching the top? FLAG a hand: a coworker takes the box you are holding and leaves a bag of smalls. More than three a trailer costs cubes. Tap 🙋 FLAG.', act:'flag', learn:'flag'},
+  {tip:'Box does not fit yet? STAGE it: press ⬇ STAGE (or F) to set the box in your hand down beside the wall. Three spots. With empty hands, F picks it back up.', act:'stage', learn:'stage'},
   {tip:'You are packed enough to dispatch. Hit ✓ FINISH (top-right) to SEAL the wall.', act:'seal', learn:'seal'}
 ];
 // checklist labels, in the sign-off order (LOCK IN culminates last, per Vince)
-var TUT_LEARN_LABELS=[['anchor','Anchor SP freight in a corner'],['balance','Balance both corners'],['foundation','Solid floor, no voids'],['place','Tile a shelf with the ghost'],['rotate','Rotate a piece (↻ ROT)'],['arrows','Keep arrows UP'],['heavy','Heavy freight low & flat'],['tire','Lay tires flat'],['stagger','Stagger the seams'],['hazmat','Hazmat low & apart'],['fragile','Close fragiles in, both sides'],['smalls','Break bags → fill gaps'],['collapse','Pillars collapse · taper them'],['breakjam','Break a chute jam'],['water','Take water breaks'],['flag','Flag a hand when stuck'],['seal','Seal & dispatch'],['lockin','LOCK IN a full shelf']];
+var TUT_LEARN_LABELS=[['anchor','Anchor SP freight in a corner'],['balance','Balance both corners'],['foundation','Solid floor, no voids'],['place','Tile a shelf with the ghost'],['rotate','Rotate a piece (↻ ROT)'],['arrows','Keep arrows UP'],['heavy','Heavy freight low & flat'],['tire','Lay tires flat'],['stagger','Stagger the seams'],['hazmat','Hazmat low & apart'],['fragile','Close fragiles in, both sides'],['smalls','Break bags → fill gaps'],['collapse','Pillars collapse · taper them'],['breakjam','Break a chute jam'],['water','Take water breaks'],['stage','Stage a box that does not fit yet'],['seal','Seal & dispatch'],['lockin','LOCK IN a full shelf']];
 
 function tutMakePiece(spec){
   spec=spec||{};
@@ -10446,7 +10665,7 @@ function tutBeat(){
     else{G.belt=[box];}
   }
   // ACT-beat setup: flag needs a belt piece to hand off; seal shows the FINISH button
-  if(s.act==='flag'){G.belt=[tutMakePiece({w:2,h:2})];}
+  if(s.act==='stage'){G.belt=[tutMakePiece({w:2,h:2})];selBeltIdx=0;selBeltRot=0;}
   if(s.act==='seal'){G.sealed=false;G.maxPack=true;var _tmf=document.getElementById('maxpack-finish');if(_tmf){_tmf.style.display='';_tmf.classList.add('pulse');}}
   // v3.5.141 highlight reflects the FORCED (rotated) footprint so it matches exactly where the piece lands
   var _tw=(s.place&&s.place.w)||2,_th=(s.place&&s.place.h)||2;if(s.place&&(s.rot||0)%2===1){var _sw=_tw;_tw=_th;_th=_sw;}
@@ -10816,7 +11035,7 @@ function nextTrailer(){
     G.grid=makeGrid();
     G.score=0;G.cog=.5;G.support=1;G.integrity=100;G._finalized=false;G._hyd75=false;G._hyd100=false;S.warnings=[]; // v3.5.59 fresh wall: reset open warnings + hydration flags (incidents/record persist)
     G.tetrisTotal=0;G.tetrisRows={};G.tetrisPaid={};G.bulkheadRows={};G.bulkheadCount=0;
-    G.brickAwarded=false;G.crunchCount=0;G.hazViolations=0;G.recoveryCount=0;G.ncPlaced=0;G.drinks=0;G.throws=0;
+    G.brickAwarded=false;G.crunchCount=0;G.hazViolations=0;G.recoveryCount=0;G.ncPlaced=0;G.drinks=0;G.throws=0;G.stageDwell=0;
     G.preselectDepth=0;G.preselectWarned=false;G.seamWarned=false;G.segWarned=false;
     G.beltSinceNC=0;G.beltSinceBag=0;
     G.practice=false; // v3.5.161 a practice kick lasts ONE trailer · the next wall is real freight (DISPATCH clock back on)
@@ -10883,7 +11102,7 @@ function endGameShift(reason){
     var _inc=(S.incidents||[]).length;document.getElementById('es-incidents').textContent=_inc+(_inc>=2?' ⚠':'');
     fillTelemetryTiles();if(typeof zEndSession==='function')zEndSession();
     document.getElementById('end-title').innerHTML='SHIFT<br>COMPLETE';
-    document.getElementById('end-sub').textContent=reason+' · '+sessionMins+'min session · '+shiftState.walls+' walls loaded';
+    document.getElementById('end-sub').textContent=reason+' · '+sessionMins+'min session · '+shiftState.walls+' walls loaded'+stageEndNote();
   }catch(_e){liShowErr('endGameShift',_e);}
   if(typeof fillEndHeadline==='function')fillEndHeadline(); // v3.5.149 headline numbers + collapse the full breakdown
   var _ovS=document.getElementById('ov-end');if(_ovS)_ovS.classList.add('vis'); // v2.4.4 end screen ALWAYS shows
@@ -12445,6 +12664,7 @@ function clockOut(){
   _elapsedFrozen=(typeof startT!=='undefined'&&startT)?(Date.now()-startT)/1000:0; // v3.5.138 freeze the clock (PPH won't drop on the readout)
   paused=false;var pov=document.getElementById('ov-pause');if(pov)pov.classList.remove('vis');
   gOver=true;if(animF){cancelAnimationFrame(animF);animF=null;}
+  if(typeof stageLeftOnDock==='function')stageLeftOnDock(); // v3.5.206
   S.totalScore=(S.totalScore||0)+(G.score||0);
   S.bestPPH=Math.min(PPH_CAP,Math.max(S.bestPPH||0,getPPH())); // v3.5.173 capped
   finalizeWall(); // v3.5.57 capture the wall on screen (no-op if already sealed)
@@ -12459,7 +12679,7 @@ function clockOut(){
   document.getElementById('es-incidents').textContent=inc+(inc>=2?' ⚠':'');
   fillTelemetryTiles();if(typeof zEndSession==='function')zEndSession();
   document.getElementById('end-title').innerHTML='CLOCKED<br>OUT';
-  document.getElementById('end-sub').textContent='Shift summary · your numbers, your record. Score kept.'+(inc>=2?' ⚠ RECORD FLAGGED.':'');
+  document.getElementById('end-sub').textContent='Shift summary · your numbers, your record. Score kept.'+(inc>=2?' ⚠ RECORD FLAGGED.':'')+stageEndNote();
   _drHide();if(gameMode==='daily'){document.getElementById('end-title').innerHTML='DAILY<br>DONE';dailyFinish();}
   document.getElementById('ov-end').classList.add('vis');
 }
@@ -12900,6 +13120,7 @@ function endGame(reason,win){
   _elapsedFrozen=(typeof startT!=='undefined'&&startT)?(Date.now()-startT)/1000:0; // v3.5.138 freeze the clock at end (PPH stops dropping on the review screen)
   if(typeof stgClose==='function')stgClose(); // v3.4.13 close the staging wheel so it can't float over the end screen
   gOver=true;if(win){sealWall(reason);return;}
+  if(typeof stageLeftOnDock==='function')stageLeftOnDock(); // v3.5.206 boxes still staged were left on the dock
   if(typeof gcurFlash==='function')gcurFlash('end',1500); // v3.5.20 end-condition glove (the L) on a fail/timeout
   if(typeof playSfx==='function')playSfx('lose');
   if(animF)cancelAnimationFrame(animF);
@@ -12918,7 +13139,7 @@ function endGame(reason,win){
     var _inc=(S.incidents||[]).length;document.getElementById('es-incidents').textContent=_inc+(_inc>=2?' ⚠':'');
     fillTelemetryTiles();if(typeof zEndSession==='function')zEndSession();
     document.getElementById('end-title').innerHTML='ROUND<br>OVER';
-    document.getElementById('end-sub').textContent=reason;
+    document.getElementById('end-sub').textContent=reason+stageEndNote();
     _drHide();if(gameMode==='daily'){document.getElementById('end-title').innerHTML='DAILY<br>DONE';var _pbd=document.getElementById('pb-ribbon');if(_pbd)_pbd.style.display='none';dailyFinish();}
   }catch(_e){liShowErr('endGame',_e);}
   if(typeof fillEndHeadline==='function')fillEndHeadline(); // v3.5.149 headline numbers + collapse the full breakdown
