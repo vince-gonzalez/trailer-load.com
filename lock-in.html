@@ -3409,7 +3409,7 @@ body[data-cb="trit"]{
       <button id="auth-forgot" onclick="zForgotToggle()" style="background:none;border:none;color:var(--teal);text-decoration:underline;cursor:pointer;font-size:13px;padding:4px 0;">Forgot password?</button>
       <div id="auth-reset" style="display:none;">
         <label class="data-fld">USERNAME<input id="rst-user" type="text" placeholder="your handle"></label>
-        <label class="data-fld">RECOVERY CODE<input id="rst-hex" type="text" maxlength="6" placeholder="e.g. a1a1a1"></label>
+        <label class="data-fld">RECOVERY CODE<input id="rst-hex" type="text" maxlength="8" placeholder="e.g. a1b2c3d4"></label>
         <label class="data-fld">NEW PASSWORD<input id="rst-pw" type="password" placeholder="6+ characters"></label>
         <div class="data-btns"><button class="data-save" onclick="zDoReset()">RESET PASSWORD</button></div>
       </div>
@@ -4513,6 +4513,11 @@ function zDoReset(){
 }
 // v3.5.205 SAVE MY STATS at sign-in (privacy review): creating an account turns it on (the form says so first); a sign-in
 // turns it on ONLY when this device never recorded a choice. A recorded OFF stays off, and the banner says which.
+// v3.5.205 a different person signing in on this device starts clean: no earlier crew code, sharing setting,
+// recovery code or device ID carries over (an expired session never ran the SIGN OUT scrub).
+function zDeviceForAccount(pl,handle){
+  if(pl.handle&&handle&&pl.handle!==handle){pl.facility='';pl.consentShare=false;delete pl.recovery;pl.pid=zUid();}
+}
 function zConsentAtSignIn(pl,created){
   if(created||!pl.consentDecided){pl.consentSelf=true;pl.consentDecided=true;}
   var c1=document.getElementById('data-c1');if(c1)c1.checked=!!pl.consentSelf; // the ACCOUNT & DATA box shows the truth
@@ -4529,7 +4534,7 @@ function zAuthLogin(){
   try{fetch(ZDATA.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({email:email,password:pass})})
     .then(function(r){return r.json();})
     .then(function(j){
-      if(j&&j.access_token){zSaveSession(j,email,fac?email:handle);var pl=zLoadPlayer();pl.email=email;pl.handle=fac?'':handle;var _cs=fac?'':zConsentAtSignIn(pl,false);if(ZDATA.session.facility)pl.facility=ZDATA.session.facility;zSavePlayer();
+      if(j&&j.access_token){zSaveSession(j,email,fac?email:handle);var pl=zLoadPlayer();zDeviceForAccount(pl,fac?'':handle);pl.email=email;pl.handle=fac?'':handle;var _cs=fac?'':zConsentAtSignIn(pl,false);if(ZDATA.session.facility)pl.facility=ZDATA.session.facility;zSavePlayer();
         if(typeof showBanner==='function')showBanner('\u2713 Signed in.'+(ZDATA.session.facility?' Facility access enabled.':_cs),'ok',(fac||pl.consentSelf)?2200:5000);
         if(nt)nt.textContent='Signed in as '+(fac?email:handle)+'.';}
       else{if(nt)nt.textContent='\u2715 '+((j&&(j.error_description||j.msg||j.error))||'Sign-in failed · check your credentials.');}
@@ -4554,7 +4559,7 @@ function zAuthSignup(){
         if(nt)nt.textContent='Signing you in\u2026';
         fetch(ZDATA.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({email:email,password:pass})})
           .then(function(r2){return r2.json();}).then(function(t){
-            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();pl.email=email;pl.handle=handle;var _cs=zConsentAtSignIn(pl,true);if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u00b7 locked in.'+_cs,'ok',3000);
+            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();zDeviceForAccount(pl,handle);pl.email=email;pl.handle=handle;var _cs=zConsentAtSignIn(pl,true);if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u00b7 locked in.'+_cs,'ok',3000);
               if(nt){if(j.recovery)nt.innerHTML='\u2713 Signed in as '+handle+'. <b>RECOVERY CODE: '+j.recovery+'</b> \u00b7 write it down (resets your password, no email needed).';else nt.textContent='Signed in as '+handle+'.';}}
             else{if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';}
           }).catch(function(e2){console.error('zAuthSignup login:',e2);if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';});
@@ -11193,7 +11198,7 @@ function pfDoLogin(){
   if(nt)nt.textContent='Signing in\u2026';
   try{fetch(ZDATA.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({email:email,password:pass})})
     .then(function(r){return r.json();}).then(function(j){
-      if(j&&j.access_token){zSaveSession(j,email,fac?email:handle);var pl=zLoadPlayer();pl.email=email;pl.handle=fac?'':handle;var _cs=fac?'':zConsentAtSignIn(pl,false);if(ZDATA.session.facility)pl.facility=ZDATA.session.facility;zSavePlayer();
+      if(j&&j.access_token){zSaveSession(j,email,fac?email:handle);var pl=zLoadPlayer();zDeviceForAccount(pl,fac?'':handle);pl.email=email;pl.handle=fac?'':handle;var _cs=fac?'':zConsentAtSignIn(pl,false);if(ZDATA.session.facility)pl.facility=ZDATA.session.facility;zSavePlayer();
         if(typeof showBanner==='function')showBanner('\u2713 Signed in.'+_cs,'ok',(fac||pl.consentSelf)?1700:5000);if(!(typeof _resumePendingLaunch==='function'&&_resumePendingLaunch()))openProfile();}
       else{if(nt)nt.textContent='\u2715 '+((j&&(j.error_description||j.msg||j.error))||'Sign-in failed \u00b7 check your credentials.');}
     }).catch(function(e){console.error('pfDoLogin:',e);if(nt)nt.textContent='\u2715 Network error \u00b7 try again.';});}catch(e){console.error('pfDoLogin:',e);}
@@ -11213,7 +11218,7 @@ function pfDoSignup(){
         if(nt)nt.textContent='Signing you in\u2026';
         fetch(ZDATA.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({email:email,password:pass})})
           .then(function(r2){return r2.json();}).then(function(t){
-            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();pl.email=email;pl.handle=handle;var _cs=zConsentAtSignIn(pl,true);if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u00b7 locked in.'+_cs,'ok',3000);if(!(typeof _resumePendingLaunch==='function'&&_resumePendingLaunch()))openProfile();}
+            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();zDeviceForAccount(pl,handle);pl.email=email;pl.handle=handle;var _cs=zConsentAtSignIn(pl,true);if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u00b7 locked in.'+_cs,'ok',3000);if(j.recovery&&typeof showBanner==='function')showBanner('\ud83d\udd11 RECOVERY CODE: '+j.recovery+' \u00b7 WRITE IT DOWN. It resets your password if you forget it.','ok',9000);if(!(typeof _resumePendingLaunch==='function'&&_resumePendingLaunch()))openProfile();}
             else{if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';}
           }).catch(function(e2){if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';});
       }
