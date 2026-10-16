@@ -75,6 +75,11 @@ small,sub,sup{font-size:11px;}
        (9) The arcade account link is ON (v3.5.204 built it switched off): signed in with SAVE MY STATS on, a
            signature is linked to the account and shown only to that player on /me/. privacy.html,
            for-districts and terms describe it, as of 2026-10-16.
+      (10) LICENSES AND CREW PRIVACY (Vince's answers, 2026-10-16; server side FIX-11 and FIX-11b). Crew members
+           never appear on a username board; they can still sign arcade initials and win the daily, and that
+           signature is not tied to their account. A free crew holds 9 members plus its leader. Free crews keep
+           this in-game roster (ME); the program dashboard and CSV export come with a license. The join card and
+           the owner notes say so, and the roster note no longer promises hex codes or an enterprise build.
      Tested headless with every network call mocked: the v3.5.205 suite passes 99 of 101 (the 2 were a
      report label, fixed here, and this version bump); the v3.5.204 suite's 110 behavior checks pass; the
      voice gates pass (no second-voice text left, standard pools byte-identical, 300 celebrations and 783
@@ -3447,7 +3452,7 @@ body[data-cb="trit"]{
 <div id="ov-crew" class="ov-data"><div class="data-card">
   <div class="data-hdr">◈ JOIN THIS CREW?</div>
   <div id="crew-cf-name" class="crew-cf-name">,</div>
-  <p class="data-p">Whoever runs this crew will see your saved loading results, including <b>sessions, walls, scores, pace, integrity, safety incidents, collapses, water breaks, rotations, lifts, the timed log of your moves, your device ID, when you made your account, when you joined and when you last played</b>. They can export them. They never see which arcade initials are yours. Joining turns on SAVE MY STATS and sharing.<br>Your account stays yours. You can leave anytime.</p>
+  <p class="data-p">Whoever runs this crew will see your saved loading results, including <b>sessions, walls, scores, pace, integrity, safety incidents, collapses, water breaks, rotations, lifts, the timed log of your moves, your device ID, when you made your account, when you joined and when you last played</b>. If the crew has a license, they can export them. They never see which arcade initials are yours. Joining turns on SAVE MY STATS and sharing.<br>Your account stays yours. You can leave anytime.</p>
   <div class="data-btns"><button class="data-save" onclick="crewJoinConfirm()">JOIN</button><button class="data-cancel" onclick="crewCancel()">CANCEL</button></div>
 </div></div>
 
@@ -4622,7 +4627,7 @@ function crewRefresh(){
       if(owned.length){
         var h='<b>YOU RUN:</b><br>',i;
         for(i=0;i<owned.length;i++)h+='◆ '+drEsc(owned[i].name)+' · code <b>'+drEsc(owned[i].code)+'</b><br>';
-        h+='<span style="opacity:.8">Share the code. See the roster at trailer-load.com/dashboard/</span>';
+        h+='<span style="opacity:.8">Share the code. Your roster is under ME. A free crew holds 9 members plus you; the program dashboard and CSV export come with a license.</span>';
         mine.innerHTML=h;mine.style.display='';
       }else mine.style.display='none';
     }
@@ -11260,10 +11265,10 @@ function pfRenderPlayer(state,rows){var body=document.getElementById(PF_BODY);if
 function pfRenderCohort(facs,rows){var body=document.getElementById(PF_BODY);if(!body)return;
   var fnames=[],k;for(k=0;k<facs.length;k++)fnames.push(pfEsc(facs[k].name||facs[k].facility_code));
   var h='<div class="pf-hero"><div class="pf-hero-id">'+(fnames.join(' \u00b7 ')||'YOUR FACILITY')+'</div><div class="pf-hero-sub">'+(rows?rows.length:0)+' enrolled handle'+((rows&&rows.length===1)?'':'s')+'</div></div>';
-  if(!rows||!rows.length){h+='<div class="pf-loading">No handles enrolled yet. Hand out usernames + dock hex-codes to start the roster.</div>';body.innerHTML=h;return;}
+  if(!rows||!rows.length){h+='<div class="pf-loading">No one has joined yet. Share your crew\u2019s join code from ACCOUNT &amp; DATA.</div>';body.innerHTML=h;return;}
   h+='<table class="pf-table pf-cohort"><tr><th>HANDLE</th><th>SESS</th><th>WALLS</th><th>AVG INT</th><th>PEAK</th><th>BEST</th><th>FLAGS</th><th>LAST</th></tr>';
   var i,r;for(i=0;i<rows.length;i++){r=rows[i];h+='<tr><td class="pf-handle">'+pfEsc(r.username)+'</td><td>'+pfNum(r.sessions)+'</td><td>'+pfNum(r.walls)+'</td><td>'+pfNum(r.avg_integrity)+'%</td><td>'+pfNum(r.best_pph)+'</td><td>'+pfNum(r.best_score)+'</td><td'+((+r.incidents>0)?' class="pf-flag"':'')+'>'+pfNum(r.incidents)+'</td><td>'+pfDate(r.last_seen)+'</td></tr>';}
-  h+='</table><div class="pf-note">Handles are anonymous \u00b7 only your roster maps them to real students. Sorting + export land in the enterprise build.</div>'+pfFootHTML();body.innerHTML=h;}
+  h+='</table><div class="pf-note">A free crew holds 9 members plus you. The program dashboard, with sorting and CSV export, comes with a license.</div>'+pfFootHTML();body.innerHTML=h;}
 function psBuild(lifeState,life){
   try{
     var W=snapWall();

@@ -17,7 +17,12 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 /* ══════════════════════════════════════════════════════════════════════════
-   THE PROGRAM DASHBOARD · v2.2.2
+   THE PROGRAM DASHBOARD · v2.4
+   v2.4 · 2026-10-16 (LOCK IN v3.5.205, FIX-11): the dashboard and CSV export need a license. A crew owner
+   whose crews are all unlicensed sees a plain panel instead of the roster; free crews keep the in-game crew
+   view (YOUR CREW). Only members of licensed crews are listed or exported. The database enforces the same
+   rule for the session and wall sheets (lockin_cohort_session / lockin_cohort_wall), so this page is not the gate.
+   v2.3 · 2026-10-16: one sign-out for the whole site (liSignOutAll).
    v2.2.2 · 2026-10-05: vince is now the demo crew's instructor, so a showcase session is titled with the
    demo crew's name (dWho), never whichever test crew the API returns first. Header shows the username.
    v2.2.1 · 2026-10-05: the SHOWCASE is opt-in (FIX-06: lockin_handles.showcase_consent) and the label says so.
@@ -197,7 +202,7 @@ tbody tr:hover td{background:#f6efdd;}
   <label class="fld"><span>Password</span><input id="li-pw" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')dLogin();"></label>
   <button class="btn" onclick="dLogin()">🔑 SIGN IN</button>
   <div id="login-msg"></div>
-  <div id="login-note">Use the same username and password you use in the game. To start a class: sign in to the game, open YOUR CREW, choose + CREATE A CREW, and give your students the join code. Forgot your password, or need help? Email <a href="mailto:vince@trailer-load.com">vince@trailer-load.com</a>.</div>
+  <div id="login-note">This dashboard is for licensed programs; a free crew sees its results in the game under ME. Use the same username and password you use in the game. To start a class: sign in to the game, open YOUR CREW, choose + CREATE A CREW, and give your students the join code. Forgot your password, or need help? Email <a href="mailto:vince@trailer-load.com">vince@trailer-load.com</a>.</div>
 </div>
 
 <!-- DASHBOARD -->
@@ -215,6 +220,16 @@ tbody tr:hover td{background:#f6efdd;}
     <!-- v2.1 SHOWCASE label · only the demo account sees it. #4a3c28 on #e8e4da = 6.95:1, border #7d4a0e = 5.73:1 -->
     <div id="showcase-note" style="display:none;margin:10px 18px 0;padding:8px 12px;border:2px dashed #7d4a0e;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:12px;color:#4a3c28;">SHOWCASE · real LOCK IN players who agreed to be shown, with their real results, under pseudonyms. A program's own dashboard shows only its students who joined its crew and agreed to share.</div>
 
+    <!-- v2.4 FREE CREW panel · same colors as the showcase note: #4a3c28 on #e8e4da = 6.95:1, border #7d4a0e = 5.73:1 -->
+    <div id="lic-note" style="display:none;margin:14px 18px 6px;padding:14px 16px;border:2px solid #7d4a0e;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:13px;line-height:1.6;color:#241a0c;">
+      <div style="font-family:'Barlow Condensed',system-ui,sans-serif;font-weight:700;font-size:20px;letter-spacing:.04em;color:#241a0c;">THIS CREW IS ON THE FREE PLAN</div>
+      <p style="margin:8px 0;">The program dashboard and CSV export come with a license. Your crew's results are still free to see in the game: open LOCK IN, sign in with this account, and choose ME.</p>
+      <p style="margin:8px 0;">A license adds this dashboard and CSV export, facility logins, a signed data agreement, purchase orders and invoices, and support. It also removes the free limit of 9 members plus the leader.</p>
+      <p style="margin:8px 0;">See <a href="/programs/" style="color:#7d4a0e;font-weight:700;">Programs</a> or email <a href="mailto:vince@trailer-load.com" style="color:#7d4a0e;font-weight:700;">vince@trailer-load.com</a>.</p>
+      <button class="btn ghost" onclick="dSignOut()">SIGN OUT</button>
+    </div>
+
+    <div id="dash-body">
     <div class="cards" id="cards"></div>
 
     <div class="sheets" id="sheets">
@@ -243,6 +258,7 @@ tbody tr:hover td{background:#f6efdd;}
       </table>
     </div>
     <div id="empty" style="display:none;"></div>
+    </div><!-- /dash-body -->
 
     <div class="foot">
       Training supplement only. Builds intuition and tracks readiness; it does not replace employer
@@ -420,7 +436,28 @@ function dEnter(){
   document.getElementById('login').style.display='none';
   document.getElementById('dash').style.display='block';
   var who=document.getElementById('who');if(who)who.style.display='block';
-  dWho(); dScopeBar(); dFetchFacility(); dProbeShowcase(dFetchSheet);
+  dWho(); dScopeBar(); dGate();
+}
+// v2.4 facilities first (they carry the license), then the showcase probe, then the sheet. Nothing loads for an
+// account with no licensed crew; the demo crew is licensed, so the showcase still opens.
+function dGate(){
+  // READS: DASH.facilities, DASH.showcase | WRITES: DASH.licensed
+  var emp=document.getElementById('empty');if(emp){emp.style.display='block';emp.textContent='Loading…';}
+  dFetchFacility(function(ok){
+    if(!ok){if(emp){emp.style.display='block';emp.textContent='Could not load · try REFRESH.';}return;}
+    dProbeShowcase(function(){
+      DASH.licensed=DASH.showcase||dLicensedCodes().length>0;
+      var n=document.getElementById('lic-note');if(n)n.style.display=DASH.licensed?'none':'block';
+      var b=document.getElementById('dash-body');if(b)b.style.display=DASH.licensed?'':'none';
+      var st=document.getElementById('stamp');if(st&&!DASH.licensed)st.textContent='FREE PLAN';
+      if(DASH.licensed)dFetchSheet();
+    });
+  });
+}
+function dLicensedCodes(){
+  var f=DASH.facilities||[],out=[],i;
+  for(i=0;i<f.length;i++){if(f[i].licensed===true&&f[i].facility_code)out.push(f[i].facility_code);}
+  return out;
 }
 // v2.1 one probe after sign-in decides the source. A missing view (404) or an empty answer means a normal program.
 function dProbeShowcase(cb){
@@ -436,15 +473,18 @@ function dProbeShowcase(cb){
       }).catch(function(e){console.error('dProbeShowcase:',e);DASH.showcase=false;cb();});
   }catch(e){console.error('dProbeShowcase:',e);DASH.showcase=false;cb();}
 }
-function dFetchFacility(){
-  try{
-    fetch(DASH.endpoint+'/lockin_facilities?select=name,facility_code',{headers:dHeaders()})
-      .then(function(r){if(r.status===401)return null;return r.json();}).then(function(j){
+function dFetchFacility(cb){
+  // WRITES: DASH.facilities · cb(true) once they are known, cb(false) on a network or server error
+  cb=cb||function(){};
+  try{var _r=null;
+    fetch(DASH.endpoint+'/lockin_facilities?select=name,facility_code,licensed',{headers:dHeaders()})
+      .then(function(r){_r=r;if(r.status===401){dExpired();return null;}return r.json();}).then(function(j){
         if(j===null)return;
-        DASH.facilities=(j&&j.length)?j:[];
-        dWho();
-      }).catch(function(e){console.error('dFetchFacility:',e);});
-  }catch(e){console.error('dFetchFacility:',e);}
+        if(!_r.ok||!Array.isArray(j)){console.error('dFetchFacility:',_r.status,j);cb(false);return;}
+        DASH.facilities=j;
+        dWho();cb(true);
+      }).catch(function(e){console.error('dFetchFacility:',e);cb(false);});
+  }catch(e){console.error('dFetchFacility:',e);cb(false);}
 }
 // v2.2.2 one place decides the header. An instructor can own several crews and the API returns them in no
 // fixed order; Vince owns the demo crew plus two test crews, and one of those (since renamed) came back
@@ -454,12 +494,13 @@ function dWho(){
   // READS: DASH.facilities, DASH.showcase, DASH.session | WRITES: DASH.name, DASH.code
   var f=DASH.facilities||[],pick=null,i;
   if(DASH.showcase){for(i=0;i<f.length;i++){if(f[i].facility_code==='ZG-DEMO-01')pick=f[i];}}
+  if(!pick){for(i=0;i<f.length;i++){if(f[i].licensed===true){pick=f[i];break;}}}
   if(!pick&&f.length)pick=f[0];
   if(pick){DASH.name=pick.name||pick.facility_code||'Your program';DASH.code=pick.facility_code||'';}
   var em=((DASH.session&&DASH.session.email)||'').replace(/@players\.lockin\.app$/,'');
   var who=document.getElementById('who');if(who)who.innerHTML='<b>'+dEsc(DASH.name||'Your program')+'</b>'+dEsc(em);
 }
-function dReload(){dFetchSheet();}
+function dReload(){if(DASH.licensed)dFetchSheet();else dGate();}
 function dSheet(s){
   if(!SHEET_SRC[s])return;
   DASH.sheet=s; DASH.sortKey=SHEET_SORT[s]; DASH.sortDir=(s==='life')?1:-1;
@@ -495,7 +536,9 @@ function dFetchSheet(){
         // v2.0.1 the instructor's own account is readable to them (lh_self_select), so it arrived as a roster
         // row and rendered as a student who NEVER PLAYED. The old test also required username===undefined,
         // which is never true, so it filtered nothing. Drop the instructor's own row unless they enrolled in a class.
+        var _lic=dLicensedCodes();
         DASH.rows=(j&&j.length)?j.filter(function(r){return !(DASH.session&&r.user_id===DASH.session.uid&&!r.facility_code);}):[];
+        if(!DASH.showcase)DASH.rows=DASH.rows.filter(function(r){return _lic.indexOf(r.facility_code)>=0;}); // v2.4 licensed crews only
         var st=document.getElementById('stamp');
         if(st)st.textContent=DASH.rows.length+' on roster';
         if(DASH.sheet==='life')dFetchGuests(); else dRender();
@@ -624,6 +667,7 @@ function dProfile(name){
   try{p.scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}
 }
 function dExport(){
+  if(!DASH.licensed)return; // v2.4 export comes with a license
   var cols=dActiveCols();
   var base=DASH.rows.slice();
   if(DASH.sheet==='life'&&DASH.showGuests)base=base.concat(DASH.guests);
@@ -653,7 +697,7 @@ function dShowLogin(t,cls){
 }
 function dSignOut(){
   var tok=DASH.session&&DASH.session.access_token;
-  DASH.session=null;DASH.rows=[];DASH.guests=[];DASH.name='';
+  DASH.session=null;DASH.rows=[];DASH.guests=[];DASH.name='';DASH.licensed=false;DASH.facilities=null;
   liSignOutAll(DASH.authUrl,DASH.anonKey,tok); // v2.3 (LOCK IN v3.5.205) one sign-out for the whole site on this device: the game and /me/ too
   dShowLogin('Signed out.','good');
 }
@@ -662,7 +706,7 @@ function dSignOut(){
 function dJwtFresh(tok){try{var p=JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));return (p.exp||0)*1000>Date.now()+30000;}catch(e){return true;}}
 function dExpired(){
   try{localStorage.removeItem('lockinDashAuth');var _e=document.getElementById('li-email');if(_e)_e.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
-  DASH.session=null;
+  DASH.session=null;DASH.licensed=false;DASH.facilities=null;
   var d=document.getElementById('dash');if(d)d.style.display='none';
   var w=document.getElementById('who');if(w)w.style.display='none';
   var l=document.getElementById('login');if(l)l.style.display='block';
@@ -681,7 +725,7 @@ function dAuthSync(){
   if(!DASH.session)return;
   var s=null;try{var r=localStorage.getItem('lockinDashAuth');s=r?JSON.parse(r):null;}catch(e){}
   if(s&&s.access_token&&!liAuthStale(s)&&!liAuthStale(DASH.session)&&s.uid===DASH.session.uid){if(s.access_token!==DASH.session.access_token)DASH.session=s;return;}
-  DASH.session=null;DASH.rows=[];DASH.guests=[];DASH.name='';
+  DASH.session=null;DASH.rows=[];DASH.guests=[];DASH.name='';DASH.licensed=false;DASH.facilities=null;
   dShowLogin('Signed out on this device.','good');
 }
 try{
