@@ -298,7 +298,7 @@ function mTab(which){
 }
 // THE HALL · every board we track (Walls of Fame), medal rows. Same RPCs as the game. v1.7 (LOCK IN v3.5.205) the Walls of Shame are gone.
 var M_FAME=[{k:'best',e:'🏆',t:'BEST WALL',rpc:'lockin_alltime_board',fmt:'num'},{k:'total',e:'▲',t:'TOTAL LOADED',rpc:'lockin_total_board',fmt:'num'},{k:'fastest',e:'⚡',t:'FASTEST WALL',rpc:'wall',metric:'fastest',fmt:'time'},{k:'cleanest',e:'✦',t:'CLEANEST',rpc:'wall',metric:'cleanest',fmt:'pct'},{k:'fewest',e:'✂',t:'FEWEST PIECES',rpc:'wall',metric:'fewest',fmt:'pieces'}];
-function mHallFmt(v,fmt){if(v==null)return ',';if(fmt==='time'){var s=+v,mm=Math.floor(s/60),ss=s%60;return mm+':'+(ss<10?'0':'')+ss;}if(fmt==='pct')return v+'%';if(fmt==='pieces')return v+' pc';return mNum(v).toLocaleString();}
+function mHallFmt(v,fmt){if(v==null)return '\u00b7';if(fmt==='time'){var s=+v,mm=Math.floor(s/60),ss=s%60;return mm+':'+(ss<10?'0':'')+ss;}if(fmt==='pct')return v+'%';if(fmt==='pieces')return v+' pc';return mNum(v).toLocaleString();}
 function mHallRows(rows,fmt,side){
   if(!rows||!rows.length)return '<div class="hc-empty">No one ranked yet · be the first.</div>';
   var me=(ME.session&&ME.session.handle)||'',medals=['🥇','🥈','🥉'],h='',i;
@@ -456,9 +456,9 @@ function mRender(){
      card('WALLS',walls,'sealed','')
     +card('SESSIONS',sessions,'clocked in','')
     +card('BEST SCORE',bestScore.toLocaleString(),'personal best','teal')
-    +card('PEAK PPH',peak||',','fastest pace','teal')
-    +card('AVG INTEGRITY',(ai?ai+'%':','),'attention to detail',intCls)
-    +card('DENSITY',(den?den+'%':','),'how tight you pack',den>=65?'ok':den>=40?'warn':(den>0?'danger':''))
+    +card('PEAK PPH',peak||'\u00b7','fastest pace','teal')
+    +card('AVG INTEGRITY',(ai?ai+'%':'\u00b7'),'attention to detail',intCls)
+    +card('DENSITY',(den?den+'%':'\u00b7'),'how tight you pack',den>=65?'ok':den>=40?'warn':(den>0?'danger':''))
     +card('SHELVES',shelves.toLocaleString(),'locked in','')
     +card('PIECES',pieces.toLocaleString(),'total moved','')
     +card('INCIDENTS',inc,'lifetime safety',inc>=2?'danger':inc>=1?'warn':'ok');
@@ -468,7 +468,7 @@ function mRender(){
   rows=rows.slice().sort(function(a,b){return mNum(b.walls)-mNum(a.walls);});
   var h='';
   for(i=0;i<rows.length;i++){var m=rows[i];var mi=mNum(m.avg_integrity);
-    h+='<tr><td>'+(m.mode||',')+'</td><td>'+mNum(m.sessions)+'</td><td>'+mNum(m.walls)+'</td><td>'+mNum(m.pieces)+'</td><td>'+mNum(m.score).toLocaleString()+'</td><td>'+mNum(m.peak_pph)+'</td><td>'+(mi||0)+'%</td><td>'+mNum(m.incidents)+'</td></tr>';
+    h+='<tr><td>'+(m.mode||'\u00b7')+'</td><td>'+mNum(m.sessions)+'</td><td>'+mNum(m.walls)+'</td><td>'+mNum(m.pieces)+'</td><td>'+mNum(m.score).toLocaleString()+'</td><td>'+mNum(m.peak_pph)+'</td><td>'+(mi||0)+'%</td><td>'+mNum(m.incidents)+'</td></tr>';
   }
   document.getElementById('tbody').innerHTML=h;
 }

@@ -41,7 +41,7 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.205
+   LOCK IN v3.5.206
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -1234,7 +1234,7 @@ small,sub,sup{font-size:11px;}
    ACTIVE theme's vars · in the default LIGHT theme --t1/--t2 resolve near-black, so rank/verdict/stat labels/
    sign-in copy rendered dark-on-dark (~1.2-2.4:1, illegible). Scoped var overrides pin dark-surface ink to the
    dark-theme palette regardless of which theme the body wears. */
-#ov-end,#ov-signin-prompt,.sip-card,#level-select,#ov-level-end{
+#ov-end,#ov-signin-prompt,.sip-card,#level-select,#ov-level-end,#seal-rdy{ /* v3.5.206 #seal-rdy joins: its % values measured 1.03:1 */
   --t1:#f0e6d4;--t2:#c0ad90;--t3:#8a7860;
   --border:#3a2c20;--border2:#4a3826;--border3:#5a4632;
   --acc:#e0962e;--acc-bright:#f0ad4a;--acc-dim:#b07820;
@@ -3025,7 +3025,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.205 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.206 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -3148,7 +3148,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 16)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.5.205: updated Oct 16; back to "Privacy" after 2026-11-16. -->
-  <div id="sm-footer">LOCK IN v3.5.205 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.206 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3298,7 +3298,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.205 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.206 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3811,7 +3811,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.205
+// LOCK IN v3.5.206
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -3851,6 +3851,11 @@ body[data-cb="trit"]{
 // ── CONSTANTS ──
 var GW=17, GH=20, WIN_H=0.92;
 var MAX_NC_SLOTS=8, MAX_BAG_SLOTS=8;
+// v3.5.206 a wall starts with at most NC_START_MAX special-handling pieces (Vince: "At most 4"). The trays opened at
+// 6/8 or fuller in 57% of fresh shift walls and full in 17%. The cap is live only while a wall is being set up;
+// _ncStartReserve holds room for pieces carried over from the last wall. The daily keeps its own fixed loadout.
+var NC_START_MAX=4,_ncStartCap=null,_ncStartReserve=0;
+function ncStartCapped(){return _ncStartCap!==null&&G&&G.ncSlots&&(G.ncSlots.filter(Boolean).length+_ncStartReserve)>=_ncStartCap;}
 // DECISION: MIN_PPH floor stays at 55 · a real hub standard.
 // Grace period extended: 30→60s before PPH tracking starts (learner runway).
 // Fail window extended: 120→180s before PPH kills the round (3 minutes, not 2).
@@ -4280,7 +4285,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.205'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.206'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -5422,6 +5427,7 @@ function isConveyable(w,h){
 }
 function routeToNC(tmpl){
   if(typeof G==='undefined'||!G.ncSlots)return;
+  if(ncStartCapped())return; // v3.5.206 wall-start cap
   var ncSlots=G.ncSlots;
   var slot=ncSlots.findIndex(function(s){return!s;});
   if(slot<0){if(typeof triggerNCHazard==='function')triggerNCHazard();return;}
@@ -5513,6 +5519,7 @@ function hazLabelDef(cls){
 }
 function spawnNC(){
   var ncSlots=G.ncSlots;
+  if(ncStartCapped())return; // v3.5.206 wall-start cap reached: skip, never an overload
   var emptyIdx=ncSlots.findIndex(function(s){return!s;});
   if(emptyIdx<0){
     // DECISION: Game-over only fires when ALL 8 slots are occupied AND a new NC
@@ -5528,7 +5535,7 @@ function spawnNC(){
   var piece=null,_si,_slot2,_staged=0;
   for(_si=0;_si<_setN;_si++){
     _slot2=ncSlots.findIndex(function(s){return!s;});
-    if(_slot2<0)break;
+    if(_slot2<0||ncStartCapped())break; // v3.5.206 a tire set stops at the wall-start cap
     var _seed=rnd(100,9999);
     var _pal=seedPal(_seed,tmpl.type,tmpl.shape,tmpl.color);
     var _lab=tmpl._isHaz?hazLabelDef(tmpl._hazClass):pickLabel('large',false,true,false);
@@ -6132,7 +6139,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   placed++;
   if(!startT)startT=Date.now(); // v3.5.144 THE CLOCK STARTS ON THE FIRST PIECE · elapsed / PPH never count the time before you place anything (fair on mobile, where the opening piece is slower). startT is null from mode-start until here.
   if(typeof gcurFlash==='function')gcurFlash('drop',420); // v3.5.20 drop-glove on a successful place
-  S.totalPieces=(S.totalPieces||0)+1; if(source==='bag')S.bagsPlaced=(S.bagsPlaced||0)+1; // v2.1.7
+  S.totalPieces=(S.totalPieces||0)+1; if(source==='bag'&&(box.isBag||box.type==='small'))S.bagsPlaced=(S.bagsPlaced||0)+1; // v2.1.7; v3.5.206 only real smalls (a regular box from that lane counted too)
   if(!(box.type==='small'||box.isBag)&&!((box._gen||0)>0))S.boxPieces=(S.boxPieces||0)+1; // v3.5.90 PPH = REAL freight only; v3.5.99 first placement ONLY · a re-placed (churned) box earns ZERO pph, so the autoclicker's place-lift-place spam gains nothing
   // v3.5.142 CEILING SMALLS-BAG BONUS · a 3x3 bag stuffed against the trailer roof (top edge at row 0) reclaims the dead air up top. Huge, once per bag (feedback only; calcScore scores the live wall). 5 bags fill a ceiling course (15 of 17 cells).
   if(box.isBag&&gy===0&&!box._bagCeilAwarded){
@@ -7625,7 +7632,7 @@ function breakJam(){
 function tickChute(){
   if(TUTORIAL_MODE)return; // v3.5.141 no chute-jam sent-home during the guided tutorial (killed the "CHUTE JAMMED · SENT HOME" bug)
   if(!CHUTE_JAM)return;
-  if(G&&G.belt&&G.belt.length>0){if(jamStarvedT||jamWarnLevel){jamStarvedT=0;jamWarnLevel=0;updateChuteUI();}return;}
+  if(G&&G.belt&&G.belt.length>0){if(jamStarvedT||jamWarnLevel){jamStarvedT=0;jamWarnLevel=0;}updateChuteUI();return;} // v3.5.206 refresh every tick (updateChuteUI writes only on a change): a new wall's full chute used to keep the last wall's BREAK JAM up
   if(!jamStarvedT)jamStarvedT=Date.now();
   if((placed||0)<1){updateChuteUI();return;}
   if(typeof isForgiving==='function'&&isForgiving()){if(jamWarnLevel!==1){jamWarnLevel=1;if(typeof playSfx==='function')playSfx('dwell');}updateChuteUI();return;}
@@ -7635,17 +7642,24 @@ function tickChute(){
   if(nl!==jamWarnLevel){jamWarnLevel=nl;if(typeof playSfx==='function')playSfx(nl>=2?'error':'dwell');}
   updateChuteUI(Math.max(0,Math.ceil(FAIL-dt)));
 }
+// v3.5.206 computes the wanted state, then touches the DOM only when it differs, so tickChute can call it every frame.
+var _chuteUIKey='';
 function updateChuteUI(cd){
   var btn=document.getElementById('breakjam-btn'),lt=document.getElementById('chute-light');
   if(!btn||!lt)return;
-  if(!CHUTE_JAM){btn.style.display='none';lt.style.display='none';return;}
-  lt.style.display='';
-  var bl=(G&&G.belt)?G.belt.length:BELT_PIECE_COUNT;
-  if(bl>=BELT_PIECE_COUNT){btn.style.display='none';lt.className='chute-light cl-ok';return;}
-  btn.style.display='';
-  if(jamWarnLevel>=2){btn.className='bj-btn bj-crit';btn.textContent='\u26a1 BREAK JAM \u00b7 '+(cd||0)+'s';lt.className='chute-light cl-crit';}
-  else if(jamWarnLevel>=1){btn.className='bj-btn bj-warn';btn.textContent='\u26a1 BREAK JAM';lt.className='chute-light cl-warn';}
-  else{btn.className='bj-btn';btn.textContent='\u26a1 BREAK JAM';lt.className='chute-light cl-warn';}
+  var bd='none',ld='',bc=btn.className,bt=btn.textContent,lc='chute-light cl-ok';
+  if(!CHUTE_JAM){ld='none';lc=lt.className;}
+  else{
+    var bl=(G&&G.belt)?G.belt.length:BELT_PIECE_COUNT;
+    if(bl<BELT_PIECE_COUNT){
+      bd='';
+      if(jamWarnLevel>=2){bc='bj-btn bj-crit';bt='\u26a1 BREAK JAM \u00b7 '+(cd||0)+'s';lc='chute-light cl-crit';}
+      else if(jamWarnLevel>=1){bc='bj-btn bj-warn';bt='\u26a1 BREAK JAM';lc='chute-light cl-warn';}
+      else{bc='bj-btn';bt='\u26a1 BREAK JAM';lc='chute-light cl-warn';}
+    }
+  }
+  var k=bd+'|'+ld+'|'+bc+'|'+bt+'|'+lc;if(k===_chuteUIKey)return;_chuteUIKey=k;
+  btn.style.display=bd;lt.style.display=ld;btn.className=bc;btn.textContent=bt;lt.className=lc;
 }
 // \u2500\u2500 v3.4.11 NC / SMALLS STAGING LIGHTS + POPUP (replaces the floor-corner slots) \u2500\u2500
 function updateStagingLights(){
@@ -8814,7 +8828,7 @@ function updateRightHUD(pph){
     nu.innerHTML=html;
   }
   var el=elapsed(),pcs=el>0?(placed/el):0,spm=el>0?((G.tetrisTotal||0)/(el/60)):0;
-  rset('perf-pph',pph||',');
+  rset('perf-pph',pph||'\u00b7');
   rset('perf-peak',S.bestPPH||0);
   rset('perf-pcs',pcs.toFixed(1));
   rset('perf-spm',spm.toFixed(1));
@@ -8857,7 +8871,7 @@ function updateHUD(){
   updateWaterHUD();
   var pphEl=document.getElementById('sp-pph');
   if(pphEl){
-    pphEl.textContent=pph||',';
+    pphEl.textContent=pph||'\u00b7';
     var pphDanger=pph>0&&pph<MIN_PPH&&elapsed()>LOW_PPH_GRACE;
     pphEl.className='sp-big'+(pphDanger?' danger':pph>=100?' ok':'');
   }
@@ -9496,6 +9510,13 @@ document.addEventListener('keydown',function(e){
   else if((e.key==='Enter'||e.key===' ')&&!act){kbPlace();e.preventDefault();}
 });
 
+// v3.5.206 FOCUS BACK TO THE WALL. After any click on a play control, focus returns to the scene, so Space and Enter
+// place the box instead of pressing the same button again. Skipped when the click opened a menu, pause or end screen.
+document.addEventListener('click',function(e){
+  var t=(e.target&&e.target.closest)?e.target.closest('button,[role="button"]'):null;
+  if(!t||!t.closest('#footer,#world,#water-bottle,#maxpack-finish'))return;
+  setTimeout(function(){try{if(kbPlayActive()){var sc=document.getElementById('scene');if(sc&&document.activeElement!==sc)sc.focus({preventScroll:true});}}catch(x){}},0);
+});
 function updateCoachTip(){
   // Hide the first-shelf tip once the bottom 2 rows have meaningful coverage
   var coachEl=document.getElementById('coach-shelf');
@@ -9672,8 +9693,8 @@ function opsRender(){
   h+=cell('HAZ SHELVES',(S&&S.hazShelfLocks)||0);
   h+='</div>';
   h+='<div class="ops-sec">PRODUCTIVITY</div><div class="ops-grid">';
-  h+=cell('PPH NOW',pphNow||',');
-  h+=cell('PPH PEAK',peak||',');
+  h+=cell('PPH NOW',pphNow||'\u00b7');
+  h+=cell('PPH PEAK',peak||'\u00b7');
   h+=cell('SHELVES',(S&&S.shelvesLocked)||0);
   h+=cell('DBL LOCKS',(S&&S.doubleLocks)||0);
   h+=cell('ACCURACY',acc+'%',acc<80?'warn':'ok');
@@ -10808,9 +10829,11 @@ function nextTrailer(){
     ncHazardFired=false;if(ncHazardTO){clearTimeout(ncHazardTO);ncHazardTO=null;}bagDwellFired=false;if(bagDwellTO){clearTimeout(bagDwellTO);bagDwellTO=null;}if(collapseTimeout){clearTimeout(collapseTimeout);collapseTimeout=null;}G.hazThisWall=0;G.ncThisWall=0;jamStarvedT=0;jamWarnLevel=0;chuteJiggleT=0; // v2.1.0 + v3.4.0 chute reset
     _freshLock=false;_lastTipTs=0;
     document.getElementById('panic-wrap').classList.remove('vis');
+    _ncStartCap=NC_START_MAX; // v3.5.206 the shift's tray carries over in G, so the cap counts what is already there
     refillBelt();
     for(var i=0;i<2;i++)spawnNC();
     for(var i=0;i<2;i++)spawnBag();
+    _ncStartCap=null;
     showBanner('WALL '+shiftState.walls+' · LOAD IT UP! 🚛','ok',2000);
     flash('fl-ok');
   } else {
@@ -10821,6 +10844,7 @@ function nextTrailer(){
     // couldn't load this trailer carrying over to the next.
     var carryNC=(G.ncSlots||[]).filter(function(p){return p;});
     var carryBag=(G.bagSlots||[]).filter(function(p){return p;});
+    _ncStartReserve=carryNC.length; // v3.5.206 fresh special handling fills only up to NC_START_MAX after the carry
     initTruck();
     var ci,k,slot;
     for(ci=0;ci<carryNC.length;ci++){
@@ -10878,7 +10902,7 @@ function snapWall(){
       cog:Math.round(Math.abs((G.cog||.5)-.5)*200)/100};
   }catch(e){return {score:0,pieces:0,pph:0,integrity:0,support:0,fillPct:0,cubePct:0,density:0,bal:0,voids:0,shelves:0,doubles:0,cog:0};}
 }
-function psTxt(id){var e=document.getElementById(id);return e?e.textContent:',';}
+function psTxt(id){var e=document.getElementById(id);return e?e.textContent:'\u00b7';}
 function psFmtTime(sec){sec=Math.max(0,Math.round(sec||0));var m=Math.floor(sec/60),s2=sec%60;return m+':'+(s2<10?'0':'')+s2;}
 // v3.5.173 (Devs BLOCKER #1) THE ONE CANONICAL CAREER. Both the post-sort LIFETIME column and the
 // SOCIAL/ME panel now fold the same per-mode rows the same way: counts SUM, peak takes the MAX
@@ -10990,7 +11014,7 @@ function lbRenderDaily(rows){
   }
   if(crown){
     if(rows.length){var w=rows[0];crown.className='lb-daily-crown';
-      crown.innerHTML='<div class="dc-lbl">👑 TODAY’S #1 LOADER ON EARTH</div><div class="dc-name">'+drEsc(w.username)+'</div><div class="dc-score">'+(w.score!=null?(+w.score||0):',')+' cubes</div>';}
+      crown.innerHTML='<div class="dc-lbl">👑 TODAY’S #1 LOADER ON EARTH</div><div class="dc-name">'+drEsc(w.username)+'</div><div class="dc-score">'+(w.score!=null?(+w.score||0):'\u00b7')+' cubes</div>';}
     else{crown.className='lb-daily-crown empty';
       crown.innerHTML='<div class="dc-lbl">👑 THE CROWN IS UNCLAIMED</div><div class="dc-name">BE THE FIRST</div><div class="dc-score">Seal today’s wall and sign it. Be #1 on Earth.</div>';}
   }
@@ -11041,7 +11065,7 @@ var HALL_META={
   fewest:{note:'✂ FEWEST PIECES · tightest sealed wall',foot:'Max density from the fewest pieces.',rpc:'wall',metric:'fewest',fmt:'pieces'},
   cleanest:{note:'✦ CLEANEST WALL · highest integrity',foot:'The most solid wall on record.',rpc:'wall',metric:'cleanest',fmt:'pct'}
 };
-function lbHallFmt(v,fmt){if(v==null)return ',';if(fmt==='time'){var s=+v,m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}if(fmt==='pct')return v+'%';if(fmt==='pieces')return v+' pc';return ''+v;}
+function lbHallFmt(v,fmt){if(v==null)return '\u00b7';if(fmt==='time'){var s=+v,m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}if(fmt==='pct')return v+'%';if(fmt==='pieces')return v+' pc';return ''+v;}
 // v3.5.152 DEAD-CODE CULL (The Schema) · the dropdown-era lbLoadHall/lbRenderHall (superseded by the categorical
 // World Board lbLoadAllBoards/lbBoardCard in v3.5.104) had zero callers. Removed.
 // v3.5.104 THE HALL as a categorical ledger · every board at once, World-Board style (emoji medals, top 5, gold #1).
@@ -11144,8 +11168,8 @@ function lbUnfollow(u){
 }
 function openLeaderboard(){ openSocial('daily'); if(typeof gaEvent==='function')gaEvent('leaderboard_open',{}); } // v3.5.85 alias → SOCIAL hub
 function pfEsc(x){x=(x==null?'':''+x);return x.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function pfNum(n){return (n==null||isNaN(+n))?',':Math.round(+n);}
-function pfDate(t){if(!t)return ',';try{var d=new Date(t);return (d.getMonth()+1)+'/'+d.getDate()+'/'+(''+d.getFullYear()).slice(2);}catch(e){return ',';}}
+function pfNum(n){return (n==null||isNaN(+n))?'\u00b7':Math.round(+n);}
+function pfDate(t){if(!t)return '\u00b7';try{var d=new Date(t);return (d.getMonth()+1)+'/'+d.getDate()+'/'+(''+d.getFullYear()).slice(2);}catch(e){return '\u00b7';}}
 function fetchProfile(cb){var sx=ZDATA.session;if(!sx||!sx.uid){cb('anon',null);return;}
   try{var _r=null;fetch(ZDATA.endpoint+'/lockin_lifetime?user_id=eq.'+encodeURIComponent(sx.uid)+'&select=*',{headers:zAuthHeaders()})
     .then(function(r){_r=r;return r.json();})
@@ -11260,7 +11284,7 @@ function pfRenderPlayer(state,rows){var body=document.getElementById(PF_BODY);if
   var h='<div class="pf-hero"><div class="pf-hero-id">'+pfEsc(ZDATA.session.handle||ZDATA.session.email||'PLAYER')+'</div><div class="pf-hero-sub">Last loaded '+pfDate(last)+'</div></div>';
   h+='<div class="pf-tiles">'+tile('WALLS',pfNum(tot.walls))+tile('SESSIONS',pfNum(tot.sessions))+tile('PEAK PPH',pfNum(peak))+tile('AVG INTEGRITY',avgInt+'%')+tile('DOUBLE LOCKS',pfNum(tot.doubles))+tile('NESTS',pfNum(tot.nests))+tile('SHELVES',pfNum(tot.shelves))+tile('INCIDENTS',pfNum(tot.incidents))+'</div>';
   h+='<div class="pf-sec">BY MODE</div><table class="pf-table"><tr><th>MODE</th><th>WALLS</th><th>PEAK PPH</th><th>AVG INT</th><th>SCORE</th></tr>';
-  for(i=0;i<rows.length;i++){r=rows[i];h+='<tr><td>'+pfEsc((r.mode||',').toUpperCase())+'</td><td>'+pfNum(r.walls)+'</td><td>'+pfNum(sanePph(r.peak_pph))+'</td><td>'+pfNum(r.avg_integrity)+'%</td><td>'+pfNum(r.score)+'</td></tr>';}
+  for(i=0;i<rows.length;i++){r=rows[i];h+='<tr><td>'+pfEsc((r.mode||'\u00b7').toUpperCase())+'</td><td>'+pfNum(r.walls)+'</td><td>'+pfNum(sanePph(r.peak_pph))+'</td><td>'+pfNum(r.avg_integrity)+'%</td><td>'+pfNum(r.score)+'</td></tr>';}
   h+='</table>'+pfFootHTML();body.innerHTML=h;}
 function pfRenderCohort(facs,rows){var body=document.getElementById(PF_BODY);if(!body)return;
   var fnames=[],k;for(k=0;k<facs.length;k++)fnames.push(pfEsc(facs[k].name||facs[k].facility_code));
@@ -11282,25 +11306,25 @@ function psBuild(lifeState,life){
     function lwv(k){return (LW&&LW[k]!=null)?LW[k]:null;} // last-wall value helper
     var inc=S.incidents||[];
     function ic(t){var k=0,i;for(i=0;i<inc.length;i++){if(inc[i]&&inc[i].type===t)k++;}return k;}
-    var avgInt=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):',';
+    var avgInt=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):'\u00b7';
     // LIFETIME cell
     function L(key,suf){
-      if(lifeState==='anon')return ',';
+      if(lifeState==='anon')return '\u00b7';
       if(lifeState==='loading')return '\u2026';
       // v3.5.183 a failed read renders as UNKNOWN, never as a number. It used to print 0.
       if(lifeState==='expired'||lifeState==='err')return '?';
-      if(!life||life[key]==null||life[key]==='')return ',';
+      if(!life||life[key]==null||life[key]==='')return '\u00b7';
       return life[key]+(suf||'');
     }
     function row(m,w,sv,lk,sub,suf){
       return '<div class="ps-row"><span class="m'+(sub?' sub':'')+'">'+m+'</span>'+
-        '<span class="n w">'+(w==null?',':w)+'</span>'+
-        '<span class="n s">'+(sv==null?',':sv)+'</span>'+
+        '<span class="n w">'+(w==null?'\u00b7':w)+'</span>'+
+        '<span class="n s">'+(sv==null?'\u00b7':sv)+'</span>'+
         '<span class="n l">'+L(lk,suf)+'</span></div>';
     }
     var pcsSec=durS>0?(pieces/durS).toFixed(2):'0.00';
     var shMin=durS>0?(((S.shelvesLocked||0)/durS)*60).toFixed(1):'0.0';
-    var tWall=walls>0?psFmtTime(durS/walls):',';
+    var tWall=walls>0?psFmtTime(durS/walls):'\u00b7';
     var ncU=S.ncSpawned?Math.min(100,Math.round((S.ncPlaced||0)/S.ncSpawned*100)):null;
     var smU=S.smallsSpawned?Math.min(100,Math.round((S.bagsPlaced||0)/S.smallsSpawned*100)):null; // v3.5.81 cap at 100 (was showing 200%)
 
@@ -11309,13 +11333,13 @@ function psBuild(lifeState,life){
     H+='<div class="ps-mast"><div style="display:flex;align-items:baseline"><span class="lg">LOCK<b> IN</b></span><span class="doc">POST-SORT REPORT</span></div><span class="stamp">SESSION COMPLETE</span></div><div class="ps-rule"></div>';
     H+='<div class="ps-id">'+
       '<div><span class="k">LOADER</span><span class="v">'+zWho()+'</span></div>'+
-      '<div><span class="k">FACILITY</span><span class="v">'+(p.facility||',')+'</span></div>'+
-      '<div><span class="k">MODE</span><span class="v">'+(TRAILER_MODE?'TRAILER-LOAD':(gameMode||',').toUpperCase())+'</span></div>'+
+      '<div><span class="k">FACILITY</span><span class="v">'+(p.facility||'\u00b7')+'</span></div>'+
+      '<div><span class="k">MODE</span><span class="v">'+(TRAILER_MODE?'TRAILER-LOAD':(gameMode||'\u00b7').toUpperCase())+'</span></div>'+
       '<div><span class="k">DATE</span><span class="v">'+new Date().toISOString().slice(0,10)+'</span></div>'+
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
-      '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.205</span></div></div>';
+      '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u00b7':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
+      '<div><span class="k">BUILD</span><span class="v">v3.5.206</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
@@ -11366,9 +11390,9 @@ function psBuild(lifeState,life){
       row('Density',lwv('density'),wlAvg('density'),'density_pct','','%')+ // v3.5.135 UNIFIED: this is the STRUCTURED density that drives the grade (was reading raw cubePct \u00b7 the same number as Pack %)
       row('Pack %',lwv('cubePct'),wlAvg('cubePct'),'cube_eff','','%')+     // v3.5.135 raw cube-fill \u00b7 one canonical label (was "Cube fill %"); the scoreboard "PACK" is its live short form
       row('Wall height %',lwv('fillPct'),wlAvg('fillPct'),'avg_wall_pct','','%')+
-      row('Avg pieces / wall',lwv('pieces'),(wl.length?wlAvg('pieces'):(walls>0?Math.round(pieces/walls):',')),null)+
-      row('SPEC freight used',null,(ncU==null?',':ncU),'nc_util_pct','','%')+
-      row('Smalls used',null,(smU==null?',':smU),'smalls_util_pct','','%')+
+      row('Avg pieces / wall',lwv('pieces'),(wl.length?wlAvg('pieces'):(walls>0?Math.round(pieces/walls):'\u00b7')),null)+
+      row('SPEC freight used',null,(ncU==null?'\u00b7':ncU),'nc_util_pct','','%')+
+      row('Smalls used',null,(smU==null?'\u00b7':smU),'smalls_util_pct','','%')+
       row('Voids (open cells)',lwv('voids'),null,null)+
       row('Shelves locked',lwv('shelves'),S.shelvesLocked||0,'shelves_locked')+
       row('Double locks',lwv('doubles'),S.doubleLocks||0,'double_locks')+
@@ -11389,7 +11413,7 @@ function psBuild(lifeState,life){
     var g=psTxt('es-grade-big'),rk=psTxt('es-rank'),vd=psTxt('es-verdict');
     // v3.5.131 the ps-ring was hardcoded GREEN · an F showed a green ring ("f is green???"). Color it by the actual grade.
     var _g0=(g||'').charAt(0), _gclr=(g==='F')?'#cc3820':(_g0==='A')?'#1f9d57':(g==='B')?'#2a7d9a':(_g0==='C'||_g0==='D')?'#b8760f':(_g0==='F')?'#cc3820':'#1f9d57';
-    var lifeSum=(lifeState==='ok'&&life&&life.sessions)?((life.avg_pph||',')+' PPH \u00b7 '+(life.avg_integrity||',')+' INTEG \u00b7 '+(life.incidents||0)+' INC \u00b7 '+(life.sessions||0)+' SESS'):(lifeState==='anon'?', log in to track ,':(lifeState==='loading'?'\u2026':', unavailable, not zero ,'));
+    var lifeSum=(lifeState==='ok'&&life&&life.sessions)?((life.avg_pph||'\u00b7')+' PPH \u00b7 '+(life.avg_integrity||'\u00b7')+' INTEG \u00b7 '+(life.incidents||0)+' INC \u00b7 '+(life.sessions||0)+' SESS'):(lifeState==='anon'?', log in to track ,':(lifeState==='loading'?'\u2026':', unavailable, not zero ,'));
     H+='<div class="ps-verdict"><div class="ps-ring" style="border-color:'+_gclr+'"><span style="color:'+_gclr+'">'+g+'</span></div>'+
       '<div class="ps-vmid"><div class="rk">'+rk+'</div><div class="ln">'+vd+'</div></div>'+
       '<div class="ps-vsum"><div class="vr s"><span class="lb">SESSION</span><span class="va">'+g+' \u00b7 '+Math.round((typeof avgPPH==='function')?avgPPH():0)+' PPH \u00b7 '+avgInt+' INTEG \u00b7 '+inc.length+' INC</span></div>'+
@@ -11825,11 +11849,11 @@ function showLevelEnd(reason,failed){
   setEl('le-score',G.score||0);
   setEl('le-pph',getPPH());
   setEl('le-time',fmtTime(elapsedSec));
-  setEl('le-par',lv?fmtTime(lv.parSec):',');
+  setEl('le-par',lv?fmtTime(lv.parSec):'\u00b7');
   setEl('le-density',Math.round(density*100)+'%');
   setEl('le-integrity',(G.integrity||100)+'%');
   setEl('le-voids',voids);
-  setEl('le-best',best>0?(best+'★'):',');
+  setEl('le-best',best>0?(best+'★'):'\u00b7');
 
   // Animate stars in sequence
   for(var s=1;s<=3;s++){
@@ -12613,9 +12637,11 @@ function initTruck(){
     brickAwarded:false,crunchCount:0,hazViolations:0,recoveryCount:0,ncPlaced:0,
     beltSinceNC:0,beltSinceBag:0,
   };
+  _ncStartCap=(gameMode==='daily')?null:NC_START_MAX; // v3.5.206 wall-start cap on special handling
   refillBelt();
   // Seed a couple of NCs and bags so the panels aren't empty from the start
   if(gameMode==='daily'){seedDailyTray();}else if(gameMode!=='gauntlet'){for(var i=0;i<2;i++)spawnNC();for(var i=0;i<2;i++)spawnBag();} // v2.7.3 daily = deterministic 6 NC + 4 bag loadout
+  _ncStartCap=null;_ncStartReserve=0;
   placed=0;startT=null; // v3.5.144 clock deferred to first piece
   if(typeof wallBaseline==='function')wallBaseline(); // v3.5.81 per-wall stat baseline
   selBeltIdx=null;selBeltRot=0;selNC=-1;selBag=-1;hCell=null;
