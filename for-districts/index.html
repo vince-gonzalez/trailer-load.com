@@ -92,7 +92,7 @@ footer a{color:var(--teal);}
 
   <div class="tldr">
     <span class="tag">THE SHORT VERSION</span>
-    <p><mark class="hl">Nothing to install. No ads. No third-party trackers. No student email required.</mark> LOCK IN runs entirely in a web browser, collects no student data unless a student opts in, keeps everything first-party, and can be verified in your browser's developer tools in under a minute. This page is the reference for your technology, privacy, and purchasing reviewers.</p>
+    <p><mark class="hl">Nothing to install. No ads. No third-party trackers. No student email required.</mark> LOCK IN runs entirely in a web browser, collects no student data unless a student opts in, keeps everything first-party, and can be checked in your browser's developer tools. This page is the reference for your technology, privacy, and purchasing reviewers.</p>
   </div>
 
   <div class="toc">
@@ -117,13 +117,12 @@ footer a{color:var(--teal);}
   </ul>
 
   <h2 id="security">Security &amp; Privacy</h2>
-  <p>The privacy posture is a deliberate design decision for school use, not a setting we toggled on. It is the same on every page and is externally verifiable.</p>
   <ul>
     <li class="no"><strong>No advertising and no ad technology of any kind</strong>, anywhere on the domain. Advertising was removed permanently and is barred.</li>
-    <li class="no"><strong>No Google Analytics and no third-party analytics or tracking of any kind.</strong> No tag manager, no advertising pixels, no session-replay. A reviewer can confirm this in browser developer tools.</li>
-    <li class="yes"><strong>First-party data only.</strong> Gameplay records are stored in our own database (Supabase / PostgreSQL) with <strong>row-level security</strong>, so a signed-in student can read only their own records.</li>
-    <li class="yes"><strong>Opt-in, off by default.</strong> "Save my stats" is off until the student turns it on (creating an account turns it on). With it off, nothing about the student or their gameplay is saved. The only data sent is a set of anonymous daily totals, such as walls finished per mode: one number per day, with no account, device, cookie or IP attached.</li>
-    <li class="yes"><strong>Double opt-in for instructor visibility.</strong> A student must separately consent before any facility or instructor can see their results.</li>
+    <li class="no"><strong>No Google Analytics and no analytics or tracking script of our own.</strong> No tag manager, no advertising pixels, no third-party session-replay script. A reviewer can confirm this in browser developer tools. The game's own timed move log is described under <a href="#data">Data Handling</a>. Cloudflare, our content-delivery provider, sends Network Error Logging headers, which ask the browser to report failed page loads to Cloudflare.</li>
+    <li class="yes"><strong>First-party data only.</strong> Gameplay records are stored in our own database (Supabase / PostgreSQL, hosted in the United States) with <strong>row-level security</strong>. A signed-in student can read only their own records, plus, if they start a crew, its members' usernames, the dates they made their accounts and joined the crew, and the results they share with it. Other users see only the public boards described below.</li>
+    <li class="yes"><strong>Opt-in, off by default.</strong> SAVE MY STATS (the box "Save my loading stats (my record)." in ADMIN ▸ ACCOUNT &amp; DATA) is off until the student turns it on. Creating an account or joining a crew turns it on. Signing in turns it on only on a device where no choice was saved; a saved OFF stays off. The setting is kept on the device, not the account, so on a shared computer the student should check it after signing in. With it off, or as a guest, no session, wall or score is saved for the student. With SAVE MY STATS off or as a guest, a wall the student signs keeps only its initials and numbers on the public arcade board, with no account attached. The only other gameplay data sent is a set of anonymous daily totals, such as walls finished per mode: one number per day, with no account, device, cookie or IP attached.</li>
+    <li class="yes"><strong>Two switches for instructor visibility.</strong> A crew sees a student's results only while the student is in it. It sees every session the student saved with SAVE MY STATS and the sharing box ("Share my stats with my crew.") both on, including sessions from before the student joined and sessions shared with an earlier crew. It sees walls saved since the student joined, while the student's most recent saved session has sharing on. A crew owner can also read each shared session's full saved record through our data API, including the timed move log and the random device ID. Joining a crew, after a confirmation card that names it and lists what it will see, turns both switches on. Any student with an account can start a crew. The dashboard does not show arcade signatures. A signed wall's score, integrity and date are public, so anyone who can see that wall under the student's username, through a crew it was shared with or a records board, could match the numbers.</li>
     <li class="yes"><strong>Transport is HTTPS/TLS only</strong> (TCP 443, outbound). No inbound connections to the device.</li>
   </ul>
   <div class="callout"><strong>Full technical security review is available to district IT reviewers on request</strong> · a detailed question-and-answer document covering endpoints to allow-list, content-security policy, authentication, storage, retention, and known limitations. We share the detailed version directly with your review team rather than publishing our configuration to the open web. Request it at <a href="mailto:vince@trailer-load.com?subject=LOCK%20IN%20,%20IT%20%26%20Security%20Review%20request">vince@trailer-load.com</a>.</div>
@@ -131,25 +130,25 @@ footer a{color:var(--teal);}
   <h2 id="data">Data Handling</h2>
   <h3>What an account collects</h3>
   <ul>
-    <li class="yes">A <strong>username</strong> and a <strong>password</strong> (stored hashed). That is the account.</li>
-    <li class="no"><strong>No email address required.</strong> No real name, no phone, no home address, no date of birth, and <strong>no payment data</strong> from students.</li>
-    <li class="yes">If the student opts in: gameplay metrics · score, load integrity, density, pace, safety incidents, walls completed.</li>
+    <li class="yes">A <strong>username</strong>, a <strong>password</strong> (stored hashed), and a recovery code shown at sign-up. That is the account.</li>
+    <li class="no"><strong>No email address required.</strong> The game does not ask for one or send one with sessions. No real name, no phone, no home address, no date of birth, and <strong>no payment data</strong> from students. Instructor logins issued by us for paid dashboards use the instructor's email.</li>
+    <li class="yes">If the student opts in: gameplay metrics · score, load integrity, density, pace, safety incidents, collapses, water breaks, rotations, lifts, walls completed · a timed log of moves (up to 6,000 per session, at 0.1 s), session start and end times, app version, and a random device ID (sign-out deletes it from the device) · per-wall records and daily scores · and, for walls the student signs while signed in, a link to the student's account that only the student can see.</li>
   </ul>
   <h3>Where it lives and who touches it</h3>
   <ul>
-    <li><strong>Subprocessors, complete list:</strong> Supabase (database and authentication hosting) and Cloudflare (content delivery and hosting). There are no others.</li>
-    <li><strong>Export:</strong> instructors can export their roster's competency data as CSV at any time.</li>
+    <li><strong>Subprocessors for the product, complete list:</strong> Supabase (database and authentication hosting, United States region us-east-2; it stores all gameplay and account data), GitHub (GitHub Pages, website hosting), and Cloudflare (content delivery and security for the website). There are no others. Our mail provider, for email sent to us, and our payment processor, for facility card payments, are not part of the product and receive no data from it.</li>
+    <li><strong>Export:</strong> whoever runs a crew, including a paid instructor, can export its roster's data as CSV at any time.</li>
     <li><strong>Return and deletion on termination</strong> are addressed in the data privacy agreement (below).</li>
-    <li><strong>A public leaderboard</strong> shows a player's chosen <em>username</em> and score. Usernames are user-selected and need not identify the student; no other field is public.</li>
+    <li><strong>Public leaderboards:</strong> for students with SAVE MY STATS on, the records boards and the Smalls Sort board show a chosen <em>username</em> with best scores and wall records (score, time, integrity, or piece count). Any signed-in player can follow a username and see that player's best score on a friends board. Joining a crew turns SAVE MY STATS on, so a student in a crew appears on the records and Smalls Sort boards under their username unless the school asks us to remove them. The daily and arcade boards show three self-chosen initials with that wall's score, integrity and date, never a username or account. Usernames and initials are user-selected and need not identify the student.</li>
   </ul>
 
   <h2 id="access">Accessibility</h2>
-  <p>Implemented and shipping today: full keyboard play, colorblind modes, a reduced-motion mode, in-game text scaling, and high-contrast outlined text for mid-game readability. We describe what is built rather than claim a formal conformance level: <strong>LOCK IN has not undergone a third-party WCAG audit and we do not assert a WCAG or Section 508 conformance level.</strong> If your institution requires a formal accessibility representation as a condition of award, contact us and we will discuss scope honestly.</p>
+  <p>Implemented and shipping today: full keyboard play, colorblind modes, a reduced-motion mode, in-game text scaling, and high-contrast outlined text for mid-game readability. We describe what is built rather than claim a formal conformance level: <strong>LOCK IN has not undergone a third-party WCAG audit and we do not assert a WCAG or Section 508 conformance level.</strong> If your institution requires a formal accessibility representation as a condition of award, contact us to discuss scope.</p>
 
   <h2 id="content">Content &amp; Age Suitability</h2>
   <ul>
     <li class="yes">Workplace-safety and logistics themed. No violence, no graphic content.</li>
-    <li class="yes"><strong>No student-to-student chat</strong> and no free-text messaging between users. The only user-authored text visible to others is a self-chosen username on a leaderboard.</li>
+    <li class="yes"><strong>No student-to-student chat</strong> and no free-text messaging between users. The only user-authored text visible to others is a self-chosen username on the leaderboards, three initials on the arcade board, and a crew name, shown to anyone who enters that crew's join code. Initials are three letters A to Z, and the server refuses a list of offensive combinations. Usernames (letters, numbers and underscore) and crew names (free text up to 48 characters) are not run through a word filter; report one to <a href="mailto:privacy@trailer-load.com">privacy@trailer-load.com</a> and we will remove it.</li>
     <li>Designed for students <strong>approximately 14 and older</strong>. A middle-grades career-exploration use is possible but should be discussed before purchase.</li>
   </ul>
   <div class="callout warn"><strong>Training supplement · not a certification.</strong> LOCK IN builds intuition and tracks readiness. It is <strong>not</strong> a certification, credential, or license, and is not a substitute for employer safety training, OSHA training, powered-industrial-truck or equipment certification, or HAZMAT / 49 CFR training.</div>

@@ -41,9 +41,44 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.204
+   LOCK IN v3.5.205
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.205 - READY FOR GOODWILL: SIGN-OUT STICKS, NO HALL OF SHAME, ONE COACH VOICE, LESS DATA KEPT.
+     Vince (2026-10-16): "if someone signs out they should remain signed out." / "hall of shame. probably need to
+     remove anything negative before public-facing real talk." / "remove the hub voice lines too ... I'LL BRING
+     THEM BACK IF I WANT TO LATER." / "we need to definitely fix the privacy wording."
+       (1) ONE SIGN-OUT FOR THE WHOLE DEVICE. Signing out on any page (the game, /me/, Smalls Sort, the
+           instructor dashboard) signs out all of them, in every open tab, and asks the server to end the
+           session. liAuthEpoch counts sign-outs on the device; a session from before the last sign-out is
+           never used, refreshed or written back. The same block lives in all four pages, and
+           .tools/authblock.py refuses a build where the copies differ.
+       (2) A shared computer keeps nothing of the last account: sign-out clears the remembered initials, the
+           username, the recovery code, the crew code, the crew-sharing flag and the device ID (a new one is
+           made next time).
+       (3) SAVE MY STATS: creating an account turns it on, and the form says so. Signing in turns it on only
+           where this device never recorded a choice; a recorded OFF stays off, and the sign-in banner says
+           which.
+       (4) Less data kept: the EMAIL box is gone and sessions send no email; the 50 local session copies,
+           which nothing ever read back, are deleted.
+       (5) HALL OF SHAME REMOVED from RECORDS and /me/ (slowest wall, most collapses, the grind, messiest).
+           The server side that refuses those boards is FIX-09.
+       (6) ONE COACH VOICE for the launch (commit 0564d17, committed alone; restore with git revert 0564d17).
+           The standard voice serves every path; a saved second-voice choice is rewritten to standard.
+       (7) Neutral wording, mechanics unchanged: SENT HOME is SHIFT OVER, SENT TO TRAINING is PRACTICE
+           TRAILER, the hazmat and collapse lines state the safety fact instead of blaming the player, the
+           repeated pick-up ladder stops guessing at motive, the New Hire level teaches instead of mocking,
+           GET BACK TO WORK is KEEP LOADING.
+       (8) The crew join card lists what a crew sees, says they can export it, and says they never see
+           arcade initials.
+       (9) The arcade account link is ON (v3.5.204 built it switched off): signed in with SAVE MY STATS on, a
+           signature is linked to the account and shown only to that player on /me/. privacy.html,
+           for-districts and terms describe it, as of 2026-10-16.
+     Tested headless with every network call mocked: the v3.5.205 suite passes 99 of 101 (the 2 were a
+     report label, fixed here, and this version bump); the v3.5.204 suite's 110 behavior checks pass; the
+     voice gates pass (no second-voice text left, standard pools byte-identical, 300 celebrations and 783
+     comments checked).
 
    CHANGE LOG v3.5.204 - THE DAILY BOARD SHOWS ARCADE INITIALS ONLY.
      Vince (2026-10-15): "the daily leaderboard only shows the 3 letter arcade names. the personal profile
@@ -2985,7 +3020,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.204 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.205 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -3107,8 +3142,8 @@ body[data-cb="trit"]{
   </div>
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 5)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. Back to "Privacy" after 2026-11-05. -->
-  <div id="sm-footer">LOCK IN v3.5.204 · © 2026</div>
+  <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 16)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.5.205: updated Oct 16; back to "Privacy" after 2026-11-16. -->
+  <div id="sm-footer">LOCK IN v3.5.205 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3258,7 +3293,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.204 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.205 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3400,7 +3435,7 @@ body[data-cb="trit"]{
     </div>
     <input id="data-facility" type="hidden">
     <label class="data-chk"><input id="data-c1" type="checkbox"> Save my loading stats (my record).</label>
-    <label class="data-chk"><input id="data-c2" type="checkbox"> Share my stats with my facility’s dashboard.</label>
+    <label class="data-chk"><input id="data-c2" type="checkbox"> Share my stats with my crew.</label>
     <div class="data-btns"><button class="data-save" onclick="zSaveConsent()">SAVE</button><button class="data-cancel" onclick="zCloseData()">NOT NOW</button></div>
     <div class="data-note">Double opt-in: facility sharing needs BOTH boxes. Change it anytime in ADMIN (pause) → ACCOUNT &amp; DATA.</div>
   </div>
@@ -3412,7 +3447,7 @@ body[data-cb="trit"]{
 <div id="ov-crew" class="ov-data"><div class="data-card">
   <div class="data-hdr">◈ JOIN THIS CREW?</div>
   <div id="crew-cf-name" class="crew-cf-name">,</div>
-  <p class="data-p">Whoever runs this crew will see your saved loading results, including <b>sessions, walls, scores, pace, integrity, safety incidents, collapses, water breaks, rotations, lifts and when you last played</b>. They can export them. They never see your arcade initials.<br>Your account stays yours. You can leave anytime.</p>
+  <p class="data-p">Whoever runs this crew will see your saved loading results, including <b>sessions, walls, scores, pace, integrity, safety incidents, collapses, water breaks, rotations, lifts, the timed log of your moves, your device ID, when you made your account, when you joined and when you last played</b>. They can export them. They never see which arcade initials are yours. Joining turns on SAVE MY STATS and sharing.<br>Your account stays yours. You can leave anytime.</p>
   <div class="data-btns"><button class="data-save" onclick="crewJoinConfirm()">JOIN</button><button class="data-cancel" onclick="crewCancel()">CANCEL</button></div>
 </div></div>
 
@@ -3771,7 +3806,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.204
+// LOCK IN v3.5.205
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -4240,7 +4275,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.204'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.205'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -11270,7 +11305,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.204</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.205</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
@@ -11304,7 +11339,7 @@ function psBuild(lifeState,life){
       row('\u00b7 Collapse',null,ic('COLLAPSE'),null,true)+
       row('Warnings (total)',lwv('warningsWall'),(S.warnings||[]).length,null)+
       row('\u00b7 washed / mitigated',lwv('safetiesWashed'),S.safetiesWashed||0,null,true)+
-      row('Sent to training',null,S.practiceKicks||0,null)+
+      row('Practice trailers',null,S.practiceKicks||0,null)+
       row('Crunches',lwv('crunches'),S.crunches||0,'crunches')+
       row('Collapses',lwv('collapses'),S.collapses||0,'collapses')+
       row('Recoveries',lwv('recoveries'),S.recoveries||0,'recoveries')+
