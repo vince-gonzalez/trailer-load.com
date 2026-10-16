@@ -2446,10 +2446,6 @@ body.m-portrait .stg-wheel{bottom:288px;}
   opacity:0;display:none;
   max-width:90%;overflow:hidden;text-overflow:ellipsis;
 }
-#cmt-overlay.hub{
-  color:#f0c040;border-color:rgba(240,192,64,.55);
-  font-size:clamp(16px,2.8vw,26px);
-}
 #cmt-overlay.ok{border-color:rgba(40,184,112,.55);}
 #cmt-overlay.danger{border-color:rgba(204,56,32,.55);}
 #cmt-overlay.vis{display:block;animation:cmtFadeIn .2s ease-out forwards;}
@@ -3214,17 +3210,6 @@ body[data-cb="trit"]{
           <div class="set-seg">
             <button class="set-seg-btn" id="set-boxgrid-on" onclick="setBoxGrid(true)">ON</button>
             <button class="set-seg-btn" id="set-boxgrid-off" onclick="setBoxGrid(false)">OFF</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="set-section">
-        <div class="set-sec-title">◈ Coach Voice</div>
-        <div class="set-row">
-          <div class="set-lbl">Voice</div>
-          <div class="set-seg">
-            <button class="set-seg-btn teal" id="set-voice-std" onclick="setVoicePref('std')">STANDARD</button>
-            <button class="set-seg-btn teal" id="set-voice-hub" onclick="setVoicePref('hub')">HUB MODE</button>
           </div>
         </div>
       </div>
@@ -5511,32 +5496,6 @@ function spawnNC(){
   buildNCPanel();
   if(_staged>=2&&typeof playSfx==='function')playSfx('stage'); // v2.4.3 audible heads-up when a SET (e.g. tires) drops into staging
   checkPanelFill();
-  // Hub Mode: fire NC-appears commentary the exact second an NC hits staging
-  // DECISION: this fires from spawnNC() not from placeBox() · it's about
-  // the NC appearing in the panel, not being placed on the wall.
-  if(activeVoice==='hub'&&gameMode!=='training'){
-    var ncLines=[
-      'YOU GOT NC\'S THERE!',
-      'IC ON DECK. DON\'T IGNORE IT.',
-      'IRREG SITTING IN THE TRAY. MOVE IT.',
-      'NON-CON\'S NOT GONNA PLACE ITSELF.',
-      'SPECIAL HANDLING. THE PANEL. NOW.',
-      'HEAVY FREIGHT. PANEL. YOU SEE IT.',
-      'THAT\'S AN IRREG, ACE. WALL, NOT FLOOR.',
-      'IC INCOMING. HANDLE IT.',
-    ];
-    var line=ncLines[Math.floor(Math.random()*ncLines.length)];
-    // Route through canvas overlay · visible, amber, punchy
-    showCmtOverlay(line,'hub',2000);
-    // Also update side panel
-    var ts=document.getElementById('fp-tip-s');
-    var th=document.getElementById('fp-tip-h');
-    if(th)th.textContent='';
-    if(ts){
-      ts.textContent=line;
-      ts.classList.remove('flash');void ts.offsetWidth;ts.classList.add('flash');
-    }
-  }
 }
 
 // v3.5.1 UNIFIED FEED · bags ride the chute like any conveyable piece (the separate SMALLS lane is retired)
@@ -6111,7 +6070,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     safetyWarn('TIRE_SIDEWAYS','tire stood on edge · load tires flat.');
     var _stc=0,_sy,_sx,_ssn={};
     for(_sy=0;_sy<GH;_sy++)for(_sx=0;_sx<GW;_sx++){var _scc=G.grid[_sy]&&G.grid[_sy][_sx];if(_scc&&!_ssn[_scc.id]&&_scc.box&&_scc.box.cat==='tire'&&((_scc.rot||0)%2===1)){_ssn[_scc.id]=1;_stc++;}}
-    if(_stc>=3&&typeof showCmtOverlay==='function')showCmtOverlay(activeVoice==='hub'?'A whole ROW of tires on their edge? They roll the second the door cracks. LAY THEM FLAT.':'Row of sideways tires · that’s a rolling load waiting to happen. Flat, every time.',activeVoice==='hub'?'hub':'',3000);
+    if(_stc>=3&&typeof showCmtOverlay==='function')showCmtOverlay('Row of sideways tires · that’s a rolling load waiting to happen. Flat, every time.','',3000);
   }
 
   // Remove from source
@@ -8989,40 +8948,17 @@ function updateFeedback(hp,pph,integ,eff,cog,voids,ss){
 
 function buildTips(hp,integ,voids,cog,ss,pph){
   var tips=[];
-  var hub=activeVoice==='hub';
-  if(hp<0.2)tips.push(hub?
-    {h:'Floor first. Always floor first.',s:'Every veteran who skipped the floor learned it the hard way. NCs on the bottom row. Heavy freight next. Now build up.'}:
-    {h:'Build your floor first.',s:'Place NCs along the bottom row before stacking regular freight. A solid foundation prevents collapse.'});
-  if(voids>5)tips.push(hub?
-    {h:'Those gaps are costing you.',s:'Holes under loaded freight collapse. Break down smalls bags. Fill the voids. There\'s no excuse.'}:
-    {h:'Fill those voids.',s:'Gaps under loaded freight weaken the wall. Use smalls and bag breakdown pieces to plug holes before building higher.'});
-  if(integ<50)tips.push(hub?
-    {h:'Wall integrity is in the red.',s:'Lock in a full shelf row. Right now. That\'s the only thing that\'s going to save this load.'}:
-    {h:'Wall integrity critical.',s:'Complete a full shelf row to recover structural integrity. A locked shelf is the strongest anchor in the wall.'});
-  if(Math.abs(cog-.5)>.22)tips.push(hub?
-    {h:'You\'re loading one side.',s:'The trailer can feel that. Heavy piece goes on the other side. COG centered. Do it now.'}:
-    {h:'Balance your load.',s:'Weight is drifting to one side. Alternate heavy pieces left and right to keep the center of gravity stable.'});
-  if(ss<0.7)tips.push(hub?
-    {h:'Pieces are floating.',s:'Over 30% unsupported. Stack on solid bases. No floating columns. This isn\'t decoration.'}:
-    {h:'Support every piece.',s:'Over 30% of your freight is unsupported. Stack pieces on solid bases · unsupported freight risks collapse.'});
-  if(pph<60&&elapsed()>60)tips.push(hub?
-    {h:'You\'re moving slow.',s:'PPH is flagged. Keep the belt moving. There\'s no good reason to stand there.'}:
-    {h:'Pick up the pace.',s:'Your PPH is below target. Keep the belt moving · clear pieces quickly rather than waiting for the perfect spot.'});
-  if((G.tetrisTotal||0)===0&&hp>.3)tips.push(hub?
-    {h:'Not a single shelf.',s:'You\'re past 30% height with no locked rows. Fill a complete row. That\'s the foundation of everything.'}:
-    {h:'Lock in a shelf.',s:'Complete a full row to earn LOCKED IN · bonus CUBES and structural integrity recovery. One shelf changes everything.'});
-  tips.push(hub?
-    {h:'SPEC in the corners.',s:'Heavy SPEC freight on floor corners anchors the wall and stops the load drifting. Use them or lose the bonus.'}:
-    {h:'SPEC anchors the wall.',s:'SPEC freight on corners and floor edges earns bonus CUBES and stops wall drift.'});
-  tips.push(hub?
-    {h:'Stagger your rows.',s:'Pieces that bridge row seams earn BRICK LOCK. That\'s what keeps walls from splitting in transit.'}:
-    {h:'Stagger your rows.',s:'Offset box joints like a brick wall · pieces that bridge seams earn the BRICK LOCK bonus.'});
-  tips.push(hub?
-    {h:'Smalls bag sitting there?',s:'Double-click it. Six gap-fillers · three 2×1s and three singles. Use them. That\'s what they\'re for.'}:
-    {h:'Bag breakdown tip.',s:'Long-press or double-click a smalls bag to break it into 6 gap-fill pieces (three 2×1s + three singles) for tight voids near the top.'});
-  return tips.length?tips:[hub?
-    {h:'Keep loading.',s:'Wall won\'t seal itself.'}:
-    {h:'Keep loading.',s:'Build toward 92% wall height to complete the trailer.'}];
+  if(hp<0.2)tips.push({h:'Build your floor first.',s:'Place NCs along the bottom row before stacking regular freight. A solid foundation prevents collapse.'});
+  if(voids>5)tips.push({h:'Fill those voids.',s:'Gaps under loaded freight weaken the wall. Use smalls and bag breakdown pieces to plug holes before building higher.'});
+  if(integ<50)tips.push({h:'Wall integrity critical.',s:'Complete a full shelf row to recover structural integrity. A locked shelf is the strongest anchor in the wall.'});
+  if(Math.abs(cog-.5)>.22)tips.push({h:'Balance your load.',s:'Weight is drifting to one side. Alternate heavy pieces left and right to keep the center of gravity stable.'});
+  if(ss<0.7)tips.push({h:'Support every piece.',s:'Over 30% of your freight is unsupported. Stack pieces on solid bases · unsupported freight risks collapse.'});
+  if(pph<60&&elapsed()>60)tips.push({h:'Pick up the pace.',s:'Your PPH is below target. Keep the belt moving · clear pieces quickly rather than waiting for the perfect spot.'});
+  if((G.tetrisTotal||0)===0&&hp>.3)tips.push({h:'Lock in a shelf.',s:'Complete a full row to earn LOCKED IN · bonus CUBES and structural integrity recovery. One shelf changes everything.'});
+  tips.push({h:'SPEC anchors the wall.',s:'SPEC freight on corners and floor edges earns bonus CUBES and stops wall drift.'});
+  tips.push({h:'Stagger your rows.',s:'Offset box joints like a brick wall · pieces that bridge seams earn the BRICK LOCK bonus.'});
+  tips.push({h:'Bag breakdown tip.',s:'Long-press or double-click a smalls bag to break it into 6 gap-fill pieces (three 2×1s + three singles) for tight voids near the top.'});
+  return tips.length?tips:[{h:'Keep loading.',s:'Build toward 92% wall height to complete the trailer.'}];
 }
 
 // ── FAIL CONDITIONS ──
@@ -9719,46 +9655,25 @@ function gcurTick(){
 }
 
 // ══════════════════════════════════════════════════════════════
-// VOICE SYSTEM + BRIEFING · v1.9.5
-// Two voices: 'std' (instructional) and 'hub' (hardened/ribbing).
-// All commentary, coaching, and celebrations route through voice state.
-// Voice persists in sessionStorage. Briefing shown once per session.
+// VOICE SYSTEM + BRIEFING · v1.9.5 · ONE VOICE since v3.5.205
+// v3.5.205 (Vince, 2026-10-16): the second coach voice is removed for the Goodwill launch, and he may bring it back
+// ("I'LL BRING THEM BACK IF I WANT TO LATER"). Git history holds it: revert the v3.5.205 voice commit to restore.
+// Every path uses the standard voice. liVoice is written as 'std' and never read back, so a saved second voice
+// cannot return. The briefing shows once per session.
 // ══════════════════════════════════════════════════════════════
 
 // ── VOICE STATE ──
-var activeVoice='std'; // 'std' | 'hub'
-try{var _sv=localStorage.getItem('liVoice');if(_sv)activeVoice=_sv;}catch(e){}
+var activeVoice='std';
 
-function setVoice(v){
-  activeVoice=v;
-  try{localStorage.setItem('liVoice',v);}catch(e){}
-  gaEvent('voice_selected',{voice:v});
-  var std=document.getElementById('vt-std');
-  var hub=document.getElementById('vt-hub');
-  if(std)std.classList.toggle('active',v==='std');
-  if(hub)hub.classList.toggle('active',v==='hub');
-  // Sync briefing tab
-  briefTab(v);
+function setVoice(v){ // any value, a saved second voice included, lands on 'std'
+  activeVoice='std';
+  try{localStorage.setItem('liVoice','std');}catch(e){}
+  briefTab('std');
 }
 
-function V(std,hub){return activeVoice==='hub'?hub:std;}
-
 // ── BRIEFING ──
-function briefTab(t){
-  document.querySelectorAll('.brief-tab').forEach(function(el,i){
-    el.classList.toggle('active',i===(t==='hub'?1:0));
-  });
-  var s=document.getElementById('brief-std');
-  var h=document.getElementById('brief-hub');
-  // v3.5.45 CLIPBOARD-BLANK FIX: the HUB briefing (#brief-hub) was retired, but 'hub' voice still
-  // hid #brief-std and tried to show the missing #brief-hub -> a BLANK clipboard for anyone whose
-  // saved voice is 'hub' (worked at std, blank at hub, intermittent by device). If brief-hub is gone,
-  // ALWAYS show brief-std regardless of voice.
-  if(h){if(s)s.style.display=t==='hub'?'none':'block';h.style.display=t==='hub'?'block':'none';}
-  else if(s){s.style.display='block';}
-  // Keep voice in sync with tab
-  activeVoice=t;
-  try{localStorage.setItem('liVoice',t);}catch(e){}
+function briefTab(t){ // v3.5.45 the clipboard is never blank: the standard briefing always shows
+  var s=document.getElementById('brief-std');if(s)s.style.display='block';
 }
 
 function acknowledgeBriefing(){
@@ -9795,34 +9710,10 @@ var LOCKIN_LINES_STD=[
   'THAT ROW IS CARRYING THE WHOLE WALL',
   'ONE SHELF DOWN. BUILD ANOTHER.',
 ];
-var LOCKIN_LINES_HUB=[
-  // v4.0 BLACK-PEN: full HUB pool rewrite · observation/consequence/instruction, every line reinforces play
-  'THERE IT IS.',
-  'NOW BUILD ANOTHER.',
-  'THAT\'S HOW WALLS START.',
-  'GOOD. KEEP MOVING.',
-  'ONE SHELF. MANY TO GO.',
-  'YOU FOUND THE FOUNDATION.',
-  'THAT ROW IS DOING REAL WORK.',
-  'NOW THE WALL CAN BREATHE.',
-  'DISPATCH LIKES THAT.',
-  'ABOUT TIME.',
-  'THE TRAILER NOTICED.',
-  'BELT\'S STILL MOVING.',
-  'DON\'T GET COMFORTABLE.',
-  'KEEP STACKING.',
-  'THAT\'S VETERAN HABIT.',
-  'NOW DO IT AGAIN.',
-];
 var BULKHEAD_LINES_STD=[
   'DOUBLE LOCK · TWO SHELVES BACK TO BACK',
   'DOUBLE ANCHOR · THIS WALL ISN\'T GOING ANYWHERE',
   'CONSECUTIVE SHELVES · MAXIMUM STRUCTURAL INTEGRITY',
-];
-var BULKHEAD_LINES_HUB=[
-  'TWO IN A ROW. WELCOME TO THE JOB.',
-  'BACK TO BACK. NOW YOU\'RE LOADING.',
-  'THAT\'S A DOUBLE LOCK. TRY NOT TO CELEBRATE TOO HARD.',
 ];
 
 var _lockinFlashTO=null;
@@ -9839,16 +9730,7 @@ function fireLockinFlash(isBulkhead,count,pts){
   if(typeof gridToCanvas==='function'){var _lc=gridToCanvas(GW/2,GH*0.45);spawnBurst(_lc.x,_lc.y,isBulkhead?26:18,isBulkhead?'rgba(25,165,148,.95)':'rgba(224,150,46,.95)',150,0.6,90);}
   addShake(isBulkhead?10:7);playSfx(isBulkhead?'doublelock':'lock');hapt(isBulkhead?'dlock':'lock');
 
-  var isHub=activeVoice==='hub';
-
-  // DECISION: In Hub Mode, BULKHEAD is just a banter line · not a structural callout.
-  // "TWO IN A ROW. WELCOME TO THE JOB." beats "CONSECUTIVE SHELVES · MAXIMUM INTEGRITY"
-  // for a hardened veteran. BULKHEAD flash still fires but shorter, and the
-  // sub-text is always a banter line in Hub Mode.
-  // Also: Hub Mode gets 1400ms flash (punchy), Standard gets 2200ms (satisfying).
-  var lines=isBulkhead?
-    (isHub?BULKHEAD_LINES_HUB:BULKHEAD_LINES_STD):
-    (isHub?LOCKIN_LINES_HUB:LOCKIN_LINES_STD);
+  var lines=isBulkhead?BULKHEAD_LINES_STD:LOCKIN_LINES_STD;
   var line=lines[Math.floor(Math.random()*lines.length)];
   if(count>1)line=(count===2?'DOUBLE ':'TRIPLE ')+line;
 
@@ -9861,7 +9743,6 @@ function fireLockinFlash(isBulkhead,count,pts){
 // Replaces fp-tip panel routing for all in-game commentary.
 // Positions at top 8% of scene when wall < 35% height (out of build area).
 // Drops to bottom strip above floor when wall >= 35% height. (v3.4.4: 50% -> 35%)
-// Hub Mode: larger amber text, 1800ms. Standard: white, 2600ms.
 var _cmtTO=null;
 function showCmtOverlay(text,cls,dur){
   if(((S&&S.totalScore||0)+(G&&G.score||0))>=TRAINER_CUTOFF)return; // v3.5.19 TRAINER backs off past the cutoff (you've proven you load safe)
@@ -9939,105 +9820,6 @@ var PLACE_CMT_STD={
     'Build upward.',
   ],
 };
-var PLACE_CMT_HUB={
-  nc:[
-    'NC on the wall. First priority, handled.',
-    'That\'s where the irreg goes. Not the floor.',
-    'IC in the corner. Classic. Do it again.',
-    'One non-con down. Clear the rest of the tray.',
-    'SP placed. Supervisor exhales.',
-    'An irreg. On the wall. As intended.',
-    'That tray is not a parking spot for ICs.',
-    'That NC was never gonna place itself.',
-  ],
-  fragile:[ // v3.5.198 protected, see PLACE_CMT_STD
-    'Fragile boxed in. That is how it is done.',
-    'Covered fragile. Good. Keep it that way.',
-    'Closed in on both sides. Write that down.',
-    'Shelf under it or boxes beside it. Either one saves it.',
-    'That\'s the correct move. Make it a habit.',
-  ],
-  frag_bad:[ // v3.5.198 exposed, at any height
-    'That fragile piece is exposed. Something will land on it.',
-    'Something heavy is going to find that one. Close it in.',
-    'The trailer wall is not a box. A fragile needs a real one each side.',
-    'Exposed fragile is a claim waiting to happen. Close it in.',
-  ],
-  small:[
-    'Smalls. The unsung heroes of a wall.',
-    'Gap filled. Look at you go.',
-    'Smalls in play · that\'s how walls get tight.',
-    'Nobody teaches that. You figured it out.',
-    'Faster hands. Same care.',
-    'That gap was costing you cubes. It\'s filled now.',
-    'Smalls go where regulars can\'t. Fill the gaps.',
-    'No daylight in that wall. Keep it airtight.',
-    'Bags flex where boxes can\'t. Use that.',
-    'Gaps filled · now keep the belt moving too.',
-  ],
-  large:[
-    'Heavy. Flat. Good. Don\'t overthink it.',
-    'Big piece in. Straighten your COG.',
-    'Large freight on a solid base. Acceptable.',
-    'Wider base next time. Big freight earns big support.',
-    'That\'s a big piece. It needs a big base. Plan ahead.',
-    'Heavy freight laid flat. Textbook. Keep up.',
-    'Keep the freight coming.',
-  ],
-  support_good:[
-    'Every cell supported. Textbook.',
-    'Solid. Your foreman would nod exactly once.',
-    'That\'s a supported placement. Yes, there\'s a difference.',
-    'Now THAT is a supported placement. Keep that standard.',
-    'Full support. That\'s the job.',
-    'Clean work. Now do it at pace.',
-    'The customer thanks you for your service.',
-    'Look at that. Supported. On purpose.',
-  ],
-  // DECISION: fires when support is high but PPH is low · "meticulous but slow"
-  // Checked in fireCommentary() via G.support>.90 && getPPH()<80
-  low_pph_high_support:[
-    'I need you to pick it up.',
-    'The clean work is there. Now find the speed.',
-    'The schedule doesn\'t wait. Move with purpose.',
-    'The belt is moving faster than you are.',
-    'Pick it up. Please.',
-    'Beautiful placement. Now give me two more, faster.',
-    'Technically correct · and behind schedule. Reps build speed.',
-    'Your support is excellent. Your pace is not. Close that gap.',
-  ],
-  cog_warn:[
-    'You\'re loading heavy on one side. The trailer knows.',
-    'COG is drifting. Other side. Now.',
-    'Split the weight. Left and right, every course.',
-    'You can feel the trailer leaning. Fix it.',
-    'One side heavy. You know better than this.',
-    'That\'s a COG problem. Solve it before it solves you.',
-    'Heavy side is winning. Load the light side.',
-  ],
-  generic:[
-    'Keep moving.',
-    'Next.',
-    'Load it.',
-    'Go.',
-    'There you go.',
-    'Make the next one cleaner.',
-    'Bring the energy up.',
-    'That\'ll do.',
-    'Not bad. Not great either.',
-    'Clock\'s running.',
-    'The trailer won\'t load itself.',
-    'That\'s a placement. It\'s fine.',
-    'One piece at a time. All shift.',
-    'Finish strong and everybody goes home on time.',
-    'Every placement goes on your record. Load like it.',
-    'Straight rows. Square corners.',
-    'Protect the freight. It pays the wages.',
-    'The customer thanks you for your service.',
-    'Look alive.',
-    'Management notices clean walls. Keep building them.',
-  ],
-};
 var _lastCmtTime=0;
 var _cmtCooldownMs=8000; // v2.6.8 quieter - min ms between placement comments
 var TRAINER_CUTOFF=9000; // v3.5.19 once the session score clears this, the TRAINER stops checking in (you've proven you can load safe)
@@ -10049,7 +9831,7 @@ function fireCommentary(source,box,gx,gy,rot){
   if(((S&&S.totalScore||0)+(G&&G.score||0))>=TRAINER_CUTOFF)return;
   _lastCmtTime=now;
 
-  var pool=activeVoice==='hub'?PLACE_CMT_HUB:PLACE_CMT_STD;
+  var pool=PLACE_CMT_STD;
   var lines=null;
 
   // Context weighting · most specific wins
@@ -10070,10 +9852,6 @@ function fireCommentary(source,box,gx,gy,rot){
     }
     if(!_fSafe&&_fc&&(isRowLockedIn(_fTop)||hasLateralSupport(_fc)))_fSafe=true;
     lines=_fSafe?pool.fragile:pool.frag_bad;
-  } else if(activeVoice==='hub'&&G.support&&G.support>0.90&&getPPH()<80&&elapsed()>60){
-    // DECISION: "meticulous but slow" context · great wall quality, terrible pace
-    // "I need you to pick it up." / "The clean work is there. Now find the speed."
-    lines=pool.low_pph_high_support||pool.generic;
   } else if(box.type==='small'||box.w<=2&&box.h<=2){
     lines=pool.small;
   } else if(box.type==='large'||box.w>=6||box.h>=6){
@@ -10090,11 +9868,8 @@ function fireCommentary(source,box,gx,gy,rot){
   if(!lines||!lines.length)return;
   var line=lines[Math.floor(Math.random()*lines.length)];
 
-  // Route to canvas overlay · visible regardless of panel scroll/size
-  // Hub Mode gets amber 'hub' class and shorter duration (punchy)
-  // Standard gets white text and longer duration (instructional)
-  var isHub=activeVoice==='hub';
-  showCmtOverlay(line,isHub?'hub':'',isHub?1800:2600);
+  // Route to the DISPATCH feed (showCmtOverlay early-returns into pushMsg, tagged TRAINER)
+  showCmtOverlay(line,'',2600);
 
   // Also update fp-tip for players who read the panel
   var th=document.getElementById('fp-tip-h');
@@ -12700,8 +12475,6 @@ function refreshSettingsUI(){
   seg('set-motion-off',!SETTINGS.reducedMotion);
   seg('set-hapt-on',SETTINGS.haptics!==false);
   seg('set-hapt-off',SETTINGS.haptics===false);
-  seg('set-voice-std',activeVoice!=='hub');
-  seg('set-voice-hub',activeVoice==='hub');
   seg('set-cb-off',!SETTINGS.colorblind||SETTINGS.colorblind==='off');
   seg('set-cb-deut',SETTINGS.colorblind==='deut');
   seg('set-cb-prot',SETTINGS.colorblind==='prot');
@@ -12770,7 +12543,6 @@ function setHaptics(on){
   if(on&&typeof hapt==='function')hapt('select');
   refreshSettingsUI();saveSettings();
 }
-function setVoicePref(v){setVoice(v);refreshSettingsUI();}
 function setColorblindMode(m){if(['deut','prot','trit'].indexOf(m)<0)m='off';SETTINGS.colorblind=m;document.body.dataset.cb=(m==='off'?'':m);refreshSettingsUI();saveSettings();}
 function setTextScale(s){if(s!=='lg'&&s!=='xl')s='normal';SETTINGS.textScale=s;document.body.dataset.txt=(s==='normal'?'':s);refreshSettingsUI();saveSettings();}
 
@@ -13184,8 +12956,6 @@ try{
   document.addEventListener('visibilitychange',function(){if(!document.hidden)zAuthSync();});
 }catch(e){console.error('auth sync boot:',e);}
 
-// Restore voice from session
-try{var _bv=sessionStorage.getItem('liVoice');if(_bv)activeVoice=_bv;}catch(e){}
 
 // v2.1.24 · load + apply saved settings (theme, reduced-motion, learning grid, audio levels)
 try{loadSettings();applySettings();}catch(e){console.error('settings boot:',e);}
