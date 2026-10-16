@@ -357,6 +357,7 @@ var SHEET_SRC_SHOW={life:'lockin_showcase', session:'lockin_showcase_session', w
 var SHEET_SORT={life:'walls', session:'last_seen', wall:'loaded_at'};
 
 function dHeaders(){
+  if(DASH.session&&liAuthStale(DASH.session))dAuthSync(); // v2.3 never send a token from before the last sign-out on this device
   var h={'apikey':DASH.anonKey,'Content-Type':'application/json'};
   h['Authorization']='Bearer '+((DASH.session&&DASH.session.access_token)||DASH.anonKey);
   return h;
@@ -364,6 +365,26 @@ function dHeaders(){
 function dMsg(t,cls){var e=document.getElementById('login-msg');if(e){e.textContent=t||'';e.className=cls||'';}}
 function dEsc(s){return (''+(s==null?'':s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function dNum(v){return (v==null||isNaN(v))?0:(+v);}
+// v3.5.205 ONE SIGN-OUT FOR THE WHOLE SITE ON THIS DEVICE (owner, 2026-10-16: "if someone signs out they should
+// remain signed out"). liAuthEpoch counts sign-outs on this device. Every stored session carries the epoch it was born
+// in (ep). A sign-out bumps the epoch, so every older session, in this tab, another tab, /me/, Smalls Sort or the
+// dashboard, is dead on sight and is never written back. A deliberate sign-in stamps the CURRENT epoch, so it works.
+// The same block lives in lock-in.html, me/index.html, dashboard/index.html and ss/index.html: keep the copies identical.
+var LI_AUTH_STORES=['liAuth','lockinMeAuth','lockinDashAuth'];
+function liAuthEpoch(){try{return parseInt(localStorage.getItem('liAuthEpoch')||'0',10)||0;}catch(e){return 0;}}
+function liAuthStale(s){return !s||(+s.ep||0)<liAuthEpoch();}
+function liSignOutAll(authUrl,anonKey,extraTok){
+  var toks=[],i,r,s,p;
+  if(extraTok)toks.push(extraTok);
+  for(i=0;i<LI_AUTH_STORES.length;i++){try{r=localStorage.getItem(LI_AUTH_STORES[i]);s=r?JSON.parse(r):null;if(s&&s.access_token&&toks.indexOf(s.access_token)<0)toks.push(s.access_token);}catch(e){}}
+  try{localStorage.setItem('liAuthEpoch',''+(liAuthEpoch()+1));}catch(e){} // FIRST: a tab that hears the removals below already sees the new epoch
+  for(i=0;i<LI_AUTH_STORES.length;i++){try{localStorage.removeItem(LI_AUTH_STORES[i]);}catch(e){}}
+  try{localStorage.removeItem('liInitials');localStorage.removeItem('meNoSSO');localStorage.removeItem('liSessions');}catch(e){}
+  // the next person on this device inherits nothing of this account: username, recovery code, crew code, crew sharing,
+  // or the device ID (a new one is made on the next game load). The SAVE MY STATS choice is kept.
+  try{p=JSON.parse(localStorage.getItem('liPlayer')||'null');if(p){p.email='';p.handle='';p.facility='';p.consentShare=false;delete p.recovery;delete p.pid;localStorage.setItem('liPlayer',JSON.stringify(p));}}catch(e){}
+  for(i=0;i<toks.length;i++){try{fetch(authUrl+'/logout?scope=local',{method:'POST',headers:{'apikey':anonKey,'Authorization':'Bearer '+toks[i]}}).catch(function(){});}catch(e){}} // best effort: revoke these sessions server-side so a tab running older code cannot refresh back in
+}
 function dSince(ts){
   if(!ts)return 'never';
   try{
@@ -388,7 +409,7 @@ function dLogin(){
     fetch(DASH.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':DASH.anonKey},body:JSON.stringify({email:email,password:pw})})
       .then(function(r){return r.json();}).then(function(j){
         if(j&&j.access_token){
-          DASH.session={access_token:j.access_token,refresh_token:j.refresh_token,email:email,uid:(j.user&&j.user.id)||''};
+          DASH.session={access_token:j.access_token,refresh_token:j.refresh_token,email:email,uid:(j.user&&j.user.id)||'',ep:liAuthEpoch()};
           try{localStorage.setItem('lockinDashAuth',JSON.stringify(DASH.session));}catch(e){}
           dMsg('','');dEnter();
         } else { dMsg((j&&(j.error_description||j.msg))||'Sign-in failed. Check your username and password, or email vince@trailer-load.com.','err'); }
@@ -623,13 +644,18 @@ function dExport(){
   if(_xb){_xb.textContent='✓ EXPORTED ('+base.length+')';setTimeout(function(){if(_xb)_xb.textContent='⭳ EXPORT CSV';},2200);}
   setTimeout(function(){URL.revokeObjectURL(url);},1500);
 }
-function dSignOut(){
-  DASH.session=null;DASH.rows=[];DASH.guests=[];DASH.name='';
-  try{localStorage.removeItem('lockinDashAuth');var _e=document.getElementById('li-email');if(_e)_e.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
-  document.getElementById('dash').style.display='none';
-  document.getElementById('login').style.display='block';
+function dShowLogin(t,cls){
+  try{var _e=document.getElementById('li-email');if(_e)_e.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
+  var d=document.getElementById('dash');if(d)d.style.display='none';
+  var l=document.getElementById('login');if(l)l.style.display='block';
   var who=document.getElementById('who');if(who)who.style.display='none';
-  dMsg('Signed out.','good');
+  dMsg(t,cls);
+}
+function dSignOut(){
+  var tok=DASH.session&&DASH.session.access_token;
+  DASH.session=null;DASH.rows=[];DASH.guests=[];DASH.name='';
+  liSignOutAll(DASH.authUrl,DASH.anonKey,tok); // v2.3 (LOCK IN v3.5.205) one sign-out for the whole site on this device: the game and /me/ too
+  dShowLogin('Signed out.','good');
 }
 /* GoTrue tokens live ~1h; a stale one made every fetch 401 and the page rendered an
    apparently WIPED roster. Expired means expired, said out loud. */
@@ -643,11 +669,26 @@ function dExpired(){
   var m=document.getElementById('login-msg');if(m){m.textContent='Session expired · sign in again.';m.className='err';}
 }
 function dBoot(){
-  try{var r=localStorage.getItem('lockinDashAuth');if(r){DASH.session=JSON.parse(r);
-    if(DASH.session&&DASH.session.access_token){
-      if(!dJwtFresh(DASH.session.access_token)){dExpired();return;}
+  try{var r=localStorage.getItem('lockinDashAuth');if(r){var ds=JSON.parse(r);
+    if(ds&&ds.access_token){
+      if(liAuthStale(ds)){localStorage.removeItem('lockinDashAuth');return;} // v2.3 signed out on this device after this login
+      DASH.session=ds;
+      if(!dJwtFresh(ds.access_token)){dExpired();return;}
       dEnter();return;}}}catch(e){console.error('dBoot:',e);}
 }
+// v2.3 (LOCK IN v3.5.205) OPEN TABS FOLLOW A SIGN-OUT made anywhere on the site: drop to the login form, never write anything back.
+function dAuthSync(){
+  if(!DASH.session)return;
+  var s=null;try{var r=localStorage.getItem('lockinDashAuth');s=r?JSON.parse(r):null;}catch(e){}
+  if(s&&s.access_token&&!liAuthStale(s)&&!liAuthStale(DASH.session)&&s.uid===DASH.session.uid){if(s.access_token!==DASH.session.access_token)DASH.session=s;return;}
+  DASH.session=null;DASH.rows=[];DASH.guests=[];DASH.name='';
+  dShowLogin('Signed out on this device.','good');
+}
+try{
+  window.addEventListener('storage',function(e){if(e.key===null||e.key==='lockinDashAuth'||e.key==='liAuthEpoch')dAuthSync();});
+  window.addEventListener('pageshow',function(e){if(e.persisted)dAuthSync();});
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)dAuthSync();});
+}catch(e){console.error('dAuthSync boot:',e);}
 dBoot();
 </script>
 </body>

@@ -2659,17 +2659,15 @@ body[data-cb="trit"]{
 .lb-row.lb-me{background:rgba(200,121,30,.14);border-radius:3px;}
 .lb-empty{color:#a08b6a;font-style:italic;padding:10px 4px;}
 .lb-note{font-family:'Share Tech Mono',monospace;font-size:11px;color:#a08b6a;line-height:1.5;margin-top:6px;border-top:1px dashed #d8cdb4;padding-top:8px;}
-/* v3.5.104 THE HALL LEDGER · World-Board fame/shame cards + medal rows, cream-paper style */
+/* v3.5.104 THE HALL LEDGER · World-Board fame cards + medal rows, cream-paper style (v3.5.205 shame removed) */
 .lb-colhd{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;margin:16px 0 9px;display:flex;align-items:center;gap:8px;}
 .lb-colhd:first-child{margin-top:0;}
 .lb-colhd::after{content:'';flex:1;height:1px;background:#cebf9c;}
 .lb-colhd.fame{color:#b07a12;}
-.lb-colhd.shame{color:#a33f1c;}
 .lb-cardgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 @media(max-width:520px){.lb-cardgrid{grid-template-columns:1fr;}}
 .lb-card{background:linear-gradient(180deg,#efe8d7,#e2d8bf);border:1px solid #cebf9c;border-radius:8px;padding:10px 10px 9px;}
 .lb-card.fame{box-shadow:inset 3px 0 0 #e0a838;}
-.lb-card.shame{box-shadow:inset 3px 0 0 #b3401f;}
 .lb-card-hd{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.6px;color:#2a1a08;display:flex;align-items:center;gap:7px;line-height:1;}
 .lb-card-hd .em{font-size:16px;}
 .lb-card-sub{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.2px;color:#9a8763;margin:2px 0 8px;line-height:1.35;}
@@ -2698,10 +2696,8 @@ body[data-cb="trit"]{
 .lb-at-hd::after{content:'';flex:1;height:1px;background:#cebf9c;}
 .lb-at-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .lb-at{background:linear-gradient(180deg,#efe8d7,#e2d8bf);border:1px solid #cebf9c;border-radius:8px;padding:9px 10px;box-shadow:inset 3px 0 0 #e0a838;}
-.lb-at.shame{box-shadow:inset 3px 0 0 #b3401f;}
 .lb-at-lbl{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:#8a7a5c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .lb-at-val{font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1;color:#2a1a08;margin:5px 0 2px;font-variant-numeric:tabular-nums;}
-.lb-at.shame .lb-at-val{color:#b3401f;}
 .lb-at-nm{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:bold;color:#5c4a30;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /* v3.5.111 2x2 grid, high-contrast (no more gray-on-gray) */
 .lb-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px;}
@@ -3135,7 +3131,7 @@ body[data-cb="trit"]{
     <div class="wu-why-lbl">WHY IT MATTERS</div>
     <div class="wu-why" id="wu-why">,</div>
     <div class="wu-ack">
-      <span id="wu-ack-note">By signing, you acknowledge the safety briefing. Repeat infractions escalate · five incidents put you on a practice trailer; four write-ups and you're sent home.</span>
+      <span id="wu-ack-note">By signing, you acknowledge the safety briefing. Repeat infractions escalate · five incidents put you on a practice trailer; four write-ups end the shift.</span>
       <button id="wu-signbtn" onclick="signWriteup()">✍ SIGN &amp; CONTINUE</button>
     </div>
   </div>
@@ -3389,7 +3385,7 @@ body[data-cb="trit"]{
       <label class="data-fld">PASSWORD<input id="auth-pw" type="password" placeholder="••••••"></label>
       <label class="data-fld">CONFIRM PASSWORD <span>(new accounts)</span><input id="auth-pw2" type="password" placeholder="re-type to confirm"></label>
       <div class="data-btns"><button class="data-save" id="auth-signin" onclick="zAuthLogin()">SIGN IN</button><button class="data-cancel" id="auth-signup" onclick="zAuthSignup()">CREATE ACCOUNT</button></div>
-      <div class="auth-note" id="auth-note">Pick a username + password to keep your record across devices. No email needed. Free, always.</div>
+      <div class="auth-note" id="auth-note">Pick a username + password to keep your record across devices. No email needed. Free, always. CREATE ACCOUNT also turns on SAVE MY STATS; switch it off below anytime.</div>
       <button id="auth-forgot" onclick="zForgotToggle()" style="background:none;border:none;color:var(--teal);text-decoration:underline;cursor:pointer;font-size:13px;padding:4px 0;">Forgot password?</button>
       <div id="auth-reset" style="display:none;">
         <label class="data-fld">USERNAME<input id="rst-user" type="text" placeholder="your handle"></label>
@@ -3401,7 +3397,6 @@ body[data-cb="trit"]{
     </div>
     <div class="data-divider">PRIVACY &amp; CONSENT</div>
     <p class="data-p">LOCK IN can save your loading stats. Gameplay is always free. Your data is yours · sharing it with a facility is separate and optional.</p>
-    <label class="data-fld">EMAIL <span>(optional · keeps your record across devices)</span><input id="data-email" type="email" placeholder="you@email.com"></label>
     <div class="crew-box" id="crew-box">
       <div class="crew-hd">◈ YOUR CREW</div>
       <div id="crew-state" class="crew-state">Sign in to join a crew.</div>
@@ -3432,7 +3427,7 @@ body[data-cb="trit"]{
 <div id="ov-crew" class="ov-data"><div class="data-card">
   <div class="data-hdr">◈ JOIN THIS CREW?</div>
   <div id="crew-cf-name" class="crew-cf-name">,</div>
-  <p class="data-p">Your loading stats · <b>integrity, pace and safety</b> · become visible to whoever runs this crew.<br>Your account stays yours. You can leave anytime.</p>
+  <p class="data-p">Whoever runs this crew will see your saved loading results, including <b>sessions, walls, scores, pace, integrity, safety incidents, collapses, water breaks, rotations, lifts and when you last played</b>. They can export them. They never see your arcade initials.<br>Your account stays yours. You can leave anytime.</p>
   <div class="data-btns"><button class="data-save" onclick="crewJoinConfirm()">JOIN</button><button class="data-cancel" onclick="crewCancel()">CANCEL</button></div>
 </div></div>
 
@@ -3735,13 +3730,11 @@ body[data-cb="trit"]{
     </div>
     <div class="lb-note">Same seed for everyone on Earth, 00:00-23:59 UTC. <b>Win it and you're the day's #1 loader on the planet.</b> The board shows three initials, never a username.</div>
   </div>
-  <!-- v3.5.104 THE HALL · a scrollable categorical ledger (Walls of Fame over Walls of Shame), every board at once. No dropdown. -->
+  <!-- v3.5.104 THE HALL · a scrollable categorical ledger, every board at once. No dropdown. v3.5.205 the Walls of Shame are gone. -->
   <div id="lb-pane-hall" style="display:none">
     <div class="lb-colhd fame">◆ WALLS OF FAME</div>
     <div class="lb-cardgrid" id="lb-fame-grid"></div>
-    <div class="lb-colhd shame">✖ WALLS OF SHAME</div>
-    <div class="lb-cardgrid" id="lb-shame-grid"></div>
-    <div class="lb-note">Rank everyone, every way · one wall, all-time. 🥇 the podium · 💀 the hall of shame.</div>
+    <div class="lb-note">All-time records: the best single walls and lifetime totals. 🥇 🥈 🥉 the podium.</div>
   </div>
   <div id="lb-pane-friends" style="display:none">
     <div id="lb-friends-auth" class="lb-empty" style="display:none">Sign in on the <b>ME</b> tab to follow loaders and track their boards.</div>
@@ -4253,6 +4246,7 @@ function zLoadPlayer(){
   if(ZDATA.player)return ZDATA.player;
   try{var r=localStorage.getItem('liPlayer');if(r)ZDATA.player=JSON.parse(r);}catch(e){console.error('zLoadPlayer:',e);}
   if(!ZDATA.player)ZDATA.player={pid:zUid(),email:'',facility:'',consentSelf:false,consentShare:false,consentDecided:false};
+  if(!ZDATA.player.pid)ZDATA.player.pid=zUid(); // v3.5.205 a sign-out drops the device ID; the next person gets a new one
   return ZDATA.player;
 }
 function zSavePlayer(){try{localStorage.setItem('liPlayer',JSON.stringify(ZDATA.player));}catch(e){console.error('zSavePlayer:',e);}}
@@ -4276,7 +4270,7 @@ function zBuildSession(){
   var _avgWallPct=_wlAvg('fillPct'), _cubeEff=_wlAvg('cubePct'), _densityPct=_wlAvg('density');
   // v2.4.2 · bonuses DERIVED from already-tracked bonus events (real per-event counter lands next ship)
   var _bonuses=(S.recoveries||0)+(S.doubleLocks||0)+(S.hazShelfLocks||0)+(S.nests||0);
-  return {pid:p.pid,email:p.email||null,facility:p.facility||null,
+  return {pid:p.pid,email:null,facility:p.facility||null, // v3.5.205 no email is ever sent with a session
     user_id:(ZDATA.session&&ZDATA.session.uid)||null,
     consent_self:!!p.consentSelf,consent_share:!!p.consentShare,opt_in_share:!!p.consentShare,
     mode:gameMode,app_ver:LI_APP_VER,
@@ -4300,7 +4294,7 @@ function zBuildSession(){
 function zSendSession(){
   var p=zLoadPlayer();if(!p.consentSelf)return;          // no save without self-consent
   var rec=zBuildSession();
-  try{var h=JSON.parse(localStorage.getItem('liSessions')||'[]');h.push(rec);if(h.length>50)h=h.slice(-50);localStorage.setItem('liSessions',JSON.stringify(h));}catch(e){console.error('zSendSession local:',e);}
+  try{localStorage.removeItem('liSessions');}catch(e){} // v3.5.205 the 50 local session copies were never read back: no longer kept on the device
   if(!ZDATA.endpoint||!ZDATA.anonKey)return;             // cloud only when configured
   // v3.5.169 refresh-then-post, and a 401/403 now surfaces instead of vanishing
   if(!ZDATA.session||!ZDATA.session.uid)return; // guests keep their local history only
@@ -4322,13 +4316,53 @@ function zEndSession(){zLoadPlayer();zSendSession();if(!ZDATA.player.consentDeci
 //   zSessionAlive() - a session is only alive if it has a uid, a token, AND is inside its expiry
 //   zSessionDead()  - kill it loudly: clear storage, flip the UI to CLOCK-IN, tell the player why
 //   zWithAuth(cb)   - refresh-then-run: every posting path goes through here, so a long session can't silently rot
+// v3.5.205 ONE SIGN-OUT FOR THE WHOLE SITE ON THIS DEVICE (owner, 2026-10-16: "if someone signs out they should
+// remain signed out"). liAuthEpoch counts sign-outs on this device. Every stored session carries the epoch it was born
+// in (ep). A sign-out bumps the epoch, so every older session, in this tab, another tab, /me/, Smalls Sort or the
+// dashboard, is dead on sight and is never written back. A deliberate sign-in stamps the CURRENT epoch, so it works.
+// The same block lives in lock-in.html, me/index.html, dashboard/index.html and ss/index.html: keep the copies identical.
+var LI_AUTH_STORES=['liAuth','lockinMeAuth','lockinDashAuth'];
+function liAuthEpoch(){try{return parseInt(localStorage.getItem('liAuthEpoch')||'0',10)||0;}catch(e){return 0;}}
+function liAuthStale(s){return !s||(+s.ep||0)<liAuthEpoch();}
+function liSignOutAll(authUrl,anonKey,extraTok){
+  var toks=[],i,r,s,p;
+  if(extraTok)toks.push(extraTok);
+  for(i=0;i<LI_AUTH_STORES.length;i++){try{r=localStorage.getItem(LI_AUTH_STORES[i]);s=r?JSON.parse(r):null;if(s&&s.access_token&&toks.indexOf(s.access_token)<0)toks.push(s.access_token);}catch(e){}}
+  try{localStorage.setItem('liAuthEpoch',''+(liAuthEpoch()+1));}catch(e){} // FIRST: a tab that hears the removals below already sees the new epoch
+  for(i=0;i<LI_AUTH_STORES.length;i++){try{localStorage.removeItem(LI_AUTH_STORES[i]);}catch(e){}}
+  try{localStorage.removeItem('liInitials');localStorage.removeItem('meNoSSO');localStorage.removeItem('liSessions');}catch(e){}
+  // the next person on this device inherits nothing of this account: username, recovery code, crew code, crew sharing,
+  // or the device ID (a new one is made on the next game load). The SAVE MY STATS choice is kept.
+  try{p=JSON.parse(localStorage.getItem('liPlayer')||'null');if(p){p.email='';p.handle='';p.facility='';p.consentShare=false;delete p.recovery;delete p.pid;localStorage.setItem('liPlayer',JSON.stringify(p));}}catch(e){}
+  for(i=0;i<toks.length;i++){try{fetch(authUrl+'/logout?scope=local',{method:'POST',headers:{'apikey':anonKey,'Authorization':'Bearer '+toks[i]}}).catch(function(){});}catch(e){}} // best effort: revoke these sessions server-side so a tab running older code cannot refresh back in
+}
+// (end of the shared block; the two functions below are game-only)
+function liInitialsBoxClear(){var ids=['np-sign-in','dr-sign-in'],i,el;for(i=0;i<ids.length;i++){el=document.getElementById(ids[i]);if(el)el.value='';}}
+// v3.5.205 forget the in-memory session WITHOUT touching storage: another tab or page owns what is stored now
+function zAuthDrop(msg){
+  if(!ZDATA.session)return;
+  ZDATA.session=null;ZDATA.player=null;
+  liInitialsBoxClear();
+  if(typeof zAuthStatus==='function')zAuthStatus();
+  try{
+    if(typeof crewRefresh==='function')crewRefresh();
+    var ov=document.getElementById('ov-leaderboard');
+    if(ov&&ov.classList.contains('vis')&&typeof lbTab==='function'){var pm=document.getElementById('lb-pane-me'),pf=document.getElementById('lb-pane-friends');
+      if(pm&&pm.style.display!=='none')lbTab('me');else if(pf&&pf.style.display!=='none')lbTab('friends');}
+  }catch(e){console.error('zAuthDrop:',e);}
+  if(msg&&typeof showBanner==='function')showBanner(msg,'',2600);
+}
 function zSessionAlive(){
   var sx=(typeof ZDATA!=='undefined')&&ZDATA.session;
-  return !!(sx&&sx.uid&&sx.access_token&&(!sx.exp||Date.now()<sx.exp-5000));
+  return !!(sx&&sx.uid&&sx.access_token&&(!sx.exp||Date.now()<sx.exp-5000)&&!liAuthStale(sx)); // v3.5.205 a session from before the last sign-out on this device is never alive
 }
 function zSessionDead(quiet){
-  ZDATA.session=null;
-  try{localStorage.removeItem('liAuth');}catch(e){}
+  var old=ZDATA.session;ZDATA.session=null;
+  try{
+    var r=localStorage.getItem('liAuth'),cur=r?JSON.parse(r):null;
+    if(old&&cur&&(cur.refresh_token===old.refresh_token||cur.access_token===old.access_token))localStorage.removeItem('liAuth'); // v3.5.205 remove only THIS session
+    localStorage.removeItem('liInitials'); // v3.5.205 an expiry is a sign-out too: the next player never sees these initials
+  }catch(e){try{localStorage.removeItem('liAuth');}catch(e2){}}
   if(typeof zAuthStatus==='function')zAuthStatus();
   if(!quiet&&typeof showBanner==='function')showBanner('\u26a0 SIGNED OUT \u00b7 your session expired.<br><span style="font-size:.72em">Scores can\u2019t post until you sign in again \u00b7 \u25c6 CLOCK-IN, top corner.</span>','danger',6000);
 }
@@ -4336,13 +4370,15 @@ function zSessionDead(quiet){
 function zWithAuth(cb){
   var sx=(typeof ZDATA!=='undefined')&&ZDATA.session;
   if(!sx||!sx.uid||!sx.access_token){cb(false);return;}
+  if(liAuthStale(sx)){zAuthDrop();cb(false);return;} // v3.5.205 signed out on this device since this session began: drop it, never refresh it
   if(zSessionAlive()){cb(true);return;}
   if(!sx.refresh_token){zSessionDead();cb(false);return;}
   try{
     fetch(ZDATA.authUrl+'/token?grant_type=refresh_token',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({refresh_token:sx.refresh_token})})
       .then(function(r){return r.json();})
       .then(function(j){
-        if(j&&j.access_token){zSaveSession(j,sx.email,sx.handle);cb(true);}
+        if(ZDATA.session!==sx){cb(zSessionAlive());return;} // v3.5.205 signed out, or newer tokens arrived, while this was in flight: never write this answer back
+        if(j&&j.access_token){cb(zSaveSession(j,sx.email,sx.handle,sx.ep||0)&&zSessionAlive());}
         else{zSessionDead();cb(false);}   // refresh tokens expire too · this is the case that was invisible
       })
       .catch(function(e){console.error('zWithAuth refresh:',e);cb(false);}); // network blip: don't nuke the session
@@ -4355,6 +4391,7 @@ function zAuthReject(status){
 }
 function zAuthHeaders(){
   var h={'Content-Type':'application/json','apikey':ZDATA.anonKey};
+  if(ZDATA.session&&liAuthStale(ZDATA.session))zAuthDrop(); // v3.5.205 never send a token from before the last sign-out on this device
   var sx=ZDATA.session;
   h['Authorization']='Bearer '+((sx&&sx.access_token)?sx.access_token:ZDATA.anonKey);
   return h;
@@ -4369,7 +4406,7 @@ function zAuthMode(m){
   var ei=document.getElementById('auth-email'),nt=document.getElementById('auth-note');
   var lbl=document.getElementById('auth-id-lbl');
   if(m==='facility'){if(ei){ei.placeholder='facility@org.com';ei.type='email';}if(lbl)lbl.textContent='EMAIL';if(nt)nt.textContent='Facility logins are issued by the publisher when you buy a dashboard. Enter the credentials we provided.';}
-  else{if(ei){ei.placeholder='pick a handle';ei.type='text';}if(lbl)lbl.textContent='USERNAME';if(nt)nt.textContent='Pick a username + password to keep your record across devices. No email needed. Free, always.';}
+  else{if(ei){ei.placeholder='pick a handle';ei.type='text';}if(lbl)lbl.textContent='USERNAME';if(nt)nt.textContent='Pick a username + password to keep your record across devices. No email needed. Free, always. CREATE ACCOUNT also turns on SAVE MY STATS; switch it off below anytime.';}
 }
 function zAuthStatus(){
   var sx=ZDATA.session,el=document.getElementById('auth-status'),so=document.getElementById('auth-signout');
@@ -4389,15 +4426,20 @@ lb.textContent=on?('\u25c6 '+((typeof zWho==='function')?zWho():(sx.handle||'YOU
 // j.user, which a refresh-token response omits. Without this a token refresh wiped uid to null while you were still
 // signed in, so dailyFinish saw you as anonymous ("sign in to claim") and zSubmitDaily bailed without posting.
 function zJwtSub(tok){try{var p=(''+tok).split('.')[1];if(!p)return null;p=p.replace(/-/g,'+').replace(/_/g,'/');var m=p.length%4;if(m)p+=new Array(5-m).join('=');var o=JSON.parse(atob(p));return o.sub||null;}catch(e){return null;}}
-function zSaveSession(j,email,handle){
-  ZDATA.session={access_token:j.access_token,refresh_token:j.refresh_token,email:email,handle:(handle||(ZDATA.session&&ZDATA.session.handle)||email),
-    uid:(j.user&&j.user.id)||zJwtSub(j.access_token)||(ZDATA.session&&ZDATA.session.uid)||null,
+function zSaveSession(j,email,handle,ep){
+  // v3.5.205 ep undefined = a DELIBERATE sign-in (password grant): stamp the current sign-out epoch. A refresh passes the
+  // epoch its session was born in; if this device signed out since, the answer is refused and never written back.
+  var fresh=(ep===undefined),e0=fresh?liAuthEpoch():(+ep||0),prev=fresh?null:ZDATA.session;
+  if(!fresh&&e0<liAuthEpoch()){zAuthDrop();return false;}
+  ZDATA.session={access_token:j.access_token,refresh_token:j.refresh_token,email:email,handle:(handle||(prev&&prev.handle)||email),
+    uid:(j.user&&j.user.id)||zJwtSub(j.access_token)||(prev&&prev.uid)||null,
     facility:(j.user&&j.user.app_metadata&&j.user.app_metadata.facility)||null,
-    exp:Date.now()+((j.expires_in||3600)*1000)};
-  try{localStorage.setItem('liAuth',JSON.stringify(ZDATA.session));}catch(e){console.error('zSaveSession:',e);}
+    exp:Date.now()+((j.expires_in||3600)*1000),ep:e0};
+  try{localStorage.setItem('liAuth',JSON.stringify(ZDATA.session));if(fresh)localStorage.removeItem('meNoSSO');}catch(e){console.error('zSaveSession:',e);}
   zAuthStatus();
   // v3.5.102 if a just-finished DAILY is sitting on the anon "sign in to claim" CTA, post it NOW that we're signed in
   setTimeout(function(){try{if(ZDATA.session&&ZDATA.session.uid&&typeof gameMode!=='undefined'&&gameMode==='daily'&&typeof gOver!=='undefined'&&gOver){var _dr=document.getElementById('daily-result');if(_dr&&_dr.style.display==='block'&&typeof dailyFinish==='function')dailyFinish();}}catch(_dz){}},0); /* v3.5.204 one tick later: every login handler sets SAVE MY STATS after zSaveSession returns */
+  return true;
 }
 // v3.5.76 SINGLE identity source. "Logged in" = a live auth session (ZDATA.session.uid) · the SAME check the
 // lifetime / profile / leaderboards already use. Prevents the report showing a local handle at the top while the
@@ -4407,6 +4449,12 @@ function zWho(){var s=ZDATA.session;if(s&&s.uid)return s.handle||((s.email||'').
 function zAuthLoad(){
   if(!ZDATA.session){try{var r=localStorage.getItem('liAuth');if(r)ZDATA.session=JSON.parse(r);}catch(e){console.error('zAuthLoad:',e);}}
   var sx=ZDATA.session;
+  // v3.5.205 a session from before the last sign-out on this device (a tab running older code wrote it back) stays signed out
+  if(sx&&liAuthStale(sx)){
+    ZDATA.session=null;
+    try{var c=localStorage.getItem('liAuth');if(c&&liAuthStale(JSON.parse(c)))localStorage.removeItem('liAuth');}catch(e){}
+    zAuthStatus();return;
+  }
   // v3.5.169 boot no longer trusts a stored session: if it's past expiry we refresh, and if the refresh
   // fails we clear it instead of leaving a corpse that looks signed-in and silently fails every post.
   if(sx&&sx.access_token&&!zSessionAlive()){
@@ -4417,7 +4465,7 @@ function zAuthLoad(){
 }
 function zAuthRefresh(){
   var sx=ZDATA.session;if(!sx||!sx.refresh_token)return;
-  try{fetch(ZDATA.authUrl+'/token?grant_type=refresh_token',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({refresh_token:sx.refresh_token})}).then(function(r){return r.json();}).then(function(j){if(j&&j.access_token)zSaveSession(j,sx.email);}).catch(function(e){console.error('zAuthRefresh:',e);});}catch(e){console.error('zAuthRefresh:',e);}
+  try{fetch(ZDATA.authUrl+'/token?grant_type=refresh_token',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({refresh_token:sx.refresh_token})}).then(function(r){return r.json();}).then(function(j){if(ZDATA.session===sx&&j&&j.access_token)zSaveSession(j,sx.email,sx.handle,sx.ep||0);}).catch(function(e){console.error('zAuthRefresh:',e);});}catch(e){console.error('zAuthRefresh:',e);}
 }
 function zHandleClean(u){return (u||'').toLowerCase().replace(/[^a-z0-9_]/g,'');}
 function zHandleEmail(u){return zHandleClean(u)+'@players.lockin.app';}
@@ -4443,6 +4491,13 @@ function zDoReset(){
       else{if(nt)nt.textContent='\u2715 '+((j&&j.error)||'Reset failed.');}
     }).catch(function(e){console.error('zDoReset:',e);if(nt)nt.textContent='\u2715 Network error \u00b7 try again.';});}catch(e){console.error('zDoReset:',e);}
 }
+// v3.5.205 SAVE MY STATS at sign-in (privacy review): creating an account turns it on (the form says so first); a sign-in
+// turns it on ONLY when this device never recorded a choice. A recorded OFF stays off, and the banner says which.
+function zConsentAtSignIn(pl,created){
+  if(created||!pl.consentDecided){pl.consentSelf=true;pl.consentDecided=true;}
+  var c1=document.getElementById('data-c1');if(c1)c1.checked=!!pl.consentSelf; // the ACCOUNT & DATA box shows the truth
+  return pl.consentSelf?' SAVE MY STATS is on · your record will sync.':' SAVE MY STATS is off on this device, so nothing is saved. Turn it on in ADMIN ▸ ACCOUNT & DATA.';
+}
 function zAuthLogin(){
   var em=document.getElementById('auth-email'),pw=document.getElementById('auth-pw');
   var idv=em?em.value.trim():'',pass=pw?pw.value:'',nt=document.getElementById('auth-note');
@@ -4454,8 +4509,8 @@ function zAuthLogin(){
   try{fetch(ZDATA.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({email:email,password:pass})})
     .then(function(r){return r.json();})
     .then(function(j){
-      if(j&&j.access_token){zSaveSession(j,email,fac?email:handle);var pl=zLoadPlayer();pl.email=email;pl.handle=fac?'':handle;if(!fac){pl.consentSelf=true;pl.consentDecided=true;}if(ZDATA.session.facility)pl.facility=ZDATA.session.facility;zSavePlayer();
-        if(typeof showBanner==='function')showBanner('\u2713 Signed in.'+(ZDATA.session.facility?' Facility access enabled.':' Your record will sync.'),'ok',2200);
+      if(j&&j.access_token){zSaveSession(j,email,fac?email:handle);var pl=zLoadPlayer();pl.email=email;pl.handle=fac?'':handle;var _cs=fac?'':zConsentAtSignIn(pl,false);if(ZDATA.session.facility)pl.facility=ZDATA.session.facility;zSavePlayer();
+        if(typeof showBanner==='function')showBanner('\u2713 Signed in.'+(ZDATA.session.facility?' Facility access enabled.':_cs),'ok',(fac||pl.consentSelf)?2200:5000);
         if(nt)nt.textContent='Signed in as '+(fac?email:handle)+'.';}
       else{if(nt)nt.textContent='\u2715 '+((j&&(j.error_description||j.msg||j.error))||'Sign-in failed · check your credentials.');}
     }).catch(function(e){console.error('zAuthLogin:',e);if(nt)nt.textContent='\u2715 Network error \u00b7 try again.';});}catch(e){console.error('zAuthLogin:',e);}
@@ -4479,7 +4534,7 @@ function zAuthSignup(){
         if(nt)nt.textContent='Signing you in\u2026';
         fetch(ZDATA.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({email:email,password:pass})})
           .then(function(r2){return r2.json();}).then(function(t){
-            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();pl.email=email;pl.handle=handle;pl.consentSelf=true;pl.consentDecided=true;if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u00b7 locked in.','ok',2200);
+            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();pl.email=email;pl.handle=handle;var _cs=zConsentAtSignIn(pl,true);if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u00b7 locked in.'+_cs,'ok',3000);
               if(nt){if(j.recovery)nt.innerHTML='\u2713 Signed in as '+handle+'. <b>RECOVERY CODE: '+j.recovery+'</b> \u00b7 write it down (resets your password, no email needed).';else nt.textContent='Signed in as '+handle+'.';}}
             else{if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';}
           }).catch(function(e2){console.error('zAuthSignup login:',e2);if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';});
@@ -4487,10 +4542,16 @@ function zAuthSignup(){
       else{if(nt)nt.textContent='\u2715 '+((j&&j.error)||'Sign-up failed \u00b7 try another handle.');}
     }).catch(function(e){console.error('zAuthSignup:',e);if(nt)nt.textContent='\u2715 Network error \u00b7 try again.';});}catch(e){console.error('zAuthSignup:',e);}
 }
-function zAuthLogout(){ZDATA.session=null;try{localStorage.removeItem('liAuth');localStorage.removeItem('lockinMeAuth');localStorage.removeItem('liInitials');}catch(e){} /* v3.5.204 one sign-out clears the profile page and the remembered initials too */zAuthStatus();var nt=document.getElementById('auth-note');if(nt)nt.textContent='Signed out.';if(typeof showBanner==='function')showBanner('Signed out.','',1400);}
+function zAuthLogout(){
+  var tok=ZDATA.session&&ZDATA.session.access_token;
+  ZDATA.session=null;
+  liSignOutAll(ZDATA.authUrl,ZDATA.anonKey,tok); // v3.5.205 one sign-out: the game, /me/, Smalls Sort and the dashboard on this device, in every open tab
+  ZDATA.player=null; // re-read the scrubbed device record; a new device ID is made on the next read
+  liInitialsBoxClear();
+  zAuthStatus();var nt=document.getElementById('auth-note');if(nt)nt.textContent='Signed out.';if(typeof showBanner==='function')showBanner('Signed out.','',1400);
+}
 function zOpenData(){
   var p=zLoadPlayer();
-  var e=document.getElementById('data-email');if(e)e.value=p.email||'';
   var f=document.getElementById('data-facility');if(f)f.value=p.facility||'';
   if(typeof crewRefresh==='function')crewRefresh(); // v3.5.176
   var c1=document.getElementById('data-c1');if(c1)c1.checked=!!p.consentSelf;
@@ -4597,9 +4658,9 @@ function crewCreate(){
 function zCloseData(){var ov=document.getElementById('ov-data');if(ov)ov.classList.remove('vis');var p=zLoadPlayer();if(!p.consentAsked){p.consentAsked=true;zSavePlayer();}} // v3.5.159 NOT NOW is a real answer · persist it so the card never auto-pops again
 function zSaveConsent(){
   var p=zLoadPlayer();
-  var e=document.getElementById('data-email'),f=document.getElementById('data-facility');
+  var f=document.getElementById('data-facility'); // v3.5.205 the EMAIL field is gone (the privacy policy says we never ask for one)
   var c1=document.getElementById('data-c1'),c2=document.getElementById('data-c2');
-  p.email=e?e.value.trim():'';p.facility=f?f.value.trim():'';
+  p.facility=f?f.value.trim():'';
   p.consentSelf=!!(c1&&c1.checked);
   p.consentShare=!!(c2&&c2.checked&&p.consentSelf); // share requires self
   p.consentDecided=true;zSavePlayer();zCloseData();
@@ -6022,7 +6083,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     // starts (and safetyWarn itself still needs a repeat to become an incident · so paper lands on a PATTERN).
     else if((S.crunches||0)>=3&&typeof safetyWarn==='function')safetyWarn('FRAGILE_CRUSH',_smCr?'you smashed a bag of smalls · those are customers’ packages.':'that’s not the first box you’ve broken · close fragiles in on both sides, or lock a shelf under them.');
     flash('fl-crunch');
-    showBanner('💥 CRUNCH! -'+(CRUNCH_PENALTY*crushed.length)+' CUBES<br><span style="font-size:.72em">'+(_hazCr?'HAZMAT CRUSHED · that’s a write-up.':_smCr?'NOTHING HEAVY ON SMALLS · you just smashed customers’ packages. Box them in on both sides or lock a shelf under them.':'EXPOSED FRAGILE · safety warning. Box it in left and right, or lock a shelf under it.')+'</span>','danger',3000);
+    showBanner('💥 CRUNCH! -'+(CRUNCH_PENALTY*crushed.length)+' CUBES<br><span style="font-size:.72em">'+(_hazCr?'HAZMAT CRUSHED · that’s a write-up.':_smCr?'NOTHING HEAVY ON SMALLS · heavy freight crushes customers’ packages. Box them in on both sides or lock a shelf under them.':'EXPOSED FRAGILE · safety warning. Box it in left and right, or lock a shelf under it.')+'</span>','danger',3000);
   }
 
   // Hazmat height check · dangerous goods must load below waist height.
@@ -6343,19 +6404,19 @@ var WRITEUP_DOCS={
   FRAGILE_CRUSH:{t:'REPEATED CRUSHED FRAGILES',w:'Only the heaviest freight crushes, and it keeps landing on exposed fragiles. Height does not protect them · crushed fragiles are damage claims. Put a real box on each side of every fragile, or lock a shelf under it first.'},
   COLLAPSE:{t:'REPEATED WALL COLLAPSES',w:'Your wall keeps coming down. Taper your stacks (wide base, narrow top) and lock shelves. Repeated collapses get documented.'},
   ACCUMULATED:{t:'MULTIPLE SAFETY VIOLATIONS',w:'You have stacked up safety violations this session. The manager is now documenting each one. Slow down and load it clean.'},
-  SENT_HOME:{t:'SENT HOME · TOO MANY WRITE-UPS',w:'That is four documented write-ups this shift. The manager has seen enough · you are clocked out for the day. It is not the end of your career: come back, slow down, and load it clean. Sign to clock out.'},
+  SENT_HOME:{t:'SHIFT OVER · FOUR WRITE-UPS',w:'That is four documented write-ups this shift, so the shift ends here. Come back, slow down, and load it clean. Sign to clock out.'},
   PRODUCTIVITY:{t:'PACE BELOW HUB STANDARD',w:'The hub runs a ~250 pph standard, counted in REAL FREIGHT · boxes. Smalls and bags don’t count, and breaking a bag down to chink gaps is time you’re not moving freight. Your pace is under the line. Keep the belt fed and move the boxes.'},
-  CHURN:{t:'REPEATED PICK-UP / PUT-DOWN',w:'You keep grabbing the same freight and setting it right back down. That is not loading · it is churn, and on the floor it reads as not understanding the job (or not caring). An unproductive loader gets buried and becomes a safety problem. Place the piece, move to the next. This is a documented productivity conversation · PIP territory.'}
+  CHURN:{t:'REPEATED PICK-UP / PUT-DOWN',w:'You keep picking up the same freight and setting it right back down. Pick a spot, place the piece, and move to the next one. On the floor, handling the same box again and again slows the line and adds handling risk.'}
 };
 // v3.5.99 REPEATED PICK-UP LADDER · grabbing the SAME box over and over is churn: the autoclicker's tell, and a
 // real "this person doesn't get what we do → unsafe" flag. 3rd pickup the SP guy notices, 4th the trainer, 5th the
 // manager, 6th a direct word, 7th = a productivity WRITE-UP (PIP territory). Re-placed boxes also earn ZERO pph.
 function productivityLadder(pk){
   if(typeof showBanner!=='function')return;
-  if(pk===3)showBanner('👀 Your lead just clocked you grabbing the same piece again · set it and move.','warn',2600);
-  else if(pk===4)showBanner('👀 Your trainer noticed too. Same box, over and over, isn’t loading.','warn',2800);
-  else if(pk===5)showBanner('⚠ The manager’s watching now. Pick-up-put-down doesn’t move freight.','warn',3000);
-  else if(pk===6)showBanner('⚠ “I’ve seen you do the wrong thing over and over.” · the manager. Last nudge.','danger',3400);
+  if(pk===3)showBanner('👀 Same piece again · pick a spot, set it, and move.','warn',2600);
+  else if(pk===4)showBanner('👀 Same box again · placing it is what moves the freight.','warn',2800);
+  else if(pk===5)showBanner('⚠ Picking up and putting down slows the line. Place it and move on.','warn',3000);
+  else if(pk===6)showBanner('⚠ Last reminder · place the piece and move to the next one.','danger',3400);
   else if(pk>=7){
     S.prodIncidents=S.prodIncidents||[];S.prodIncidents.push({type:'CHURN',t:Date.now(),wall:(S.truck||1)});
     if(typeof raiseWriteup==='function')raiseWriteup('CHURN',S.prodIncidents.length);
@@ -6380,7 +6441,7 @@ function raiseWriteup(offense,num){
 }
 function signWriteup(){
   var ov=document.getElementById('ov-writeup');if(ov)ov.classList.remove('vis');
-  if(G&&G._sentHome){G._sentHome=false;if(typeof endGame==='function'){endGame('SENT HOME · 4 write-ups this shift. Come back and load it clean.',false);}return;} // v3.5.109 4th write-up = sent home
+  if(G&&G._sentHome){G._sentHome=false;if(typeof endGame==='function'){endGame('SHIFT OVER · 4 write-ups this shift. Come back and load it clean.',false);}return;} // v3.5.109 4th write-up = sent home
   if(gOver)return;
   paused=false;lastLoopT=0;animF=requestAnimationFrame(loop);
 }
@@ -6427,7 +6488,7 @@ function mitigateWarn(source){
 function sendToPractice(){
   if(G&&G._practiceSent)return;if(G)G._practiceSent=true;
   S.practiceKicks=(S.practiceKicks||0)+1;
-  showBanner('\u26d4 SENT TO TRAINING \u00b7 too many incidents.<br><span style="font-size:.72em">Fresh, clean practice trailer. Reset your habits \u00b7 your record still stands.</span>','danger',4200);
+  showBanner('\u26d4 PRACTICE TRAILER \u00b7 too many incidents.<br><span style="font-size:.72em">Fresh, clean practice trailer. Reset your habits \u00b7 your record still stands.</span>','danger',4200);
   setTimeout(function(){
     S.warnings=[]; // new wall, warnings reset (incidents/record persist)
     G.grid=makeGrid();placed=0;G.score=0;G.cog=.5;G.support=1;G.integrity=100;G._finalized=false;G._practiceSent=false;
@@ -6767,7 +6828,7 @@ function tireStackStrike(){
   if(n===1){showBanner('⚠ TIRES DON’T STACK VERTICALLY · one on top of another ROLLS. First warning.','warn',3000);}
   else if(n===2){if(typeof logIncident==='function')logIncident('TIRE_STACK','');showBanner('⛔ STACKED TIRES AGAIN · that’s an incident on your record.','danger',3200);}
   else if(n===3){showBanner('⛔ THIRD TIME · off to a practice trailer to reset your habits.','danger',2800);if(typeof sendToPractice==='function')sendToPractice();}
-  else if(!gOver&&typeof endGame==='function'){endGame('YOUR WALL CAME DOWN · stacked tires rolled the load. You got hurt.',false);}
+  else if(!gOver&&typeof endGame==='function'){endGame('YOUR WALL CAME DOWN · stacked tires rolled the load. On a real dock, a rolled load injures people.',false);}
 }
 // v3.5.66 COLLAPSE ESCALATION · a collapse is a LEARNING CURVE, not an instant violation.
 // 1-2 = whoopsie (no record), 3 = the trainer notices, 4 = a safety warning (on record),
@@ -6801,11 +6862,11 @@ function collapseFreeStack(st){
   addShake(_slip?7:18);if(typeof playSfx==='function')playSfx(_slip?'gaplock':'collapse');hapt(_slip?'error':'collapse');
   if(typeof gridToCanvas==='function'){var _c=gridToCanvas((st.cx||Math.floor(GW/2))+0.5,GH*0.4);spawnBurst(_c.x,_c.y,_slip?12:32,'rgba(120,90,60,.95)',170,0.7,_slip?90:240);}
   if(!_slip)flash('fl-danger');
-  // v3.5.65 HAZMAT in ANY collapse OR slip = you're sent home. A dropped hazmat is a hurt-somebody event.
+  // v3.5.65 HAZMAT in ANY collapse OR slip = the shift ends. A dropped hazmat is a hurt-somebody event.
   var _cHaz=false;st.boxes.forEach(function(c){if(c&&c.box&&(c.box.isHaz||c.box.hazClass))_cHaz=true;});
   if(_cHaz&&!gOver&&typeof endGame==='function'){
-    showBanner('⛔ HAZMAT DOWN · you’re going to hurt somebody. Keep hazmat low and locked.','danger',3600);
-    setTimeout(function(){endGame('HAZMAT IN A COLLAPSE · you’re going to hurt somebody.',false);},700);
+    showBanner('⛔ HAZMAT DOWN · a dropped hazmat package can injure someone. Keep hazmat low and locked.','danger',3600);
+    setTimeout(function(){endGame('HAZMAT IN A COLLAPSE · a dropped hazmat package can injure someone.',false);},700);
     return;
   }
   if(_slip){ // a slip is forgiving: piece back on the belt, quick nudge, no record, no recovery lockout
@@ -7044,8 +7105,8 @@ function triggerCollapse(){
   // v3.5.66 hazmat in this collapse = round over; otherwise the learning-curve ladder.
   var _tHaz=false;toRemove.forEach(function(c){if(c&&c.box&&(c.box.isHaz||c.box.hazClass))_tHaz=true;});
   if(_tHaz&&!gOver&&typeof endGame==='function'){
-    showBanner('⛔ HAZMAT DOWN · you’re going to hurt somebody. Keep hazmat low and locked.','danger',3600);
-    setTimeout(function(){endGame('HAZMAT IN A COLLAPSE · you’re going to hurt somebody.',false);},700);
+    showBanner('⛔ HAZMAT DOWN · a dropped hazmat package can injure someone. Keep hazmat low and locked.','danger',3600);
+    setTimeout(function(){endGame('HAZMAT IN A COLLAPSE · a dropped hazmat package can injure someone.',false);},700);
   } else { collapseEscalation(); }
   setTimeout(function(){collapseAnimating=false;},700);
 }
@@ -7565,7 +7626,7 @@ function tickChute(){
   if((placed||0)<1){updateChuteUI();return;}
   if(typeof isForgiving==='function'&&isForgiving()){if(jamWarnLevel!==1){jamWarnLevel=1;if(typeof playSfx==='function')playSfx('dwell');}updateChuteUI();return;}
   var dt=(Date.now()-jamStarvedT)/1000,WARN=4,FAIL=11;
-  if(dt>=FAIL){jamStarvedT=0;jamWarnLevel=0;endGame('CHUTE JAMMED \u00b7 SENT HOME',false);return;}
+  if(dt>=FAIL){jamStarvedT=0;jamWarnLevel=0;endGame('CHUTE JAMMED \u00b7 SHIFT OVER',false);return;}
   var nl=(dt>=WARN)?2:1;
   if(nl!==jamWarnLevel){jamWarnLevel=nl;if(typeof playSfx==='function')playSfx(nl>=2?'error':'dwell');}
   updateChuteUI(Math.max(0,Math.ceil(FAIL-dt)));
@@ -9588,7 +9649,7 @@ function sessionGrade(){
   // v3.5.110 EMPTY WALL = F. An unloaded trailer can't grade D on default integrity · showing up is half the job,
   // and half a job is a failing grade. Detect a truly-empty wall (nothing placed) and hard-fail it.
   var _filled=(typeof countFilled==='function'&&typeof GW!=='undefined'&&G&&G.grid)?countFilled():((typeof placed!=='undefined')?placed:1);
-  if(_filled<=0){return {pts:0,g:'F',rank:'NOT LOADED',verd:'Nothing in the trailer. Showing up is half the job · loading it is the other half.',clr:'var(--danger)',ai:0,inc:inc};}
+  if(_filled<=0){return {pts:0,g:'F',rank:'NOT LOADED',verd:'Nothing in the trailer yet. Start with a solid floor row.',clr:'var(--danger)',ai:0,inc:inc};}
   var g,rank,verd,clr;
   if(pts>=95){g='A+';rank='YARD LEGEND';verd='Elite. Near-gapless, dead-square, spotless safety. Almost nobody loads like this.';clr='var(--ok)';}
   else if(pts>=87){g='A';rank='DOCK VETERAN';verd='Tight, square, safe · a hair off perfect. Veteran work.';clr='var(--ok)';}
@@ -10654,7 +10715,7 @@ var _briefPending=null,_briefAckThisLoad=false;
 // no device, no cookie. New vs returning is decided HERE, on the device (a "1" in localStorage), and only the
 // bucket goes up. Counting runs only on the real site, so lab testing never pollutes the numbers.
 var LI_COUNT_LIVE=/(^|\.)trailer-load\.com$/.test(location.hostname);
-var LI_ARCADE_LINK=false; // v3.5.204 true sends a clocked-in, SAVE MY STATS player's token with a signature so the server links it to the account (FIX-08a). OFF until privacy.html describes the link in Vince's words; flip together with ME.arcadeLink in me/index.html.
+var LI_ARCADE_LINK=true; // v3.5.205 ON (privacy.html describes it as of 2026-10-16). v3.5.204: true sends a clocked-in, SAVE MY STATS player's token with a signature so the server links it to the account (FIX-08a). OFF until privacy.html describes the link in Vince's words; flip together with ME.arcadeLink in me/index.html.
 var _liRunN=0,_liSigned={},_liSigning=false,_liDailyPay=null; // run counter (bumped in restartGame), signed walls by key, in-flight guard, the daily numbers dailyFinish saved
 function liCount(ev,mode){
   try{
@@ -11092,7 +11153,7 @@ function lbTab(which){
     lbStartDailyCountdown();
     lbLoadDailyBest(_dgen); // v3.5.204 all-time daily top 3, initials
   }
-  if(which==='hall'){lbLoadAllBoards();} // v3.5.104 the whole fame/shame ledger, every board at once
+  if(which==='hall'){lbLoadAllBoards();} // v3.5.104 the whole records ledger, every board at once (v3.5.205 fame only)
   if(which==='friends')lbLoadFriends();
 }
 // v3.5.85 SOCIAL hub entry · one button, one overlay. v3.5.86 DAILY leads (the crown jewel) for everyone.
@@ -11152,45 +11213,39 @@ function lbLoadMe(){
     else{fetchProfile(function(state,rows){pfRenderPlayer(state,rows);});}
   });
 }
-// v3.5.83 THE HALL · Walls of Fame + Walls of Shame, one dropdown, many boards.
+// v3.5.83 THE HALL · Walls of Fame, many boards. v3.5.205 the Walls of Shame are gone (owner, 2026-10-16).
 var HALL_META={
   best:{note:'★ BEST WALL · top single score, all-time',foot:'Every loader’s single highest-scoring wall.',rpc:'lockin_alltime_board',fmt:'num'},
   total:{note:'▲ TOTAL LOADED · lifetime cumulative',foot:'Every score you’ve ever posted, summed. Consistency wins.',rpc:'lockin_total_board',fmt:'num'},
   fastest:{note:'⚡ FASTEST WALL · quickest seal (≥35% packed)',foot:'Speed WITH substance · loose bails don’t count.',rpc:'wall',metric:'fastest',fmt:'time'},
   fewest:{note:'✂ FEWEST PIECES · tightest sealed wall',foot:'Max density from the fewest pieces.',rpc:'wall',metric:'fewest',fmt:'pieces'},
-  cleanest:{note:'✦ CLEANEST WALL · highest integrity',foot:'The most solid wall on record.',rpc:'wall',metric:'cleanest',fmt:'pct'},
-  slowest:{note:'🐌 SLOWEST WALL · took forever',foot:'Molasses. The dispatch clock wept.',rpc:'wall',metric:'slowest',fmt:'time'},
-  most_pieces:{note:'📦 MOST PIECES · the grind',foot:'One wall, and a truly heroic amount of pieces.',rpc:'wall',metric:'most_pieces',fmt:'pieces'},
-  messiest:{note:'💀 MESSIEST WALL · barely held',foot:'Sealed on a prayer and low integrity.',rpc:'wall',metric:'messiest',fmt:'pct'},
-  most_collapses:{note:'🧱 MOST COLLAPSES · one wall',foot:'Kept building pillars. Kept paying for it.',rpc:'wall',metric:'most_collapses',fmt:'num'}
+  cleanest:{note:'✦ CLEANEST WALL · highest integrity',foot:'The most solid wall on record.',rpc:'wall',metric:'cleanest',fmt:'pct'}
 };
 function lbHallFmt(v,fmt){if(v==null)return ',';if(fmt==='time'){var s=+v,m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}if(fmt==='pct')return v+'%';if(fmt==='pieces')return v+' pc';return ''+v;}
 // v3.5.152 DEAD-CODE CULL (The Schema) · the dropdown-era lbLoadHall/lbRenderHall (superseded by the categorical
 // World Board lbLoadAllBoards/lbBoardCard in v3.5.104) had zero callers. Removed.
 // v3.5.104 THE HALL as a categorical ledger · every board at once, World-Board style (emoji medals, top 5, gold #1).
 var HALL_FAME=['total','best','fastest','cleanest','fewest']; // v3.5.170 TOTAL leads · it's the only board every player who ever loaded a wall appears on (the daily board only holds people who played THAT day)
-var HALL_SHAME=['slowest','most_collapses','most_pieces','messiest'];
-var HALL_EMOJI={best:'🏆',total:'▲',fastest:'⚡',cleanest:'✦',fewest:'✂',slowest:'🐌',most_collapses:'🧱',most_pieces:'📦',messiest:'💀'};
-var HALL_TITLE={best:'BEST WALL',total:'TOTAL LOADED',fastest:'FASTEST WALL',cleanest:'CLEANEST WALL',fewest:'FEWEST PIECES',slowest:'SLOWEST WALL',most_collapses:'MOST COLLAPSES',most_pieces:'THE GRIND',messiest:'BARELY HELD'};
-// shared row renderer · medals for the podium (💀 for #1 shame), gold #1, tabular values. Reused by the daily board too.
+var HALL_EMOJI={best:'🏆',total:'▲',fastest:'⚡',cleanest:'✦',fewest:'✂'};
+var HALL_TITLE={best:'BEST WALL',total:'TOTAL LOADED',fastest:'FASTEST WALL',cleanest:'CLEANEST WALL',fewest:'FEWEST PIECES'};
+// shared row renderer · medals for the podium, gold #1, tabular values. Reused by the daily board too.
 function lbMedalRows(rows,fmt,side,cap){
   rows=rows||[];var lim=cap||5;
-  if(!rows.length)return '<div class="lb-empty">'+(side==='shame'?'No one ranked yet.':'No one ranked yet · be the first.')+'</div>';
+  if(!rows.length)return '<div class="lb-empty">No one ranked yet · be the first.</div>';
   var me=(ZDATA.session&&ZDATA.session.email&&(''+ZDATA.session.email).split('@')[0])||(ZDATA.session&&ZDATA.session.handle)||'';
   var medals=['🥇','🥈','🥉'],h='',i;
   for(i=0;i<rows.length&&i<lim;i++){var r=rows[i];
     var v=(r.val!=null?r.val:(r.best_score!=null?r.best_score:(r.score!=null?r.score:null)));
     var rank=r.rank||(i+1),mine=((r.mine!==undefined)?(r.mine===true):(me&&r.username===me))?' lb-me':''; // v3.5.204 arcade rows carry mine; RECORDS still match by username
-    var med=(side==='shame')?(i===0?'💀':''):(medals[i]||'');
+    var med=medals[i]||'';
     h+='<div class="lb-crow'+(rank===1?' r1':'')+mine+'"><span class="rk">'+rank+'</span><span class="who">'+(med?'<span class="med">'+med+'</span>':'')+'<span class="nm">'+drEsc(r.username)+'</span></span><span class="v">'+lbHallFmt(v,fmt)+'</span></div>';
   }
   return h;
 }
 function lbLoadAllBoards(){
-  var fg=document.getElementById('lb-fame-grid'),sg=document.getElementById('lb-shame-grid');
-  if(fg)fg.innerHTML=''; if(sg)sg.innerHTML='';
+  var fg=document.getElementById('lb-fame-grid');
+  if(fg)fg.innerHTML='';
   HALL_FAME.forEach(function(k){lbBoardCard(fg,k,'fame');});
-  HALL_SHAME.forEach(function(k){lbBoardCard(sg,k,'shame');});
 }
 function lbBoardCard(grid,key,side){
   if(!grid)return;var meta=HALL_META[key];if(!meta)return;var cardId='lb-card-'+key;
@@ -11206,7 +11261,7 @@ function lbBoardCard(grid,key,side){
       .catch(function(){var box=document.getElementById(cardId);if(box){var rb=box.querySelector('.lb-card-rows');if(rb)rb.innerHTML='<div class="lb-empty">Board offline.</div>';}});
   }catch(e){}
 }
-// v3.5.83 send a SEALED wall to the per-wall boards (logged-in only; graceful). Powers fastest/slowest/fewest/most-pieces.
+// v3.5.83 send a SEALED wall to the per-wall boards (logged-in only; graceful). Powers the fastest/fewest/cleanest boards.
 function zLogWall(){
   try{
     if(!(ZDATA.session&&ZDATA.session.uid))return;
@@ -11295,7 +11350,7 @@ function pfMode(m){PF_MODE=m;
   var idl=document.getElementById('pf-id-lbl'),idi=document.getElementById('pf-id'),su=document.getElementById('pf-signup-btn'),nt=document.getElementById('pf-auth-note');
   var cf=document.getElementById('pf-pw2-fld'); // v3.5.51 facility = sign-in only: hide CONFIRM + CREATE so it can't be mistaken for signup
   if(m==='facility'){if(idl)idl.textContent='FACILITY EMAIL';if(idi){idi.type='email';idi.placeholder='facility@school.edu';}if(su)su.style.display='none';if(cf)cf.style.display='none';if(nt)nt.textContent='Facility logins are issued by the publisher when a school or employer buys a dashboard.';}
-  else{if(idl)idl.textContent='USERNAME';if(idi){idi.type='text';idi.placeholder='pick a handle';}if(su)su.style.display='';if(cf)cf.style.display='';if(nt)nt.textContent='New here? Pick a username + password and CREATE ACCOUNT. Coming back? Just SIGN IN. Free, always.';}
+  else{if(idl)idl.textContent='USERNAME';if(idi){idi.type='text';idi.placeholder='pick a handle';}if(su)su.style.display='';if(cf)cf.style.display='';if(nt)nt.textContent='New here? Pick a username + password and CREATE ACCOUNT (that turns on SAVE MY STATS; switch it off anytime in ADMIN ▸ ACCOUNT & DATA). Coming back? Just SIGN IN. Free, always.';}
 }
 function pfAuthFormHTML(){
   return '<div class="pf-auth">'+
@@ -11306,7 +11361,7 @@ function pfAuthFormHTML(){
     '<div class="pf-fld" id="pf-pw2-fld"><label>CONFIRM PASSWORD <small style="opacity:.55;">(new accounts)</small></label><input id="pf-pw2" type="password" autocomplete="new-password" placeholder="re-type to confirm"></div>'+
     '<button class="pf-cta" onclick="pfDoLogin()">CLOCK IN<span>\u25b6</span></button>'+
     '<button id="pf-signup-btn" class="pf-ghost2" onclick="pfDoSignup()">Create a free account</button>'+
-    '<div class="pf-auth-note" id="pf-auth-note">Pick a username + password to keep your record across devices. No email needed. Free, always.</div>'+
+    '<div class="pf-auth-note" id="pf-auth-note">Pick a username + password to keep your record across devices. No email needed. Free, always. Creating an account turns on SAVE MY STATS; switch it off anytime in ADMIN ▸ ACCOUNT &amp; DATA.</div>'+
     '<div class="pf-auth-foot">Gameplay is always free \u00b7 your record is yours. Workers never pay.</div></div>';
 }
 function pfFootHTML(){var sx=ZDATA.session||{};return '<div class="pf-foot"><span class="pf-who">'+pfEsc(sx.handle||sx.email||'')+(sx.facility?' \u00b7 '+pfEsc(sx.facility):'')+'</span><button class="pf-signout" onclick="pfDoLogout()">SIGN OUT</button></div>';}
@@ -11328,8 +11383,8 @@ function pfDoLogin(){
   if(nt)nt.textContent='Signing in\u2026';
   try{fetch(ZDATA.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({email:email,password:pass})})
     .then(function(r){return r.json();}).then(function(j){
-      if(j&&j.access_token){zSaveSession(j,email,fac?email:handle);var pl=zLoadPlayer();pl.email=email;pl.handle=fac?'':handle;if(!fac){pl.consentSelf=true;pl.consentDecided=true;}if(ZDATA.session.facility)pl.facility=ZDATA.session.facility;zSavePlayer();
-        if(typeof showBanner==='function')showBanner('\u2713 Signed in.','ok',1700);if(!(typeof _resumePendingLaunch==='function'&&_resumePendingLaunch()))openProfile();}
+      if(j&&j.access_token){zSaveSession(j,email,fac?email:handle);var pl=zLoadPlayer();pl.email=email;pl.handle=fac?'':handle;var _cs=fac?'':zConsentAtSignIn(pl,false);if(ZDATA.session.facility)pl.facility=ZDATA.session.facility;zSavePlayer();
+        if(typeof showBanner==='function')showBanner('\u2713 Signed in.'+_cs,'ok',(fac||pl.consentSelf)?1700:5000);if(!(typeof _resumePendingLaunch==='function'&&_resumePendingLaunch()))openProfile();}
       else{if(nt)nt.textContent='\u2715 '+((j&&(j.error_description||j.msg||j.error))||'Sign-in failed \u00b7 check your credentials.');}
     }).catch(function(e){console.error('pfDoLogin:',e);if(nt)nt.textContent='\u2715 Network error \u00b7 try again.';});}catch(e){console.error('pfDoLogin:',e);}
 }
@@ -11348,7 +11403,7 @@ function pfDoSignup(){
         if(nt)nt.textContent='Signing you in\u2026';
         fetch(ZDATA.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey},body:JSON.stringify({email:email,password:pass})})
           .then(function(r2){return r2.json();}).then(function(t){
-            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();pl.email=email;pl.handle=handle;pl.consentSelf=true;pl.consentDecided=true;if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u00b7 locked in.','ok',2200);if(!(typeof _resumePendingLaunch==='function'&&_resumePendingLaunch()))openProfile();}
+            if(t&&t.access_token){zSaveSession(t,email,handle);var pl=zLoadPlayer();pl.email=email;pl.handle=handle;var _cs=zConsentAtSignIn(pl,true);if(j.recovery)pl.recovery=j.recovery;zSavePlayer();if(typeof showBanner==='function')showBanner('\u2713 Welcome, '+handle+' \u00b7 locked in.'+_cs,'ok',3000);if(!(typeof _resumePendingLaunch==='function'&&_resumePendingLaunch()))openProfile();}
             else{if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';}
           }).catch(function(e2){if(nt)nt.textContent='\u2713 Account made \u00b7 tap SIGN IN to enter.';});
       }
@@ -11593,7 +11648,7 @@ null, // index 0 unused · levels are 1-based
 // ─────────────────────────────────────────────────────────────
 {n:1,name:'THE COLUMBUS WELCOME',hub:'John Glenn Columbus Intl',city:'Columbus, OH · CMH',
  abbr:'COLUMBUS',
- flavor:'"Door 7. Columbus. Every carrier in the country moves freight through here. You\'re new. Everyone can tell. Show them anyway."',
+ flavor:'"Door 7. Columbus. Every carrier in the country moves freight through here. You\'re new. Learn the rules, then load it right."',
  diffLabel:'DAY ONE',diffClass:'ls-d1',accent:'#28b870',
  poolW:{sml:.20,reg:.70,lrg:.10},
  ncCount:2,ncPreload:0,fragile:0,
@@ -11698,7 +11753,7 @@ null, // index 0 unused · levels are 1-based
 // void creation, unsupported stacking. The final boss is training the new hire.
 {n:11,name:'THE TRAINER',hub:'Grove City · Training Bay',city:'Grove City, OH · CMH',
  abbr:'TRAINER',
- flavor:'"New hire\'s first shift. You build the wall. They help. God help you."',
+ flavor:'"New hire\'s first shift. You build the wall. They help. Teach as you go."',
  diffLabel:'FINAL BOSS',diffClass:'ls-trainer',accent:'#c040c0',
  poolW:{sml:.25,reg:.55,lrg:.20},
  ncCount:4,ncPreload:1,fragile:.20,
@@ -12111,10 +12166,10 @@ function initMechanic(){
 var NH_BANNERS=[
   'THE NEW HIRE HELPED.',
   'THEY MEANT WELL.',
-  'YOUR PROBLEM NOW.',
-  'CLASSIC TRAINEE MOVE.',
+  'YOUR WALL TO FIX.',
+  'EVERY TRAINEE DOES THIS ONCE.',
   'SOMEBODY HAS TO TEACH THEM.',
-  'THEY WERE FOLLOWING YOUR EXAMPLE.',
+  'SHOW THEM THE RIGHT WAY.',
   'TRAINING OPPORTUNITY DETECTED.',
   'THIS IS WHY TRAINERS EXIST.',
   'THEY\'RE LEARNING.',
@@ -12417,7 +12472,7 @@ function tickStrike(dt){
     if(now>=_M.frozenEndT){
       _M.frozen=false;
       document.getElementById('work-stoppage').classList.remove('vis');
-      showBanner('BELT RESUMED · GET BACK TO WORK','ok',1500);
+      showBanner('BELT RESUMED · KEEP LOADING','ok',1500);
     }
     return;
   }
@@ -13109,6 +13164,25 @@ initTruck();
 // every fresh load read as logged-OUT, the daily played as anonymous, and nothing posted. Now the session comes
 // back on boot and the top-corner button shows your name.
 try{zAuthLoad();}catch(e){console.error('auth persistence boot:',e);}
+// v3.5.205 OPEN TABS FOLLOW A SIGN-OUT. Another tab or page signed out (liAuthEpoch bumped, or liAuth removed): drop the
+// in-memory session and NEVER write it back. The same player refreshed or signed in again elsewhere: take the newer
+// tokens. A guest tab stays a guest until reload or ACCOUNT & DATA.
+function zAuthSync(){
+  var s=null,cur=ZDATA.session;
+  if(!cur)return;
+  try{var r=localStorage.getItem('liAuth');s=r?JSON.parse(r):null;}catch(e){}
+  if(s&&s.access_token&&s.uid&&!liAuthStale(s)&&s.uid===cur.uid){if(s.access_token!==cur.access_token){ZDATA.session=s;zAuthStatus();}return;}
+  zAuthDrop((s&&s.uid&&s.uid!==cur.uid&&!liAuthStale(s))?'Signed out here · another account signed in on this device.':'Signed out on this device.');
+}
+try{
+  window.addEventListener('storage',function(e){
+    if(e.storageArea&&e.storageArea!==localStorage)return;
+    if(e.key===null||e.key==='liPlayer')ZDATA.player=null; // SAVE MY STATS changed in another tab: re-read it, never save a stale copy over it
+    if(e.key===null||e.key==='liAuth'||e.key==='liAuthEpoch')zAuthSync();
+  });
+  window.addEventListener('pageshow',function(e){if(e.persisted)zAuthSync();}); // Back/Forward restores a frozen page that heard no storage events
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)zAuthSync();});
+}catch(e){console.error('auth sync boot:',e);}
 
 // Restore voice from session
 try{var _bv=sessionStorage.getItem('liVoice');if(_bv)activeVoice=_bv;}catch(e){}

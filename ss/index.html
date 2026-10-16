@@ -727,6 +727,27 @@ function endGame(reason){
 // table the main game uses · RLS self-insert via the shared liAuth token · so smalls feeds the one record + boards.
 var SM_ENDPOINT='https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1';
 var SM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo';
+var SM_AUTH='https://igqpgsqogfrpujdgvefs.supabase.co/auth/v1'; // v1.12 for the one site-wide sign-out
+// v3.5.205 ONE SIGN-OUT FOR THE WHOLE SITE ON THIS DEVICE (owner, 2026-10-16: "if someone signs out they should
+// remain signed out"). liAuthEpoch counts sign-outs on this device. Every stored session carries the epoch it was born
+// in (ep). A sign-out bumps the epoch, so every older session, in this tab, another tab, /me/, Smalls Sort or the
+// dashboard, is dead on sight and is never written back. A deliberate sign-in stamps the CURRENT epoch, so it works.
+// The same block lives in lock-in.html, me/index.html, dashboard/index.html and ss/index.html: keep the copies identical.
+var LI_AUTH_STORES=['liAuth','lockinMeAuth','lockinDashAuth'];
+function liAuthEpoch(){try{return parseInt(localStorage.getItem('liAuthEpoch')||'0',10)||0;}catch(e){return 0;}}
+function liAuthStale(s){return !s||(+s.ep||0)<liAuthEpoch();}
+function liSignOutAll(authUrl,anonKey,extraTok){
+  var toks=[],i,r,s,p;
+  if(extraTok)toks.push(extraTok);
+  for(i=0;i<LI_AUTH_STORES.length;i++){try{r=localStorage.getItem(LI_AUTH_STORES[i]);s=r?JSON.parse(r):null;if(s&&s.access_token&&toks.indexOf(s.access_token)<0)toks.push(s.access_token);}catch(e){}}
+  try{localStorage.setItem('liAuthEpoch',''+(liAuthEpoch()+1));}catch(e){} // FIRST: a tab that hears the removals below already sees the new epoch
+  for(i=0;i<LI_AUTH_STORES.length;i++){try{localStorage.removeItem(LI_AUTH_STORES[i]);}catch(e){}}
+  try{localStorage.removeItem('liInitials');localStorage.removeItem('meNoSSO');localStorage.removeItem('liSessions');}catch(e){}
+  // the next person on this device inherits nothing of this account: username, recovery code, crew code, crew sharing,
+  // or the device ID (a new one is made on the next game load). The SAVE MY STATS choice is kept.
+  try{p=JSON.parse(localStorage.getItem('liPlayer')||'null');if(p){p.email='';p.handle='';p.facility='';p.consentShare=false;delete p.recovery;delete p.pid;localStorage.setItem('liPlayer',JSON.stringify(p));}}catch(e){}
+  for(i=0;i<toks.length;i++){try{fetch(authUrl+'/logout?scope=local',{method:'POST',headers:{'apikey':anonKey,'Authorization':'Bearer '+toks[i]}}).catch(function(){});}catch(e){}} // best effort: revoke these sessions server-side so a tab running older code cannot refresh back in
+}
 function _smPostNote(t,ok){var e=document.getElementById('r-posted');if(e){e.textContent=t;e.style.color=ok?'var(--ok)':'var(--t2)';}} // v1.8 run-recorded honesty
 function smSubmitSession(acc,tput,grade){
   try{
@@ -738,7 +759,7 @@ function smSubmitSession(acc,tput,grade){
     if(!_pl||!_pl.consentSelf){_smPostNote('NOT RECORDED · stats saving is off (game → ACCOUNT & DATA)',false);return;} // no save without self-consent · identical rule to the game's zSendSession
     var dur=Math.max(1,Math.round((Date.now()-(STATE.startT||Date.now()))/1000));
     var rec={
-      user_id:s.uid, mode:'smalls', app_ver:'ss-1.11',
+      user_id:s.uid, mode:'smalls', app_ver:'ss-1.12',
       consent_self:!!_pl.consentSelf, consent_share:!!_pl.consentShare, opt_in_share:!!_pl.consentShare,
       started_at:new Date(STATE.startT||Date.now()).toISOString(), ended_at:new Date().toISOString(),
       duration_s:dur,
@@ -858,6 +879,7 @@ function boot(){
 // (was the reported gap). Sign-IN lives in the main game's profile, so we link there rather than
 // duplicate the whole auth form.
 function smReadAuth(){try{var r=localStorage.getItem('liAuth');if(!r)return null;var s=JSON.parse(r);
+  if(liAuthStale(s))return null; // v1.12 (LOCK IN v3.5.205) a session from before the last sign-out on this device is signed out here too
   // v1.7 (HIGH #3) stale-token honesty: a ~1h GoTrue token past exp means every POST silently 401s.
   // Treat expired as signed-out here (SIGN IN link shows, runs don't silently vanish) · but NEVER delete
   // liAuth: it's the GAME's shared session and the game knows how to refresh it.
@@ -871,11 +893,12 @@ function smAcctRender(){
     el.innerHTML='<span style="color:var(--ok);">◉ '+smEsc(who)+'</span>'+
       '<button id="sm-signout" style="font-family:inherit;font-size:11px;letter-spacing:1px;color:var(--t3);background:transparent;border:1px solid #3a3a3c;border-radius:5px;padding:3px 8px;cursor:pointer;">SIGN OUT ⏻</button>';
     var b=document.getElementById('sm-signout');
-    if(b)b.addEventListener('click',function(){try{localStorage.removeItem('liAuth');}catch(e){}smAcctRender();},{passive:true});
+    if(b)b.addEventListener('click',function(){liSignOutAll(SM_AUTH,SM_ANON,s&&s.access_token);smAcctRender();},{passive:true}); // v1.12 one sign-out for the whole site on this device
   }else{
     el.innerHTML='<a class="hdr-link" href="/lock-in.html#signin" style="color:var(--t3);text-decoration:none;letter-spacing:1px;">SIGN IN →</a>';
   }
 }
+try{window.addEventListener('storage',function(e){if(e.key===null||e.key==='liAuth'||e.key==='liAuthEpoch')smAcctRender();});window.addEventListener('pageshow',function(e){if(e.persisted)smAcctRender();});}catch(e){} // v1.12 the header follows a sign-in or sign-out in another tab
 boot();
 </script>
 </body>

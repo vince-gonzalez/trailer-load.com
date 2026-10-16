@@ -111,16 +111,14 @@ tr:hover td{background:#fbf9f4;}
 .lb-unfollow{background:transparent;border:none;color:#736550;cursor:pointer;font-size:14px;min-width:26px;min-height:26px;line-height:1;padding:0 6px;}
 .lb-unfollow:hover{color:var(--danger);}
 .lb-msg{font-family:'Share Tech Mono',monospace;font-size:12px;min-height:16px;margin-bottom:6px;}
-/* the hall · fame/shame ledger, every board we track */
+/* the hall · fame ledger, every board we track (v1.7: shame removed) */
 .hall-colhd{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin:16px 0 9px;display:flex;align-items:center;gap:8px;}
 .hall-colhd:first-child{margin-top:0;}
 .hall-colhd::after{content:'';flex:1;height:1px;background:var(--line2);}
 .hall-colhd.fame{color:var(--acc-dim);}
-.hall-colhd.shame{color:var(--danger);}
 .hall-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;}
 .hall-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 13px;box-shadow:0 3px 12px rgba(40,28,14,.05);}
 .hall-card.fame{box-shadow:inset 3px 0 0 var(--acc),0 3px 12px rgba(40,28,14,.05);}
-.hall-card.shame{box-shadow:inset 3px 0 0 var(--danger),0 3px 12px rgba(40,28,14,.05);}
 .hall-card h3{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.6px;color:var(--ink);display:flex;align-items:center;gap:7px;margin:0 0 8px;line-height:1;}
 .hall-card h3 .em{font-size:18px;}
 .hc-row{display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:8px;padding:5px 6px;border-radius:6px;}
@@ -210,8 +208,6 @@ td.sig-ini{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px
   <div id="lp-hall" style="display:none;">
     <div class="hall-colhd fame">◆ Walls of Fame</div>
     <div class="hall-grid" id="hall-fame"></div>
-    <div class="hall-colhd shame">✖ Walls of Shame</div>
-    <div class="hall-grid" id="hall-shame"></div>
   </div>
   <div id="lp-friends" style="display:none;">
     <div class="lb-add">
@@ -236,14 +232,34 @@ var ME={
   authUrl:'https://igqpgsqogfrpujdgvefs.supabase.co/auth/v1',
   endpoint:'https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1',
   anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo',
-  session:null, rows:[], sigGen:0,
-  arcadeLink:false // v1.6 must match lock-in.html LI_ARCADE_LINK; false hides the private list. OFF until privacy.html describes the link
+  session:null, src:'', rows:[], sigGen:0,
+  arcadeLink:true // v1.7 ON with LOCK IN v3.5.205. v1.6: must match lock-in.html LI_ARCADE_LINK; false hides the private list. OFF until privacy.html describes the link
 };
-function mHeaders(){var h={'apikey':ME.anonKey,'Content-Type':'application/json'};h['Authorization']='Bearer '+((ME.session&&ME.session.access_token)||ME.anonKey);return h;}
+function mHeaders(){if(ME.session&&liAuthStale(ME.session))mAuthSync();var h={'apikey':ME.anonKey,'Content-Type':'application/json'};h['Authorization']='Bearer '+((ME.session&&ME.session.access_token)||ME.anonKey);return h;}
 function mMsg(t,cls){var e=document.getElementById('login-msg');if(e){e.textContent=t||'';e.className=cls||'';}}
 function mClean(u){return (''+(u||'')).toLowerCase().replace(/[^a-z0-9_]/g,'');}
 function mJwtSub(tok){try{var p=(''+tok).split('.')[1];if(!p)return null;p=p.replace(/-/g,'+').replace(/_/g,'/');var m=p.length%4;if(m)p+=new Array(5-m).join('=');return (JSON.parse(atob(p)).sub)||null;}catch(e){return null;}}
 function mNum(v){return (v==null||isNaN(v))?0:(+v);}
+// v3.5.205 ONE SIGN-OUT FOR THE WHOLE SITE ON THIS DEVICE (owner, 2026-10-16: "if someone signs out they should
+// remain signed out"). liAuthEpoch counts sign-outs on this device. Every stored session carries the epoch it was born
+// in (ep). A sign-out bumps the epoch, so every older session, in this tab, another tab, /me/, Smalls Sort or the
+// dashboard, is dead on sight and is never written back. A deliberate sign-in stamps the CURRENT epoch, so it works.
+// The same block lives in lock-in.html, me/index.html, dashboard/index.html and ss/index.html: keep the copies identical.
+var LI_AUTH_STORES=['liAuth','lockinMeAuth','lockinDashAuth'];
+function liAuthEpoch(){try{return parseInt(localStorage.getItem('liAuthEpoch')||'0',10)||0;}catch(e){return 0;}}
+function liAuthStale(s){return !s||(+s.ep||0)<liAuthEpoch();}
+function liSignOutAll(authUrl,anonKey,extraTok){
+  var toks=[],i,r,s,p;
+  if(extraTok)toks.push(extraTok);
+  for(i=0;i<LI_AUTH_STORES.length;i++){try{r=localStorage.getItem(LI_AUTH_STORES[i]);s=r?JSON.parse(r):null;if(s&&s.access_token&&toks.indexOf(s.access_token)<0)toks.push(s.access_token);}catch(e){}}
+  try{localStorage.setItem('liAuthEpoch',''+(liAuthEpoch()+1));}catch(e){} // FIRST: a tab that hears the removals below already sees the new epoch
+  for(i=0;i<LI_AUTH_STORES.length;i++){try{localStorage.removeItem(LI_AUTH_STORES[i]);}catch(e){}}
+  try{localStorage.removeItem('liInitials');localStorage.removeItem('meNoSSO');localStorage.removeItem('liSessions');}catch(e){}
+  // the next person on this device inherits nothing of this account: username, recovery code, crew code, crew sharing,
+  // or the device ID (a new one is made on the next game load). The SAVE MY STATS choice is kept.
+  try{p=JSON.parse(localStorage.getItem('liPlayer')||'null');if(p){p.email='';p.handle='';p.facility='';p.consentShare=false;delete p.recovery;delete p.pid;localStorage.setItem('liPlayer',JSON.stringify(p));}}catch(e){}
+  for(i=0;i<toks.length;i++){try{fetch(authUrl+'/logout?scope=local',{method:'POST',headers:{'apikey':anonKey,'Authorization':'Bearer '+toks[i]}}).catch(function(){});}catch(e){}} // best effort: revoke these sessions server-side so a tab running older code cannot refresh back in
+}
 function mLogin(){
   var uEl=document.getElementById('li-user'),pEl=document.getElementById('li-pw');
   var raw=uEl?uEl.value.trim():'',pass=pEl?pEl.value:'';
@@ -256,7 +272,7 @@ function mLogin(){
     fetch(ME.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':ME.anonKey},body:JSON.stringify({email:email,password:pass})})
       .then(function(r){return r.json();}).then(function(j){
         if(j&&j.access_token){
-          ME.session={access_token:j.access_token,refresh_token:j.refresh_token,uid:(j.user&&j.user.id)||mJwtSub(j.access_token)||null,handle:(raw.indexOf('@')>=0?raw:mClean(raw))};
+          ME.session={access_token:j.access_token,refresh_token:j.refresh_token,uid:(j.user&&j.user.id)||mJwtSub(j.access_token)||null,handle:(raw.indexOf('@')>=0?raw:mClean(raw)),ep:liAuthEpoch()};ME.src='me';
           try{localStorage.setItem('lockinMeAuth',JSON.stringify(ME.session));}catch(e){}
           mMsg('','');mEnter();
         } else {
@@ -280,17 +296,16 @@ function mTab(which){
   for(k in panes){var p=document.getElementById(panes[k]);if(p)p.style.display=(k===which)?'':'none';var t=document.getElementById(tabs[k]);if(t)t.classList.toggle('active',k===which);}
   if(which==='arcade')mArcade();else if(which==='hall')mHall();else mFriends();
 }
-// THE HALL · every board we track (Walls of Fame + Walls of Shame), medal rows. Same RPCs as the game.
+// THE HALL · every board we track (Walls of Fame), medal rows. Same RPCs as the game. v1.7 (LOCK IN v3.5.205) the Walls of Shame are gone.
 var M_FAME=[{k:'best',e:'🏆',t:'BEST WALL',rpc:'lockin_alltime_board',fmt:'num'},{k:'total',e:'▲',t:'TOTAL LOADED',rpc:'lockin_total_board',fmt:'num'},{k:'fastest',e:'⚡',t:'FASTEST WALL',rpc:'wall',metric:'fastest',fmt:'time'},{k:'cleanest',e:'✦',t:'CLEANEST',rpc:'wall',metric:'cleanest',fmt:'pct'},{k:'fewest',e:'✂',t:'FEWEST PIECES',rpc:'wall',metric:'fewest',fmt:'pieces'}];
-var M_SHAME=[{k:'slowest',e:'🐌',t:'SLOWEST WALL',rpc:'wall',metric:'slowest',fmt:'time'},{k:'most_collapses',e:'🧱',t:'MOST COLLAPSES',rpc:'wall',metric:'most_collapses',fmt:'num'},{k:'most_pieces',e:'📦',t:'THE GRIND',rpc:'wall',metric:'most_pieces',fmt:'pieces'},{k:'messiest',e:'💀',t:'BARELY HELD',rpc:'wall',metric:'messiest',fmt:'pct'}];
 function mHallFmt(v,fmt){if(v==null)return ',';if(fmt==='time'){var s=+v,mm=Math.floor(s/60),ss=s%60;return mm+':'+(ss<10?'0':'')+ss;}if(fmt==='pct')return v+'%';if(fmt==='pieces')return v+' pc';return mNum(v).toLocaleString();}
 function mHallRows(rows,fmt,side){
-  if(!rows||!rows.length)return '<div class="hc-empty">'+(side==='shame'?'No one ranked yet.':'No one ranked yet · be the first.')+'</div>';
+  if(!rows||!rows.length)return '<div class="hc-empty">No one ranked yet · be the first.</div>';
   var me=(ME.session&&ME.session.handle)||'',medals=['🥇','🥈','🥉'],h='',i;
   for(i=0;i<rows.length&&i<5;i++){var r=rows[i];
     var v=(r.val!=null?r.val:(r.best_score!=null?r.best_score:(r.score!=null?r.score:null)));
     var rank=r.rank||(i+1),mine=(me&&r.username===me)?' mine':'';
-    var med=(side==='shame')?(i===0?'💀 ':''):((medals[i]||'')+' ');
+    var med=(medals[i]||'')+' ';
     h+='<div class="hc-row'+(rank===1?' r1':'')+mine+'"><span class="rk">'+rank+'</span><span class="nm">'+med+mEsc(r.username)+(mine?' (you)':'')+'</span><span class="val">'+mHallFmt(v,fmt)+'</span></div>';}
   return h;
 }
@@ -306,10 +321,9 @@ function mHallCard(grid,m,side){
     .catch(function(){var c=document.getElementById(id);if(c){var rb=c.querySelector('.hc-rows');if(rb)rb.innerHTML='<div class="hc-empty">Board offline.</div>';}});}catch(e){}
 }
 function mHall(){
-  var fg=document.getElementById('hall-fame'),sg=document.getElementById('hall-shame');
-  if(!fg||!sg)return; fg.innerHTML=''; sg.innerHTML='';
+  var fg=document.getElementById('hall-fame');
+  if(!fg)return; fg.innerHTML='';
   var i;for(i=0;i<M_FAME.length;i++)mHallCard(fg,M_FAME[i],'fame');
-  for(i=0;i<M_SHAME.length;i++)mHallCard(sg,M_SHAME[i],'shame');
 }
 function mBoardRows(id,rows,empty,friends){
   var el=document.getElementById(id);if(!el)return;
@@ -458,38 +472,63 @@ function mRender(){
   }
   document.getElementById('tbody').innerHTML=h;
 }
+function mShowLogin(t,cls){ // v1.7 one way back to the login form: nothing of the last person stays in the hidden page
+  try{var _u=document.getElementById('li-user');if(_u)_u.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
+  var c=document.getElementById('cards');if(c)c.innerHTML='';var tb=document.getElementById('tbody');if(tb)tb.innerHTML='';
+  var mh=document.getElementById('me-handle');if(mh)mh.textContent='';
+  var d=document.getElementById('me');if(d)d.style.display='none';
+  var l=document.getElementById('login');if(l)l.style.display='block';
+  mMsg(t,cls);
+}
 function mSignOut(){
-  ME.session=null;ME.rows=[];mSigClear();try{localStorage.removeItem('liInitials');}catch(e){} // v1.6 the next student never sees these initials prefilled
-  try{localStorage.removeItem('lockinMeAuth');var _u=document.getElementById('li-user');if(_u)_u.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
-  // v1.3 an explicit sign-out must STICK. mBoot reads the game's shared liAuth first, so without
-  // this flag the next page load signed the previous student straight back in · on a shared
-  // Chromebook that hands their named record to the next kid. We never delete liAuth (the game
-  // owns its refresh); we just record that THIS page was signed out of deliberately.
-  try{localStorage.setItem('meNoSSO','1');}catch(e){}
-  document.getElementById('me').style.display='none';
-  document.getElementById('login').style.display='block';
-  mMsg('Clocked out.','good');
+  var tok=ME.session&&ME.session.access_token;
+  ME.session=null;ME.src='';ME.rows=[];mSigClear();
+  // v1.7 (LOCK IN v3.5.205) owner, 2026-10-16: "if someone signs out they should remain signed out". One sign-out ends
+  // the game's session too (liAuth), plus lockinMeAuth, the dashboard's, and the remembered initials, in every open
+  // tab on this device. Replaces v1.3's meNoSSO flag, which kept the game signed in on purpose.
+  liSignOutAll(ME.authUrl,ME.anonKey,tok);
+  mShowLogin('Clocked out.','good');
 }
 // v1.1 (HIGH #3) · honest session expiry: stale tokens said "No walls on record yet" instead of the truth.
 function mJwtFresh(tok){try{var p=JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));return (p.exp||0)*1000>Date.now()+30000;}catch(e){return true;}}
 function mExpired(){
   mSigClear();
-  try{localStorage.removeItem('lockinMeAuth');var _u=document.getElementById('li-user');if(_u)_u.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
-  ME.session=null;
-  var d=document.getElementById('me');if(d)d.style.display='none';
-  var l=document.getElementById('login');if(l)l.style.display='block';
-  var m=document.getElementById('login-msg');if(m){m.textContent='Session expired · sign in again.';m.className='err';}
+  try{localStorage.removeItem('lockinMeAuth');localStorage.removeItem('liInitials');}catch(e){}
+  ME.session=null;ME.src='';
+  mShowLogin('Session expired · sign in again.','err');
 }
 function mBoot(){
-  // v1.2 (MED) ONE login for players: read the GAME's shared liAuth session first (read-only · never
-  // write or delete it; the game owns the refresh). lockinMeAuth stays as this page's own fallback store.
+  // v1.7 (LOCK IN v3.5.205) ONE login, ONE sign-out. The game's liAuth first, then this page's own lockinMeAuth, and
+  // either only if it was born after the last sign-out on this device (liAuthEpoch). meNoSSO is v1.3's flag: still
+  // honored for anyone who signed out under v1.3, never set again.
   var _noSSO=false;try{_noSSO=localStorage.getItem('meNoSSO')==='1';}catch(e){}
   try{var g=_noSSO?null:localStorage.getItem('liAuth');if(g){var gs=JSON.parse(g);
-    if(gs&&gs.access_token&&mJwtFresh(gs.access_token)){ME.session=gs;mEnter();return;}
-    if(gs&&gs.access_token)mMsg('Session expired · sign in again.','err');
+    if(gs&&gs.access_token&&!liAuthStale(gs)){
+      if(mJwtFresh(gs.access_token)){ME.session=gs;ME.src='game';mEnter();return;}
+      mMsg('Session expired · sign in again.','err');
+    }
   }}catch(e){}
-  try{var r=localStorage.getItem('lockinMeAuth');if(r){ME.session=JSON.parse(r);if(ME.session&&ME.session.access_token){if(!mJwtFresh(ME.session.access_token)){mExpired();return;}mEnter();return;}}}catch(e){console.error('mBoot:',e);}
+  try{var r=localStorage.getItem('lockinMeAuth');if(r){var ms=JSON.parse(r);
+    if(ms&&ms.access_token){
+      if(liAuthStale(ms)){localStorage.removeItem('lockinMeAuth');return;} // signed out on this device after this login
+      ME.session=ms;ME.src='me';
+      if(!mJwtFresh(ms.access_token)){mExpired();return;}
+      mEnter();return;}}}catch(e){console.error('mBoot:',e);}
 }
+// v1.7 OPEN TABS FOLLOW A SIGN-OUT made anywhere on the site: drop to the login form, never write anything back.
+function mAuthSync(){
+  if(!ME.session)return; // a signed-out page stays on the login form; it picks up a game sign-in on reload
+  var key=(ME.src==='game')?'liAuth':'lockinMeAuth',s=null;
+  try{var r=localStorage.getItem(key);s=r?JSON.parse(r):null;}catch(e){}
+  if(s&&s.access_token&&!liAuthStale(s)&&!liAuthStale(ME.session)&&s.uid===ME.session.uid){if(s.access_token!==ME.session.access_token)ME.session=s;return;} // the game refreshed: borrow the newer token
+  ME.session=null;ME.src='';ME.rows=[];mSigClear();
+  mShowLogin('Signed out on this device.','good');
+}
+try{
+  window.addEventListener('storage',function(e){if(e.key===null||e.key==='liAuth'||e.key==='lockinMeAuth'||e.key==='liAuthEpoch')mAuthSync();});
+  window.addEventListener('pageshow',function(e){if(e.persisted)mAuthSync();});
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)mAuthSync();});
+}catch(e){console.error('mAuthSync boot:',e);}
 mBoot();
 </script>
 </body>
