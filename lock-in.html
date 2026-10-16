@@ -76,6 +76,9 @@ small,sub,sup{font-size:11px;}
        (7) Post-sort: the "No-hydration", "thrown-away" and "Water sabotage flags" rows are removed (none
            can be non-zero now); "with the rhythm bonus" is added under Hydration breaks. The tutorial
            and the Training ladder say what the buttons now do.
+       (8) PHONE FIX (same night, found by the wide-trailer study): the small bottle covered about 5 px of
+           wall column 0 on a 390 px phone, so a tap there hit the bottle. It now narrows to fit the strip
+           left of the wall (25 px wide at 390, 22 at 360) and lets taps through if it ever overlaps.
      Tested headless against the local file: 27 checks (desktop and phone layout, every drink, warnings,
      the 100% check, FLAG, the demo), 0 failures, no page errors.
 
@@ -5535,8 +5538,9 @@ function positionWaterBottle(){
   else{roomy=false;}
   var sc=roomy?1:0.7,w=Math.round(bw*sc),h=Math.round(bh*sc);
   if(roomy)top=Math.round(Math.max(48,midY-h/2));
-  else{left=6;top=Math.round(Math.max(48,NW.tl.y+8));}
+  else{left=4;w=Math.max(18,Math.min(w,Math.floor(NW.tl.x-8)));top=Math.round(Math.max(48,NW.tl.y+8));} // phone: never wider than the strip left of the wall
   el.style.left=left+'px';el.style.top=top+'px';el.style.width=w+'px';el.classList.toggle('small',!roomy);
+  el.style.pointerEvents=(left+w<=NW.tl.x-2)?'':'none'; // if it still overlaps column 0, taps go to the wall (the WATER button still drinks)
 }
 // gate the seal: returns false (and blocks/ends) if the loader never drank this wall
 function hydrationOK(){return true;} // v2.6.8 WATER SHELVED to Season 2 - never blocks seal or ends the game (was the glitch source)
