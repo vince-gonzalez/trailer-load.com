@@ -41,9 +41,47 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.203
+   LOCK IN v3.5.204
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.204 - THE DAILY BOARD SHOWS ARCADE INITIALS ONLY.
+     Vince (2026-10-15): "the daily leaderboard only shows the 3 letter arcade names. the personal profile
+     shows which 3 letter arcade names were yours."
+       (1) TODAY reads the arcade board (rpc lockin_arcade_board): the crown, the top 10, and an all-time daily
+           top 3, all in initials. The v3.5.107 four-card all-time strip is retired: it named usernames
+           (including a "Slowest winner" shame card) and arcade rows carry no time to rebuild it from.
+       (2) THE DAILY SIGNS ON THE END SCREEN, after the private record saves, with the run total and average
+           integrity: the same numbers lockin_submit_daily stores. Only a sealed wall can sign. A wall from
+           before the 00:00 UTC reset cannot land on the new day's board. Trailer-Load still signs on the card,
+           and a perfect fill after a partial seal now shows the sign box too (the re-seal branch never did).
+       (3) THE ACCOUNT LINK (FIX-08a, live in the database): clocked in with SAVE MY STATS on, the signature
+           goes out with the player's token, the server stores the account id, and /me/ lists it, to that
+           player only. SWITCHED OFF in this build (LI_ARCADE_LINK=false here, ME.arcadeLink=false in /me/)
+           because privacy.html still says a signature attaches "no account, device, or IP address". Flip both
+           together once Vince's own wording is on the policy. Off, every signature is a guest signature.
+       (4) Your own rows are highlighted from the server's mine flag, never by matching a username.
+       (5) The v3.5.170 read-back rule carried over: after a sign the game reads today's board and finds the
+           row. "SAVED TO YOUR PROFILE" shows only when the read-back row says it is yours.
+       (6) Fixes: the signed-wall marker never reset between runs; a double Enter could sign twice; a stalled
+           sign froze every later sign box (now per wall, with a 15 s read-back instead of a guess); a login
+           refresh could re-post an unfinished daily; a guest clocking in from the end screen was told SAVE MY
+           STATS was off a moment before it turned on; a failed board read rendered as "be the first" or as a
+           rank; a stale token blanked reads instead of falling back to the guest key; the own-row highlight on
+           the end screen was 1.01:1 in the light theme and the rank column 3.70:1 (now 5.45 and 6.22).
+       (7) /me/ v1.6: "Arcade · today" replaces the username daily board, plus a private "Your initials on the
+           board" table (hidden while the link is off). Sign-out clears it, late responses cannot repaint it,
+           and the game's sign-out now also signs the profile page out and forgets the last initials, so the
+           next student on a shared Chromebook never inherits them.
+       (8) Guest prompt copy: guests can sign the board (true since v3.5.202); the old copy said they would not
+           show up on the leaderboards.
+     Retired readers: the public username daily view (zLoadDailyBoard, lockin_daily_board), its read-back
+     (zVerifyOnBoard), the all-time strip (lockin_daily_alltime), and /me/ mDaily. No page reads them now, so
+     FIX-08b can close them once this build is on trailer-load.com.
+     Tested headless with every database call mocked (no request reached the server): with the link switched
+     on in a scratch copy, 111 of 112 checks pass (the 1 is the copy not being a git repo; the same dash check
+     passes on the repo). On this build as shipped, link off: 92 pass, and the 21 that fail are exactly the
+     link-on checks.
 
    CHANGE LOG v3.5.203 - THE WATER BOTTLE. WATER FIXES THIRST, NOT UNSAFE LOADING.
      Vince (2026-10-15): "install a water-meter (vertical, looks like the shape of a water bottle, with
@@ -2806,6 +2844,17 @@ body[data-cb="trit"]{
 .dr-row span:last-child{color:var(--acc);}
 .dr-me{background:var(--acc-wash);}
 .dr-empty{color:var(--t3);font-style:italic;padding:6px;}
+/* v3.5.204 SIGN TODAY'S BOARD on the end-screen panel (#daily-result is fixed #2e2016 in both themes, so fixed colors) */
+#dr-sign{margin:6px 0 10px;padding:8px 0;border-top:1px solid rgba(224,150,46,.35);border-bottom:1px solid rgba(224,150,46,.35);}
+.dr-sign-hd{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1.5px;color:#ffd98a;}
+.dr-sign-row{display:flex;gap:8px;margin-top:6px;}
+#dr-sign-in{width:88px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:6px;background:#1c1410;color:#f0e6d4;border:2px solid #e0962e;border-radius:6px;padding:2px 6px;text-transform:uppercase;}
+#dr-sign-in::placeholder{color:#a2917a;opacity:1;}
+#dr-sign-btn{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;background:#e0962e;color:#241505;border:none;border-radius:6px;padding:6px 14px;min-height:34px;cursor:pointer;}
+#dr-sign-btn:disabled{background:#6b4a1e;color:#f0e6d4;cursor:default;}
+#dr-sign-msg{font-family:'Share Tech Mono',monospace;font-size:12px;color:#c0ad90;min-height:15px;margin-top:5px;}
+#daily-result .dr-me{background:#3a2a16;} /* the theme wash was #f4e6cf under the fixed light ink: 1.01:1 */
+#daily-result .dr-row span:first-child{color:#b3a088;} /* rank column: #8a7860 was 3.70:1 on the panel, 3.24:1 on your row; now 6.22 and 5.45 */
 /* ── v2.4.5 POST-SORT REPORT ── */
 #ov-postsort{position:fixed;inset:0;z-index:340;display:none;overflow:auto;
   background:radial-gradient(80% 70% at 50% 30%,rgba(224,150,46,.07),rgba(20,12,4,.55) 75%),rgba(20,12,4,.5);
@@ -2944,7 +2993,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.203 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.204 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -3067,7 +3116,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 5)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. Back to "Privacy" after 2026-11-05. -->
-  <div id="sm-footer">LOCK IN v3.5.203 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.204 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3228,7 +3277,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.203 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.204 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3435,11 +3484,11 @@ body[data-cb="trit"]{
 <div id="next-popup">
           <div id="next-popup-badge">✓ WALL COMPLETE · LOAD SEALED</div>
           <!-- v3.5.202 SIGN THE WALL: three initials on the public arcade board, no account (Vince: "like an old
-               arcade game"). Shown for Daily and Trailer-Load walls; liSignPrepare() decides. -->
+               arcade game"). Trailer-Load walls only since v3.5.204; the daily signs on the end screen (#dr-sign). -->
           <div id="np-sign" style="display:none;">
             <div class="np-sign-hd">SIGN THE WALL · ARCADE BOARD</div>
-            <div class="np-sign-row"><input id="np-sign-in" type="text" maxlength="3" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AAA" aria-label="Your three initials" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')" onkeydown="if(event.key==='Enter')liArcadeSign();"><button id="np-sign-btn" onclick="liArcadeSign()">SIGN</button></div>
-            <div id="np-sign-msg"></div>
+            <div class="np-sign-row"><input id="np-sign-in" type="text" maxlength="3" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AAA" aria-label="Your three initials" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')" onkeydown="if(event.key==='Enter')liShiftSign();"><button id="np-sign-btn" onclick="liShiftSign()">SIGN</button></div>
+            <div id="np-sign-msg" aria-live="polite"></div>
           </div>
           <!-- v3.5.186 OUTSIDE np-shift on purpose: showDailyComplete() hides that whole branch,
                so a daily wall -- the mode every new player and every professor opens first --
@@ -3452,7 +3501,7 @@ body[data-cb="trit"]{
             <button class="btn-p" onclick="returnToMenu()">⌂ MAIN MENU</button>
           </div>
           <div id="np-daily" style="display:none;">
-            <button id="next-popup-btn-daily" onclick="dailySubmit()">★ SUBMIT WALL · BOARD &amp; MENU</button>
+            <button id="next-popup-btn-daily" onclick="dailySubmit()">★ SUBMIT WALL · SIGN THE BOARD</button>
             <button class="btn-p" onclick="npKeepLoading()">↺ KEEP LOADING · IMPROVE IT</button>
             <button class="btn-p" onclick="dailyRestart()">↺ RESTART DAILY · FRESH ATTEMPT</button>
           </div>
@@ -3590,8 +3639,10 @@ body[data-cb="trit"]{
     <div class="dr-head">DAILY · <span id="dr-date"></span></div>
     <div class="dr-streak" id="dr-streak" style="display:none;"></div>
     <div class="dr-rank" id="dr-rank"></div>
+    <!-- v3.5.204 the daily signs HERE, with the run total, after the private record is saved -->
+    <div id="dr-sign" style="display:none;"><div class="dr-sign-hd">SIGN TODAY’S BOARD · THREE INITIALS</div><div class="dr-sign-row"><input id="dr-sign-in" type="text" maxlength="3" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AAA" aria-label="Your three initials" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')" onkeydown="if(event.key==='Enter')liDailySign();"><button id="dr-sign-btn" onclick="liDailySign()">SIGN</button></div><div id="dr-sign-msg" aria-live="polite"></div></div>
     <button class="btn-p dr-share" onclick="shareDaily()">▲ SHARE RESULT</button>
-    <div class="dr-board-h">TODAY’S BOARD</div>
+    <div class="dr-board-h">TODAY’S ARCADE BOARD</div>
     <div id="dr-board" class="dr-board"></div>
   </div>
   <div class="es-actions">
@@ -3607,10 +3658,10 @@ body[data-cb="trit"]{
 <div id="ov-signin-prompt">
   <div class="sip-card">
     <div class="sip-title">CLOCK IN FIRST?</div>
-    <div class="sip-body">You’re not clocked in. Play right now as a guest if you want · but your score won’t be saved and you won’t show up on the leaderboards. Clocking in is free and keeps your record.</div>
+    <div class="sip-body">You’re not clocked in. Play right now as a guest if you want · your score won’t be saved to a record, but you can still sign the board with three initials. Clocking in is free and keeps your record.</div>
     <div class="sip-actions">
       <button class="end-act primary" onclick="signinPromptLogin()"><span class="ea-t">◆ CLOCK IN / SIGN UP</span><span class="ea-d">Save your score &amp; climb the boards</span></button>
-      <button class="end-act" onclick="signinPromptGuest()"><span class="ea-t">▶ CONTINUE AS GUEST</span><span class="ea-d">Play now · nothing gets saved</span></button>
+      <button class="end-act" onclick="signinPromptGuest()"><span class="ea-t">▶ CONTINUE AS GUEST</span><span class="ea-d">Play now · sign with initials, no record kept</span></button>
     </div>
   </div>
 </div>
@@ -3667,13 +3718,11 @@ body[data-cb="trit"]{
   </div>
   <!-- v3.5.202 THE ARCADE BOARD · initials signed after a wall, no account needed -->
   <div id="lb-pane-arcade" style="display:none">
-    <div class="lb-tabline">🕹 ARCADE · TODAY'S DAILY WALL</div>
-    <div class="lb-board" id="lb-arcade-daily"><div class="lb-empty">Loading…</div></div>
     <div class="lb-tabline">🕹 ARCADE · TODAY'S TRAILER-LOAD WALLS</div>
     <div class="lb-board" id="lb-arcade-shift"><div class="lb-empty">Loading…</div></div>
     <div class="lb-tabline">🏛 ARCADE · ALL-TIME DAILY</div>
     <div class="lb-board" id="lb-arcade-all"><div class="lb-empty">Loading…</div></div>
-    <div class="lb-note">No account needed. Seal a wall, then sign it with three initials. <b>Only the initials and that wall's numbers are kept.</b></div>
+    <div class="lb-note">No account needed. Seal a wall, then sign it with three initials. <b>The board shows the initials and that wall’s numbers, never a username.</b></div>
   </div>
   <div id="lb-pane-daily">
     <div class="lb-daily-crown" id="lb-daily-crown"></div>
@@ -3681,10 +3730,10 @@ body[data-cb="trit"]{
     <div class="lb-board" id="lb-daily-board"><div class="lb-empty">Loading…</div></div>
     <div class="lb-daily-reset" id="lb-daily-reset"></div>
     <div class="lb-alltime">
-      <div class="lb-at-hd">🏛 All-time daily · records that stand</div>
-      <div class="lb-at-grid" id="lb-daily-alltime"></div>
+      <div class="lb-at-hd">🏛 All-time daily · top 3</div>
+      <div class="lb-board" id="lb-daily-alltime"></div>
     </div>
-    <div class="lb-note">Same seed for everyone on Earth, 00:00-23:59 UTC. <b>Win it and you're the day's #1 loader on the planet.</b></div>
+    <div class="lb-note">Same seed for everyone on Earth, 00:00-23:59 UTC. <b>Win it and you're the day's #1 loader on the planet.</b> The board shows three initials, never a username.</div>
   </div>
   <!-- v3.5.104 THE HALL · a scrollable categorical ledger (Walls of Fame over Walls of Shame), every board at once. No dropdown. -->
   <div id="lb-pane-hall" style="display:none">
@@ -3744,7 +3793,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.203
+// LOCK IN v3.5.204
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -4212,7 +4261,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.203'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.204'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -4326,6 +4375,11 @@ function zAuthStatus(){
   var sx=ZDATA.session,el=document.getElementById('auth-status'),so=document.getElementById('auth-signout');
   if(sx&&sx.email&&(typeof zSessionAlive!=='function'||zSessionAlive())){if(el){el.textContent='\u2713 Signed in as '+(sx.handle||sx.email)+(sx.facility?(' \u00b7 FACILITY '+sx.facility):'');el.style.display='block';}if(so)so.style.display='';}
   else{if(el)el.style.display='none';if(so)so.style.display='none';}
+  try{ /* v3.5.204 the sign boxes and the end-screen board follow the session */
+    if(typeof liDailySignPrepare==='function')liDailySignPrepare();
+    if(typeof liSignPrepare==='function'&&typeof S!=='undefined'&&S)liSignPrepare();
+    if(!zLoggedIn()){var _dre=document.getElementById('daily-result');if(_dre&&_dre.style.display==='block'&&typeof liLoadArcade==='function')liLoadArcade('daily','today',10,renderDailyBoard);}
+  }catch(_lsp){console.error('zAuthStatus sign refresh:',_lsp);}
   // v3.5.108 TOP-CORNER LOGIN INDICATOR: your NAME when signed in (the persistence you can SEE), CLOCK-IN when not.
   var lb=document.getElementById('sm-loginbtn');
   if(lb){var on=(typeof zSessionAlive==='function')?zSessionAlive():!!(sx&&sx.uid); // v3.5.169 a dead session reads as CLOCK-IN, not as your name
@@ -4343,7 +4397,7 @@ function zSaveSession(j,email,handle){
   try{localStorage.setItem('liAuth',JSON.stringify(ZDATA.session));}catch(e){console.error('zSaveSession:',e);}
   zAuthStatus();
   // v3.5.102 if a just-finished DAILY is sitting on the anon "sign in to claim" CTA, post it NOW that we're signed in
-  try{if(ZDATA.session&&ZDATA.session.uid&&typeof gameMode!=='undefined'&&gameMode==='daily'){var _dr=document.getElementById('daily-result');if(_dr&&_dr.style.display==='block'&&typeof dailyFinish==='function')dailyFinish();}}catch(_dz){}
+  setTimeout(function(){try{if(ZDATA.session&&ZDATA.session.uid&&typeof gameMode!=='undefined'&&gameMode==='daily'&&typeof gOver!=='undefined'&&gOver){var _dr=document.getElementById('daily-result');if(_dr&&_dr.style.display==='block'&&typeof dailyFinish==='function')dailyFinish();}}catch(_dz){}},0); /* v3.5.204 one tick later: every login handler sets SAVE MY STATS after zSaveSession returns */
 }
 // v3.5.76 SINGLE identity source. "Logged in" = a live auth session (ZDATA.session.uid) · the SAME check the
 // lifetime / profile / leaderboards already use. Prevents the report showing a local handle at the top while the
@@ -4433,7 +4487,7 @@ function zAuthSignup(){
       else{if(nt)nt.textContent='\u2715 '+((j&&j.error)||'Sign-up failed \u00b7 try another handle.');}
     }).catch(function(e){console.error('zAuthSignup:',e);if(nt)nt.textContent='\u2715 Network error \u00b7 try again.';});}catch(e){console.error('zAuthSignup:',e);}
 }
-function zAuthLogout(){ZDATA.session=null;try{localStorage.removeItem('liAuth');}catch(e){}zAuthStatus();var nt=document.getElementById('auth-note');if(nt)nt.textContent='Signed out.';if(typeof showBanner==='function')showBanner('Signed out.','',1400);}
+function zAuthLogout(){ZDATA.session=null;try{localStorage.removeItem('liAuth');localStorage.removeItem('lockinMeAuth');localStorage.removeItem('liInitials');}catch(e){} /* v3.5.204 one sign-out clears the profile page and the remembered initials too */zAuthStatus();var nt=document.getElementById('auth-note');if(nt)nt.textContent='Signed out.';if(typeof showBanner==='function')showBanner('Signed out.','',1400);}
 function zOpenData(){
   var p=zLoadPlayer();
   var e=document.getElementById('data-email');if(e)e.value=p.email||'';
@@ -7323,7 +7377,7 @@ function sealWall(reason){
     if(gameMode!=='level'){ // v3.5.4 seal payout ONCE per wall. v3.5.98: re-seal respects the rhythm rule too
     var _kl0=(typeof countFilled==='function')&&countFilled()<GW*GH&&!(G&&G.wallDone);
     if(_kl0){var _mf0=document.getElementById('maxpack-finish');if(_mf0){_mf0.style.display='';_mf0.classList.add('pulse');}G.maxPack=true;}
-    else{var _np=document.getElementById('next-popup');if(_np)_np.classList.add('vis');var _nb=document.getElementById('next-popup-badge');if(_nb)_nb.textContent='✓ WALL COMPLETE · '+packPct()+'% PACKED';}
+    else{var _sh1=document.getElementById('np-shift'),_da1=document.getElementById('np-daily');if(_sh1)_sh1.style.display='';if(_da1)_da1.style.display='none';liSignPrepare();var _np=document.getElementById('next-popup');if(_np)_np.classList.add('vis');var _nb=document.getElementById('next-popup-badge');if(_nb)_nb.textContent='✓ WALL COMPLETE · '+packPct()+'% PACKED';}
   }return;}
   G.sealed=true;
   if(gameMode==='daily'||gameMode==='shift')liCount('wall_done',gameMode); // v3.5.202 daily total, first seal of a wall only
@@ -10600,7 +10654,8 @@ var _briefPending=null,_briefAckThisLoad=false;
 // no device, no cookie. New vs returning is decided HERE, on the device (a "1" in localStorage), and only the
 // bucket goes up. Counting runs only on the real site, so lab testing never pollutes the numbers.
 var LI_COUNT_LIVE=/(^|\.)trailer-load\.com$/.test(location.hostname);
-var _liSignedWall=-1;
+var LI_ARCADE_LINK=false; // v3.5.204 true sends a clocked-in, SAVE MY STATS player's token with a signature so the server links it to the account (FIX-08a). OFF until privacy.html describes the link in Vince's words; flip together with ME.arcadeLink in me/index.html.
+var _liRunN=0,_liSigned={},_liSigning=false,_liDailyPay=null; // run counter (bumped in restartGame), signed walls by key, in-flight guard, the daily numbers dailyFinish saved
 function liCount(ev,mode){
   try{
     if(!LI_COUNT_LIVE||!ZDATA.endpoint||!ZDATA.anonKey)return;
@@ -10621,61 +10676,161 @@ function liCountBoot(){
     else{try{localStorage.setItem('liFirstSeen','1');}catch(e){}liCount('visitor_new','');}
   }catch(e){console.error('liCountBoot:',e);}
 }
-// SIGN THE WALL. Three initials, A to Z, on a public board, no account. The server stores the initials and this
-// wall's numbers (mode, score, integrity, pieces, pack) and nothing else, and re-checks every value.
-function liSignPrepare(){
-  // READS: gameMode, S.wallLog, _liSignedWall | WRITES: #np-sign state
+// SIGN THE WALL. Three initials, A to Z, on a public board. The board shows only the initials and that wall's
+// numbers (mode, score, integrity, pieces, pack), and the server re-checks every value.
+// v3.5.204 (Vince: "the daily leaderboard only shows the 3 letter arcade names. the personal profile shows which
+// 3 letter arcade names were yours"). A clocked-in player with SAVE MY STATS on signs with their own token, so the
+// server also stores their account id on the row (auth.uid(), FIX-08a). Only they can read that link
+// (lockin_my_signatures, on /me/). Guests, and SAVE MY STATS off, sign with the anon key and nothing is linked.
+// The daily signs on the END SCREEN with the run total (the number the private record saves); a Trailer-Load wall
+// signs on the wall-complete card.
+function liArcadeHdr(useJwt){ // the player's token only while it is alive (zAuthHeaders would send an expired one)
+  var h={'Content-Type':'application/json','apikey':ZDATA.anonKey,'Authorization':'Bearer '+ZDATA.anonKey};
+  if(useJwt&&zSessionAlive())h['Authorization']='Bearer '+ZDATA.session.access_token;
+  return h;
+}
+// read an arcade board. cb(array) = read, and [] is truly empty; cb(null) = could not read it. A rejected token
+// retries once as a guest. A READ never signs the player out (same rule as zReadState).
+function liLoadArcade(mode,scope,limit,cb){
+  function run(useJwt){
+    try{
+      fetch(ZDATA.endpoint+'/rpc/lockin_arcade_board',{method:'POST',headers:liArcadeHdr(useJwt),
+        body:JSON.stringify({p_mode:mode,p_scope:scope,p_limit:limit})})
+        .then(function(r){
+          if(useJwt&&(r.status===401||r.status===403)){run(false);return 'retry';}
+          var ok=r.ok;return r.json().then(function(j){return (ok&&Array.isArray(j))?j:null;},function(){return null;});
+        })
+        .then(function(x){if(x==='retry')return;cb(x);})
+        .catch(function(e){console.error('liLoadArcade:',e);cb(null);});
+    }catch(e){console.error('liLoadArcade:',e);cb(null);}
+  }
+  run(zSessionAlive());
+}
+function liSignLinks(){return !!(LI_ARCADE_LINK&&zLoggedIn()&&zLoadPlayer().consentSelf);}
+function liSignHint(){
+  if(!zLoggedIn())return 'No account needed.';
+  if(!LI_ARCADE_LINK)return '';
+  if(!zLoadPlayer().consentSelf)return 'SAVE MY STATS is off, so this signs as a guest.';
+  return 'The board shows the initials. Your profile notes they were yours.';
+}
+// fill a sign box (prefix np = the wall card, dr = the daily end screen) for the wall named by key
+function liSignFill(prefix,key){
+  var box=document.getElementById(prefix+'-sign');if(box)box.setAttribute('data-key',key); // which wall this box shows now
+  var btn=document.getElementById(prefix+'-sign-btn'),msg=document.getElementById(prefix+'-sign-msg'),inp=document.getElementById(prefix+'-sign-in');
+  if(_liSigned[key]){if(btn){btn.disabled=true;btn.textContent='SIGNED';}if(msg)msg.textContent=_liSigned[key].msg;}
+  else if(_liSigning===key){if(btn){btn.disabled=true;btn.textContent='SIGNING';}}
+  else{if(btn){btn.disabled=false;btn.textContent='SIGN';}if(msg)msg.textContent=liSignHint();}
+  if(inp&&!inp.value){var last='';try{last=localStorage.getItem('liInitials')||'';}catch(e){}inp.value=last;}
+}
+function liSignPrepare(){ // the wall-complete card signs Trailer-Load walls only; the daily signs on the end screen
+  // READS: gameMode, S.wallLog, _liSigned | WRITES: #np-sign state
   try{
     var box=document.getElementById('np-sign');if(!box)return;
-    var ok=(gameMode==='daily'||gameMode==='shift');
+    var ok=(gameMode==='shift');
     box.style.display=ok?'':'none';if(!ok)return;
-    var n=(S.wallLog||[]).length;
-    var btn=document.getElementById('np-sign-btn'),msg=document.getElementById('np-sign-msg'),inp=document.getElementById('np-sign-in');
-    if(_liSignedWall!==n){if(btn){btn.disabled=false;btn.textContent='SIGN';}if(msg)msg.textContent='';}
-    if(inp&&!inp.value){var last='';try{last=localStorage.getItem('liInitials')||'';}catch(e){}inp.value=last;}
+    liSignFill('np','np:'+_liRunN+':'+(S.wallLog||[]).length);
   }catch(e){console.error('liSignPrepare:',e);}
 }
-function liArcadeSign(){
-  // READS: gameMode, S.wallLog, packPct() | WRITES: _liSignedWall, localStorage liInitials
-  var inp=document.getElementById('np-sign-in'),btn=document.getElementById('np-sign-btn'),msg=document.getElementById('np-sign-msg');
-  function reset(t){if(btn){btn.disabled=false;btn.textContent='SIGN';}if(msg)msg.textContent=t||'';}
+function liShiftSign(){
+  var wl=S.wallLog||[],w=wl[wl.length-1];
+  if(!w){var m=document.getElementById('np-sign-msg');if(m)m.textContent='Seal a wall first.';return;}
+  liArcadeSign('np','np:'+_liRunN+':'+wl.length,{mode:'shift',score:w.score,integrity:w.integrity,pieces:w.pieces,pack:packPct()});
+}
+function liDailySignPrepare(){
+  // READS: _liDailyPay, _liRunN | WRITES: #dr-sign state
   try{
+    var box=document.getElementById('dr-sign');if(!box)return;
+    var p=_liDailyPay,ok=!!(p&&p.run===_liRunN&&p.sealed);
+    box.style.display=ok?'':'none';if(!ok)return;
+    liSignFill('dr','dr:'+_liRunN);
+  }catch(e){console.error('liDailySignPrepare:',e);}
+}
+function liDailySign(){
+  var p=_liDailyPay;
+  if(!(p&&p.run===_liRunN&&p.sealed)){var m=document.getElementById('dr-sign-msg');if(m)m.textContent='Seal the wall to sign the board.';return;}
+  if(DAILY&&DAILY.key&&DAILY.key!==dailyKey()){var m2=document.getElementById('dr-sign-msg');if(m2)m2.textContent='Today’s board has reset. This wall was yesterday’s daily.';return;}
+  liArcadeSign('dr','dr:'+_liRunN,{mode:'daily',score:p.score,integrity:p.integrity,pieces:p.pieces,pack:p.pack});
+}
+function liArcadeSign(prefix,key,pay){
+  // READS: ZDATA.session, zLoadPlayer().consentSelf, LI_ARCADE_LINK, LI_COUNT_LIVE | WRITES: _liSigned, _liSigning, localStorage liInitials
+  var inp=document.getElementById(prefix+'-sign-in'),btn=document.getElementById(prefix+'-sign-btn'),msg=document.getElementById(prefix+'-sign-msg');
+  function same(){var bx=document.getElementById(prefix+'-sign');return !bx||bx.getAttribute('data-key')===key;} // the box still shows THIS wall
+  function reset(t){if(!same())return;if(btn){btn.disabled=false;btn.textContent='SIGN';}if(msg)msg.textContent=t||'';}
+  try{
+    if(_liSigning===key)return; // Enter in the box still fires while the button is disabled
     var v=((inp&&inp.value)||'').toUpperCase().replace(/[^A-Z]/g,'');
     if(v.length!==3){reset('Three letters, A to Z.');return;}
-    var wl=S.wallLog||[],w=wl[wl.length-1];
-    if(!w){reset('Seal a wall first.');return;}
-    if(_liSignedWall===wl.length){if(msg)msg.textContent='This wall is already signed.';return;}
-    var mode=(gameMode==='daily')?'daily':'shift';
+    if(_liSigned[key]){if(msg)msg.textContent='This wall is already signed.';return;}
     try{localStorage.setItem('liInitials',v);}catch(e){}
-    var body={p_initials:v,p_mode:mode,p_score:Math.round(w.score||0),p_integrity:Math.round(w.integrity||0),
-              p_pieces:Math.round(w.pieces||0),p_pack:packPct()};
+    var body={p_initials:v,p_mode:pay.mode,p_score:Math.round(pay.score||0),p_integrity:Math.round(pay.integrity||0),
+              p_pieces:Math.round(pay.pieces||0),p_pack:Math.round(pay.pack||0)};
+    var acct=zLoggedIn(),link=liSignLinks(),run0=_liRunN;
     if(btn){btn.disabled=true;btn.textContent='SIGNING';}
-    if(!LI_COUNT_LIVE){_liSignedWall=wl.length;if(btn)btn.textContent='SIGNED';if(msg)msg.textContent='LAB COPY · not posted. '+v+' would sign with '+body.p_score+'.';return;}
-    fetch(ZDATA.endpoint+'/rpc/lockin_arcade_sign',{method:'POST',
-      headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey,'Authorization':'Bearer '+ZDATA.anonKey},
-      body:JSON.stringify(body)})
-      .then(function(r){return r.json();})
-      .then(function(j){
-        if(j&&j.ok){_liSignedWall=wl.length;if(btn)btn.textContent='SIGNED';
-          if(msg)msg.textContent=j.initials+' IS ON THE BOARD · #'+j.rank_today+' TODAY';liCount('arcade_signed',mode);}
-        else reset((j&&j.err)||'Could not sign the board.');
-      }).catch(function(e){console.error('liArcadeSign:',e);reset('No connection. Try again.');});
-  }catch(e){console.error('liArcadeSign:',e);reset('Could not sign the board.');}
+    if(!LI_COUNT_LIVE){ // the lab never posts to the real board
+      var lab='LAB COPY · not posted. '+v+' would sign with '+body.p_score+(link?(zSessionAlive()?' · linked to '+zWho():' · would refresh, then link'):((LI_ARCADE_LINK&&acct)?' · as a guest, SAVE MY STATS is off':''))+'.';
+      _liSigned[key]={msg:lab};if(btn)btn.textContent='SIGNED';if(msg)msg.textContent=lab;return;
+    }
+    _liSigning=key;
+    var settled=false,to=setTimeout(function(){ // no answer in 15 s: read the board instead of guessing
+      if(settled)return;settled=true;if(_liSigning===key)_liSigning=false;
+      liArcadeProof(prefix,key,pay.mode,{initials:v,rank_today:0},body,'',function(){delete _liSigned[key];reset('No answer from the board yet. If your initials are not on it in a minute, sign again.');});
+    },15000);
+    var post=function(jwt,why){
+      fetch(ZDATA.endpoint+'/rpc/lockin_arcade_sign',{method:'POST',headers:liArcadeHdr(jwt),body:JSON.stringify(body)})
+        .then(function(r){var st=r.status;return r.json().then(function(j){return {st:st,j:j};},function(){return {st:st,j:null};});})
+        .then(function(x){
+          // a rejected token is refused before the function runs, so re-posting as a guest cannot sign twice
+          if(settled)return; // the timeout already handed this wall to the read-back
+          if(jwt&&(x.st===401||x.st===403)){post(false,'reject');return;}
+          settled=true;clearTimeout(to);if(_liSigning===key)_liSigning=false;
+          var ok=!!(x.j&&x.j.ok);
+          if(why==='reject'&&ok&&typeof zSessionDead==='function')zSessionDead();
+          if(run0!==_liRunN)return;
+          if(!ok){reset((x.j&&x.j.err)||'Could not sign the board.');return;}
+          var tail=(why==='consent')?' Signed as a guest: SAVE MY STATS is off.':((why==='expired'||why==='reject')?(' Signed as a guest, not linked to your account.'+(ZDATA.session?'':' Clock in again to link the next one.')):'');
+          _liSigned[key]={msg:v+' SIGNED · checking the board…'};
+          if(same()){if(btn){btn.disabled=true;btn.textContent='SIGNED';}if(msg)msg.textContent=_liSigned[key].msg;}
+          liCount('arcade_signed',pay.mode);
+          liArcadeProof(prefix,key,pay.mode,x.j,body,tail);
+        })
+        .catch(function(e){if(settled)return;settled=true;clearTimeout(to);if(_liSigning===key)_liSigning=false;console.error('liArcadeSign:',e);if(run0===_liRunN)reset('No connection. Try again.');}); // never auto-retry: the row may already be stored
+    };
+    if(!link){post(false,(LI_ARCADE_LINK&&acct)?'consent':'');return;}
+    if(zSessionAlive()){post(true,'');return;}
+    var fired=false,t=setTimeout(function(){if(fired)return;fired=true;post(false,'expired');},4000);
+    zWithAuth(function(ok2){if(fired)return;fired=true;clearTimeout(t);var live=!!(ok2&&zSessionAlive());post(live,live?'':'expired');});
+  }catch(e){if(_liSigning===key)_liSigning=false;console.error('liArcadeSign:',e);reset('Could not sign the board.');}
 }
-function lbLoadArcade(){
-  var jobs=[['lb-arcade-daily','daily','today','No initials on today’s daily wall yet. Seal it and sign.'],
-            ['lb-arcade-shift','shift','today','No Trailer-Load walls signed today yet.'],
+// The v3.5.170 rule, carried over: never trust a post you did not read back. Read today's board and find the row.
+// "SAVED TO YOUR PROFILE" shows only when the read-back row carries mine=true, so the account link is checked, not assumed.
+function liArcadeProof(prefix,key,mode,j,body,tail,onMiss){
+  liLoadArcade(mode,'today',100,function(rows){
+    var t='',i,r,hit=null;
+    if(rows){for(i=0;i<rows.length;i++){r=rows[i];if(r.username===j.initials&&(+r.score)===body.p_score){if(!hit||r.mine===true)hit=r;if(r.mine===true)break;}}}
+    if(hit)t=j.initials+' IS ON THE BOARD · #'+hit.rank+' TODAY'+(hit.mine===true?' · SAVED TO YOUR PROFILE.':'.')+tail;
+    else if(!rows)t=j.initials+' SIGNED · #'+j.rank_today+' TODAY. The board did not load to check it.'+tail;
+    else if(rows.length>=100&&j.rank_today>100)t=j.initials+' SIGNED · #'+j.rank_today+' TODAY.'+tail;
+    else if(onMiss){onMiss();return;}
+    else t='⚠ SIGNED, BUT NOT ON THE BOARD. The server took it and it is not showing. Tell Vince.';
+    _liSigned[key]={msg:t};
+    var bx=document.getElementById(prefix+'-sign'),m=document.getElementById(prefix+'-sign-msg');
+    if(m&&(!bx||bx.getAttribute('data-key')===key)){m.textContent=t;var b2=document.getElementById(prefix+'-sign-btn');if(b2&&hit){b2.disabled=true;b2.textContent='SIGNED';}}
+    if(prefix==='dr'&&rows){_drGen++;renderDailyBoard(rows.slice(0,10));} // one read serves the proof and the board
+    var ov=document.getElementById('ov-leaderboard'),ap=document.getElementById('lb-pane-arcade');if(ov&&ov.classList.contains('vis')&&ap&&ap.style.display!=='none')lbLoadArcade();
+  });
+}
+var _lbArcGen=0;
+function lbLoadArcade(){ // the ARCADE tab: today's Trailer-Load walls and the all-time daily (TODAY owns today's daily)
+  var gen=++_lbArcGen;
+  var jobs=[['lb-arcade-shift','shift','today','No Trailer-Load walls signed today yet.'],
             ['lb-arcade-all','daily','all','The all-time arcade board is empty. Be the first.']],i;
   for(i=0;i<jobs.length;i++)(function(j){
     var el=document.getElementById(j[0]);if(el)el.innerHTML='<div class="lb-empty">Loading…</div>';
-    try{
-      fetch(ZDATA.endpoint+'/rpc/lockin_arcade_board',{method:'POST',
-        headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey,'Authorization':'Bearer '+ZDATA.anonKey},
-        body:JSON.stringify({p_mode:j[1],p_scope:j[2],p_limit:10})})
-        .then(function(r){return r.ok?r.json():[];})
-        .then(function(rows){lbRenderInto(j[0],rows,j[3]);})
-        .catch(function(e){console.error('lbLoadArcade:',e);lbRenderInto(j[0],[],j[3]);});
-    }catch(e){console.error('lbLoadArcade:',e);}
+    liLoadArcade(j[1],j[2],10,function(rows){
+      if(gen!==_lbArcGen)return;
+      if(!rows){var e2=document.getElementById(j[0]);if(e2)e2.innerHTML='<div class="lb-empty">Board offline.</div>';return;}
+      lbRenderInto(j[0],rows,j[3]);
+    });
   })(jobs[i]);
 }
 function _briefingSeen(){var s=false;try{s=localStorage.getItem('liBriefingDone')==='1';}catch(e){}return s||_briefAckThisLoad;}
@@ -10920,8 +11075,7 @@ function closeLeaderboard(){var ov=document.getElementById('ov-leaderboard');if(
 function lbRenderInto(id,rows,emptyMsg){
   var el=document.getElementById(id);if(!el)return;
   if(!rows||!rows.length){el.innerHTML='<div class="lb-empty">'+(emptyMsg||'No scores posted yet today · be the first.')+'</div>';return;}
-  var me=(ZDATA.session&&ZDATA.session.email&&(''+ZDATA.session.email).split('@')[0])||(ZDATA.session&&ZDATA.session.handle)||'';
-  var h='',i;for(i=0;i<rows.length;i++){var r=rows[i];var sc=(r.score!=null?r.score:(r.best_score!=null?r.best_score:0));var mine=(me&&r.username===me)?' lb-me':'';h+='<div class="lb-row'+mine+'"><span>'+(r.rank||(i+1))+'</span><span>'+drEsc(r.username)+'</span><span>'+sc+'</span></div>';}
+  var h='',i;for(i=0;i<rows.length;i++){var r=rows[i];var sc=(r.score!=null?r.score:(r.best_score!=null?r.best_score:0));var mine=(r.mine===true)?' lb-me':'';h+='<div class="lb-row'+mine+'"><span>'+(r.rank||(i+1))+'</span><span>'+drEsc(r.username)+'</span><span>'+sc+'</span></div>';} // v3.5.204 mine = the server flag
   el.innerHTML=h;
 }
 function lbTab(which){
@@ -10933,9 +11087,10 @@ function lbTab(which){
   if(which==='daily'){ // v3.5.85 load the daily board whenever the tab is shown; v3.5.86 crown + countdown
     var dd=document.getElementById('lb-daily-date');if(dd)dd.textContent='◈ DAILY · '+dailyKey();
     var db=document.getElementById('lb-daily-board');if(db)db.innerHTML='<div class="lb-empty">Loading…</div>';
-    if(typeof zLoadDailyBoard==='function')zLoadDailyBoard(function(rows){lbRenderDaily(rows);});
+    var _dgen=++_lbDayGen;
+    liLoadArcade('daily','today',10,function(rows){if(_dgen===_lbDayGen)lbRenderDaily(rows);}); // v3.5.204 initials only
     lbStartDailyCountdown();
-    lbLoadDailyAlltime(); // v3.5.107 the all-time daily records strip
+    lbLoadDailyBest(_dgen); // v3.5.204 all-time daily top 3, initials
   }
   if(which==='hall'){lbLoadAllBoards();} // v3.5.104 the whole fame/shame ledger, every board at once
   if(which==='friends')lbLoadFriends();
@@ -10947,15 +11102,18 @@ function openSocial(tab){
 }
 // v3.5.86 DAILY render: the world's #1 loader gets the crown hero, then the board.
 function lbRenderDaily(rows){
-  rows=rows||[];
-  var crown=document.getElementById('lb-daily-crown');
+  var crown=document.getElementById('lb-daily-crown'),db=document.getElementById('lb-daily-board');
+  if(!Array.isArray(rows)){ // v3.5.204 a failed read used to render as "THE CROWN IS UNCLAIMED"
+    if(crown){crown.className='lb-daily-crown empty';crown.innerHTML='<div class="dc-lbl">👑 TODAY’S BOARD</div><div class="dc-name">OFFLINE</div><div class="dc-score">Could not load it. That is not an empty board. Try again.</div>';}
+    if(db)db.innerHTML='<div class="lb-empty">Board offline.</div>';return;
+  }
   if(crown){
     if(rows.length){var w=rows[0];crown.className='lb-daily-crown';
-      crown.innerHTML='<div class="dc-lbl">👑 TODAY’S #1 LOADER ON EARTH</div><div class="dc-name">'+drEsc(w.username)+'</div><div class="dc-score">'+(w.score!=null?w.score:',')+' cubes</div>';}
+      crown.innerHTML='<div class="dc-lbl">👑 TODAY’S #1 LOADER ON EARTH</div><div class="dc-name">'+drEsc(w.username)+'</div><div class="dc-score">'+(w.score!=null?(+w.score||0):',')+' cubes</div>';}
     else{crown.className='lb-daily-crown empty';
-      crown.innerHTML='<div class="dc-lbl">👑 THE CROWN IS UNCLAIMED</div><div class="dc-name">BE THE FIRST</div><div class="dc-score">Post today’s top score · be #1 on Earth.</div>';}
+      crown.innerHTML='<div class="dc-lbl">👑 THE CROWN IS UNCLAIMED</div><div class="dc-name">BE THE FIRST</div><div class="dc-score">Seal today’s wall and sign it. Be #1 on Earth.</div>';}
   }
-  var db=document.getElementById('lb-daily-board');if(db)db.innerHTML=(rows.length?lbMedalRows(rows,'num','fame',10):'<div class="lb-empty">No scores posted yet today · be the first.</div>'); // v3.5.104 medal rows
+  if(db)db.innerHTML=(rows.length?lbMedalRows(rows,'num','fame',10):'<div class="lb-empty">No initials on today’s board yet. Seal the wall and sign it.</div>'); // v3.5.104 medal rows
 }
 var _dailyCD=null;
 function lbDailyCountdown(){
@@ -10965,27 +11123,16 @@ function lbDailyCountdown(){
   el.textContent='⏱ NEW BOARD IN '+hh+'h '+(mm<10?'0':'')+mm+'m '+(ss<10?'0':'')+ss+'s · UTC RESET';
 }
 function lbStartDailyCountdown(){lbDailyCountdown();if(_dailyCD)clearInterval(_dailyCD);_dailyCD=setInterval(lbDailyCountdown,1000);}
-// v3.5.107 ALL-TIME DAILY records · the records that stand (RPC lockin_daily_alltime: highest score, cleanest, fastest complete, slowest winner). "Most nested" isn't stored yet, so it's not shown.
-function lbLoadDailyAlltime(){
+// v3.5.204 the all-time daily strip is the arcade all-time top 3, in initials. The v3.5.107 four cards (highest,
+// fastest, cleanest, slowest winner) named usernames, and arcade rows carry no time. See the v3.5.204 change log.
+var _lbDayGen=0;
+function lbLoadDailyBest(gen){
   var el=document.getElementById('lb-daily-alltime');if(!el)return;
-  el.innerHTML='<div class="lb-empty" style="grid-column:1/-1">Loading…</div>';
-  try{fetch(ZDATA.endpoint+'/rpc/lockin_daily_alltime',{method:'POST',headers:zAuthHeaders(),body:'{}'})
-    .then(function(r){return r.json();}).then(function(j){lbRenderDailyAlltime(j||{});})
-    .catch(function(){lbRenderDailyAlltime({});});}catch(e){lbRenderDailyAlltime({});}
-}
-function lbRenderDailyAlltime(d){
-  var el=document.getElementById('lb-daily-alltime');if(!el)return;
-  function fmtT(s){s=+s||0;var m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}
-  function at(em,lbl,rec,fmt,shame){
-    var has=rec&&rec.val!=null;
-    var v=has?(fmt==='time'?fmtT(rec.val):(fmt==='pct'?rec.val+'%':(+rec.val).toLocaleString())):',';
-    var nm=(has&&rec.username)?drEsc(rec.username):',';
-    return '<div class="lb-at'+(shame?' shame':'')+'"><div class="lb-at-lbl">'+em+' '+lbl+'</div><div class="lb-at-val">'+v+'</div><div class="lb-at-nm">'+nm+'</div></div>';
-  }
-  el.innerHTML=at('🏆','Highest score',d.highest_score,'num',false)
-    +at('⚡','Fastest complete',d.fastest,'time',false)
-    +at('✦','Cleanest',d.cleanest,'pct',false)
-    +at('🐌','Slowest winner',d.slowest_winner,'time',true);
+  el.innerHTML='<div class="lb-empty">Loading…</div>';
+  liLoadArcade('daily','all',3,function(rows){
+    if(gen!==_lbDayGen)return;
+    var e2=document.getElementById('lb-daily-alltime');if(e2)e2.innerHTML=rows?lbMedalRows(rows,'num','fame',3):'<div class="lb-empty">Board offline.</div>';
+  });
 }
 // v3.5.86 would this score crack the daily top 10? returns the 1-based rank (<=10) or 0.
 function lbWouldRankDaily(rows,score){
@@ -11033,7 +11180,7 @@ function lbMedalRows(rows,fmt,side,cap){
   var medals=['🥇','🥈','🥉'],h='',i;
   for(i=0;i<rows.length&&i<lim;i++){var r=rows[i];
     var v=(r.val!=null?r.val:(r.best_score!=null?r.best_score:(r.score!=null?r.score:null)));
-    var rank=r.rank||(i+1),mine=(me&&r.username===me)?' lb-me':'';
+    var rank=r.rank||(i+1),mine=((r.mine!==undefined)?(r.mine===true):(me&&r.username===me))?' lb-me':''; // v3.5.204 arcade rows carry mine; RECORDS still match by username
     var med=(side==='shame')?(i===0?'💀':''):(medals[i]||'');
     h+='<div class="lb-crow'+(rank===1?' r1':'')+mine+'"><span class="rk">'+rank+'</span><span class="who">'+(med?'<span class="med">'+med+'</span>':'')+'<span class="nm">'+drEsc(r.username)+'</span></span><span class="v">'+lbHallFmt(v,fmt)+'</span></div>';
   }
@@ -11293,7 +11440,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?',':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.203</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.204</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
@@ -12752,6 +12899,7 @@ function dailyRestart(){
 }
 function restartGame(){
   gOver=false; // v2.10.11 ensure TRY AGAIN clears the fail state
+  _liRunN++;_drHide(); // v3.5.204 a new run is a new signature key (the v3.5.202 signed-wall marker never reset)
   placed=0;startT=null; // v3.5.144 restart = FRESH session; clock deferred to the first piece (startT going null->set on placement still resets the AFK/rate timers via the _afkStartT!==startT check). Was v3.5.134 Date.now().
   if(gameMode!=='level')BELT_PIECE_COUNT=BELT_DEFAULT; // v3.5.100 CHUTE BUG FIX: level's initMechanic/clearMechanic slam the global to 6 and never restore it, so a 6-piece chute leaked into every mode after Tour (or the menu demo). Standard modes now restore the default 10 on start; level sets its own after.
   document.getElementById('ov-end').classList.remove('vis');
@@ -12789,36 +12937,14 @@ function zSubmitDaily(score,walls,integ,inc,cb){
       .catch(function(e){console.error('submitDaily:',e);cb&&cb({err:true});});
   }catch(e){cb&&cb({err:true});}
 }
-function zLoadDailyBoard(cb){
-  try{
-    var url=ZDATA.endpoint+'/lockin_daily_board?puzzle_date=eq.'+encodeURIComponent(dailyKey())+'&order=rank.asc&limit=10&select=rank,username,score,incidents';
-    fetch(url,{headers:zAuthHeaders()}).then(function(r){return r.json();}).then(function(j){cb&&cb(j||[]);})
-      .catch(function(e){console.error('dailyBoard:',e);cb&&cb([]);});
-  }catch(e){cb&&cb([]);}
-}
-// v3.5.170 the proof step: read the PUBLIC board back and confirm this player is really on it.
-// Silence is never treated as success · an unreadable board reports 'unknown', a readable board that
-// lacks the player reports 'missing'. This is the check whose absence cost a whole launch push.
-function zVerifyOnBoard(score,cb){
-  var me=(ZDATA.session&&ZDATA.session.handle)||((ZDATA.session&&ZDATA.session.email)||'').split('@')[0];
-  if(!me){cb('unknown');return;}
-  setTimeout(function(){
-    try{
-      var url=ZDATA.endpoint+'/lockin_daily_board?puzzle_date=eq.'+encodeURIComponent(dailyKey())+'&username=eq.'+encodeURIComponent(me)+'&select=username,score';
-      fetch(url,{headers:zAuthHeaders()}).then(function(r){return r.ok?r.json():null;})
-        .then(function(rows){
-          if(!rows){cb('unknown');return;}
-          cb((rows.length&&rows[0]&&rows[0].username===me)?'confirmed':'missing');
-        })
-        .catch(function(){cb('unknown');});
-    }catch(e){cb('unknown');}
-  },900); // give the write a beat to settle before reading it back
-}
-function renderDailyBoard(rows){
+// v3.5.204 the public username board reader and its read-back are gone (see the v3.5.204 change log). The private
+// record still posts through lockin_submit_daily; the public read-back rule moved to liArcadeProof.
+var _drGen=0; // v3.5.204 end-screen board generation
+function renderDailyBoard(rows){ // today's ARCADE board on the end screen; the player's rows come from the server's mine flag
   var el=document.getElementById('dr-board');if(!el)return;
-  if(!rows||!rows.length){el.innerHTML='<div class="dr-empty">No scores posted yet today \u00b7 be the first.</div>';return;}
-  var me=(ZDATA.session&&ZDATA.session.email&&ZDATA.session.email.split('@')[0])||(ZDATA.session&&ZDATA.session.handle)||'';
-  var h='',i;for(i=0;i<rows.length;i++){var mine=(me&&rows[i].username===me)?' dr-me':'';h+='<div class="dr-row'+mine+'"><span>'+rows[i].rank+'</span><span>'+drEsc(rows[i].username)+'</span><span>'+rows[i].score+'</span></div>';}
+  if(!Array.isArray(rows)){el.innerHTML='<div class="dr-empty">The board did not load. That is a connection problem, not an empty board.</div>';return;}
+  if(!rows.length){el.innerHTML='<div class="dr-empty">No initials on today’s board yet. Seal it and sign.</div>';return;}
+  var h='',i,r,mine;for(i=0;i<rows.length;i++){r=rows[i];mine=(r.mine===true);h+='<div class="dr-row'+(mine?' dr-me':'')+'"><span>'+(+r.rank||(i+1))+'</span><span>'+drEsc(r.username)+(mine?' · YOU':'')+'</span><span>'+(+r.score||0)+'</span></div>';}
   el.innerHTML=h;
 }
 function shareDaily(){
@@ -12842,35 +12968,33 @@ function dailyFinish(){
   var dd=document.getElementById('dr-date');if(dd)dd.textContent=dailyKey();
   var avgInt=S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):100;
   var score=S.totalScore||0,walls=S.trucksDone||S.truck||1,inc=(S.incidents||[]).length;
-  var rk=document.getElementById('dr-rank');
-  if(!zSessionAlive()){ // v3.5.169 an expired session gets the SIGN-IN-TO-CLAIM path, not a fake rank
-    // v3.5.86 anon CTA: if this score would crack the daily top 10, prompt to sign in and CLAIM it
-    zLoadDailyBoard(function(rows){
+  var rk=document.getElementById('dr-rank'),_dg=++_drGen;
+  // v3.5.204 the sign uses the SAME total and integrity the private record saves, and only a sealed wall can sign
+  _liDailyPay={run:_liRunN,score:score,integrity:avgInt,pieces:(typeof gridPieceCount==='function'?gridPieceCount():0),pack:packPct(),sealed:!!(typeof G!=='undefined'&&G&&G.sealed)};
+  liDailySignPrepare();
+  var sealed=_liDailyPay.sealed;
+  if(!zSessionAlive()){ // v3.5.169 an expired session is a guest here: no private save, the sign still works
+    if(rk)rk.innerHTML=sealed?'<b>SIGN YOUR INITIALS BELOW</b>':'<b>WALL NOT SEALED</b><br><span style="font-size:.62em">Seal it next time to sign the board.</span>';
+    liLoadArcade('daily','today',10,function(rows){
+      if(_dg!==_drGen)return; // a newer board (the sign's read-back) is already up
       renderDailyBoard(rows);
+      if(!rk||!sealed||!rows||_liSigned['dr:'+_liRunN])return; // a failed read never claims a rank; a signed wall needs no offer
       var wr=lbWouldRankDaily(rows,score);
-      if(rk){
-        if(wr>0)rk.innerHTML='🏆 <b>YOU’D BE #'+wr+' IN THE WORLD TODAY!</b><br><span style="font-size:.62em">Sign in from ◆ SOCIAL to claim your spot on the daily board.</span>';
-        else rk.innerHTML='<b>LOG IN TO POST YOUR RANK</b>';
-      }
+      rk.innerHTML=(wr>0?'🏆 <b>YOU’D BE #'+wr+' TODAY</b>':'<b>SIGN YOUR INITIALS BELOW</b>')+'<br><span style="font-size:.62em">'+(LI_ARCADE_LINK?'Clock in first if you want it on your profile. ':'')+'Clocking in also keeps your record.</span>';
     });
     return;
   }
-  if(rk)rk.textContent='Posting your score\u2026';
+  if(rk)rk.textContent='Saving to your record…';
   zSubmitDaily(score,walls,avgInt,inc,function(j){
-    if(j&&j.ok){
-      if(rk)rk.innerHTML='RANK <b>'+j.rank+'</b> of '+j.total+(j.improved?' \u00b7 new best':'');
-      // v3.5.170 ROUND-TRIP PROOF. The whole reason players lost scores is that the client BELIEVED a post
-      // it never checked. Now the game re-reads the public board and physically looks for the player's name.
-      // Confirmed -> say so. Missing -> say THAT, loudly, instead of showing a rank nobody else can see.
-      zVerifyOnBoard(score,function(state){
-        if(!rk)return;
-        if(state==='confirmed')rk.innerHTML+='<br><span style="font-size:.58em;color:var(--ok)">\u2713 CONFIRMED ON THE WORLD BOARD</span>';
-        else if(state==='missing')rk.innerHTML='\u26a0 <b>NOT ON THE BOARD</b><br><span style="font-size:.62em">The server took your score but it isn\u2019t showing. Sign out and back in, then replay \u00b7 and tell Vince.</span>';
-      });
+    var note=sealed?'':'<br><span style="font-size:.62em">Wall not sealed, so there is nothing to sign.</span>';
+    if(rk){
+      if(j&&j.ok)rk.innerHTML='✓ <b>SAVED TO YOUR RECORD</b>'+(j.improved?' · new best':'')+note; // the private rank counted usernames and would disagree with the arcade board
+      else if(j&&j.expired)rk.innerHTML='⚠ <b>NOT SAVED · YOUR SESSION EXPIRED</b><br><span style="font-size:.62em">Clock in again (◆ CLOCK-IN) and replay today’s wall to save it.'+(sealed?' You can still sign the board below.':'')+'</span>';
+      else if(j&&j.anon)rk.innerHTML='<b>SAVE MY STATS IS OFF</b><br><span style="font-size:.62em">This run is not kept on your record.'+(sealed?' You can still sign the board below.':'')+'</span>'; // was mislabeled offline
+      else rk.textContent='(could not save · played offline?)';
     }
-    else if(j&&j.expired){if(rk)rk.innerHTML='\u26a0 <b>NOT POSTED \u00b7 YOUR SESSION EXPIRED</b><br><span style="font-size:.62em">Sign in again (\u25c6 CLOCK-IN) and replay today\u2019s wall to claim your rank.</span>';}
-    else if(rk)rk.textContent='(could not post \u00b7 played offline?)';
-    zLoadDailyBoard(renderDailyBoard);
+    liDailySignPrepare(); // the hint changes if the session died during the save
+    liLoadArcade('daily','today',10,function(rows){if(_dg===_drGen)renderDailyBoard(rows);});
   });
 }
 function endGame(reason,win){

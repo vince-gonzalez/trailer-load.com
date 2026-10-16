@@ -131,6 +131,13 @@ tr:hover td{background:#fbf9f4;}
 .hc-row.r1 .rk{color:var(--acc);}
 .hc-row.mine{outline:2px solid rgba(200,121,30,.4);outline-offset:-1px;}
 .hc-empty{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--ink3);padding:8px 4px;font-style:italic;}
+/* v1.6 (LOCK IN v3.5.204) your initials on the board */
+.sig-l{text-align:left;}
+td.sig-ini{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--acc-dim);}
+#sig-empty{padding:22px;}
+.sig-note{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--ink3);margin:8px 2px 0;}
+[data-theme="dark"] th{background:#2e2016;}
+[data-theme="dark"] tr:hover td{background:#2e2016;}
 @media(max-width:560px){.brand{font-size:24px;letter-spacing:4px;}.me-hero .handle{font-size:32px;}}
 </style>
 </head>
@@ -180,13 +187,26 @@ tr:hover td{background:#fbf9f4;}
     <div id="empty" style="display:none;"></div>
   </div>
 
+  <!-- v1.6 (LOCK IN v3.5.204) YOUR INITIALS ON THE BOARD · private to you (rpc lockin_my_signatures, FIX-08a) -->
+  <div id="sig-sec">
+    <h2 style="margin-top:28px;">Your initials on the board</h2>
+    <div class="tbl-wrap">
+      <table id="sig-table" style="display:none;">
+        <thead><tr><th>Day</th><th class="sig-l">Mode</th><th class="sig-l">Initials</th><th>Score</th><th>Integrity</th><th>Pieces</th><th>Packed</th><th>Rank that day</th></tr></thead>
+        <tbody id="sig-tbody"></tbody>
+      </table>
+      <div id="sig-empty" class="lb-empty">Loading your initials…</div>
+    </div>
+    <div class="sig-note">Only you see this list. The board shows the three letters and the score, never your username.</div>
+  </div>
+
   <h2 style="margin-top:28px;">Leaderboards</h2>
   <div class="lb-tabs">
-    <button class="lb-tab active" id="lt-daily" onclick="mTab('daily')">Daily</button>
+    <button class="lb-tab active" id="lt-arcade" onclick="mTab('arcade')">Arcade · today</button>
     <button class="lb-tab" id="lt-hall" onclick="mTab('hall')">The Hall</button>
     <button class="lb-tab" id="lt-friends" onclick="mTab('friends')">Friends</button>
   </div>
-  <div id="lp-daily"><div id="lb-daily" class="lb-board"></div></div>
+  <div id="lp-arcade"><div class="hall-colhd fame">◆ Today’s daily wall</div><div id="lb-arc-daily" class="lb-board"></div><div class="hall-colhd fame">◆ Today’s Trailer-Load walls</div><div id="lb-arc-shift" class="lb-board"></div></div>
   <div id="lp-hall" style="display:none;">
     <div class="hall-colhd fame">◆ Walls of Fame</div>
     <div class="hall-grid" id="hall-fame"></div>
@@ -216,7 +236,8 @@ var ME={
   authUrl:'https://igqpgsqogfrpujdgvefs.supabase.co/auth/v1',
   endpoint:'https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1',
   anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo',
-  session:null, rows:[]
+  session:null, rows:[], sigGen:0,
+  arcadeLink:false // v1.6 must match lock-in.html LI_ARCADE_LINK; false hides the private list. OFF until privacy.html describes the link
 };
 function mHeaders(){var h={'apikey':ME.anonKey,'Content-Type':'application/json'};h['Authorization']='Bearer '+((ME.session&&ME.session.access_token)||ME.anonKey);return h;}
 function mMsg(t,cls){var e=document.getElementById('login-msg');if(e){e.textContent=t||'';e.className=cls||'';}}
@@ -249,14 +270,15 @@ function mEnter(){
   document.getElementById('me').style.display='block';
   document.getElementById('me-handle').textContent=(ME.session&&ME.session.handle)||'You';
   mFetch();
-  mTab('daily');
+  if(ME.arcadeLink)mSigs();else{var ss=document.getElementById('sig-sec');if(ss)ss.style.display='none';}
+  mTab('arcade');
 }
 function mEsc(s){return (''+(s==null?'':s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-// ── LEADERBOARDS + FRIENDS (reuse the game's daily view + all-time/friends/follow RPCs) ──
+// ── LEADERBOARDS + FRIENDS (v1.6: today's arcade board in initials, lockin_arcade_board, + all-time/friends/follow RPCs) ──
 function mTab(which){
-  var panes={daily:'lp-daily',hall:'lp-hall',friends:'lp-friends'},tabs={daily:'lt-daily',hall:'lt-hall',friends:'lt-friends'},k;
+  var panes={arcade:'lp-arcade',hall:'lp-hall',friends:'lp-friends'},tabs={arcade:'lt-arcade',hall:'lt-hall',friends:'lt-friends'},k;
   for(k in panes){var p=document.getElementById(panes[k]);if(p)p.style.display=(k===which)?'':'none';var t=document.getElementById(tabs[k]);if(t)t.classList.toggle('active',k===which);}
-  if(which==='daily')mDaily();else if(which==='hall')mHall();else mFriends();
+  if(which==='arcade')mArcade();else if(which==='hall')mHall();else mFriends();
 }
 // THE HALL · every board we track (Walls of Fame + Walls of Shame), medal rows. Same RPCs as the game.
 var M_FAME=[{k:'best',e:'🏆',t:'BEST WALL',rpc:'lockin_alltime_board',fmt:'num'},{k:'total',e:'▲',t:'TOTAL LOADED',rpc:'lockin_total_board',fmt:'num'},{k:'fastest',e:'⚡',t:'FASTEST WALL',rpc:'wall',metric:'fastest',fmt:'time'},{k:'cleanest',e:'✦',t:'CLEANEST',rpc:'wall',metric:'cleanest',fmt:'pct'},{k:'fewest',e:'✂',t:'FEWEST PIECES',rpc:'wall',metric:'fewest',fmt:'pieces'}];
@@ -301,12 +323,27 @@ function mBoardRows(id,rows,empty,friends){
   }
   el.innerHTML=h;
 }
-function mDaily(){
-  var b=document.getElementById('lb-daily');if(b)b.innerHTML='<div class="lb-empty">Loading…</div>';
-  var key=new Date().toISOString().slice(0,10);
-  try{fetch(ME.endpoint+'/lockin_daily_board?puzzle_date=eq.'+encodeURIComponent(key)+'&order=rank.asc&limit=15&select=rank,username,score,incidents',{headers:mHeaders()})
-    .then(function(r){return r.json();}).then(function(j){mBoardRows('lb-daily',Array.isArray(j)?j:[],'No scores on today’s board yet · play Daily and be the first.',false);})
-    .catch(function(e){console.error('mDaily:',e);mBoardRows('lb-daily',[],'Could not load the board.',false);});}catch(e){console.error('mDaily:',e);}
+// v1.6 (LOCK IN v3.5.204) today's ARCADE board: three initials, never a username. Your own rows come from the
+// server's mine flag (your token), never from matching your handle. Replaces the v1.5 username daily board.
+function mArcRows(id,rows,empty){
+  var el=document.getElementById(id);if(!el)return;
+  if(!rows||!rows.length){el.innerHTML='<div class="lb-empty">'+mEsc(empty)+'</div>';return;}
+  var h='',i,r,mine;
+  for(i=0;i<rows.length;i++){r=rows[i];mine=(r.mine===true);
+    h+='<div class="lb-row'+(mine?' lb-me':'')+'"><span class="lb-rank">'+(mNum(r.rank)||(i+1))+'</span><span class="lb-name">'+mEsc(r.username)+(mine?' (yours)':'')+'</span><span class="lb-score">'+mNum(r.score).toLocaleString()+'</span></div>';}
+  el.innerHTML=h;
+}
+function mArcade(){
+  var gen=ME.arcGen=(ME.arcGen||0)+1; // a sign-out bumps this, so late responses never repaint the hidden page
+  var jobs=[['lb-arc-daily','daily',15,'No initials on today’s daily wall yet. Seal it and sign.'],['lb-arc-shift','shift',10,'No Trailer-Load walls signed today yet.']],i;
+  for(i=0;i<jobs.length;i++)(function(j){
+    var b=document.getElementById(j[0]);if(b)b.innerHTML='<div class="lb-empty">Loading…</div>';
+    try{fetch(ME.endpoint+'/rpc/lockin_arcade_board',{method:'POST',headers:mHeaders(),body:JSON.stringify({p_mode:j[1],p_scope:'today',p_limit:j[2]})})
+      .then(function(r){if(gen!==ME.arcGen)return null;if(r.status===401){mExpired();return null;}return r.json().then(function(x){return (r.ok&&Array.isArray(x))?x:'ERR';},function(){return 'ERR';});})
+      .then(function(x){if(x===null||gen!==ME.arcGen)return;if(x==='ERR'){mArcRows(j[0],null,'Could not load the board. That is a connection problem, not an empty board.');return;}mArcRows(j[0],x,j[3]);})
+      .catch(function(e){console.error('mArcade:',e);mArcRows(j[0],null,'Could not load the board.');});
+    }catch(e){console.error('mArcade:',e);}
+  })(jobs[i]);
 }
 function mFriends(){
   var b=document.getElementById('lb-friends');if(b)b.innerHTML='<div class="lb-empty">Loading…</div>';
@@ -347,6 +384,39 @@ function mFetch(){
         mRender();
       }).catch(function(e){console.error('mFetch:',e);if(emp)emp.textContent='Could not load your record · try again.';});
   }catch(e){console.error('mFetch:',e);}
+}
+// v1.6 YOUR INITIALS ON THE BOARD (FIX-08a, rpc lockin_my_signatures): signatures made while clocked in with SAVE
+// MY STATS on. Only you can read this list; the public board shows the three letters and the score.
+var M_MODE={daily:'DAILY',shift:'TRAILER-LOAD'};
+function mModeLbl(m){return M_MODE[m]||mEsc((''+(m||'')).toUpperCase());}
+function mSigState(msg){
+  var tb=document.getElementById('sig-tbody'),tbl=document.getElementById('sig-table'),em=document.getElementById('sig-empty');
+  if(tb)tb.innerHTML='';if(tbl)tbl.style.display='none';
+  if(em){em.style.display=msg?'':'none';em.textContent=msg||'';}
+}
+function mSigs(){
+  var gen=ME.sigGen=(ME.sigGen||0)+1;
+  mSigState('Loading your initials…');
+  if(!ME.session||!ME.session.access_token||!mJwtFresh(ME.session.access_token)){mExpired();return;}
+  try{fetch(ME.endpoint+'/rpc/lockin_my_signatures',{method:'POST',headers:mHeaders(),body:JSON.stringify({p_limit:50})})
+    .then(function(r){if(r.status===401){if(gen===ME.sigGen)mExpired();return null;}return r.json().then(function(x){return (r.ok&&Array.isArray(x))?x:'ERR';},function(){return 'ERR';});})
+    .then(function(rows){
+      if(gen!==ME.sigGen||rows===null)return;
+      if(rows==='ERR'){mSigState('Could not load your initials · that is a connection problem, not an empty list. Try again in a moment.');return;}
+      if(!rows.length){mSigState('No initials yet. Sign a wall while clocked in, with SAVE MY STATS on, and they show up here.');return;}
+      // the board day is UTC; never new Date(s.day), because a bare date reads as the day before in Florida
+      var today=new Date().toISOString().slice(0,10),h='',i,s,isT;
+      for(i=0;i<rows.length;i++){s=rows[i];isT=(s.day===today);
+        h+='<tr title="'+mEsc(s.signed_at?new Date(s.signed_at).toLocaleString():'')+'"><td>'+(isT?'TODAY':mEsc(s.day))+'</td><td class="sig-l">'+mModeLbl(s.mode)+'</td><td class="sig-l sig-ini">'+mEsc(s.initials)+'</td><td>'+mNum(s.score).toLocaleString()+'</td><td>'+mNum(s.integrity)+'%</td><td>'+mNum(s.pieces)+'</td><td>'+mNum(s.pack)+'%</td><td>#'+mNum(s.rank_that_day)+(isT?' so far':'')+'</td></tr>';}
+      var tb=document.getElementById('sig-tbody'),tbl=document.getElementById('sig-table'),em=document.getElementById('sig-empty');
+      if(tb)tb.innerHTML=h;if(tbl)tbl.style.display='';if(em)em.style.display='none';
+    })
+    .catch(function(e){console.error('mSigs:',e);if(gen===ME.sigGen)mSigState('Could not load your initials · try again.');});
+  }catch(e){console.error('mSigs:',e);}
+}
+function mSigClear(){ // sign-out or expiry: a private list never stays in the hidden page on a shared Chromebook
+  ME.sigGen=(ME.sigGen||0)+1;ME.arcGen=(ME.arcGen||0)+1;mSigState('');
+  var a=document.getElementById('lb-arc-daily');if(a)a.innerHTML='';var b=document.getElementById('lb-arc-shift');if(b)b.innerHTML='';
 }
 function mRank(ai){
   // v1.2 (MED) aligned to the game's wall-report ladder · same titles, SAME cutoffs, same bottom rank (was 90/82/72/60/45 + "IN TRAINING")
@@ -389,7 +459,7 @@ function mRender(){
   document.getElementById('tbody').innerHTML=h;
 }
 function mSignOut(){
-  ME.session=null;ME.rows=[];
+  ME.session=null;ME.rows=[];mSigClear();try{localStorage.removeItem('liInitials');}catch(e){} // v1.6 the next student never sees these initials prefilled
   try{localStorage.removeItem('lockinMeAuth');var _u=document.getElementById('li-user');if(_u)_u.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
   // v1.3 an explicit sign-out must STICK. mBoot reads the game's shared liAuth first, so without
   // this flag the next page load signed the previous student straight back in · on a shared
@@ -403,6 +473,7 @@ function mSignOut(){
 // v1.1 (HIGH #3) · honest session expiry: stale tokens said "No walls on record yet" instead of the truth.
 function mJwtFresh(tok){try{var p=JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));return (p.exp||0)*1000>Date.now()+30000;}catch(e){return true;}}
 function mExpired(){
+  mSigClear();
   try{localStorage.removeItem('lockinMeAuth');var _u=document.getElementById('li-user');if(_u)_u.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
   ME.session=null;
   var d=document.getElementById('me');if(d)d.style.display='none';
