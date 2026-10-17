@@ -76,7 +76,23 @@ small,sub,sup{font-size:11px;}
            pushing ROT off the strip. Keys: F stage, H special handling, W water, P pause, with R and B as before.
       (13) The saved session records stageSets, stagePlaced, stageLeft and aisleWarnings. privacy.html says the game
            saves "boxes you staged, picked up again, or left on the dock" (his words) in place of "flags for help".
-     Tests (every network call blocked): t206a 22/22, t206b 39/39, water 27/27, t205 101/101.
+     PART 3: the Day One guide teaches staging (Vince approved the draft in chat). The daily keeps its 6-piece
+       special-handling loadout (his answer: keep the daily at 6).
+     PART 4, THE OPERATOR CONSOLE (Vince: side columns yes, dark panels, drop WALL HEIGHT and PACK, coaching in
+       pause only, fullscreen yes). cnLayout() moves the game's own elements; every id and updater is unchanged.
+      (14) Computers (room beside the trailer and at least 600 px tall): LEFT = the SPECIAL HANDLING plate with its
+           one-line rule and H, the tray drawn in place with the real box art (pick one to take it), STAGE with the
+           staged boxes drawn in place, the console buttons and FULL SCREEN. RIGHT = the score card (no WALL HEIGHT
+           or PACK; the seal card shows both), the seal meter, dispatch up to 3 lines, SAFE and FLOW, the water
+           bottle as a tile (the one WATER control), ROTATE, and a fixed CHUTE row (BELT FLOWING / BREAK JAM).
+           The page cap and the bottom strip go: wall cells 27.5 px at 1366x768 (was 21.67), 23.5 at 1366x657,
+           38.7 at 1920x1080. A short-window step keeps 1366x600 whole.
+      (15) Phones and narrow windows (at least 560 px tall): a slim score bar on top and the controls as a bottom
+           sheet. Shorter windows (a phone held sideways) keep the original layout, restored element by element.
+      (16) Clicking a tray or staging tile hands focus back to the wall; no [R] hint on touch screens; the STAGE
+           label lost the dark outline that smudged it on yellow; the last static ',' placeholders show '·'.
+     Tests (every network call blocked): t206a 22/22, t206b 39/39, water 27/27, t205 101/101, t206c 73/73 at
+       1366x768, 1366x657, 1366x600, 1536x864, 1920x1080, 1024x768, 768x1024, 390x844, 360x780, 844x390.
 
    CHANGE LOG v3.5.205 - READY FOR GOODWILL: SIGN-OUT STICKS, NO HALL OF SHAME, ONE COACH VOICE, LESS DATA KEPT.
      Vince (2026-10-16): "if someone signs out they should remain signed out." / "hall of shame. probably need to
@@ -2459,7 +2475,9 @@ body.m-portrait .stg-wheel{bottom:288px;}
 body.m-portrait .sh-word{font-size:15px;}
 /* v3.5.206 STAGE · yellow floor-tape button with a fixed width so the count never shifts the strip.
    #141414 on #ffd21a = 13.1:1; on the FULL state #b8950f = 6.6:1. */
-.strip-act.sa-stage{background:#ffd21a;color:#141414;min-width:150px;gap:7px;} /* gap: inline-flex drops the space before the count */
+.strip-act.sa-stage{background:#ffd21a;color:#141414;min-width:150px;gap:7px;text-shadow:none;-webkit-text-stroke:0;} /* the dark outline for buttons smudged black ink on yellow */
+/* no keyboard hints on touch screens (the design rule: no [R] on a phone) */
+body.m-portrait .kh,body.cn-sheet .kh{display:none;} /* gap: inline-flex drops the space before the count */
 .strip-act.sa-stage.s-full{background:#b8950f;color:#141414;}
 /* v3.5.206 the tray caption floats above the wheel instead of sitting inside the strip (it pushed FLAG and ROT off screen) */
 #ov-staging .stg-sep{position:fixed;left:50%;transform:translateX(-50%);bottom:232px;pointer-events:auto;background:#1c1410;color:#f3c98a;border-color:#c8791e;z-index:1;}
@@ -2468,6 +2486,188 @@ body.m-portrait #ov-staging .stg-sep{bottom:404px;max-width:92vw;white-space:nor
 .stg-tile{width:64px;height:62px;color:#f0e6d4;}
 .stg-tile .d{color:#f3c98a;}
 .stg-art{display:block;width:52px;height:34px;pointer-events:none;}
+/* v3.5.206 OPERATOR CONSOLE (see cnLayout). Both panels are a FIXED dark surface, so their ink is pinned to the
+   dark-theme palette (the v3.5.154 pattern). --u is one design pixel: 1px at 768 tall, scaled with the window. */
+#cn-left,#cn-right{
+  --t1:#f0e6d4;--t2:#c0ad90;--t3:#a8977c;
+  --border:#3a2c20;--border2:#4a3826;--border3:#5a4632;
+  --acc:#e0962e;--acc-bright:#f0ad4a;--acc-dim:#b07820;
+  --ok:#28b870;--warn:#e0962e;--danger:#e0593a;--teal:#19a594;--teal-bright:#2dc0ad;
+  --sm:#a07de8;--sm-bright:#c0a0ff;--bg:#1c1410;--bg2:#241a13;--bg3:#2e2016;
+  --cn-face:#16100b;--cn-card:#221912;--cn-tape:#f2c230;
+  display:none;box-sizing:border-box;color:var(--t1);font-family:'Barlow Condensed',sans-serif;
+}
+body.cn-on #cn-left,body.cn-on #cn-right{display:flex;flex-direction:column;}
+#cn-left *,#cn-right *{box-sizing:border-box;}
+#cn-left kbd,#cn-right kbd{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:calc(var(--u)*24);height:calc(var(--u)*24);
+  padding:0 calc(var(--u)*5);border:2px solid currentColor;border-radius:5px;font:700 calc(var(--u)*15)/1 'Share Tech Mono',monospace;letter-spacing:0;}
+/* the bottle is the one WATER control; the strip is emptied and kept at full width with zero height (resize() reads its width) */
+body.cn-on #water-side,body.cn-on #stg-bag{display:none!important;}
+body.cn-on #root{max-width:none;box-shadow:none;}
+body.cn-on #footer{height:0;min-height:0;padding:0;border:0;overflow:hidden;flex:none;}
+.cn-sec{background:var(--cn-card);border:1px solid var(--border2);border-radius:10px;padding:calc(var(--u)*10) calc(var(--u)*12);}
+.cn-hd{display:flex;align-items:center;gap:calc(var(--u)*8);font:400 calc(var(--u)*21)/1 'Bebas Neue',sans-serif;letter-spacing:.08em;color:var(--t2);margin-bottom:calc(var(--u)*8);}
+.cn-hd .cn-grow{flex:1;}
+.cn-sub{font:600 calc(var(--u)*16)/1 'Barlow Condensed',sans-serif;letter-spacing:.02em;color:var(--t2);}
+.cn-title{display:flex;align-items:center;gap:8px;font:400 calc(var(--u)*17)/1 'Share Tech Mono',monospace;letter-spacing:.12em;color:var(--t2);padding:0 calc(var(--u)*2);}
+.cn-title::before{content:'';width:calc(var(--u)*10);height:calc(var(--u)*10);border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);}
+/* SEAL readiness: the game's #seal-rdy, restyled in place */
+#cn-right #seal-rdy{position:static;transform:none;min-width:0;width:100%;background:none;border:0;box-shadow:none;padding:0;-webkit-backdrop-filter:none;backdrop-filter:none;pointer-events:none;}
+#cn-right .sr-cap{font:700 calc(var(--u)*17)/1.1 'Share Tech Mono',monospace;letter-spacing:.06em;color:var(--t1);text-align:left;margin-bottom:calc(var(--u)*8);text-shadow:none;}
+#cn-right .sr-cap.rdy{color:#5fe6b0;}#cn-right .sr-cap.loose{color:#f0b84a;}
+#cn-right .sr-row{gap:calc(var(--u)*10);margin-top:calc(var(--u)*7);}
+#cn-right .sr-lbl{font:700 calc(var(--u)*16)/1 'Share Tech Mono',monospace;color:var(--t2);width:calc(var(--u)*64);text-align:left;text-shadow:none;}
+#cn-right .sr-track{height:calc(var(--u)*14);border-radius:7px;background:#0b0805;border:1px solid #6a5232;}
+#cn-right .sr-v{font:700 calc(var(--u)*18)/1 'Share Tech Mono',monospace;color:var(--t1);width:calc(var(--u)*50);text-align:right;text-shadow:none;}
+.cn-seal{min-height:calc(var(--u)*92);}
+.cn-seal:has(#seal-rdy[style*="none"])::after{content:'Seal meter. It starts with your first box.';display:block;font:600 calc(var(--u)*17)/1.25 'Barlow Condensed',sans-serif;color:var(--t2);}
+/* SPECIAL HANDLING in the column: bigger plate, its one-line rule and the H key */
+.sh-sub,.sh-br,.sh-key{display:none;}
+body.cn-cols #stg-nc{display:flex;width:100%;padding:calc(var(--u)*10);border-radius:12px;background:repeating-linear-gradient(-45deg,#c8101e 0 11px,#ffffff 11px 22px);box-shadow:0 3px 0 #000,0 6px 16px rgba(0,0,0,.45);}
+body.cn-cols #stg-nc .sh-face{flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:calc(var(--u)*6) calc(var(--u)*10);padding:calc(var(--u)*10) calc(var(--u)*12);border:2px solid #111;border-radius:6px;}
+body.cn-cols #stg-nc .sh-word{order:1;flex:1 1 auto;font-size:calc(var(--u)*30);}
+body.cn-cols #stg-nc .sh-chip{order:2;font:700 calc(var(--u)*26)/1 'Barlow Condensed',sans-serif;padding:calc(var(--u)*4) calc(var(--u)*9);border-radius:6px;}
+body.cn-cols #stg-nc .sh-br{order:3;display:block;flex:0 0 100%;height:0;}
+body.cn-cols #stg-nc .stg-pie{order:4;width:calc(var(--u)*26);height:calc(var(--u)*26);border:2px solid #111;flex:none;}
+body.cn-cols #stg-nc .sh-sub{order:5;display:block;flex:1 1 0;min-width:0;text-align:left;font:600 max(15px,calc(var(--u)*17))/1.15 'Barlow Condensed',sans-serif;color:#2b2b2b;}
+body.cn-cols #stg-nc .sh-key{order:6;display:inline-flex;color:#111;}
+/* the tray and the staging floor, drawn in place with the real box art */
+.cn-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:calc(var(--u)*8);}
+.cn-stage-tiles{grid-template-columns:repeat(3,minmax(0,1fr));}
+.cn-tile{position:relative;min-width:0;height:calc(var(--u)*62);border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0;margin:0;font:inherit;overflow:hidden;}
+.cn-stage-tiles .cn-tile{height:calc(var(--u)*84);}
+.cn-tile.open{border:2px dashed #6a5232;background:#1a130d;color:var(--cn-tape);font:700 calc(var(--u)*14)/1 'Share Tech Mono',monospace;}
+.cn-stage-tiles .cn-tile.open{border:3px dashed var(--cn-tape);}
+.cn-tile.full{cursor:pointer;background:#ffffff;border:2px solid #111;}
+.cn-stage-tiles .cn-tile.full{background:repeating-linear-gradient(135deg,var(--cn-tape) 0 9px,#1a1006 9px 18px);border:3px solid #1a1006;}
+.cn-stage-tiles .cn-tile.full::before{content:'';position:absolute;inset:5px;border-radius:4px;background:#3a2c1c;}
+.cn-tile canvas{position:relative;display:block;pointer-events:none;}
+.cn-tile .cn-dim{position:absolute;right:4px;bottom:3px;font:700 calc(var(--u)*14)/1 'Share Tech Mono',monospace;color:#ffffff;background:#111;border-radius:4px;padding:2px 5px;}
+.cn-tile.sel{box-shadow:0 0 0 3px #ffd400;}
+.cn-tile.full:hover{box-shadow:0 0 0 3px var(--acc-bright);}
+.cn-tile:focus-visible{outline:3px solid #2f7de1;outline-offset:2px;}
+.cn-stage-top{margin-bottom:calc(var(--u)*9);}
+body.cn-cols #cn-stage #stage-btn{width:100%;min-height:calc(var(--u)*52);font-size:calc(var(--u)*26);}
+/* WATER (the bottle, moved into a tile) and ROTATE */
+.cn-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(var(--u)*10);}
+#cn-right #water-bottle{position:relative!important;left:auto!important;top:auto!important;width:auto!important;pointer-events:auto!important;z-index:1;min-width:0;
+  display:flex;align-items:center;gap:calc(var(--u)*10);min-height:calc(var(--u)*72);padding:calc(var(--u)*6) calc(var(--u)*12);
+  background:#0e2433;border:2px solid #5cb8ee;border-radius:10px;color:#eaf6ff;
+  --wb-line:#9ad4f7;--wb-glass:rgba(255,255,255,.18);--wb-fill:#3aa0f0;--wb-tick:rgba(200,230,255,.5);--wb-ink:#eaf6ff;--wb-full:#7ff0b4;--wb-dry:#ff9a8a;}
+#cn-right #water-bottle svg{width:calc(var(--u)*26);flex:none;grid-row:1/3;grid-column:1;}
+#cn-right #water-bottle::before{content:'WATER';order:2;grid-row:1;grid-column:2;align-self:end;font:400 calc(var(--u)*27)/1 'Bebas Neue',sans-serif;letter-spacing:.08em;color:#eaf6ff;}
+#cn-right #water-bottle .wb-n,#cn-right #water-bottle.small .wb-n{order:3;grid-row:2;grid-column:2;align-self:start;text-align:left;margin:0;font:700 calc(var(--u)*24)/1 'Share Tech Mono',monospace;color:#eaf6ff;}
+body.cn-cols #cn-right #water-bottle{display:grid;grid-template-columns:auto 1fr;grid-template-rows:1fr 1fr;column-gap:calc(var(--u)*12);row-gap:calc(var(--u)*5);}
+#cn-right #water-bottle.full .wb-n{color:#7ff0b4;}#cn-right #water-bottle.dry .wb-n{color:#ff9a8a;}
+#cn-right #water-bottle:hover{border-color:#ffffff;}
+#cn-right #rot-btn{position:relative;display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*10);min-width:0;min-height:calc(var(--u)*72);padding:0 calc(var(--u)*10);
+  background:var(--acc);border:2px solid #533a12;border-radius:10px;color:#120a02;font:400 calc(var(--u)*30)/1 'Bebas Neue',sans-serif;letter-spacing:.08em;text-shadow:none;box-shadow:0 3px 0 #533a12;}
+#cn-right #rot-btn:hover{background:var(--acc-bright);}
+/* CHUTE: light + BREAK JAM in a fixed-height row, so a jam never shoves anything */
+.cn-chute{display:flex;align-items:center;gap:calc(var(--u)*10);min-height:calc(var(--u)*52);}
+.cn-chute .cn-chute-t{font:400 calc(var(--u)*21)/1 'Bebas Neue',sans-serif;letter-spacing:.08em;color:var(--t2);}
+#cn-right .cn-chute .conv-lbl{display:flex;align-items:center;gap:calc(var(--u)*10);flex:1;}
+#cn-right #chute-light{width:calc(var(--u)*24);height:calc(var(--u)*24);font-size:calc(var(--u)*14);}
+#cn-right #breakjam-btn{flex:1;min-height:calc(var(--u)*40);font-size:calc(var(--u)*21);text-shadow:none;}
+#cn-right .cn-chute .conv-lbl:has(#breakjam-btn[style*="none"])::after{content:'BELT FLOWING';font:700 calc(var(--u)*17)/1 'Share Tech Mono',monospace;color:var(--t1);}
+/* the score card (WALL HEIGHT and PACK live in the seal card, so cells 7 and 8 go) */
+#cn-right #stats-panel{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:calc(var(--u)*8);background:none;border:0;overflow:visible;padding:0;z-index:auto;}
+#cn-right .sb-cell{border:0;border-radius:8px;background:var(--cn-card);padding:calc(var(--u)*8) calc(var(--u)*11);gap:calc(var(--u)*4);min-width:0;grid-column:span 2;}
+#cn-right .sb-cell .sp-lbl{font:700 max(13px,calc(var(--u)*14))/1 'Share Tech Mono',monospace;color:var(--t2);text-shadow:none;white-space:nowrap;}
+#cn-right .sb-cell .sp-med{font-size:calc(var(--u)*24);text-shadow:none;}
+#cn-right .sb-cell .sp-big{font-size:calc(var(--u)*40);line-height:.9;text-shadow:none;}
+#cn-right #sp-cog-s{font-size:calc(var(--u)*16);text-shadow:none;}
+#cn-right .sb-cell:nth-child(1){order:0;grid-column:1/-1;background:none;padding:0 calc(var(--u)*2) calc(var(--u)*2);flex-direction:row;justify-content:flex-start;align-items:center;gap:calc(var(--u)*10);min-height:calc(var(--u)*30);}
+#cn-right .sb-cell:nth-child(1) .sp-med{font-size:calc(var(--u)*18);color:var(--t1);}
+#cn-right .sb-cell:nth-child(3){order:1;grid-column:span 3;}
+#cn-right .sb-cell:nth-child(6){order:2;grid-column:span 3;}
+#cn-right .sb-cell:nth-child(3) .sp-big{font-size:calc(var(--u)*46);}
+#cn-right .sb-cell:nth-child(6) .sp-big{font-size:calc(var(--u)*40);}
+#cn-right .sb-cell:nth-child(2){order:3;}
+#cn-right .sb-cell:nth-child(4){order:4;}
+#cn-right .sb-cell:nth-child(9){order:5;}
+#cn-right .sb-cell:nth-child(5){order:6;grid-column:1/-1;}
+#cn-right .sb-cell:nth-child(7),#cn-right .sb-cell:nth-child(8){display:none;}
+/* dispatch, safety and flow (a reserved row, so the streak pip never moves anything) */
+.cn-disp{display:flex;flex-direction:column;gap:calc(var(--u)*8);}
+.cn-disp .cn-hd{margin-bottom:0;}
+.cn-sf{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:calc(var(--u)*38);padding:0 calc(var(--u)*4);}
+#cn-right #flow-pip{position:static;font-size:calc(var(--u)*19);padding:calc(var(--u)*4) calc(var(--u)*11);}
+#cn-right #panic-wrap{border-radius:6px;}
+#cn-left #safety-live,#cn-right #safety-live{font-size:calc(var(--u)*16)!important;color:var(--t1);text-shadow:none;}
+#cn-right #msg-feed{margin:0;min-height:calc(var(--u)*50);}
+#cn-right .msg-line{white-space:normal;font:700 max(15px,calc(var(--u)*17))/1.25 'Barlow Condensed',sans-serif;color:var(--t1);background:#120d09;text-shadow:none;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
+.cn-ops{display:flex;align-items:center;gap:calc(var(--u)*8);flex-wrap:wrap;}
+#cn-right #ops-console,#cn-left #ops-console{gap:calc(var(--u)*8);}
+#cn-right .console-btn,#cn-left .console-btn{min-height:max(40px,calc(var(--u)*44));font-size:max(14px,calc(var(--u)*15));padding:0 calc(var(--u)*12);text-shadow:none;}
+/* =================== COLS (landscape) =================== */
+body.cn-cols{--u:clamp(.82px,.1302vh,1.35px);}
+body.cn-cols #cn-left,body.cn-cols #cn-right{position:fixed;top:12px;bottom:12px;z-index:40;width:var(--cn-w,380px);gap:calc(var(--u)*10);
+  padding:calc(var(--u)*12);background:var(--cn-face);border:2px solid #533a12;border-radius:14px;box-shadow:0 8px 30px rgba(20,12,4,.35);overflow:hidden;}
+body.cn-cols #cn-left{left:var(--cn-l,12px);}
+body.cn-cols #cn-right{left:var(--cn-r,974px);}
+body.cn-cols .cn-spacer{flex:1;min-height:0;}
+body.cn-cols #maxpack-finish{right:auto!important;left:50%;transform:translateX(-50%);}
+/* short windows (a 1366x600 laptop window): the same parts, tighter, so the chute row never clips */
+@media (max-height:700px){
+  body.cn-cols #cn-left,body.cn-cols #cn-right{gap:calc(var(--u)*7);top:8px;bottom:8px;}
+  body.cn-cols #cn-right .sb-cell{padding:calc(var(--u)*5) calc(var(--u)*10);}
+  body.cn-cols #cn-right #stats-panel{gap:calc(var(--u)*6);}
+  body.cn-cols #cn-right .sb-cell:nth-child(3) .sp-big,body.cn-cols #cn-right .sb-cell:nth-child(6) .sp-big{font-size:calc(var(--u)*36);}
+  body.cn-cols .cn-sec{padding:calc(var(--u)*7) calc(var(--u)*10);}
+  body.cn-cols .cn-seal{min-height:calc(var(--u)*80);}
+}
+/* =================== SHEET (phone / narrow) =================== */
+body.cn-sheet{--u:1px;}
+body.cn-sheet #cn-left{flex-direction:row;align-items:center;gap:6px;flex:none;height:48px;padding:3px 56px 3px 6px;background:var(--cn-face);border-bottom:2px solid #533a12;}
+body.cn-sheet #cn-left #stats-panel{display:flex!important;flex:1;gap:5px;min-width:0;}
+body.cn-sheet #cn-left .sb-cell{padding:2px 7px;gap:2px;flex:1 1 0;min-width:0;}
+body.cn-sheet #cn-left .sb-cell .sp-lbl{font-size:11px;letter-spacing:.04em;}
+body.cn-sheet #cn-left .sb-cell .sp-med,body.cn-sheet #cn-left .sb-cell .sp-big{font:700 19px/1 'Share Tech Mono',monospace;letter-spacing:0;}
+body.cn-sheet #cn-left .sb-cell:nth-child(1),body.cn-sheet #cn-left .sb-cell:nth-child(2),body.cn-sheet #cn-left .sb-cell:nth-child(4),
+body.cn-sheet #cn-left .sb-cell:nth-child(5),body.cn-sheet #cn-left .sb-cell:nth-child(7),body.cn-sheet #cn-left .sb-cell:nth-child(9){display:none;}
+body.cn-sheet #cn-left .sb-cell:nth-child(8){display:flex;order:3;}
+body.cn-sheet #cn-left .sb-cell:nth-child(3){flex:1.2 1 0;}
+body.cn-sheet #cn-left .cn-ops{flex:none;flex-wrap:nowrap;}
+body.cn-sheet #cn-left .console-btn{min-height:42px;min-width:44px;padding:0 8px;font-size:0;}
+body.cn-sheet #cn-left .console-btn .ci{font-size:18px;}
+body.m-portrait.cn-sheet #cbtn-admin{display:none;}
+body.m-portrait.cn-sheet #m-pause{top:2px;right:6px;width:44px;height:42px;font-size:18px;}
+body.cn-sheet #flow-pip{top:6px;left:auto;right:6px;font-size:14px;padding:3px 9px;}
+body.cn-sheet #cn-right{flex:1 1 auto;min-height:0;gap:7px;padding:7px 12px 8px;background:var(--cn-face);border-top:3px solid #533a12;box-shadow:0 -6px 18px rgba(0,0,0,.35);}
+body.cn-sheet .cn-r0{display:flex;align-items:center;gap:8px;}
+body.cn-sheet #cn-right #msg-feed{flex:1;min-width:0;min-height:0;}
+body.cn-sheet #cn-right .msg-line{white-space:normal;font:700 15px/1.2 'Barlow Condensed',sans-serif;color:var(--t1);background:#120d09;text-shadow:none;padding:4px 8px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+body.cn-sheet #cn-right #safety-live{font-size:14px!important;white-space:nowrap;}
+body.cn-sheet .cn-r1{display:grid;grid-template-columns:minmax(0,1fr) 78px;gap:8px;}
+body.cn-sheet #stg-nc{width:100%;min-height:56px;padding:6px;}
+body.cn-sheet #stg-nc .sh-face{flex:1;justify-content:space-between;}
+body.cn-sheet #stg-nc .sh-word{font-size:20px;}
+body.cn-sheet #stg-nc .stg-pie{display:none;}
+body.cn-sheet #cn-right #rot-btn{min-height:56px;font-size:19px;padding:0;flex-direction:column;}
+body.cn-sheet .cn-r2 #stage-btn{width:100%;min-height:46px;}
+body.cn-sheet .cn-r3{display:grid;grid-template-columns:132px minmax(0,1fr);gap:8px;}
+body.cn-sheet #cn-right #water-bottle{display:flex;min-height:46px;padding:3px 10px;gap:8px;}
+body.cn-sheet #cn-right #water-bottle .wb-n{margin-left:auto;align-self:center;font-size:18px;}
+body.cn-sheet #cn-right #water-bottle::before{align-self:center;font-size:21px;}
+body.cn-sheet #cn-right #water-bottle svg{width:15px;}
+body.cn-sheet .cn-seal{min-height:46px;padding:4px 9px;display:flex;align-items:center;}
+body.cn-sheet #cn-right .sr-cap{display:none;}
+body.cn-sheet #cn-right .sr-row{margin:2px 0;gap:6px;}
+body.cn-sheet #cn-right .sr-lbl{font-size:13px;width:50px;}
+body.cn-sheet #cn-right .sr-track{height:10px;}
+body.cn-sheet #cn-right .sr-v{font-size:14px;width:38px;}
+body.cn-sheet .cn-seal:has(#seal-rdy[style*="none"])::after{font-size:14px;}
+body.cn-sheet .cn-chute{min-height:40px;padding:3px 8px;}
+body.cn-sheet .cn-chute:has(#breakjam-btn[style*="none"]){display:none;}
+body.cn-sheet #cn-right kbd,body.cn-sheet #cn-fs{display:none;}
+/* holding a box on a phone: the sheet swaps to STAGE + the aim controls */
+body.cn-sheet.m-armed .cn-r1,body.cn-sheet.m-armed .cn-r3{display:none;}
+body.m-portrait.cn-sheet.m-armed:not(.ctrl-dpad) #m-stick{left:16px!important;bottom:12px!important;}
+body.m-portrait.cn-sheet.m-armed.ctrl-dpad #m-dpad{left:16px!important;bottom:8px!important;}
+body.m-portrait.cn-sheet.m-armed #m-drop{right:14px;bottom:14px;min-width:124px;}
+body.m-portrait.cn-sheet.m-armed #m-rot{right:150px;bottom:14px;}
 .stg-empty{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);white-space:nowrap;color:var(--t3);font-size:12px;background:rgba(20,14,9,.95);padding:6px 12px;border-radius:6px;pointer-events:auto;}
 
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
@@ -3218,13 +3418,13 @@ body[data-cb="trit"]{
     <div class="wu-head"><span class="wu-brand">LOCK<b> IN</b></span><span class="wu-doc">SAFETY WRITE-UP</span></div>
     <div class="wu-meta">
       <div><span>LOADER</span><b id="wu-loader">GUEST</b></div>
-      <div><span>DATE</span><b id="wu-date">,</b></div>
+      <div><span>DATE</span><b id="wu-date">·</b></div>
       <div><span>INFRACTION #</span><b id="wu-num">1</b></div>
     </div>
     <div class="wu-inf-lbl">INFRACTION</div>
-    <div class="wu-inf" id="wu-title">,</div>
+    <div class="wu-inf" id="wu-title">·</div>
     <div class="wu-why-lbl">WHY IT MATTERS</div>
-    <div class="wu-why" id="wu-why">,</div>
+    <div class="wu-why" id="wu-why">·</div>
     <div class="wu-ack">
       <span id="wu-ack-note">By signing, you acknowledge the safety briefing. Repeat infractions escalate · five incidents put you on a practice trailer; four write-ups end the shift.</span>
       <button id="wu-signbtn" onclick="signWriteup()">✍ SIGN &amp; CONTINUE</button>
@@ -3415,11 +3615,11 @@ body[data-cb="trit"]{
     <div class="le-stat"><span class="le-stat-v" id="le-score">0</span><span class="le-stat-l">Cubes</span></div>
     <div class="le-stat"><span class="le-stat-v" id="le-pph">0</span><span class="le-stat-l">PPH</span></div>
     <div class="le-stat"><span class="le-stat-v" id="le-time">0:00</span><span class="le-stat-l">Time</span></div>
-    <div class="le-stat"><span class="le-stat-v" id="le-par">,</span><span class="le-stat-l">Par Time</span></div>
+    <div class="le-stat"><span class="le-stat-v" id="le-par">·</span><span class="le-stat-l">Par Time</span></div>
     <div class="le-stat"><span class="le-stat-v" id="le-density">0%</span><span class="le-stat-l">Density</span></div>
     <div class="le-stat"><span class="le-stat-v" id="le-integrity">0%</span><span class="le-stat-l">Integrity</span></div>
     <div class="le-stat"><span class="le-stat-v" id="le-voids">0</span><span class="le-stat-l">Voids</span></div>
-    <div class="le-stat"><span class="le-stat-v" id="le-best">,</span><span class="le-stat-l">Best ★</span></div>
+    <div class="le-stat"><span class="le-stat-v" id="le-best">·</span><span class="le-stat-l">Best ★</span></div>
   </div>
   <div id="le-flavor"></div>
   <div id="le-btn-row">
@@ -3510,7 +3710,7 @@ body[data-cb="trit"]{
      came up empty: a player could enter a code and never tick "share". -->
 <div id="ov-crew" class="ov-data"><div class="data-card">
   <div class="data-hdr">◈ JOIN THIS CREW?</div>
-  <div id="crew-cf-name" class="crew-cf-name">,</div>
+  <div id="crew-cf-name" class="crew-cf-name">·</div>
   <p class="data-p">Whoever runs this crew will see your saved loading results, including <b>sessions, walls, scores, pace, integrity, safety incidents, collapses, water breaks, rotations, lifts, the timed log of your moves, your device ID, when you made your account, when you joined and when you last played</b>. If the crew has a license, they can export them. They never see which arcade initials are yours. Joining turns on SAVE MY STATS and sharing.<br>Your account stays yours. You can leave anytime.</p>
   <div class="data-btns"><button class="data-save" onclick="crewJoinConfirm()">JOIN</button><button class="data-cancel" onclick="crewCancel()">CANCEL</button></div>
 </div></div>
@@ -3522,7 +3722,7 @@ body[data-cb="trit"]{
     <div class="sb-cell"><div class="sp-lbl">MODE</div><span class="sp-med" id="sp-mode">SHIFT</span></div>
     <div class="sb-cell"><div class="sp-lbl">TRAILER</div><span class="sp-med" id="sp-truck">#1</span></div>
     <div class="sb-cell" style="position:relative;"><div class="sp-lbl">SCORE</div><span class="sp-big" id="sp-score">0</span><span class="score-pop" id="score-pop"></span></div>
-    <div class="sb-cell"><div class="sp-lbl">LOAD RATE</div><span class="sp-med" id="sp-pph">,</span></div>
+    <div class="sb-cell"><div class="sp-lbl">LOAD RATE</div><span class="sp-med" id="sp-pph">·</span></div>
     <div class="sb-cell sb-cog"><div class="sp-lbl">BALANCE</div><div id="sp-cog-wrap"><div id="sp-cog-g"></div><div id="sp-cog-d"></div></div><span id="sp-cog-s" style="color:var(--ok)">STABLE</span></div>
     <div class="sb-cell"><div class="sp-lbl">ELAPSED</div><span class="sp-big" id="sp-time">00:00</span></div>
     <div class="sb-cell"><div class="sp-lbl">WALL HEIGHT</div><span class="sp-med" id="sp-h-val">0%</span><div class="sp-bar"><div class="sp-bar-fill" id="sp-h-fill" style="width:0%"></div></div></div>
@@ -3626,12 +3826,12 @@ body[data-cb="trit"]{
                 <div class="conv-lbl" style="display:flex;align-items:center;gap:8px;"><span id="chute-light" class="chute-light cl-ok" title="Chute flow"></span><button id="breakjam-btn" class="bj-btn" onclick="breakJam()" style="display:none">📦 BREAK JAM</button></div>
         <button id="water-side" class="strip-act sa-water" onclick="takeDrink()" title="Drink water · 4 a trailer · 6s between drinks" aria-label="Drink water. 0 of 4 drinks this trailer">💧 WATER 0/4</button>
         <div class="conv-lbl" style="display:flex;align-items:center;gap:7px;">
-          <button type="button" class="sh-plate" id="stg-nc" onclick="openStagingPopup('nc')" title="Special handling (H): too big, heavy or hazardous for the belt. Load it low." aria-label="Special handling. 0 of 8. Too big, heavy or hazardous for the belt. Load it low. Key H."><span class="sh-face"><span class="sh-word">SPECIAL HANDLING</span><span class="stg-pie" id="stg-nc-pie"></span><span class="sh-chip" id="stg-nc-n">0/8</span></span></button>
+          <button type="button" class="sh-plate" id="stg-nc" onclick="openStagingPopup('nc')" title="Special handling (H): too big, heavy or hazardous for the belt. Load it low." aria-label="Special handling. 0 of 8. Too big, heavy or hazardous for the belt. Load it low. Key H."><span class="sh-face"><span class="sh-word">SPECIAL HANDLING</span><span class="stg-pie" id="stg-nc-pie"></span><span class="sh-chip" id="stg-nc-n">0/8</span><span class="sh-br"></span><span class="sh-sub">Too big, heavy or hazardous for the belt. Load it low.</span><kbd class="sh-key" aria-hidden="true">H</kbd></span></button>
           <span class="stg-light" id="stg-bag" onclick="openStagingPopup('bag')" title="Smalls staging" style="display:none;"><b>SM</b><span class="stg-pie" id="stg-bag-pie"></span><span id="stg-bag-n">0/8</span></span>
         </div>
         <span class="conv-lbl" id="safety-live" style="font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:bold;letter-spacing:.5px;" title="Live safety · open warnings / incidents on record"></span>
         <button id="stage-btn" class="strip-act sa-stage" type="button" onclick="stageButton()" title="STAGE (F): set the box in your hand down beside the wall. 3 spots. With empty hands, choose a staged box to pick back up." aria-label="Stage. 0 of 3 staged. Key F.">⬇ STAGE <span id="stage-n">0/3</span></button>
-        <button id="rot-btn" onclick="rotateSel()">↻ ROT [R]</button>
+        <button id="rot-btn" onclick="rotateSel()" aria-label="Rotate the box in hand. Key R.">↻ ROT<span class="kh"> [R]</span></button>
       </div>
       <canvas id="belt-canvas" style="display:none;width:100%;touch-action:none;"></canvas>
     </div>
@@ -3660,7 +3860,7 @@ body[data-cb="trit"]{
   <div id="pb-ribbon"></div>
   <div class="es-hero">
     <div class="es-grade-ring" id="es-grade-ring"><span id="es-grade-big">A</span></div>
-    <div class="es-hero-txt"><div class="es-rank" id="es-rank">DOCK HAND</div><div class="es-verdict" id="es-verdict">,</div></div>
+    <div class="es-hero-txt"><div class="es-rank" id="es-rank">DOCK HAND</div><div class="es-verdict" id="es-verdict">·</div></div>
   </div>
   <!-- v3.5.149 END-SCREEN TRIM · 4 headline numbers above the fold; the full ~40-tile breakdown collapses behind SEE ALL STATS (or the FULL REPORT button). -->
   <div class="es-headline">
@@ -6762,6 +6962,7 @@ function stageHUD(){
     }
   }
   stageAisleClear();
+  if(CN.mode==='cols')cnLanesRender(false); // v3.5.206 the in-place tray and staging tiles
 }
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 
@@ -7870,6 +8071,7 @@ function _stgSet(key,used,max,warnFill,critFired){
 }
 function openStagingPopup(type){
   if(gOver||paused)return;
+  if(CN.mode==='cols'){if(type==='nc')takeSpecialHandling();else stageToggle();return;} // v3.5.206 the columns show both lanes in place
   if(STG_OPEN===type){stgClose();return;} // tapping the open lane's light closes it
   STG_OPEN=type;var ov=document.getElementById('ov-staging');if(ov)ov.classList.add('vis');
   var sep=document.getElementById('stg-sep');if(sep)sep.style.display='';
@@ -9029,7 +9231,7 @@ function updateRightHUD(pph){
         d=getDims(p,0);nm=(p.label||p.type||'BOX');
         html+='<div class="nu-row"><span class="nu-n">'+(i+1)+'</span><span class="nu-name">'+nm+'</span><span class="nu-dim">'+d.w+'\u00d7'+d.h+'</span></div>';
       }else{
-        html+='<div class="nu-row nu-empty"><span class="nu-n">'+(i+1)+'</span><span class="nu-name">,</span><span class="nu-dim"></span></div>';
+        html+='<div class="nu-row nu-empty"><span class="nu-n">'+(i+1)+'</span><span class="nu-name">·</span><span class="nu-dim"></span></div>';
       }
     }
     var ncU=(G.ncSlots||[]).filter(function(x){return !!x;}).length;
@@ -9729,11 +9931,182 @@ document.addEventListener('keydown',function(e){
   else if((e.key==='Enter'||e.key===' ')&&!act){kbPlace();e.preventDefault();}
 });
 
+// ═══ v3.5.206 OPERATOR CONSOLE ═══
+// Vince 2026-10-16: side columns on computers (yes), dark panels, the score card without WALL HEIGHT and PACK (the
+// seal meter shows both), coaching in pause only (no rules panel), and a fullscreen button with P as a second pause.
+// Built from the design206 "console" mockup, which measured 27.5 px wall cells at 1366x768 (was 21.67) with every
+// text pair at 7:1 or better. It MOVES the game's own elements; every id and updater stays the same.
+//   body.cn-cols   room beside the trailer frame: LEFT = special handling, its tray drawn in place, and staging;
+//                  RIGHT = score, seal, dispatch, safety and flow, water and rotate, the chute row, the console buttons.
+//                  The page cap goes, the bottom strip goes, and the scene gets the full window height.
+//   body.cn-sheet  phone or any narrow window: a slim score bar on top and the controls as a bottom sheet.
+// Nothing happens until cnLayout() adds body.cn-on, so if this fails the old strip still works.
+var CN={mode:null,left:null,right:null,p:null};
+var CN_GAP=14,CN_EDGE=12,CN_COL_MAX=440,CN_COL_MIN=230,CN_SHEET_MIN=252,CN_COLS_MIN_H=600,CN_SHEET_MIN_H=560; // under these heights (a phone held sideways) the original layout stays
+function cnBuild(){
+  if(CN.left)return true;
+  var d=document,mainCol=d.getElementById('main-col'),world=d.getElementById('world');
+  if(!mainCol||!world)return false;
+  function el(t,id,c,h){var e=d.createElement(t);if(id)e.id=id;if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
+  var L=el('aside','cn-left'),R=el('aside','cn-right');
+  L.setAttribute('aria-label','Special handling and staging');R.setAttribute('aria-label','Score, seal, dispatch and controls');
+  mainCol.insertBefore(L,world);mainCol.insertBefore(R,world.nextSibling);
+  CN.left=L;CN.right=R;
+  CN.orig=[];
+  ['stats-panel','flow-pip','panic-wrap','safety-live','msg-feed','ops-console','seal-rdy','stg-nc','water-bottle','rot-btn','stage-btn'].forEach(function(id){var e=d.getElementById(id);if(e)CN.orig.push({el:e,parent:e.parentNode,next:e.nextSibling});});
+  var _jl=d.getElementById('chute-light');if(_jl&&_jl.parentNode)CN.orig.push({el:_jl.parentNode,parent:_jl.parentNode.parentNode,next:_jl.parentNode.nextSibling});
+  CN.orig.sort(function(a,b){return (a.el.compareDocumentPosition(b.el)&4)?1:-1;}); // last in the page first, so each next sibling is home before it is used
+  var fs=el('button','cn-fs','console-btn cn-fs','<span class="ci" aria-hidden="true">⛶</span>FULL SCREEN');
+  fs.type='button';fs.onclick=cnFullscreen;fs.setAttribute('aria-label','Full screen');
+  CN.p={
+    lTitle:el('div',null,'cn-title','SPECIAL FREIGHT'),
+    lTray:el('section','cn-tray','cn-sec','<div class="cn-hd">TRAY<span class="cn-sub">pick one to take it</span><span class="cn-grow"></span></div><div class="cn-tiles" id="cn-tray-tiles"></div>'),
+    lStage:el('section','cn-stage','cn-sec','<div class="cn-stage-top"></div><div class="cn-tiles cn-stage-tiles" id="cn-stage-tiles"></div>'),
+    lSpacer:el('div',null,'cn-spacer'),
+    rTitle:el('div',null,'cn-title','DOCK CONSOLE'),
+    rSeal:el('section',null,'cn-sec cn-seal'),
+    rDisp:el('section',null,'cn-sec cn-disp','<div class="cn-hd">DISPATCH<span class="cn-grow"></span></div>'),
+    rSf:el('div',null,'cn-sf'),
+    rSpacer:el('div',null,'cn-spacer'),
+    rRow:el('div',null,'cn-row'),
+    rChute:el('div',null,'cn-sec cn-chute','<span class="cn-chute-t">CHUTE</span>'),
+    rOps:el('div',null,'cn-ops'),
+    fs:fs,
+    r0:el('div',null,'cn-r0'),r1:el('div',null,'cn-r1'),r2:el('div',null,'cn-r2'),r3:el('div',null,'cn-r3')
+  };
+  return true;
+}
+function _cnPut(parent,kids){var i;for(i=0;i<kids.length;i++){if(kids[i])parent.appendChild(kids[i]);}}
+function cnAssemble(m){
+  var d=document,P=CN.p;function $(id){return d.getElementById(id);}
+  if(m==='off'){var i,o;for(i=0;i<CN.orig.length;i++){o=CN.orig[i];if(o.parent)o.parent.insertBefore(o.el,(o.next&&o.next.parentNode===o.parent)?o.next:null);}return;}
+  var stats=$('stats-panel'),flow=$('flow-pip'),panic=$('panic-wrap'),safety=$('safety-live'),feed=$('msg-feed'),ops=$('ops-console');
+  var seal=$('seal-rdy'),spec=$('stg-nc'),bottle=$('water-bottle'),rot=$('rot-btn'),stage=$('stage-btn');
+  var jam=$('chute-light')?$('chute-light').parentNode:null;
+  if(m==='cols'){
+    _cnPut(P.lStage.querySelector('.cn-stage-top'),[stage]);
+    _cnPut(P.rOps,[ops,P.fs]);
+    _cnPut(CN.left,[P.lTitle,spec,P.lTray,P.lStage,P.lSpacer,P.rOps]);
+    _cnPut(P.rSeal,[seal]);
+    _cnPut(P.rDisp,[panic,feed]);
+    _cnPut(P.rSf,[safety,flow]);
+    _cnPut(P.rRow,[bottle,rot]);
+    if(jam)P.rChute.appendChild(jam);
+    _cnPut(CN.right,[stats,P.rSeal,P.rDisp,P.rSf,P.rSpacer,P.rRow,P.rChute]); // the MODE row heads this column
+  }else{
+    d.getElementById('scene-wrap').appendChild(flow);       // the streak pip rides the trailer ceiling
+    _cnPut(P.rOps,[ops]);
+    _cnPut(CN.left,[stats,P.rOps]);                          // slim score bar on top
+    _cnPut(P.r0,[feed,safety]);
+    _cnPut(P.r1,[spec,rot]);
+    _cnPut(P.r2,[stage]);
+    _cnPut(P.rSeal,[seal]);_cnPut(P.r3,[bottle,P.rSeal]);
+    if(jam)P.rChute.appendChild(jam);
+    _cnPut(CN.right,[panic,P.r0,P.r1,P.r2,P.r3,P.rChute]);
+  }
+}
+function cnLayout(){
+  try{
+    if(!cnBuild())return;
+    var b=document.body,vw=window.innerWidth,vh=window.innerHeight;
+    var AR=(typeof BACKDROP!=='undefined'&&BACKDROP&&BACKDROP.naturalWidth)?BACKDROP.naturalWidth/BACKDROP.naturalHeight:674/926;
+    var side=(vw-Math.min(vw*0.976,vh*0.984*AR))/2-CN_GAP-CN_EDGE;
+    var m=(side>=CN_COL_MIN&&vh>=CN_COLS_MIN_H)?'cols':(vh>=CN_SHEET_MIN_H&&side<CN_COL_MIN)?'sheet':'off';
+    if(m!==CN.mode){CN.mode=m;cnAssemble(m);}
+    b.classList.toggle('cn-on',m!=='off');b.classList.toggle('cn-cols',m==='cols');b.classList.toggle('cn-sheet',m==='sheet');
+    var world=document.getElementById('world'),sw=document.getElementById('scene-wrap');
+    if(m==='off'){world.style.flex='';world.style.height='';b.style.removeProperty('--u');if(sw&&(sw.offsetWidth!==W||sw.offsetHeight!==H))resize();return;}
+    if(m==='sheet'){
+      var topH=CN.left.offsetHeight||52,fitH=Math.ceil(vw*0.976/AR/0.984)+2;
+      var h=Math.max(220,Math.min(fitH,vh-topH-CN_SHEET_MIN));
+      world.style.flex='0 0 '+h+'px';world.style.height=h+'px';
+      b.style.removeProperty('--u');
+    }else{world.style.flex='';world.style.height='';}
+    if(sw&&(sw.offsetWidth!==W||sw.offsetHeight!==H))resize();
+    if(m==='cols'&&sw){
+      var r=sw.getBoundingClientRect(),fl=r.left+DL,fr=r.left+DR;
+      var w=Math.floor(Math.min(CN_COL_MAX,fl-CN_GAP-CN_EDGE,vw-fr-CN_GAP-CN_EDGE));
+      b.style.setProperty('--cn-w',w+'px');
+      b.style.setProperty('--u',Math.max(0.82,Math.min(1.35,vh/768,w/381)).toFixed(3)+'px');
+      b.style.setProperty('--cn-l',Math.round(fl-CN_GAP-w)+'px');
+      b.style.setProperty('--cn-r',Math.round(fr+CN_GAP)+'px');
+    }
+    cnLanesRender(true);
+  }catch(e){console.error('cnLayout:',e);}
+}
+// the special-handling tray and the staging floor drawn in place (columns only); writes only when something changed
+function cnLanesRender(force){
+  if(!CN.left||CN.mode!=='cols'||typeof G==='undefined'||!G||!G.ncSlots||!G.bagSlots)return;
+  var i,st=[];for(i=0;i<G.bagSlots.length;i++)if(G.bagSlots[i])st.push(i);
+  var nc=[];for(i=0;i<G.ncSlots.length;i++)nc.push(i);
+  while(st.length<STAGE_MAX)st.push(-1);
+  _cnLane('cn-tray-tiles','nc',G.ncSlots,nc,selNC,force);
+  _cnLane('cn-stage-tiles','bag',G.bagSlots,st,selBag,force);
+}
+function _cnLane(id,lane,slots,idx,sel,force){
+  var box=document.getElementById(id);if(!box)return;
+  var key=lane+'|'+box.clientWidth+'|'+sel+'|'+idx.map(function(k){return (k<0||!slots[k])?'-':slots[k].id;}).join(',');
+  if(!force&&box._cnKey===key)return;
+  box._cnKey=key;
+  var h='',k;
+  for(k=0;k<idx.length;k++){
+    var si=idx[k],p=(si>=0)?slots[si]:null;
+    if(!p){h+='<div class="cn-tile open" aria-hidden="true">'+(lane==='bag'?'OPEN':'')+'</div>';continue;}
+    var nm=(lane==='nc')?'Special handling':(p.isBag?'Staged bag of smalls':'Staged box');
+    h+='<button type="button" class="cn-tile full'+(si===sel?' sel':'')+'" data-i="'+si+'" onclick="cnPick(\''+lane+'\','+si+')" aria-label="'+nm+', '+(p.w||2)+' by '+(p.h||2)+(si===sel?', in hand':'')+'"><canvas></canvas><span class="cn-dim">'+(p.w||2)+'×'+(p.h||2)+'</span></button>';
+  }
+  box.innerHTML=h;
+  var bs=box.querySelectorAll('.cn-tile.full'),dpr=Math.max(1,Math.min(3,window.devicePixelRatio||1));
+  for(k=0;k<bs.length;k++){
+    var bt=bs[k],p2=slots[+bt.getAttribute('data-i')],cv=bt.querySelector('canvas');if(!p2||!cv)continue;
+    var bw=bt.clientWidth-12,bh=bt.clientHeight-12,dw=p2.w||2,dh=p2.h||2,s=Math.max(3,Math.min(bw/dw,bh/dh)),cw=Math.max(4,Math.round(dw*s)),ch=Math.max(4,Math.round(dh*s));
+    cv.width=cw*dpr;cv.height=ch*dpr;cv.style.width=cw+'px';cv.style.height=ch+'px';
+    var cx=cv.getContext('2d');if(!cx)continue;
+    cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,cw,ch);
+    try{drawBeltPiece(cx,p2,0,0,cw,ch,false,0,0);}catch(e){console.error('_cnLane:',e);}
+  }
+}
+// a tile in the columns: take that piece (special handling) or that staged box; holding a chute box, a staged box trades
+function cnPick(lane,i){
+  if(gOver||paused||typeof G==='undefined'||!G)return;
+  if(lane==='nc'){
+    if(!G.ncSlots[i])return;
+    selNC=(selNC===i)?-1:i;selNCRot=0;selBeltIdx=null;selBag=-1;
+    if(typeof buildNCPanel==='function')buildNCPanel();
+    if(selNC>=0&&typeof kbCenterCursor==='function')kbCenterCursor();
+  }else{
+    if(!G.bagSlots[i])return;
+    if(selBeltIdx!==null&&G.belt[selBeltIdx]){stageSwap(i);}
+    else{selBag=(selBag===i)?-1:i;selBeltIdx=null;selNC=-1;if(selBag>=0&&typeof kbCenterCursor==='function')kbCenterCursor();}
+  }
+  if(typeof playSfx==='function')playSfx('select');
+  cnLanesRender(true);
+  try{var _sc=document.getElementById('scene');if(_sc&&kbPlayActive())_sc.focus({preventScroll:true});}catch(_f){}
+}
+// full screen: only full screen clears 24 px wall cells in a normal Chromebook window (1366x657 gives 23.5)
+function cnFullscreen(){
+  try{
+    var d=document,de=d.documentElement;
+    if(!d.fullscreenElement){
+      var req=de.requestFullscreen||de.webkitRequestFullscreen;
+      if(!req){showBanner('Full screen is not available in this browser.','',1800);return;}
+      var pr=req.call(de);if(pr&&pr.catch)pr.catch(function(){showBanner('Full screen is not allowed here.','',1800);});
+    }else if(d.exitFullscreen){d.exitFullscreen();}
+  }catch(e){console.error('cnFullscreen:',e);}
+}
+function _cnFsLabel(){var b=document.getElementById('cn-fs');if(b)b.innerHTML='<span class="ci" aria-hidden="true">⛶</span>'+(document.fullscreenElement?'EXIT FULL SCREEN':'FULL SCREEN');}
+try{
+  window.addEventListener('resize',function(){setTimeout(cnLayout,0);});
+  window.addEventListener('orientationchange',function(){setTimeout(cnLayout,120);});
+  document.addEventListener('fullscreenchange',function(){_cnFsLabel();setTimeout(cnLayout,60);});
+  window.addEventListener('load',function(){setTimeout(cnLayout,0);});
+  if(document.fonts&&document.fonts.ready&&document.fonts.ready.then)document.fonts.ready.then(function(){cnLayout();});
+}catch(_cne){console.error('cnLayout boot:',_cne);}
 // v3.5.206 FOCUS BACK TO THE WALL. After any click on a play control, focus returns to the scene, so Space and Enter
 // place the box instead of pressing the same button again. Skipped when the click opened a menu, pause or end screen.
 document.addEventListener('click',function(e){
   var t=(e.target&&e.target.closest)?e.target.closest('button,[role="button"]'):null;
-  if(!t||!t.closest('#footer,#world,#water-bottle,#maxpack-finish'))return;
+  if(!t||!t.closest('#footer,#world,#water-bottle,#maxpack-finish,#cn-left,#cn-right'))return;
   setTimeout(function(){try{if(kbPlayActive()){var sc=document.getElementById('scene');if(sc&&document.activeElement!==sc)sc.focus({preventScroll:true});}}catch(x){}},0);
 });
 function updateCoachTip(){
