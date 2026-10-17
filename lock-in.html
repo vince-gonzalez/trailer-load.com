@@ -100,7 +100,17 @@ small,sub,sup{font-size:11px;}
            smaller with a ▾ on its WxH tag. Click a spot: a held chute box goes down there (or trades with the box
            there); empty hands pick the box up; special handling is refused. The staging wheel is gone, and the
            column keeps only STAGE, its count and one line.
-     Tests (every network call blocked): t206a 22/22, t206b 41/41, water 27/27, t205 101/101, t206c 73/73 at
+     PART 9, MORE BAGS TOWARD THE TOP (Vince 2026-10-17: "the top of the wall spawns more bags", for two reasons: later
+       in the truck more smalls are processed, and at the end the NC guy hands you bags so the load finishes with no gaps).
+      (18) THE NC GUY DELIVERS: the first time the wall's top passes 70%, and again at 85%, a bag of smalls goes to the
+           front of the chute (in the daily, the same bag for everyone who climbs that high; the stream never moves).
+           A bag also comes down the chute every topBagInterval() belt pieces: 9 below half height, down to 3 at 90%. From 75% height, a special-handling piece too big for the room left above the top goes to the
+           other door and a bag comes instead. The daily ramps by stream position (12% of pieces for the first 20, up to
+           36% from piece 40), identical for every player. A bag on a staging spot breaks with a double-click or a long
+           press again (the old handlers tested the retired floor slots).
+     Measured (design206/sim206bags.js, a greedy loader bot, 80 walls x2, ramp off vs on): bags reaching a loader once
+       the wall's top passes 75% went from 0.35 to 0.40 a wall to about 1.95; every wall still sealable.
+     Tests (every network call blocked): t206a 22/22, t206b 41/41, t206d 20/20, water 27/27, t205 101/101, t206c 73/73 at
        1366x768, 1366x657, 1366x600, 1536x864, 1920x1080, 1024x768, 768x1024, 390x844, 360x780, 844x390.
 
    CHANGE LOG v3.5.205 - READY FOR GOODWILL: SIGN-OUT STICKS, NO HALL OF SHAME, ONE COACH VOICE, LESS DATA KEPT.
@@ -5798,6 +5808,11 @@ function spawnNC(){
   }
   // Deep-copy the template · never mutate the pool array
   var tmpl=pickNC();
+  if(_ncStartCap===null&&G.belt&&G.belt.length<BELT_PIECE_COUNT+5&&ncTooBigForTop(tmpl)){ // v3.5.206 too big for the room left at the top: a bag instead (only when the chute can take it)
+    S.ncDiverted=(S.ncDiverted||0)+1;spawnBag();
+    if(!G._divertTold){G._divertTold=true;showBanner('📦 Too big for your top · the NC guy sent it to the other door and gave you a bag of smalls.','',2600);}
+    return;
+  }
   tmpl.cells=(tmpl.cells||makeRect(tmpl.w,tmpl.h)).map(function(c){return[c[0],c[1]];});
   // v2.1.35 · tires ship in SETS (FARM=6, DB pair=2, STD/MC=4). Stage what fits; never overflow.
   var _setN=1;
@@ -6128,6 +6143,44 @@ function liftBox(cell){
   G.integrity=calcIntegrity(G.grid);G.score=calcScore();
   checkPanelFill();
 }
+// ═══ v3.5.206 MORE BAGS TOWARD THE TOP OF THE WALL ═══
+// Vince 2026-10-17: "the later you are along in the truck, the more smalls would be processed, and at the end of
+// the wall, the loader can usually 'pick their poison' a little bit more ... the nc guy goes out of his way to give
+// you bags to fit more pieces ... near the end of your truck / top of your wall, so that you don't have any gaps."
+// 1. A bag comes down the chute every topBagInterval() belt pieces: 9 until the wall is 45% built, then down to 3
+//    at 85% (it was a flat 9). 'Built' is the average column height, so one tall tower does not count as a wall.
+// 2. From 75% height, a special-handling piece too big for the room left above the top goes to the other door and
+//    the NC guy sends a bag instead (ncTooBigForTop, counted in S.ncDiverted).
+// 4. THE NC GUY DELIVERS a bag to the front of the chute when the wall's top first passes each TOP_BAG_AT mark.
+// 3. The daily ramps by stream position instead (dailyBagChance), so every player still gets the same boxes.
+function wallProgress(){
+  if(typeof G==='undefined'||!G||!G.grid)return 0;
+  var x,y,s=0;
+  for(x=0;x<GW;x++){for(y=0;y<GH;y++){if(G.grid[y][x])break;}s+=GH-y;}
+  return s/(GW*GH);
+}
+function topBagInterval(p){return (p<0.5)?9:Math.max(3,Math.round(9-(p-0.5)/0.40*6));} // p = the wall's top (wallH/GH): 9 below half, 3 from 90%
+function wallTopFrac(){return (typeof G==='undefined'||!G||!G.grid)?0:wallH()/GH;}
+var TOP_BAG_AT=[0.70,0.85]; // the NC guy hands over a bag the first time the wall's top passes each of these
+// called after every successful placement: deliver the next top-off bag if the wall's top just passed its mark
+function topBagCheck(){
+  if(typeof G==='undefined'||!G||!G.belt||gameMode==='gauntlet'||TUTORIAL_MODE)return; // the tutorial scripts its own chute
+  var n=G._topBags||0;if(n>=TOP_BAG_AT.length||wallTopFrac()<TOP_BAG_AT[n])return;
+  if(G.belt.length>=BELT_PIECE_COUNT+5)return; // the chute is full; he tries again on the next box
+  var b=makeBagPiece();
+  if(gameMode==='daily'&&typeof DAILY!=='undefined'&&DAILY.seed!=null){b.seed=100+Math.floor(mulberry32((DAILY.seed^Math.imul(n+1,0x1B873593)^0x5EED)>>>0)()*9800);b.id='DTOP'+n;}
+  G.belt.unshift(b);if(selBeltIdx!==null)selBeltIdx++; // the held chute box keeps its place in line
+  G._topBags=n+1;S.topBags=(S.topBags||0)+1;S.smallsSpawned=(S.smallsSpawned||0)+1;
+  if(typeof updateChuteUI==='function')updateChuteUI();
+  showBanner('🛍 BAG OF SMALLS from the NC guy · front of the chute. Finish off the top.','ok',2400);
+}
+function ncTooBigForTop(t){ // from 75% height, a piece that cannot fit in the room left above the wall's top
+  if(!t||gameMode==='daily')return false;
+  if(wallTopFrac()<0.75)return false;
+  var head=GH-wallH();
+  return Math.min(t.w||1,t.h||1)>head;
+}
+function dailyBagChance(idx){return (idx<20)?0.12:Math.min(0.36,0.12+(idx-20)*0.012);}
 function refillBelt(){
   // LV6: Belt Drought · no new pieces during active drought
   if(isDroughtActive())return;
@@ -6137,7 +6190,7 @@ function refillBelt(){
   var _rbG=0;while(G.belt.length<BELT_PIECE_COUNT&&_rbG++<240){
     // Guaranteed periodic NC/bag spawn · not pure random
     // One NC every NC_SPAWN_INTERVAL belt pieces consumed
-    var ncInterval=6, bagInterval=9;
+    var ncInterval=6, bagInterval=topBagInterval(wallTopFrac()); // v3.5.206 more bags toward the top
     G.beltSinceNC=(G.beltSinceNC||0);
     G.beltSinceBag=(G.beltSinceBag||0);
 
@@ -6267,7 +6320,7 @@ function dailyPieceAt(seed,idx){
 function buildDailyPiece(seed,idx){
   // v3.5.2 deterministic BAG in the daily chute (~1 in 8) · same for every player on the date
   var mb=mulberry32((seed^Math.imul(idx+1,0x85EBCA6B))>>>0);
-  if(mb()<0.12){var b=makeBagPiece();b.id='DB'+idx;b.seed=100+Math.floor(mb()*9800);return b;}
+  if(mb()<dailyBagChance(idx)){var b=makeBagPiece();b.id='DB'+idx;b.seed=100+Math.floor(mb()*9800);return b;} // v3.5.206 was a flat 0.12
   var sp=dailyPieceAt(seed,idx);
   var tmpl={...sp.arr[sp.ti]};
   tmpl.cells=(tmpl.cells||makeRect(tmpl.w,tmpl.h)).map(function(c){return[c[0],c[1]];});
@@ -6409,7 +6462,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   placed++;
   if(!startT)startT=Date.now(); // v3.5.144 THE CLOCK STARTS ON THE FIRST PIECE · elapsed / PPH never count the time before you place anything (fair on mobile, where the opening piece is slower). startT is null from mode-start until here.
   if(typeof gcurFlash==='function')gcurFlash('drop',420); // v3.5.20 drop-glove on a successful place
-  S.totalPieces=(S.totalPieces||0)+1; if(source==='bag'||box._fromStage){S.stagePlaced=(S.stagePlaced||0)+1;box._fromStage=false;} if(source!=='bag')stageAisleTick(); if(source==='bag'&&(box.isBag||box.type==='small'))S.bagsPlaced=(S.bagsPlaced||0)+1; // v2.1.7; v3.5.206 only real smalls (a regular box from that lane counted too)
+  S.totalPieces=(S.totalPieces||0)+1; if(source==='bag'||box._fromStage){S.stagePlaced=(S.stagePlaced||0)+1;box._fromStage=false;} if(source!=='bag')stageAisleTick(); topBagCheck(); if(source==='bag'&&(box.isBag||box.type==='small'))S.bagsPlaced=(S.bagsPlaced||0)+1; // v2.1.7; v3.5.206 only real smalls (a regular box from that lane counted too)
   if(!(box.type==='small'||box.isBag)&&!((box._gen||0)>0))S.boxPieces=(S.boxPieces||0)+1; // v3.5.90 PPH = REAL freight only; v3.5.99 first placement ONLY · a re-placed (churned) box earns ZERO pph, so the autoclicker's place-lift-place spam gains nothing
   // v3.5.142 CEILING SMALLS-BAG BONUS · a 3x3 bag stuffed against the trailer roof (top edge at row 0) reclaims the dead air up top. Huge, once per bag (feedback only; calcScore scores the live wall). 5 bags fill a ceiling course (15 of 17 cells).
   if(box.isBag&&gy===0&&!box._bagCeilAwarded){
@@ -6774,7 +6827,7 @@ function sendToPractice(){
     S.warnings=[]; // new wall, warnings reset (incidents/record persist)
     G.grid=makeGrid();placed=0;G.score=0;G.cog=.5;G.support=1;G.integrity=100;G._finalized=false;G._practiceSent=false;
   try{liCertReset();}catch(_cr0){} // v3.5.185 the certificate never carries to the next wall
-    G.drinks=0;G.throws=0;G.stageDwell=0;G._hyd75=false;G._hyd100=false;G.tetrisTotal=0;G.tetrisRows={};G.tetrisPaid={};G.bulkheadRows={};G.bulkheadCount=0;
+    G.drinks=0;G.throws=0;G.stageDwell=0;G._topBags=0;G._divertTold=false;G._hyd75=false;G._hyd100=false;G.tetrisTotal=0;G.tetrisRows={};G.tetrisPaid={};G.bulkheadRows={};G.bulkheadCount=0;
     G.practice=true;startT=null; // v3.5.144 clock deferred to first piece
     if(typeof wallBaseline==='function')wallBaseline(); // v3.5.81 per-wall stat baseline (practice trailer)
     selBeltIdx=null;selBeltRot=0;selNC=-1;selBag=-1;
@@ -9551,7 +9604,7 @@ scene.addEventListener('pointerup',function(e){
   var c2=getPC(e,scene);if(!c2)return;
 
   // ── Floor slot hit test first ── (v3.4.11: disabled when STAGING_LIGHTS · selection lives in the popup)
-  var _stgHit=stageFloorHit(c2.mx,c2.my);if(_stgHit!==null){stageSpotClick(_stgHit);return;} // v3.5.206 a taped staging spot
+  var _stgHit=stageFloorHit(c2.mx,c2.my);if(_stgHit!==null){if(_stgLPFired){_stgLPFired=false;return;}stageSpotClick(_stgHit);return;} // v3.5.206 a taped staging spot
   var slotHit=STAGING_LIGHTS?null:hitTestFloorSlots(c2.mx,c2.my);
   if(slotHit){
     if(slotHit.type==='nc'){
@@ -9643,15 +9696,15 @@ scene.addEventListener('dblclick',function(e){
   }
 },{passive:false});
 // ── Long press + dblclick on bag floor slots ──
-var _bagLPTimer=null,_bagLPIdx=-1;
+var _bagLPTimer=null,_bagLPIdx=-1,_stgLPFired=false; // _stgLPFired: a long press that broke a bag is not also a click
 scene.addEventListener('pointerdown',function(e){
   var c2=getPC(e,scene);if(!c2)return;
-  var hit=hitTestFloorSlots(c2.mx,c2.my);
+  var _sh=(typeof stageFloorHit==='function')?stageFloorHit(c2.mx,c2.my):null,hit=(_sh!==null)?{type:'bag',idx:_sh}:null; // v3.5.206 the taped spots
   if(hit&&hit.type==='bag'){
     var bs=G.bagSlots[hit.idx];
     if(bs&&bs.isBag){
       _bagLPIdx=hit.idx;
-      _bagLPTimer=setTimeout(function(){breakdownBag(_bagLPIdx);_bagLPTimer=null;},600);
+      _bagLPTimer=setTimeout(function(){_stgLPFired=true;breakdownBag(_bagLPIdx);if(selBag===_bagLPIdx)selBag=-1;_bagLPTimer=null;},600);
     }
   }
 },{passive:true});
@@ -9659,8 +9712,8 @@ scene.addEventListener('pointerup',function(){if(_bagLPTimer){clearTimeout(_bagL
 scene.addEventListener('pointerleave',function(){hCell=null;if(_bagLPTimer){clearTimeout(_bagLPTimer);_bagLPTimer=null;}},{passive:true});
 scene.addEventListener('dblclick',function(e){
   var c2=getPC(e,scene);if(!c2)return;
-  var hit=hitTestFloorSlots(c2.mx,c2.my);
-  if(hit&&hit.type==='bag'){var bs=G.bagSlots[hit.idx];if(bs&&bs.isBag)breakdownBag(hit.idx);}
+  var _sh=(typeof stageFloorHit==='function')?stageFloorHit(c2.mx,c2.my):null; // v3.5.206 the taped spots
+  if(_sh!==null){var bs=G.bagSlots[_sh];if(bs&&bs.isBag){breakdownBag(_sh);if(selBag===_sh)selBag=-1;}}
 });
 
 scene.addEventListener('contextmenu',function(e){e.preventDefault();rotateSel();});
@@ -10989,7 +11042,7 @@ function runDemoStep(){
     if(pEl2)pEl2.textContent='THAT\'S A LOCKED-IN WALL';
     if(rEl2)rEl2.textContent='Every principle you just watched is a real hub loading rule. The wall is about to reset · study it again, or hit EXIT and load one yourself in SHIFT mode.';
     trainingState.stepTimer=setTimeout(function(){
-      G.grid=makeGrid();placed=0;G.cog=.5;G.tetrisRows={};G.tetrisPaid={};G.drinks=0;G.throws=0;G.stageDwell=0;
+      G.grid=makeGrid();placed=0;G.cog=.5;G.tetrisRows={};G.tetrisPaid={};G.drinks=0;G.throws=0;G.stageDwell=0;G._topBags=0;G._divertTold=false;
       trainingState.stepIdx=0;
       if(trainingState.playing)runDemoStep();
     },4000/trainingState.speed);
@@ -11545,7 +11598,7 @@ function nextTrailer(){
     G.grid=makeGrid();
     G.score=0;G.cog=.5;G.support=1;G.integrity=100;G._finalized=false;G._hyd75=false;G._hyd100=false;S.warnings=[]; // v3.5.59 fresh wall: reset open warnings + hydration flags (incidents/record persist)
     G.tetrisTotal=0;G.tetrisRows={};G.tetrisPaid={};G.bulkheadRows={};G.bulkheadCount=0;
-    G.brickAwarded=false;G.crunchCount=0;G.hazViolations=0;G.recoveryCount=0;G.ncPlaced=0;G.drinks=0;G.throws=0;G.stageDwell=0;
+    G.brickAwarded=false;G.crunchCount=0;G.hazViolations=0;G.recoveryCount=0;G.ncPlaced=0;G.drinks=0;G.throws=0;G.stageDwell=0;G._topBags=0;G._divertTold=false;
     G.preselectDepth=0;G.preselectWarned=false;G.seamWarned=false;G.segWarned=false;
     G.beltSinceNC=0;G.beltSinceBag=0;
     G.practice=false; // v3.5.161 a practice kick lasts ONE trailer · the next wall is real freight (DISPATCH clock back on)
