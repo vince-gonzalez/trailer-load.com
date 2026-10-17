@@ -117,7 +117,7 @@
 
 <script>
 // ============================================================
-// VAN STACK v0.7.0
+// VAN STACK v0.7.2
 // Van loading drill: pull from the belt, set in the right place, scan to hand off.
 // F-Keys LLC | www.f-keys.com
 // ============================================================
@@ -174,7 +174,7 @@ var BELT_TOP = 869, BELT_SPEED = 85, SPAWN_EVERY = 2.3, POOL_MAX = 5;
 var POOL_X = 1318;          // pieces past this x fall into the pool
 var DRAG_PX = 9;            // display px of movement that turns a press into a drag
 var STICKER_AR = 1.5;       // sticker width / height (single-digit sections read best on a near-square tag)
-var ROUTE = ["1", "2", "3", "4", "5", "6", "7", "8"];   // DECISION: plain 1-8; four-digit section numbers may be FedEx-specific
+var ROUTE = ["1", "2", "3", "4", "5", "6", "7", "8"];   // DECISION: plain 1-8; keeps any one company's section numbering out of the game
 
 // Sticker colors: every text/background pair measured >= 4.5:1 (WCAG AA).
 var STICKERS = {
@@ -1262,6 +1262,23 @@ function drawBin(bin, tint) {
   }
 }
 
+// Repaints both lower shelves (top surface + front lip) straight from the van art, over whatever
+// floor pieces were drawn first. A lower shelf only ever overlaps floor pieces that are FARTHER
+// than it on screen, so this is always the correct occlusion. LIP_BAND = lip thickness at the far
+// end (measured ~10 px; ~40 px at the near end at 4.2x).
+var LIP_BAND = 10;
+function occludeLowerShelves() {
+  if (!IMG.van) return;
+  SHELVES.forEach(function (sh) {
+    if (sh.name.indexOf("lower") < 0) return;
+    var low = { x: sh.lip.x, y: sh.lip.y + LIP_BAND };
+    ctx.save();
+    path([at(sh.wall, 0), at(sh.wall, 1), at(low, 1), at(low, 0)]); ctx.clip();
+    ctx.drawImage(IMG.van, 0, 0, W, H);
+    ctx.restore();
+  });
+}
+
 // The painted walkway: yellow edge lines on the floor at both walkway edges, and a stencil.
 function drawWalkway() {
   ["L", "R"].forEach(function (s) {
@@ -1342,8 +1359,6 @@ function draw() {
   if (IMG.van) ctx.drawImage(IMG.van, 0, 0, W, H);
   drawWalkway();
   var walkSec = (STATE.phase === "walk" && STATE.walkStep >= 0 && STATE.walkStep < ROUTE.length) ? ROUTE[STATE.walkStep] : null;
-  if (walkSec) { path(SECTIONS[walkSec].hull); ctx.fillStyle = STICKERS[walkSec].bg + "40"; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = STICKERS[walkSec].bg; ctx.stroke(); }
-  drawPlacards();
 
   var target = (STATE.phase === "play" && !STATE.hand) ? vanTargetAt(wm) : null;
   var hoverBox = target && target.kind === "box" ? target.box : null;
@@ -1361,7 +1376,12 @@ function draw() {
     else if (pl.ok && pl.bin) { path(pl.bin.hull); ctx.lineWidth = 4; ctx.strokeStyle = "#40c057"; ctx.stroke(); }
     else if (pl.area) { path(pl.area); ctx.fillStyle = "rgba(224,49,49,.3)"; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "#e03131"; ctx.stroke(); }
   }
-  if (pl && pl.kind === "floor") ghost();
+  // The lower shelves stand in front of the floor pieces tucked under them: repaint them from the
+  // van art over the floor layer, then lay shelf content on top.
+  occludeLowerShelves();
+  if (pl && pl.kind === "floor") ghost();   // the ghost stays visible over the shelf so you can aim
+  if (walkSec) { path(SECTIONS[walkSec].hull); ctx.fillStyle = STICKERS[walkSec].bg + "40"; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = STICKERS[walkSec].bg; ctx.stroke(); }
+  drawPlacards();
   shelf.forEach(function (b) { drawPlacedPiece(b, b === hoverBox ? "rgba(255,255,255,.18)" : null); drawPlacedSticker(b); });
   if (pl && pl.kind === "shelf") ghost();
   BINS.forEach(function (bin) { drawBin(bin, bin === hoverBinIdle || bin === pressBin ? "rgba(255,255,255,.2)" : null); });
