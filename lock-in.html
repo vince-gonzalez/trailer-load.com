@@ -108,6 +108,10 @@ small,sub,sup{font-size:11px;}
            other door and a bag comes instead. The daily ramps by stream position (12% of pieces for the first 20, up to
            36% from piece 40), identical for every player. A bag on a staging spot breaks with a double-click or a long
            press again (the old handlers tested the retired floor slots).
+     PART 10, TIRE HOLLOWS (Vince: "i've STUFFED the insides of tires all the way"). A tire's hollow is (width - 1) x
+       height cells (STD 6, MC 4, DB 2, FARM 10); same-size tires laid flat one on another share one hollow (two STD = 12);
+       a bag is malleable and needs only its 9 cells of room; a rigid box or hazmat must fit the opening, (width - 1) wide
+       and as tall as the stack; anything nested keeps the whole stack in place; the real-box nest bonus keeps its old cap.
      Measured (design206/sim206bags.js, a greedy loader bot, 80 walls x2, ramp off vs on): bags reaching a loader once
        the wall's top passes 75% went from 0.35 to 0.40 a wall to about 1.95; every wall still sealable.
      Tests (every network call blocked): t206a 22/22, t206b 41/41, t206d 20/20, water 27/27, t205 101/101, t206c 73/73 at
@@ -6018,7 +6022,40 @@ function breakdownBag(idx){
 // Regular and bag-sourced pieces return to front of belt.
 // READS: G.grid, G.belt, G.ncSlots, cell.box.isNC
 // WRITES: G.grid, G.belt or G.ncSlots, placed, selBeltIdx/selNC
-function getNestCap(box){
+// ═══ v3.5.206 TIRE HOLLOWS ═══
+// Vince 2026-10-17: "in real life, i've STUFFED the insides of tires all the way. i always look to put hazmats and
+// buckets inside of the tires because they're protected that way; same with smaller packages. because tire-walls are
+// thin, it's possible to fit most of their space with smalls inside, and a smalls bag is typically malleable enough
+// to nest into a couple of set-tires." The math:
+//  - a tire's hollow is (width - 1) x height cells: the rubber takes one cell of the width, the rest is open.
+//    STD 4x2 = 6, MC 3x2 = 4, DB 3x1 = 2, FARM 6x2 = 10 (about three quarters of the tire).
+//  - same-size tires laid flat, one directly on another, share ONE hollow: two STD = 12, three = 18.
+//  - a bag is malleable: it needs only the room (9 cells), so it takes a stacked pair or a farm tire.
+//  - a box or hazmat is rigid: it must also fit the opening, (width - 1) wide and as tall as the stack.
+//  - anything nested anywhere in a stack keeps every tire of that stack in place.
+function tireHollow(rec){
+  if(!rec||!rec.box||rec.box.cat!=='tire')return 0;
+  var L=Math.max(rec.w,rec.h),Sm=Math.min(rec.w,rec.h);
+  return Math.max(1,(L-1)*Sm);
+}
+// the placed tire plus every same-size tire laid flat directly above or below it
+function tireStack(rec){
+  var out=[rec];if(!rec||!rec.box||rec.box.cat!=='tire'||!(rec.w>rec.h))return out;
+  function at(x,y){return (y>=0&&y<GH&&G.grid[y])?G.grid[y][x]:null;}
+  function same(o){return o&&o.box&&o.box.cat==='tire'&&o.box.n===rec.box.n&&o.rx===rec.rx&&o.w===rec.w&&o.h===rec.h;}
+  var cur=rec,o;
+  while((o=at(cur.rx,cur.ry-1))&&o!==cur&&same(o)&&o.ry+o.h===cur.ry&&out.indexOf(o)<0){out.push(o);cur=o;}
+  cur=rec;
+  while((o=at(cur.rx,cur.ry+cur.h))&&o!==cur&&same(o)&&o.ry===cur.ry+cur.h&&out.indexOf(o)<0){out.push(o);cur=o;}
+  return out;
+}
+function tireOpening(rec,stk){
+  if(rec.w>rec.h){var hh=0,i;for(i=0;i<stk.length;i++)hh+=stk[i].h;return {w:rec.w-1,h:hh};}
+  return {w:rec.w,h:Math.max(1,rec.h-1)}; // a tire on its edge (a safety offense anyway)
+}
+function stackHollow(stk){var s=0,i;for(i=0;i<stk.length;i++)s+=tireHollow(stk[i]);return s;}
+function stackNestUsed(stk){var s=0,i;for(i=0;i<stk.length;i++)s+=getNestUsed(stk[i].box);return s;}
+function getNestCap(box){ // retired in v3.5.206 (tireHollow/stackHollow measure the placed tire); kept for any old caller
   if(!box||box.cat!=='tire')return 0;
   return box.n==='TIRE-FARM'?6:(box.n==='TIRE-STD'?4:2); // v3.5.50 STD 3->4 so a 2x2 box fits a standard tire
 }
@@ -6033,10 +6070,16 @@ function tryNest(src,idx,tcell){
   var _isHazNest=!!(sb.labelDef&&sb.labelDef.isHaz)||!!sb.hazClass; // v3.5.72 needed for the fits gate
   // v3.5.50 REAL BOXES NEST · compact freight (<=3x3, area<=6) seats in a tire hollow; v3.5.72 HAZMATS (NC) may nest too (leak-shielded, and it can't fall in a collapse)
   var _area=sb.cells?sb.cells.length:(sb.w*sb.h);
-  var fits=(!sb.isNC||_isHazNest)&&sb.w<=3&&sb.h<=3&&_area<=6;
-  if(!fits)return false;
-  var cost=sb.isBag?2:_area;
-  var cap=getNestCap(tbox),used=getNestUsed(tbox);
+  if(sb.isNC&&!_isHazNest)return false; // special handling stays out, except hazmats
+  var _stk=tireStack(tcell),_open=tireOpening(tcell,_stk);
+  if(!sb.isBag&&!((sb.w<=_open.w&&sb.h<=_open.h)||(sb.h<=_open.w&&sb.w<=_open.h)))return false; // v3.5.206 a rigid piece must fit the opening
+  var cost=_area; // v3.5.206 every piece costs its cells (a bag is 9; it used to be a token 2 and could never fit)
+  var cap=stackHollow(_stk),used=stackNestUsed(_stk);
+  if(cap<cost){ // too big for this hollow even empty: say what would hold it
+    if(typeof playSfx==='function')playSfx('deny');
+    if(!G._nestBig||Date.now()-G._nestBig>2500){G._nestBig=Date.now();showBanner(sb.isBag?('🛞 A BAG NEEDS 9 CELLS OF HOLLOW · this one has '+cap+'. Stack two same-size tires flat and their hollows join.'):('🛞 TOO BIG FOR THIS HOLLOW · '+cap+' cells of room.'),'warn',2400);}
+    return false;
+  }
   if(cap-used<cost){
     if(typeof playSfx==='function')playSfx('deny');
     if(!G._nestFull||Date.now()-G._nestFull>2000){G._nestFull=Date.now();showBanner('TIRE HOLLOW FULL \u00b7 no room to stuff that one.','warn',1400);}
@@ -6049,7 +6092,7 @@ function tryNest(src,idx,tcell){
   else if(src==='nc'){G.ncSlots[idx]=null;selNC=-1;S.ncPlaced=(S.ncPlaced||0)+1;if(typeof buildNCPanel==='function')buildNCPanel();} // v3.5.72 hazmat/NC nested from the staging tray
   else{G.bagSlots[idx]=null;selBag=-1;if(typeof buildBagPanel==='function')buildBagPanel();}
   var _realBox=!(sb.type==='small'||sb.isBag)&&_area>=2; // a real regular/large box, not a smalls/bag
-  var bonus=70+30*cost+(isHaz?120:0)+(_realBox?200*(_area-1):0); // v3.5.50 BIG bonus for stuffing an actual box into the hollow
+  var bonus=70+30*cost+(isHaz?120:0)+(_realBox?Math.min(1000,200*(_area-1)):0); // v3.5.50 BIG bonus for stuffing an actual box into the hollow; v3.5.206 capped at its old maximum now that bigger boxes fit a stack
   bankScore(bonus); // v3.5.156 banked · the nest bonus used to evaporate on the next placement's recompute
   S.nests=(S.nests||0)+1;
   if(typeof gcurFlash==='function')gcurFlash('nest',520); // v3.5.22 nest-glove on a tire stuff
@@ -6083,7 +6126,7 @@ function liftBox(cell){
   if(G&&G.wallDone)return; // v3.5.24 perfect load = wall locked
   // v3.5.95 SWEEP #4 tire lift rules · a nested tire is STUCK; a set-in tire load doesn't budge.
   if(cell&&cell.box&&cell.box.cat==='tire'){
-    if(cell.box.nest&&cell.box.nest.length){
+    if(stackNestUsed(tireStack(cell))>0){ // v3.5.206 anything nested anywhere in the stack keeps every tire of it in place
       if(typeof showBanner==='function')showBanner('THAT TIRE HAS SOMETHING NESTED IN IT · it’s stuck. Can’t lift it now.','warn',2100);
       if(typeof playSfx==='function')playSfx('error');return;
     }
@@ -6477,7 +6520,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   // v3.5.147 NESTING TEACH (one-shot) · the one mechanic the tutorial skips. First time a flat tire is on the wall AND a bag is in staging, surface the veteran move.
   if(!G._nestHintShown&&!TUTORIAL_MODE&&(G.bagSlots||[]).some(function(b){return b&&b.isBag;})&&_wallHasTire()){
     G._nestHintShown=true;
-    showBanner('🛞 VETERAN MOVE · drop a SMALLS BAG onto a flat tire. The smalls NEST in the hollow for bonus cubes (dead air the belt can’t fill).','ok',3400);
+    showBanner('🛞 VETERAN MOVE · stack two same-size tires flat and their hollows join. A SMALLS BAG squeezes in for bonus cubes (dead air the belt can’t fill).','ok',3400);
   }
   if(!S.sessionStartT){S.sessionStartT=startT||Date.now();ZDATA.events=[];} // v2.1.9 session clock; v3.5.132 reset the raw event timeline per session (timestamps are relative to sessionStartT) so it never accumulates across sessions · BEFORE the first place is logged
   if(typeof zLog==='function')zLog('place',{x:gx,y:gy,n:box.n||box.label||'?',r:rot||0,src:source});
