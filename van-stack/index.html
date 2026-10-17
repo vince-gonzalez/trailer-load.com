@@ -92,7 +92,8 @@
         <li><b>Fix a misload.</b> Drag a piece to pick it back up. Its scan stays good.</li>
         <li><b>Step in.</b> Space climbs into the van for the back shelves.</li>
         <li><b>Don't let it ride.</b> Missed pieces fall in the pool. A full pool stops the belt.</li>
-        <li><b>Dispatch.</b> When the belt is clear and your scans are done, press Dispatch. The driver walks 1, then 2, then the rest.</li>
+        <li><b>Room for more?</b> Once the planned load is in, the belt keeps sending <b>EXTRA</b> pieces while there's real room. Every one you fit is a bonus. Stop whenever you like.</li>
+        <li><b>Dispatch.</b> Once the planned belt and the NC cart are in, Dispatch lights up. Finish your scans, then send the driver: 1, then 2, then the rest.</li>
       </ol>
       <div class="legend" id="legend"></div>
       <div class="row"><button class="primary" id="btnStart">Open the doors</button></div>
@@ -116,7 +117,7 @@
 
 <script>
 // ============================================================
-// VAN STACK v0.6.0
+// VAN STACK v0.7.0
 // Van loading drill: pull from the belt, set in the right place, scan to hand off.
 // F-Keys LLC | www.f-keys.com
 // ============================================================
@@ -135,7 +136,9 @@
 //    the scan stays good because it never left the van.
 // 5. The walkway (28 in, his rule) is part of the geometry: no piece can be placed into it, so
 //    every van the game produces is safe-looking by construction.
-// 6. When the belt is clear the Dispatch button lights up. The driver walk goes 1, 2, then 3-8,
+// 6. When the planned load (belt + NC cart) is in, Dispatch lights up. If real room is left, the
+//    belt keeps offering EXTRA pieces one at a time (sized to that room, last few are smalls) until
+//    the van is full; extras only ever add to the score. The driver walk goes 1, 2, then 3-8,
 //    naming every unscanned, misloaded and left-behind piece. An NC on the floor outside its own
 //    zone is a note, not a failure (the walkway was kept open).
 //
@@ -233,6 +236,7 @@ var ZONES = [];      // floor zones: { id, side, sh, sections[2], u0, u1, hull, 
 var STATE = {
   phase: "brief",      // brief | play | walk | done
   seed: 0, manifest: [], next: 0, skipped: [], cart: [], ncs: [],
+  extras: [], extraDone: false, extraSmalls: 0, plannedDone: false, extraRng: null,   // bonus freight after the plan
   belt: [], pool: [], hand: null, placed: [],
   spawnClock: 0, elapsed: 0, down: 0, stopped: false, beltClear: false,
   mouse: { x: -1, y: -1 }, muted: false,
@@ -478,12 +482,67 @@ function newShift(seed) {
   STATE.belt = []; STATE.pool = []; STATE.hand = null; STATE.placed = [];
   STATE.spawnClock = SPAWN_EVERY; STATE.elapsed = 0; STATE.down = 0; STATE.stopped = false; STATE.beltClear = false;
   STATE.walkStep = -1; STATE.walkClock = 0;
+  STATE.extras = []; STATE.extraDone = false; STATE.extraSmalls = 0; STATE.plannedDone = false;
+  STATE.extraRng = mulberry32((seed ^ 0x2545f491) >>> 0);
   STATE.zoom = 1; STATE.zoomTarget = 1;
   document.getElementById("hSeed").textContent = seed;
   setDispatchReady(false);
   updateHud();
 }
-function allPieces() { return STATE.manifest.concat(STATE.ncs); }
+// The planned load, plus any extra freight that made it onto the van (extras left on the belt
+// ride a spare van: never counted, never "left at the station").
+function plannedPieces() { return STATE.manifest.concat(STATE.ncs); }
+function extrasLoaded() { return STATE.extras.filter(function (e) { return e.where === "van"; }); }
+function allPieces() { return plannedPieces().concat(extrasLoaded()); }
+
+// ---------- extra freight ----------
+// When the planned load is in and there is still room, the belt keeps offering extras - one at a
+// time, each sized to room that really exists right now (shelf first, then the floor under its
+// section), and the last few are smalls for the bins. Pure upside: an encouragement, not a demand.
+var EXTRA_MAX = 12, EXTRA_SMALLS = 4;
+function plannedInFlight() {
+  function planned(it) { return !it.extra; }
+  return STATE.belt.some(function (e) { return planned(e.box); }) || STATE.pool.some(planned) || (STATE.hand && planned(STATE.hand));
+}
+function extraInFlight() {
+  return STATE.belt.some(function (e) { return e.box.extra; }) || STATE.pool.some(function (p) { return p.extra; }) || (STATE.hand && STATE.hand.extra);
+}
+// Room that an extra could really use right now, as a list of {section, w, h}.
+function extraOptions() {
+  var opts = [];
+  ROUTE.forEach(function (sec) {
+    [[2, 2], [1, 2], [2, 1], [1, 1]].forEach(function (s) {
+      if (shelfCandidates(sec, { kind: "box", w: s[0], h: s[1] }).length) opts.push({ section: sec, w: s[0], h: s[1] });
+    });
+    if (floorCandidates(homeZone(sec), { kind: "box", w: 1, h: 1 }).length) opts.push({ section: sec, w: 1, h: 1 });
+  });
+  return opts;
+}
+function makeExtra(kind, section, w, h) {
+  var r = STATE.extraRng, it = { id: 10000 + STATE.extras.length, kind: kind, w: w, h: h, section: section, extra: true,
+    where: "belt", slot: null, placedIn: null, scanned: false };
+  it.seed = 100 + Math.floor(r() * 9800);
+  it.pal = seedPal(it.seed, kind);
+  it.tape = kind === "small" ? "frontload" : (r() < 0.25 ? "aircargo" : null);
+  it.tapeAng = (r() - 0.5) * 0.6;
+  STATE.extras.push(it);
+  STATE.belt.push({ box: it, x: -100 });
+  return it;
+}
+// Offers the next extra, or declares the van full.
+function spawnExtra() {
+  var r = STATE.extraRng;
+  if (STATE.extras.length < EXTRA_MAX) {
+    var opts = extraOptions();
+    if (opts.length) { var o = opts[Math.floor(r() * opts.length)]; makeExtra("box", o.section, o.w, o.h); return; }
+    if (STATE.extraSmalls < EXTRA_SMALLS) {
+      var secs = ROUTE.filter(function (s) { return homeBin(s).items.length < BIN_CAP; });
+      if (secs.length) { STATE.extraSmalls++; makeExtra("small", secs[Math.floor(r() * secs.length)], 1, 1); return; }
+    }
+  }
+  STATE.extraDone = true;
+  SFX.clear(); say("Van's full. Great load. Dispatch when your scans are done.");
+}
 
 // ---------- placement rules ----------
 // Free shelf cells in a section (for the spawner's "this section has room" check).
@@ -879,12 +938,20 @@ function update(dt) {
       nb.where = "belt"; STATE.belt.push({ box: nb, x: -100 }); STATE.spawnClock = 0; break;
     }
   }
-  // DECISION: no auto-dispatch. When the belt runs out, Dispatch lights up and the loader
-  // finishes scans, NCs and fixes before sending the driver.
-  var clear = STATE.next >= STATE.manifest.length && !STATE.belt.length && !STATE.pool.length && !STATE.hand;
-  if (clear && !STATE.beltClear) { SFX.clear(); say(STATE.cart.length ? "Belt's clear. Load the NC cart, finish your scans, then Dispatch." : "Belt's clear. Finish your scans, then Dispatch."); }
+  // DECISION: no auto-dispatch. When the planned belt runs out, the loader finishes NCs, scans and
+  // fixes; Dispatch lights once the planned load (belt + cart) is in.
+  var clear = STATE.next >= STATE.manifest.length && !plannedInFlight();
+  if (clear && !STATE.beltClear && STATE.cart.length) { SFX.clear(); say("Belt's clear. Load the NC cart, then Dispatch."); }
   STATE.beltClear = clear;
-  setDispatchReady(clear && !STATE.cart.length);
+  var done = clear && !STATE.cart.length;
+  if (done && !STATE.plannedDone) {
+    STATE.spawnClock = 0;
+    if (extraOptions().length || BINS.some(function (b) { return b.items.length < BIN_CAP; })) { SFX.clear(); say("Planned load's in, and there's room for more. You've got this."); }
+  }
+  STATE.plannedDone = done;
+  // extra freight: one at a time, only while there is real room, until the van is full
+  if (done && !STATE.extraDone && !extraInFlight() && STATE.spawnClock >= SPAWN_EVERY * 0.6) { spawnExtra(); STATE.spawnClock = 0; }
+  setDispatchReady(done);
   updateHud();
 }
 function setDispatchReady(on) { document.getElementById("btnDispatch").classList.toggle("ready", !!on); }
@@ -943,15 +1010,19 @@ function finishWalk() {
   var scanned = all.filter(function (b) { return b.scanned; }).length;
   var right = all.filter(rightPlace).length;
   var handed = all.filter(function (b) { return b.scanned && rightPlace(b); }).length;
-  var left = total - loaded;
+  var left = plannedPieces().filter(function (b) { return b.where !== "van"; }).length;
+  var extra = extrasLoaded().length;
   var pct = function (a, b) { return b ? Math.round(100 * a / b) + "%" : "-"; };
   document.getElementById("walkLog").insertAdjacentHTML("beforeend", '<div class="line"><span class="ok">Walkway clear the whole route.</span></div>');
+  // DECISION: extras only ever add. Fitting them is praised; leaving room is never called out.
   document.getElementById("result").innerHTML =
-    '<p class="big">' + handed + " of " + total + "</p><p>customers got a clean out-for-delivery.</p>" +
+    '<p class="big">' + handed + " of " + total + "</p><p>customers got a clean out-for-delivery." +
+    (extra ? ' <b style="color:#1f6b32">+' + extra + " extra piece" + (extra > 1 ? "s" : "") + " fit. Nice cube.</b>" : "") + "</p>" +
     '<div class="grid2">' +
     "<div>Scan compliance</div><div><b>" + pct(scanned, loaded) + "</b> (" + (loaded - scanned) + " missed)</div>" +
     "<div>Right place</div><div><b>" + pct(right, loaded) + "</b> (" + (loaded - right) + " misloaded)</div>" +
     "<div>Left at station</div><div><b>" + left + "</b></div>" +
+    (extra ? "<div>Extra freight</div><div><b>+" + extra + "</b></div>" : "") +
     "<div>Belt down</div><div><b>" + Math.round(STATE.down) + "s</b></div>" +
     "<div>Shift time</div><div><b>" + fmtTime(STATE.elapsed) + "</b></div></div>";
   document.getElementById("endButtons").hidden = false;
@@ -963,7 +1034,8 @@ function finishWalk() {
 function fmtTime(s) { s = Math.floor(s); return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2); }
 function updateHud() {
   var all = loadedItems();
-  document.getElementById("hLoaded").textContent = all.length + "/" + allPieces().length;
+  var plannedIn = plannedPieces().filter(function (b) { return b.where === "van"; }).length, ex = extrasLoaded().length;
+  document.getElementById("hLoaded").textContent = plannedIn + "/" + plannedPieces().length + (ex ? " +" + ex : "");
   document.getElementById("hScanned").textContent = all.filter(function (b) { return b.scanned; }).length;
   document.getElementById("hCart").textContent = STATE.cart.length;
   var pool = document.getElementById("hPool");
@@ -1067,8 +1139,14 @@ function drawLoose(it, cx, baseY, scale) {
   if (it.nc === "tire") tireFace(x, y, w, h, it); else lockinFace(x, y, w, h, it);
   if (it.kind === "box") { path([lerp(top[0], top[1], 0.38), lerp(top[3], top[2], 0.38), lerp(top[3], top[2], 0.62), lerp(top[0], top[1], 0.62)]); ctx.fillStyle = "rgba(255,242,182,.3)"; ctx.fill(); }
   if (it.kind === "nc" && it.nc !== "tire") ncMarks(it, x, y, w, h);
-  var sh = Math.min(42, h * 0.5) * scale / Math.max(scale, 0.01);
   drawSticker(it.nc === "tire" ? x + w * 0.5 : cx, y + h * (it.nc === "long" ? 0.55 : 0.62), Math.min(42 * scale, h * 0.55), it.section, false);
+  if (it.extra) {   // gold EXTRA tag: bonus freight, take it if there's room
+    var tw = 62 * scale, th = 20 * scale;
+    roundRect(x - 4 * scale, y - dd - th * 0.6, tw, th, 4 * scale); ctx.fillStyle = "#f5c518"; ctx.fill();
+    ctx.lineWidth = 1.5; ctx.strokeStyle = "#111"; ctx.stroke();
+    ctx.fillStyle = "#111"; ctx.font = "900 " + (13 * scale) + "px system-ui, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText("EXTRA", x - 4 * scale + tw / 2, y - dd - th * 0.6 + th / 2 + 1);
+  }
 }
 
 // A placed piece (shelf or floor prism), skinned like LOCK IN freight: aisle side, door-facing end,
@@ -1238,8 +1316,13 @@ function drawBelt() {
     ctx.fillStyle = "#f3ece0"; ctx.font = "700 14px system-ui, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "top";
     ctx.fillText(NC_TYPES[nc.nc].label, CART_RECT.x + CART_RECT.w / 2, CART_RECT.y + 168);
   }
+  // DECISION: the extras banner encourages ("you've got this"), never scolds ("do better").
+  var unscanned = loadedItems().some(function (b) { return !b.scanned; });
   var banner = STATE.stopped ? { text: "BELT STOPPAGE · CLEAR THE POOL", bg: "rgba(120,20,20,.88)" }
-    : (STATE.beltClear && STATE.phase === "play") ? { text: STATE.cart.length ? "BELT'S CLEAR · LOAD THE NC CART, THEN DISPATCH" : "BELT'S CLEAR · FINISH YOUR SCANS, THEN DISPATCH", bg: "rgba(20,83,45,.9)" } : null;
+    : STATE.phase !== "play" ? null
+    : (STATE.plannedDone && STATE.extraDone) ? { text: "VAN'S FULL · GREAT LOAD" + (unscanned ? " · FINISH YOUR SCANS" : " · DISPATCH WHEN READY"), bg: "rgba(20,83,45,.9)" }
+    : STATE.plannedDone ? { text: "ROOM FOR MORE · YOU'VE GOT THIS", bg: "rgba(11,92,110,.92)" }
+    : (STATE.beltClear && STATE.cart.length) ? { text: "BELT'S CLEAR · LOAD THE NC CART", bg: "rgba(20,83,45,.9)" } : null;
   if (banner) {
     ctx.font = "800 28px system-ui, sans-serif"; var bw = ctx.measureText(banner.text).width + 48;
     ctx.fillStyle = banner.bg; roundRect(W / 2 - bw / 2, BELT_TOP - 70, bw, 54, 10); ctx.fill();
