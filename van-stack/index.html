@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-adsense-account" content="ca-pub-8826956454892311">
+<meta name="robots" content="noindex">  <!-- unlisted until it joins the LOCK IN Mini-Games menu -->
+<title>VAN STACK · LOCK IN</title>
+<style>
+  :root {
+    --bg: #14110e; --panel: #1f1a15; --line: #3a3027; --ink: #f3ece0; --dim: #c9bba5;
+    --amber: #f5a524; --good: #69db7c; --bad: #ff8787;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { display: flex; align-items: center; gap: 12px; max-width: 1448px; margin: 0 auto; padding: 10px 16px; flex-wrap: wrap; }
+  header h1 { margin: 0; font-size: 22px; letter-spacing: .06em; color: var(--amber); }
+  header .sub { color: var(--dim); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  header .sp { flex: 1; }
+  header a, button { color: var(--ink); }
+  button { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 7px 12px; font: inherit; font-weight: 600; cursor: pointer; }
+  button.primary { background: var(--amber); color: #1a1208; border-color: var(--amber); }
+  button.ready { background: var(--amber); color: #1a1208; border-color: var(--amber); animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(245, 165, 36, .35); } }
+  @media (prefers-reduced-motion: reduce) { button.ready { animation: none; } }
+  button:focus-visible, a:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+  .hud { display: flex; flex-wrap: wrap; gap: 6px; max-width: 1448px; margin: 0 auto; padding: 0 16px 8px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; min-width: 92px; }
+  .stat b { display: block; font-size: 18px; color: var(--amber); }
+  .stat span { font-size: 11px; color: var(--dim); letter-spacing: .08em; text-transform: uppercase; }
+  .stage { position: relative; max-width: 1448px; margin: 0 auto; padding: 0 16px; }
+  canvas { display: block; width: 100%; height: auto; border-radius: 8px; background: #000; touch-action: none; cursor: pointer; }
+  .overlay { position: absolute; inset: 0 16px; display: flex; align-items: center; justify-content: center; background: rgba(10, 8, 6, .72); border-radius: 8px; padding: 16px; }
+  /* Driver walk: the card sits BESIDE the van (below it on narrow screens) so every mark stays visible. */
+  .stage.walking { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 12px; align-items: start; max-width: 1840px; }
+  .stage.walking #ovEnd { position: static; background: none; padding: 0; display: block; }
+  .stage.walking #ovEnd .card { max-width: none; }
+  @media (max-width: 900px) { .stage.walking { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) { #ovBrief { position: static; background: none; padding: 12px 0 0; display: block; } }
+  .card { background: #ece4d6; color: #1d1710; border-radius: 12px; max-width: 640px; width: 100%; max-height: 100%; overflow: auto; padding: 20px 22px; box-shadow: 0 10px 40px rgba(0,0,0,.5); }
+  .card h2 { margin: 0 0 10px; letter-spacing: .06em; }
+  .card ol { padding-left: 22px; margin: 8px 0 14px; }
+  .card li { margin: 5px 0; }
+  .card .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .card button { background: #fff; color: #1d1710; border-color: #b8a88f; }
+  .card button.primary { background: #c46a00; color: #fff; border-color: #c46a00; }
+  .legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 8px 0; }
+  .tag { border-radius: 5px; padding: 4px 0; text-align: center; font-weight: 800; border: 1.5px solid #111; }
+  .walk { font-size: 14px; }
+  .walk .line { padding: 4px 0; border-bottom: 1px solid #cfc3ad; }
+  .walk .bad { color: #a61e1e; font-weight: 700; }
+  .walk .ok { color: #1f6b32; font-weight: 700; }
+  .big { font-size: 34px; font-weight: 800; line-height: 1.1; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; margin: 10px 0; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  footer { max-width: 1448px; margin: 14px auto 24px; padding: 0 16px; color: var(--dim); font-size: 13px; text-align: center; }
+  footer a { color: var(--dim); }
+  @media (max-width: 600px) { .legend { grid-template-columns: repeat(2, 1fr); } .stat { min-width: 70px; } }
+</style>
+</head>
+<body>
+<header>
+  <div><h1>VAN STACK</h1><div class="sub">a LOCK IN companion · pull · set · scan</div></div>
+  <div class="sp"></div>
+  <button id="btnSound" aria-pressed="true">Sound: on</button>
+  <button id="btnStep" aria-pressed="false">Step in (Space)</button>
+  <button id="btnDispatch">Dispatch</button>
+  <a href="https://www.trailer-load.com/lock-in.html">← LOCK IN</a>
+</header>
+<div class="hud" aria-label="Shift stats">
+  <div class="stat"><b id="hLoaded">0/80</b><span>Loaded</span></div>
+  <div class="stat"><b id="hScanned">0</b><span>Scanned</span></div>
+  <div class="stat"><b id="hPool">0/5</b><span>Pool</span></div>
+  <div class="stat"><b id="hTime">0:00</b><span>Time</span></div>
+  <div class="stat"><b id="hDown">0s</b><span>Belt down</span></div>
+  <div class="stat"><b id="hSeed">-</b><span>Shift #</span></div>
+</div>
+<div class="stage">
+  <canvas id="cv" width="1448" height="1086" aria-label="Van interior with shelves, smalls bins at the shelf ends, and a conveyor belt across the bottom"></canvas>
+  <div class="overlay" id="ovBrief">
+    <div class="card" role="dialog" aria-labelledby="briefTitle">
+      <h2 id="briefTitle">PRE-LOAD MEETING</h2>
+      <ol>
+        <li><b>Pull.</b> Click a box on the belt. Boxes ride left to right.</li>
+        <li><b>Set.</b> Read the sticker, then click that section in the van. The box goes into the next open spot.</li>
+        <li><b>Scan.</b> Click the box on the shelf. The scan hands it to the driver. <b>No scan, no out-for-delivery.</b></li>
+        <li><b>Smalls go in the bins.</b> Envelopes and paks go in the bin at the end of their shelf, then click the bin to scan each one. The driver takes the bins up front.</li>
+        <li><b>Fix a misload.</b> Drag a box (or a small out of a bin) to pick it back up, then set it where it belongs. Its scan stays good.</li>
+        <li><b>Step in.</b> Press Space to climb into the van and work the back shelves up close.</li>
+        <li><b>Don't let it ride.</b> Missed pieces fall in the pool. A full pool stops the belt.</li>
+        <li><b>Dispatch.</b> When the belt is clear and your scans are done, press Dispatch. The driver walks 1000, then 2000, then the rest.</li>
+      </ol>
+      <div class="legend" id="legend"></div>
+      <div class="row"><button class="primary" id="btnStart">Open the doors</button></div>
+    </div>
+  </div>
+  <div class="overlay" id="ovEnd" hidden>
+    <div class="card" role="dialog" aria-labelledby="endTitle">
+      <h2 id="endTitle">DRIVER WALK</h2>
+      <div class="walk" id="walkLog"></div>
+      <div id="result"></div>
+      <div class="row" id="endButtons" hidden>
+        <button class="primary" id="btnAgain">Run it back (same shift)</button>
+        <button id="btnNew">New shift</button>
+      </div>
+    </div>
+  </div>
+  <div class="overlay" id="ovError" hidden><div class="card"><h2>Couldn't load the van</h2><p id="errMsg"></p></div></div>
+</div>
+<p class="sr" aria-live="polite" id="live"></p>
+<footer>VAN STACK · a LOCK IN companion · <a href="https://www.trailer-load.com">trailer-load.com</a><br>www.f-keys.com | © 2026 F-Keys LLC</footer>
+
+<script>
+// ============================================================
+// VAN STACK v0.3.0
+// Van shelf-loading drill: pull from the belt, set in the right section, scan to hand off.
+// F-Keys LLC | www.f-keys.com
+// ============================================================
+//
+// WORKFLOW STACK:
+// 1. Build a seeded shift manifest: 64 boxes (8 per section 1000-8000) + 16 smalls (2 per
+//    section), shuffled. Same seed = same shift.
+// 2. Belt carries pieces left -> right; unpicked pieces fall into the pool; full pool stops the belt.
+// 3. Click a belt/pool piece = pick up. Box: click a section = next open slot (far end first,
+//    toward the door, then the next layer). Small: click the bin at the end of its shelf.
+// 4. Click a placed box = scan it. Click a bin = scan the next unscanned small in it.
+//    Drag a placed box (top of its stack) or a bin = pick the piece back up to fix a misload;
+//    the scan stays good because the piece is still on the van.
+// 5. A section or bin with no room stops receiving pieces.
+// 6. When the belt is clear the Dispatch button lights up; the loader decides when to dispatch.
+//    The driver walk goes 1000, 2000, then 3000-8000, naming every unscanned, misloaded and
+//    left-behind piece.
+//
+// ASSET MANIFEST:
+// - van-open-cab.webp (1448x1086, open-bulkhead rear view, DALL-E)
+// - belt.webp (1448x1086, roller belt strip on flat gray; rows 360-700 used)
+// - No CDN, no network calls. Sounds are synthesized with WebAudio.
+//
+// BOOT ORDER:
+// 1. buildGeometry() - shelves, sections, 64 slots, 4 smalls bins (one-point perspective model)
+// 2. buildLegend() - sticker legend in the pre-load card
+// 3. boot() - load both images (async, visible error card on failure)
+// 4. newShift(seed) - manifest + reset STATE
+// 5. requestAnimationFrame(frame) - update + draw loop
+// ============================================================
+
+var W = 1448, H = 1086;
+
+// ---------- perspective model (measured on van-open-cab.webp, see slots.html) ----------
+var VP = { x: 723, y: 262 };
+var F_NEAR = 4.39;          // near/far scale at the door frame
+var U_MAX = 0.8;            // DECISION: usable shelf length for boxes; 1.0 clips 16 of 64 boxes off-frame (measured)
+var SHELF_GAP_FAR = 136;    // px between lower lip and top lip at the far end
+var BOX_H = 0.38;           // box height as a fraction of SHELF_GAP_FAR (2 layers fit under the ceiling)
+var ALONG = 8, LAYERS = 2, PER_SECTION = 8, SMALLS_PER_SECTION = 2;
+// Smalls bins sit in the shelf-end space boxes cannot use (measured to stay inside the frame).
+var BIN_U0 = 0.81, BIN_U1 = 0.89, BIN_V0 = 0.55, BIN_V1 = 0.95, BIN_H = 0.30, BIN_CAP = 8;
+var BELT_TOP = 869, BELT_SPEED = 85, SPAWN_EVERY = 2.3, POOL_MAX = 5;
+var POOL_X = 1318;          // pieces past this x fall into the pool
+var DRAG_PX = 9;            // display px of movement that turns a press into a drag
+var ROUTE = ["1000", "2000", "3000", "4000", "5000", "6000", "7000", "8000"];
+
+// Sticker colors: every text/background pair measured >= 4.5:1 (WCAG AA).
+var STICKERS = {
+  "1000": { bg: "#C92A2A", fg: "#ffffff" }, "2000": { bg: "#F08C00", fg: "#111111" },
+  "3000": { bg: "#FAB005", fg: "#111111" }, "4000": { bg: "#40C057", fg: "#111111" },
+  "5000": { bg: "#3BC9DB", fg: "#111111" }, "6000": { bg: "#1864AB", fg: "#ffffff" },
+  "7000": { bg: "#6741D9", fg: "#ffffff" }, "8000": { bg: "#C2255C", fg: "#ffffff" }
+};
+
+var SHELVES = [
+  { name: "R-top",   wall: { x: 995, y: 270 }, lip: { x: 905, y: 272 }, sections: ["1000", "2000"] },
+  { name: "R-lower", wall: { x: 975, y: 410 }, lip: { x: 865, y: 406 }, sections: ["3000", "4000"] },
+  { name: "L-top",   wall: { x: 455, y: 270 }, lip: { x: 545, y: 272 }, sections: ["5000", "6000"] },
+  { name: "L-lower", wall: { x: 470, y: 410 }, lip: { x: 580, y: 408 }, sections: ["7000", "8000"] }
+];
+
+var SECTIONS = {};   // "1000" -> { id, slots[8] in fill order, hull, placard }
+var ALL_SLOTS = [];
+var SLOT_AT = {};    // "shelf|i|L" -> slot, for "is anything in front of / on top of this box" checks
+var BINS = [];       // one smalls bin per shelf end: { id, sections[2], b, t, hull, items[] }
+
+var STATE = {
+  phase: "brief",      // brief | play | walk | done
+  seed: 0, manifest: [], next: 0, skipped: [],
+  belt: [], pool: [], hand: null, placed: [],
+  spawnClock: 0, elapsed: 0, down: 0, stopped: false, beltClear: false,
+  mouse: { x: -1, y: -1 }, muted: false,
+  ptr: { down: false, p0: null, press: null, picked: false },   // press = placed box/bin awaiting click-or-drag
+  zoom: 1, zoomTarget: 1,   // 1 = door view, ZOOM_IN = stepped into the van
+  walkStep: -1, walkClock: 0, walkLines: [],
+  lastTs: 0
+};
+
+var IMG = { van: null, belt: null };
+var cv = document.getElementById("cv");
+var ctx = cv.getContext("2d");
+
+// ---------- geometry helpers ----------
+// Depth scale at shelf position u (0 far, 1 door frame): one-point perspective.
+function f(u) { return 1 / (1 - u * (1 - 1 / F_NEAR)); }
+// Image point of a far-end point carried to depth u along its ray from the vanishing point.
+function at(farPt, u) { var k = f(u); return { x: VP.x + (farPt.x - VP.x) * k, y: VP.y + (farPt.y - VP.y) * k }; }
+function lerp(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
+function up(p, h) { return { x: p.x, y: p.y - h }; }
+
+// Convex hull (monotone chain) - used for click targets.
+function hull(points) {
+  var p = points.slice().sort(function (a, b) { return a.x - b.x || a.y - b.y; });
+  function cross(o, a, b) { return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x); }
+  var lower = [], upper = [], i;
+  for (i = 0; i < p.length; i++) { while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p[i]) <= 0) lower.pop(); lower.push(p[i]); }
+  for (i = p.length - 1; i >= 0; i--) { while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p[i]) <= 0) upper.pop(); upper.push(p[i]); }
+  upper.pop(); lower.pop();
+  return lower.concat(upper);
+}
+// Ray-casting point-in-polygon.
+function inPoly(pt, poly) {
+  var c = false, i, j;
+  for (i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    if (((poly[i].y > pt.y) !== (poly[j].y > pt.y)) &&
+        (pt.x < (poly[j].x - poly[i].x) * (pt.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)) c = !c;
+  }
+  return c;
+}
+function centroid(poly) { return poly.reduce(function (s, q) { return { x: s.x + q.x / poly.length, y: s.y + q.y / poly.length }; }, { x: 0, y: 0 }); }
+
+// Prism on a shelf between depths u0..u1 and shelf-depth v0..v1, h0..h1 in box-height units.
+// Corner order: far-wall, far-aisle, near-aisle, near-wall.
+function prism(sh, u0, u1, v0, v1, h0, h1) {
+  var fw = lerp(at(sh.wall, u0), at(sh.lip, u0), v0), fa = lerp(at(sh.wall, u0), at(sh.lip, u0), v1);
+  var nw = lerp(at(sh.wall, u1), at(sh.lip, u1), v0), na = lerp(at(sh.wall, u1), at(sh.lip, u1), v1);
+  var kF = SHELF_GAP_FAR * f(u0), kN = SHELF_GAP_FAR * f(u1);
+  return { b: [up(fw, kF * h0), up(fa, kF * h0), up(na, kN * h0), up(nw, kN * h0)],
+           t: [up(fw, kF * h1), up(fa, kF * h1), up(na, kN * h1), up(nw, kN * h1)] };
+}
+
+// Builds every slot as a box prism (bottom quad b, top quad t), groups them by section, and
+// builds one smalls bin per shelf end.
+function buildGeometry() {
+  var GAP = 0.06, V0 = 0.08, V1 = 0.95;
+  SHELVES.forEach(function (sh) {
+    sh.sections.forEach(function (id) { SECTIONS[id] = { id: id, shelf: sh, slots: [], hull: null, placard: null }; });
+    for (var i = 0; i < ALONG; i++) {
+      var u0 = U_MAX * (i + GAP) / ALONG, u1 = U_MAX * (i + 1 - GAP) / ALONG;
+      for (var L = 0; L < LAYERS; L++) {
+        var pr = prism(sh, u0, u1, V0, V1, BOX_H * L, BOX_H * (L + 1));
+        var sec = sh.sections[i < ALONG / 2 ? 0 : 1];
+        var slot = { section: sec, shelf: sh.name, i: i, L: L, u0: u0, z: u0 * 10 + L, b: pr.b, t: pr.t,
+                     hull: hull(pr.b.concat(pr.t)), box: null,
+                     fillKey: L * 100 + i };   // far end first, toward the door, then next layer
+        SECTIONS[sec].slots.push(slot);
+        ALL_SLOTS.push(slot);
+        SLOT_AT[sh.name + "|" + i + "|" + L] = slot;
+      }
+    }
+    var bp = prism(sh, BIN_U0, BIN_U1, BIN_V0, BIN_V1, 0, BIN_H);
+    BINS.push({ id: sh.name, sections: sh.sections.slice(), b: bp.b, t: bp.t, hull: hull(bp.b.concat(bp.t)), items: [] });
+  });
+  Object.keys(SECTIONS).forEach(function (id) {
+    var s = SECTIONS[id];
+    s.slots.sort(function (a, b) { return a.fillKey - b.fillKey; });
+    var pts = [];
+    s.slots.forEach(function (sl) { pts = pts.concat(sl.b, sl.t); });
+    s.hull = hull(pts);
+    // Shelf placard: on the shelf lip, under the middle of the section.
+    var k = s.shelf.sections.indexOf(id);
+    var um = U_MAX * (k * 4 + 2) / ALONG;
+    s.placard = { p: at(s.shelf.lip, um), k: f(um) };
+  });
+}
+function binById(id) { for (var i = 0; i < BINS.length; i++) if (BINS[i].id === id) return BINS[i]; return null; }
+function binLabel(bin) { return bin.sections.join("/"); }
+
+// ---------- seeded shift ----------
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+// Starts a shift. Same seed = same piece order = same van.
+// WRITES: STATE (everything), slot.box, bin.items
+function newShift(seed) {
+  var rnd = mulberry32(seed), list = [], n = 0;
+  ROUTE.forEach(function (sec) {
+    for (var i = 0; i < PER_SECTION; i++) list.push({ id: ++n, kind: "box", section: sec, where: "manifest", slot: null, placedIn: null, scanned: false });
+    for (var j = 0; j < SMALLS_PER_SECTION; j++) list.push({ id: ++n, kind: "small", section: sec, where: "manifest", slot: null, placedIn: null, scanned: false });
+  });
+  for (var i = list.length - 1; i > 0; i--) { var k = Math.floor(rnd() * (i + 1)); var tmp = list[i]; list[i] = list[k]; list[k] = tmp; }
+  ALL_SLOTS.forEach(function (s) { s.box = null; });
+  BINS.forEach(function (b) { b.items = []; });
+  STATE.seed = seed; STATE.manifest = list; STATE.next = 0; STATE.skipped = [];
+  STATE.belt = []; STATE.pool = []; STATE.hand = null; STATE.placed = [];
+  STATE.spawnClock = SPAWN_EVERY; STATE.elapsed = 0; STATE.down = 0; STATE.stopped = false; STATE.beltClear = false;
+  STATE.walkStep = -1; STATE.walkClock = 0; STATE.walkLines = [];
+  STATE.zoom = 1; STATE.zoomTarget = 1;
+  document.getElementById("hSeed").textContent = seed;
+  setDispatchReady(false);
+  updateHud();
+}
+
+function sectionFull(sec) { return SECTIONS[sec].slots.every(function (s) { return s.box !== null; }); }
+function nextSlot(sec) { var s = SECTIONS[sec].slots; for (var i = 0; i < s.length; i++) if (!s[i].box) return s[i]; return null; }
+function homeBin(sec) { for (var i = 0; i < BINS.length; i++) if (BINS[i].sections.indexOf(sec) >= 0) return BINS[i]; return null; }
+// Everything on the van: boxes on shelves plus smalls in bins.
+function loadedItems() { var all = STATE.placed.slice(); BINS.forEach(function (b) { all = all.concat(b.items); }); return all; }
+// Right place: a box in its own section, a small in the bin at the end of its own shelf.
+function rightPlace(it) { return it.kind === "box" ? it.placedIn === it.section : homeBin(it.section).id === it.placedIn; }
+function placeName(it) { return it.kind === "box" ? it.placedIn : "the " + binLabel(binById(it.placedIn)) + " bin"; }
+
+// ---------- audio (synthesized; no files) ----------
+var AC = null;
+// Creates/resumes the AudioContext on the first user gesture.
+async function ensureAudio() {
+  try {
+    if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+    if (AC.state === "suspended") await AC.resume();
+  } catch (err) { console.error("ensureAudio:", err); AC = null; }
+}
+function tone(freq, start, dur, type, gain) {
+  if (!AC || STATE.muted) return;
+  var o = AC.createOscillator(), g = AC.createGain(), t0 = AC.currentTime + start;
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(gain, t0 + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(AC.destination); o.start(t0); o.stop(t0 + dur + 0.02);
+}
+function noise(start, dur, freq, gain) {
+  if (!AC || STATE.muted) return;
+  var len = Math.floor(AC.sampleRate * dur), buf = AC.createBuffer(1, len, AC.sampleRate), d = buf.getChannelData(0);
+  for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+  var src = AC.createBufferSource(), bp = AC.createBiquadFilter(), g = AC.createGain(), t0 = AC.currentTime + start;
+  src.buffer = buf; bp.type = "bandpass"; bp.frequency.value = freq; bp.Q.value = 0.8; g.gain.value = gain;
+  src.connect(bp); bp.connect(g); g.connect(AC.destination); src.start(t0);
+}
+var SFX = {
+  shuffle: function () { noise(0, 0.12, 700, 0.9); noise(0.09, 0.14, 500, 0.7); },
+  set: function () { noise(0, 0.08, 260, 1.2); tone(90, 0, 0.12, "sine", 0.4); },
+  toss: function () { noise(0, 0.07, 1400, 0.6); },
+  scan: function () { tone(1760, 0, 0.07, "square", 0.12); tone(2350, 0.08, 0.1, "square", 0.12); },
+  full: function () { tone(110, 0, 0.32, "sawtooth", 0.18); },
+  drop: function () { tone(70, 0, 0.2, "sine", 0.5); noise(0, 0.1, 180, 0.8); },
+  stop: function () { tone(440, 0, 0.18, "square", 0.12); tone(330, 0.2, 0.25, "square", 0.12); },
+  clear: function () { tone(523, 0, 0.12, "triangle", 0.15); tone(784, 0.13, 0.18, "triangle", 0.15); },
+  walk: function () { tone(660, 0, 0.06, "triangle", 0.15); }
+};
+
+function say(msg) { document.getElementById("live").textContent = msg; }
+
+// ---------- input ----------
+function toCanvas(ev) {
+  var r = cv.getBoundingClientRect();
+  return { x: (ev.clientX - r.left) * W / r.width, y: (ev.clientY - r.top) * H / r.height };
+}
+function cssScale() { return cv.getBoundingClientRect().width / W; }
+
+// Belt piece screen rectangle (sprite footprint) for hit tests.
+function beltRect(e) {
+  return e.box.kind === "small" ? { x: e.x - 58, y: BELT_TOP + 70, w: 116, h: 110 } : { x: e.x - 66, y: BELT_TOP + 30, w: 132, h: 150 };
+}
+function inRect(p, r) { return p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h; }
+var POOL_RECT = { x: 1322, y: BELT_TOP + 8, w: 120, h: 205 };
+
+// ---------- step-in camera ----------
+// Stepping in zooms around the far end so the back sections fill the view (a loader climbs in).
+// Van layer only; the belt and pool always stay in screen space.
+var ZOOM_IN = 2;
+var FOCUS_IMG = { x: 723, y: 320 };   // image point the step-in view centres on (far sections)
+var FOCUS_SCR = { x: 724, y: 434 };   // where that point lands on screen when fully stepped in
+function view() {
+  var z = STATE.zoom, k = (z - 1) / (ZOOM_IN - 1);
+  return { z: z, fx: FOCUS_IMG.x, fy: FOCUS_IMG.y,
+           sx: FOCUS_IMG.x + (FOCUS_SCR.x - FOCUS_IMG.x) * k, sy: FOCUS_IMG.y + (FOCUS_SCR.y - FOCUS_IMG.y) * k };
+}
+// Screen point -> van-image point (inverse of the camera). Belt area has no van point.
+function toWorld(p) {
+  if (p.x < 0 || p.y >= BELT_TOP) return { x: -9999, y: -9999 };
+  var v = view();
+  return { x: (p.x - v.sx) / v.z + v.fx, y: (p.y - v.sy) / v.z + v.fy };
+}
+// Display pixels per van-image pixel; drives sticker/placard readability thresholds.
+function vanScale() { return Math.max(cssScale() * STATE.zoom, 0.2); }
+
+function toggleStep() {
+  if (STATE.phase !== "play") return;
+  STATE.zoomTarget = STATE.zoomTarget === 1 ? ZOOM_IN : 1;
+  var btn = document.getElementById("btnStep");
+  btn.textContent = STATE.zoomTarget === 1 ? "Step in (Space)" : "Step out (Space)";
+  btn.setAttribute("aria-pressed", String(STATE.zoomTarget !== 1));
+  say(STATE.zoomTarget === 1 ? "At the door." : "Stepped into the van.");
+}
+
+// Placed box under the point. Among overlapping boxes the nearest UNSCANNED one wins, because a
+// click only does anything useful on a box that still needs its scan. A near miss (within ~14
+// display px of a box centre) still counts, so small far boxes are easy to hit.
+// DECISION: unscanned-first targeting; every box still needs its own click.
+function placedBoxAt(p) {
+  var list = STATE.placed.slice().sort(function (a, b) { return b.slot.z - a.slot.z; });
+  var hits = list.filter(function (b) { return inPoly(p, b.slot.hull); });
+  if (!hits.length) {
+    var tol = 14 / vanScale();
+    hits = list.filter(function (b) { var c = centroid(b.slot.hull); return Math.hypot(c.x - p.x, c.y - p.y) < tol; });
+  }
+  for (var i = 0; i < hits.length; i++) if (!hits[i].scanned) return hits[i];
+  return hits[0] || null;
+}
+function binAt(p) { for (var i = 0; i < BINS.length; i++) if (inPoly(p, BINS[i].hull)) return BINS[i]; return null; }
+function sectionAt(p) {
+  for (var id in SECTIONS) if (inPoly(p, SECTIONS[id].hull)) return id;
+  return null;
+}
+// What a press on the van lands on. Bins sit nearest the door, so they win over boxes behind them.
+function vanTargetAt(wp) {
+  var bin = binAt(wp);
+  if (bin) return { kind: "bin", bin: bin };
+  var box = placedBoxAt(wp);
+  if (box) return { kind: "box", box: box };
+  return null;
+}
+function moved(p) {
+  var p0 = STATE.ptr.p0;
+  return p0 && Math.hypot(p.x - p0.x, p.y - p0.y) * cssScale() > DRAG_PX;
+}
+
+// Press: with a piece in hand it places; on a placed box/bin it waits to see click (scan) vs drag (move);
+// on the belt or pool it picks up.
+// READS: STATE.hand, STATE.belt, STATE.pool, STATE.placed, BINS   WRITES: STATE.ptr, STATE.hand, STATE.belt, STATE.pool
+function onPointerDown(ev) {
+  ensureAudio();
+  if (STATE.phase !== "play") return;
+  var p = toCanvas(ev);
+  try { cv.setPointerCapture(ev.pointerId); } catch (err) { console.error("onPointerDown:", err); }
+  STATE.mouse = p;
+  STATE.ptr = { down: true, p0: p, press: null, picked: false };
+  if (STATE.hand) { dropHandAt(p); return; }
+  var t = vanTargetAt(toWorld(p));
+  if (t) { STATE.ptr.press = t; return; }
+  for (var i = STATE.belt.length - 1; i >= 0; i--) {
+    if (inRect(p, beltRect(STATE.belt[i]))) {
+      var b = STATE.belt.splice(i, 1)[0].box; b.where = "hand"; STATE.hand = b; STATE.ptr.picked = true;
+      SFX.shuffle(); say("Picked up " + (b.kind === "small" ? "a small for " : "") + b.section + "."); return;
+    }
+  }
+  if (inRect(p, POOL_RECT) && STATE.pool.length) {
+    var pb = STATE.pool.pop(); pb.where = "hand"; STATE.hand = pb; STATE.ptr.picked = true;
+    SFX.shuffle(); say("Pulled " + pb.section + " from the pool."); return;
+  }
+}
+
+// Move: a press on a placed box/bin that travels far enough becomes a lift (fixing a misload).
+function onPointerMove(ev) {
+  var p = toCanvas(ev);
+  STATE.mouse = p;
+  if (STATE.ptr.down && STATE.ptr.press && moved(p)) {
+    var t = STATE.ptr.press; STATE.ptr.press = null;
+    if (liftTarget(t)) STATE.ptr.picked = true;
+  }
+}
+
+// Release: an unmoved press on a box/bin is a scan; a piece dragged in this press drops where released.
+function onPointerUp(ev) {
+  var p = toCanvas(ev);
+  if (STATE.phase === "play") {
+    if (STATE.ptr.press) scanTarget(STATE.ptr.press);
+    else if (STATE.ptr.picked && STATE.hand && moved(p)) dropHandAt(p, true);
+  }
+  STATE.ptr = { down: false, p0: null, press: null, picked: false };
+}
+
+// Puts the held piece wherever p points: a bin, a section, or back on the belt.
+// quiet = a drag released over nothing keeps the piece in hand without a message.
+// WRITES: STATE.hand, STATE.placed, STATE.belt, bin.items
+function dropHandAt(p, quiet) {
+  var it = STATE.hand, wp = toWorld(p);
+  var bin = binAt(wp);
+  if (bin) {
+    if (it.kind !== "small") { SFX.full(); say("Too big for a smalls bin. Boxes go on the shelf."); return; }
+    putInBin(bin); return;
+  }
+  var sec = sectionAt(wp);
+  if (sec) {
+    if (it.kind === "small") { SFX.full(); say("Smalls go in the bin at the end of the shelf."); return; }
+    placeHand(sec); return;
+  }
+  if (p.y >= BELT_TOP && p.x < POOL_X) {   // set it back on the belt
+    STATE.hand = null; it.where = "belt";
+    STATE.belt.push({ box: it, x: Math.max(70, Math.min(POOL_X - 70, p.x)) });
+    SFX.drop(); say("Back on the belt."); return;
+  }
+  if (!quiet) say("Holding " + it.section + ". Click a " + (it.kind === "small" ? "bin" : "section") + ".");
+}
+
+// Sets the held box into the next open slot of the clicked section (right or wrong section).
+// WRITES: STATE.hand, STATE.placed, slot.box
+function placeHand(sec) {
+  var slot = nextSlot(sec);
+  if (!slot) { SFX.full(); say("Section " + sec + " is full."); return; }
+  var b = STATE.hand; STATE.hand = null;
+  b.where = "van"; b.slot = slot; b.placedIn = sec; slot.box = b;
+  STATE.placed.push(b);
+  SFX.set(); say(b.scanned ? "Moved to " + sec + ". Scan still good." : "Set in " + sec + ". Scan it.");
+  updateHud();
+}
+
+// Drops the held small into a bin (right or wrong bin).
+// WRITES: STATE.hand, bin.items
+function putInBin(bin) {
+  if (bin.items.length >= BIN_CAP) { SFX.full(); say("The " + binLabel(bin) + " bin is full."); return; }
+  var s = STATE.hand; STATE.hand = null;
+  s.where = "van"; s.placedIn = bin.id; bin.items.push(s);
+  SFX.toss(); say(s.scanned ? "Moved to the " + binLabel(bin) + " bin. Scan still good." : "In the " + binLabel(bin) + " bin. Click the bin to scan it.");
+  updateHud();
+}
+
+// Picks a placed piece back up. Boxes only from the top of a stack; bins give up their last small.
+// DECISION: a moved piece keeps its scan - it never left the van.
+// WRITES: STATE.hand, STATE.placed, slot.box, bin.items
+function liftTarget(t) {
+  if (t.kind === "box") {
+    var b = t.box, above = b.slot.L === 0 ? SLOT_AT[b.slot.shelf + "|" + b.slot.i + "|1"] : null;
+    if (above && above.box) { SFX.full(); say("Take the box on top off first."); return false; }
+    b.slot.box = null; b.slot = null; b.where = "hand"; b.placedIn = null;
+    STATE.placed.splice(STATE.placed.indexOf(b), 1);
+    STATE.hand = b; SFX.shuffle(); say("Picked up " + b.section + " to move it."); updateHud();
+    return true;
+  }
+  var bin = t.bin;
+  if (!bin.items.length) { say("The " + binLabel(bin) + " bin is empty."); return false; }
+  var s = bin.items.pop(); s.where = "hand"; s.placedIn = null;
+  STATE.hand = s; SFX.shuffle(); say("Pulled a " + s.section + " small out of the bin."); updateHud();
+  return true;
+}
+
+// Scanning is the handoff to the driver. The scanner confirms "on the van", not "right shelf".
+// DECISION: a scan in the wrong section still beeps; the driver walk is where a misload shows up.
+function scanTarget(t) {
+  if (t.kind === "box") {
+    var b = t.box;
+    if (b.scanned) { say(b.section + " already scanned."); return; }
+    b.scanned = true; SFX.scan(); say("Scanned. " + b.section + " is in the driver's hands.");
+  } else {
+    var bin = t.bin, todo = bin.items.filter(function (s) { return !s.scanned; });
+    if (!todo.length) { say(bin.items.length ? "Every small in the " + binLabel(bin) + " bin is scanned." : "The " + binLabel(bin) + " bin is empty."); return; }
+    todo[todo.length - 1].scanned = true; SFX.scan();
+    say("Scanned a " + todo[todo.length - 1].section + " small. " + (todo.length - 1) + " left to scan in this bin.");
+  }
+  updateHud();
+}
+
+cv.addEventListener("pointerdown", onPointerDown);
+cv.addEventListener("pointermove", onPointerMove);
+cv.addEventListener("pointerup", onPointerUp);
+cv.addEventListener("pointercancel", function () { STATE.ptr = { down: false, p0: null, press: null, picked: false }; });
+cv.addEventListener("pointerleave", function () { if (!STATE.ptr.down) STATE.mouse = { x: -1, y: -1 }; });
+
+// ---------- update ----------
+// Advances belt, spawning, pool and the belt-clear signal.
+// READS/WRITES: STATE.belt, STATE.pool, STATE.next, STATE.stopped, STATE.down, STATE.elapsed, STATE.beltClear
+function update(dt) {
+  STATE.zoom += (STATE.zoomTarget - STATE.zoom) * Math.min(1, dt * 9);   // smooth step in/out
+  if (Math.abs(STATE.zoomTarget - STATE.zoom) < 0.002) STATE.zoom = STATE.zoomTarget;
+  if (STATE.phase === "walk") { updateWalk(dt); return; }
+  if (STATE.phase !== "play") return;
+  STATE.elapsed += dt;
+  var wasStopped = STATE.stopped;
+  STATE.stopped = STATE.pool.length >= POOL_MAX;
+  if (STATE.stopped && !wasStopped) { SFX.stop(); say("Belt stoppage. Clear the pool."); }
+  if (STATE.stopped) { STATE.down += dt; updateHud(); return; }
+
+  // move pieces; anything past the end falls into the pool
+  for (var i = STATE.belt.length - 1; i >= 0; i--) {
+    STATE.belt[i].x += BELT_SPEED * dt;
+    if (STATE.belt[i].x > POOL_X) {
+      var b = STATE.belt.splice(i, 1)[0].box; b.where = "pool"; STATE.pool.push(b); SFX.drop();
+    }
+  }
+  // spawn the next manifest piece whose section/bin still has room; full ones stop receiving
+  STATE.spawnClock += dt;
+  var leftmost = STATE.belt.reduce(function (m, e) { return Math.min(m, e.x); }, Infinity);
+  if (STATE.spawnClock >= SPAWN_EVERY && leftmost > 170) {
+    while (STATE.next < STATE.manifest.length) {
+      var nb = STATE.manifest[STATE.next++];
+      if (nb.where !== "manifest") continue;   // already in play; never spawn a piece twice
+      var noRoom = nb.kind === "box" ? sectionFull(nb.section) : homeBin(nb.section).items.length >= BIN_CAP;
+      if (noRoom) { nb.where = "skipped"; STATE.skipped.push(nb); continue; }
+      nb.where = "belt"; STATE.belt.push({ box: nb, x: -70 }); STATE.spawnClock = 0; break;
+    }
+  }
+  // DECISION: no auto-dispatch. When the belt runs out, Dispatch lights up and the loader
+  // finishes scans and fixes before sending the driver (the last box always gets its scan).
+  var clear = STATE.next >= STATE.manifest.length && !STATE.belt.length && !STATE.pool.length && !STATE.hand;
+  if (clear && !STATE.beltClear) { SFX.clear(); say("Belt's clear. Finish your scans, then Dispatch."); }
+  STATE.beltClear = clear;
+  setDispatchReady(clear);
+  updateHud();
+}
+function setDispatchReady(on) { document.getElementById("btnDispatch").classList.toggle("ready", !!on); }
+
+// ---------- driver walk ----------
+// Ends loading and walks the route in order, one section per step.
+// WRITES: STATE.phase, STATE.walkStep, STATE.walkLines
+function dispatch() {
+  if (STATE.phase !== "play") return;
+  if (STATE.hand) { STATE.hand.where = "hand"; }
+  STATE.phase = "walk"; STATE.walkStep = -1; STATE.walkClock = 0.6; STATE.walkLines = [];
+  setDispatchReady(false);
+  // DECISION: the driver walk always plays from the door view so the whole van is visible.
+  STATE.zoomTarget = 1;
+  document.getElementById("btnStep").textContent = "Step in (Space)";
+  document.getElementById("btnStep").setAttribute("aria-pressed", "false");
+  document.getElementById("walkLog").innerHTML = "";
+  document.getElementById("result").innerHTML = "";
+  document.getElementById("endButtons").hidden = true;
+  document.getElementById("ovEnd").hidden = false;
+  document.querySelector(".stage").classList.add("walking");
+  say("Dispatched. The driver walks the route.");
+}
+
+// What the driver finds for one section of the route (its boxes and its smalls).
+function auditSection(sec) {
+  var mine = STATE.manifest.filter(function (b) { return b.section === sec; });
+  var r = { sec: sec, handed: 0, unscanned: 0, misloaded: [], left: 0 };
+  mine.forEach(function (b) {
+    if (b.where !== "van") { r.left++; return; }
+    if (!rightPlace(b)) { r.misloaded.push(placeName(b)); return; }
+    if (b.scanned) r.handed++; else r.unscanned++;
+  });
+  return r;
+}
+
+function updateWalk(dt) {
+  STATE.walkClock -= dt;
+  if (STATE.walkClock > 0 || STATE.walkStep >= ROUTE.length) return;
+  STATE.walkStep++;
+  STATE.walkClock = 0.9;
+  if (STATE.walkStep >= ROUTE.length) { finishWalk(); return; }
+  var r = auditSection(ROUTE[STATE.walkStep]);
+  var parts = [], st = STICKERS[r.sec];
+  if (r.handed) parts.push('<span class="ok">' + r.handed + " handed off</span>");
+  if (r.unscanned) parts.push('<span class="bad">' + r.unscanned + " never scanned: no out-for-delivery for " + (r.unscanned > 1 ? "those customers" : "that customer") + "</span>");
+  if (r.misloaded.length) parts.push('<span class="bad">' + r.misloaded.length + " misloaded (in " + r.misloaded.join(", ") + "): the driver has to hunt</span>");
+  if (r.left) parts.push('<span class="bad">' + r.left + " left at the station</span>");
+  var line = '<div class="line"><span class="tag" style="display:inline-block;width:64px;margin-right:8px;background:' + st.bg + ";color:" + st.fg + '">' + r.sec + "</span>" + parts.join(" · ") + "</div>";
+  document.getElementById("walkLog").insertAdjacentHTML("beforeend", line);
+  SFX.walk();
+}
+
+// Final score card. Scan compliance is the headline number.
+function finishWalk() {
+  STATE.phase = "done";
+  var all = loadedItems(), total = STATE.manifest.length, loaded = all.length;
+  var scanned = all.filter(function (b) { return b.scanned; }).length;
+  var right = all.filter(rightPlace).length;
+  var handed = all.filter(function (b) { return b.scanned && rightPlace(b); }).length;
+  var left = total - loaded;
+  var pct = function (a, b) { return b ? Math.round(100 * a / b) + "%" : "-"; };
+  document.getElementById("result").innerHTML =
+    '<p class="big">' + handed + " of " + total + "</p><p>customers got a clean out-for-delivery.</p>" +
+    '<div class="grid2">' +
+    "<div>Scan compliance</div><div><b>" + pct(scanned, loaded) + "</b> (" + (loaded - scanned) + " missed)</div>" +
+    "<div>Right place</div><div><b>" + pct(right, loaded) + "</b> (" + (loaded - right) + " misloaded)</div>" +
+    "<div>Left at station</div><div><b>" + left + "</b></div>" +
+    "<div>Belt down</div><div><b>" + Math.round(STATE.down) + "s</b></div>" +
+    "<div>Shift time</div><div><b>" + fmtTime(STATE.elapsed) + "</b></div></div>";
+  document.getElementById("endButtons").hidden = false;
+  document.getElementById("btnAgain").focus();
+  say(handed + " of " + total + " handed off cleanly. Scan compliance " + pct(scanned, loaded) + ".");
+}
+
+// ---------- HUD ----------
+function fmtTime(s) { s = Math.floor(s); return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2); }
+function updateHud() {
+  var all = loadedItems();
+  document.getElementById("hLoaded").textContent = all.length + "/" + STATE.manifest.length;
+  document.getElementById("hScanned").textContent = all.filter(function (b) { return b.scanned; }).length;
+  var pool = document.getElementById("hPool");
+  pool.textContent = STATE.pool.length + "/" + POOL_MAX;
+  pool.style.color = STATE.stopped ? "var(--bad)" : "";
+  document.getElementById("hTime").textContent = fmtTime(STATE.elapsed);
+  document.getElementById("hDown").textContent = Math.round(STATE.down) + "s";
+}
+
+// ---------- drawing ----------
+function path(pts) { ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y); for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y); ctx.closePath(); }
+function roundRect(x, y, w, h, r) {
+  ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+}
+
+// Sticker: section color, big number, optional scanned check.
+function drawSticker(cx, cy, h, sec, scanned) {
+  var st = STICKERS[sec], w = h * 2.2;
+  roundRect(cx - w / 2, cy - h / 2, w, h, h * 0.16);
+  ctx.fillStyle = st.bg; ctx.fill(); ctx.lineWidth = Math.max(1, h * 0.06); ctx.strokeStyle = "#111"; ctx.stroke();
+  ctx.fillStyle = st.fg; ctx.font = "800 " + (h * 0.66) + "px system-ui, sans-serif";
+  ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(sec, cx, cy + h * 0.04);
+  if (scanned) {
+    var r = h * 0.36, bx = cx + w / 2 - r * 0.3, by = cy - h / 2 + r * 0.3;
+    ctx.beginPath(); ctx.arc(bx, by, r, 0, Math.PI * 2); ctx.fillStyle = "#14532d"; ctx.fill();
+    ctx.lineWidth = Math.max(1.2, r * 0.18); ctx.strokeStyle = "#fff"; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx - r * 0.45, by); ctx.lineTo(bx - r * 0.1, by + r * 0.38); ctx.lineTo(bx + r * 0.5, by - r * 0.4);
+    ctx.lineWidth = Math.max(1.5, r * 0.28); ctx.stroke();
+  }
+}
+
+// Cardboard box sprite for the belt and the hand (front + top face).
+function drawLooseBox(cx, baseY, sec, scale) {
+  var w = 120 * scale, h = 96 * scale, d = 20 * scale, x = cx - w / 2, y = baseY - h;
+  ctx.fillStyle = "rgba(0,0,0,.28)"; ctx.fillRect(x + 6 * scale, baseY - 4 * scale, w, 8 * scale);
+  path([{ x: x, y: y }, { x: x + d, y: y - d }, { x: x + w + d, y: y - d }, { x: x + w, y: y }]);
+  ctx.fillStyle = "#e0bf8a"; ctx.fill(); ctx.strokeStyle = "#3b2a17"; ctx.lineWidth = 2; ctx.stroke();
+  path([{ x: x + w, y: y }, { x: x + w + d, y: y - d }, { x: x + w + d, y: baseY - d }, { x: x + w, y: baseY }]);
+  ctx.fillStyle = "#a9814c"; ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#c99f63"; ctx.fillRect(x, y, w, h); ctx.strokeRect(x, y, w, h);
+  ctx.fillStyle = "rgba(90,60,30,.35)"; ctx.fillRect(x + w * 0.44, y, w * 0.12, h);   // tape
+  drawSticker(cx, y + h * 0.55, 42 * scale, sec, false);
+}
+
+// Small (envelope/pak) sprite for the belt and the hand: flat, white, smaller than a box.
+function drawLooseSmall(cx, baseY, sec, scale) {
+  var w = 112 * scale, h = 46 * scale, x = cx - w / 2, y = baseY - h;
+  ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.fillRect(x + 5 * scale, baseY - 3 * scale, w, 6 * scale);
+  roundRect(x, y, w, h, 5 * scale); ctx.fillStyle = "#f4f1ea"; ctx.fill();
+  ctx.strokeStyle = "#5c5348"; ctx.lineWidth = 2; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(cx, y + h * 0.45); ctx.lineTo(x + w, y); ctx.strokeStyle = "rgba(92,83,72,.5)"; ctx.stroke();   // flap
+  drawSticker(cx, y + h * 0.58, 30 * scale, sec, false);
+}
+
+// Prism box on a shelf slot (aisle face, near end face, top face).
+function drawSlotBox(slot, tint) {
+  var b = slot.b, t = slot.t;
+  ctx.lineWidth = 1.5; ctx.strokeStyle = "#3b2a17";
+  path([b[1], b[2], t[2], t[1]]); ctx.fillStyle = "#c99f63"; ctx.fill(); ctx.stroke();
+  path([b[2], b[3], t[3], t[2]]); ctx.fillStyle = "#a9814c"; ctx.fill(); ctx.stroke();
+  path(t); ctx.fillStyle = "#e0bf8a"; ctx.fill(); ctx.stroke();
+  if (tint) { path(slot.hull); ctx.fillStyle = tint; ctx.fill(); }
+}
+// Aisle-face centre and size: the sticker faces the aisle, like a loader keeps labels out.
+function slotStickerAnchor(slot) {
+  var b = slot.b, t = slot.t;
+  var c = { x: (b[1].x + b[2].x + t[1].x + t[2].x) / 4, y: (b[1].y + b[2].y + t[1].y + t[2].y) / 4 };
+  var faceH = ((b[1].y - t[1].y) + (b[2].y - t[2].y)) / 2;
+  var faceW = Math.abs(b[2].x - b[1].x);
+  return { c: c, faceH: faceH, faceW: faceW };
+}
+
+// Door-facing end of the box, used when no box sits in front of it on the same layer.
+function slotEndAnchor(slot) {
+  var b = slot.b, t = slot.t;
+  var c = { x: (b[2].x + b[3].x + t[2].x + t[3].x) / 4, y: (b[2].y + b[3].y + t[2].y + t[3].y) / 4 };
+  return { c: c, faceH: b[2].y - t[2].y, faceW: Math.abs(b[2].x - b[3].x) };
+}
+function frontExposed(slot) {
+  var ahead = SLOT_AT[slot.shelf + "|" + (slot.i + 1) + "|" + slot.L];
+  return !ahead || !ahead.box;
+}
+
+// Placed-box sticker fitted inside its best visible face: the door-facing end when nothing is in
+// front of the box (so the box you just set always shows a big label), otherwise the aisle side.
+// Too small to read -> solid color chip; the hover callout gives the full-size label.
+// DECISION: replaces a forced minimum size, which stacked far stickers into an unreadable pile.
+function drawPlacedSticker(b) {
+  var a = slotStickerAnchor(b.slot);
+  var h = Math.min(a.faceH * 0.45, a.faceW * 0.92 / 2.2);
+  if (frontExposed(b.slot)) {
+    var e = slotEndAnchor(b.slot), he = Math.min(e.faceH * 0.45, e.faceW * 0.92 / 2.2);
+    if (he > h) { a = e; h = he; }
+  }
+  var minText = 13 / vanScale();
+  if (h >= minText) { drawSticker(a.c.x, a.c.y, h, b.section, b.scanned); return; }
+  var w = Math.max(4, a.faceW * 0.8), ch = Math.max(4, Math.min(a.faceH * 0.4, w));
+  ctx.fillStyle = STICKERS[b.section].bg; ctx.fillRect(a.c.x - w / 2, a.c.y - ch / 2, w, ch);
+  ctx.lineWidth = 1; ctx.strokeStyle = "#111"; ctx.strokeRect(a.c.x - w / 2, a.c.y - ch / 2, w, ch);
+  if (b.scanned) { ctx.fillStyle = "#fff"; ctx.fillRect(a.c.x - 1.5, a.c.y - ch / 2 - 5, 3, 3); }
+}
+
+// Smalls bin: gray plastic tote with its two section labels on the door-facing end, the smalls
+// inside poking above the rim, and an "N to scan" badge while any are unscanned.
+function drawBin(bin, tint) {
+  var b = bin.b, t = bin.t;
+  ctx.lineWidth = 2; ctx.strokeStyle = "#1f2a33";
+  path(t); ctx.fillStyle = "#2b3640"; ctx.fill(); ctx.stroke();                 // dark open top
+  // contents: one envelope edge per small, stacked inside the opening
+  var n = bin.items.length, tc = centroid(t), span = Math.abs(t[2].x - t[3].x) * 0.7;
+  bin.items.forEach(function (s, i) {
+    var x = tc.x - span / 2 + (n > 1 ? span * i / (n - 1) : span / 2), hh = Math.abs(b[2].y - t[2].y) * 0.32;
+    ctx.fillStyle = "#f4f1ea"; ctx.fillRect(x - hh * 0.35, tc.y - hh * 0.9, hh * 0.7, hh);
+    ctx.fillStyle = STICKERS[s.section].bg; ctx.fillRect(x - hh * 0.35, tc.y - hh * 0.9, hh * 0.7, hh * 0.35);
+  });
+  path([b[1], b[2], t[2], t[1]]); ctx.fillStyle = "#6b7c8a"; ctx.fill(); ctx.stroke();   // aisle side
+  path([b[2], b[3], t[3], t[2]]); ctx.fillStyle = "#8696a3"; ctx.fill(); ctx.stroke();   // door-facing end
+  if (tint) { path(bin.hull); ctx.fillStyle = tint; ctx.fill(); }
+  // labels: the bin's two sections, side by side on the end face
+  var e = { c: { x: (b[2].x + b[3].x + t[2].x + t[3].x) / 4, y: (b[2].y + b[3].y + t[2].y + t[3].y) / 4 },
+            w: Math.abs(b[2].x - b[3].x), h: b[2].y - t[2].y };
+  var lh = Math.min(e.h * 0.3, e.w * 0.92 / 4.7);
+  drawSticker(e.c.x - lh * 1.15, e.c.y + lh * 0.2, lh, bin.sections[0], false);
+  drawSticker(e.c.x + lh * 1.15, e.c.y + lh * 0.2, lh, bin.sections[1], false);
+  ctx.font = "800 " + Math.max(10, lh * 0.55) + "px system-ui, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+  ctx.lineWidth = 3; ctx.strokeStyle = "#111"; ctx.fillStyle = "#fff";
+  ctx.strokeText("SMALLS", e.c.x, e.c.y - lh * 0.45); ctx.fillText("SMALLS", e.c.x, e.c.y - lh * 0.45);
+  var todo = bin.items.filter(function (s) { return !s.scanned; }).length;
+  if (todo) {
+    var r = Math.max(11, lh * 0.55), bx = t[2].x + (t[3].x - t[2].x) * 0.5, by = Math.min(t[2].y, t[3].y) - r * 0.6;
+    ctx.beginPath(); ctx.arc(bx, by, r, 0, Math.PI * 2); ctx.fillStyle = "#b45309"; ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = "#fff"; ctx.stroke();
+    ctx.fillStyle = "#fff"; ctx.font = "800 " + r * 1.1 + "px system-ui, sans-serif"; ctx.textBaseline = "middle";
+    ctx.fillText(String(todo), bx, by + 1);
+  }
+}
+
+function drawPlacards() {
+  var minH = 16 / vanScale();
+  Object.keys(SECTIONS).forEach(function (id) {
+    var s = SECTIONS[id], h = Math.max(minH, 13 * s.placard.k);
+    drawSticker(s.placard.p.x, s.placard.p.y + h * 0.75, h, id, false);
+  });
+}
+
+function drawBelt() {
+  if (IMG.belt) ctx.drawImage(IMG.belt, 0, 360, W, 340, 0, BELT_TOP, W, H - BELT_TOP);
+  else { ctx.fillStyle = "#1c4fa0"; ctx.fillRect(0, BELT_TOP, W, H - BELT_TOP); }
+  // pool bin at the end of the belt
+  roundRect(POOL_RECT.x, POOL_RECT.y, POOL_RECT.w, POOL_RECT.h, 10);
+  ctx.fillStyle = STATE.stopped ? "rgba(120,20,20,.92)" : "rgba(25,20,16,.9)"; ctx.fill();
+  ctx.strokeStyle = STATE.stopped ? "#ff8787" : "#f5a524"; ctx.lineWidth = 3; ctx.stroke();
+  ctx.fillStyle = "#f3ece0"; ctx.font = "800 22px system-ui, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "top";
+  ctx.fillText("POOL", POOL_RECT.x + POOL_RECT.w / 2, POOL_RECT.y + 8);
+  ctx.font = "800 30px system-ui, sans-serif";
+  ctx.fillText(STATE.pool.length + "/" + POOL_MAX, POOL_RECT.x + POOL_RECT.w / 2, POOL_RECT.y + 34);
+  if (STATE.pool.length) {
+    var top = STATE.pool[STATE.pool.length - 1];
+    drawSticker(POOL_RECT.x + POOL_RECT.w / 2, POOL_RECT.y + 120, 38, top.section, false);
+    ctx.font = "700 16px system-ui, sans-serif"; ctx.fillStyle = "#f3ece0";
+    ctx.fillText("click to pull", POOL_RECT.x + POOL_RECT.w / 2, POOL_RECT.y + 150);
+  }
+  STATE.belt.forEach(function (e) {
+    if (e.box.kind === "small") drawLooseSmall(e.x, BELT_TOP + 160, e.box.section, 1);
+    else drawLooseBox(e.x, BELT_TOP + 168, e.box.section, 1);
+  });
+  var banner = STATE.stopped ? { text: "BELT STOPPAGE · CLEAR THE POOL", bg: "rgba(120,20,20,.88)" }
+    : (STATE.beltClear && STATE.phase === "play") ? { text: "BELT'S CLEAR · FINISH YOUR SCANS, THEN DISPATCH", bg: "rgba(20,83,45,.9)" } : null;
+  if (banner) {
+    ctx.font = "800 28px system-ui, sans-serif"; var bw = ctx.measureText(banner.text).width + 48;
+    ctx.fillStyle = banner.bg; roundRect(W / 2 - bw / 2, BELT_TOP - 70, bw, 54, 10); ctx.fill();
+    ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(banner.text, W / 2, BELT_TOP - 43);
+  }
+}
+
+// Full frame: van, section highlight, boxes, bins, stickers, belt, hand, callout, walk marks.
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  var m = STATE.mouse, wm = toWorld(m);
+  // van layer is drawn through the step-in camera; belt, hand and callout are drawn after, in screen space
+  var v = view();
+  ctx.save();
+  ctx.setTransform(v.z, 0, 0, v.z, v.sx - v.fx * v.z, v.sy - v.fy * v.z);
+  if (IMG.van) ctx.drawImage(IMG.van, 0, 0, W, H);
+  var holding = STATE.phase === "play" && STATE.hand;
+  var hoverBin = holding && STATE.hand.kind === "small" ? binAt(wm) : null;
+  var hoverSec = holding && STATE.hand.kind === "box" ? sectionAt(wm) : null;
+  var walkSec = (STATE.phase === "walk" && STATE.walkStep >= 0 && STATE.walkStep < ROUTE.length) ? ROUTE[STATE.walkStep] : null;
+
+  // section highlight: where the held box will go, or the section the driver is checking
+  [hoverSec, walkSec].forEach(function (sec) {
+    if (!sec) return;
+    var full = sectionFull(sec), col = STICKERS[sec].bg;
+    path(SECTIONS[sec].hull); ctx.fillStyle = full ? "rgba(200,30,30,.25)" : col + "40"; ctx.fill();
+    ctx.lineWidth = 4; ctx.strokeStyle = full ? "#ff8787" : col; ctx.stroke();
+    var ns = nextSlot(sec);
+    if (ns && sec === hoverSec) { path(ns.hull); ctx.setLineDash([8, 6]); ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.stroke(); ctx.setLineDash([]); }
+  });
+
+  drawPlacards();
+
+  var order = STATE.placed.slice().sort(function (a, b) { return a.slot.z - b.slot.z; });
+  var pressBin = STATE.ptr.press && STATE.ptr.press.kind === "bin" ? STATE.ptr.press.bin : null;
+  var target = (STATE.phase === "play" && !STATE.hand) ? vanTargetAt(wm) : null;
+  var hoverBox = target && target.kind === "box" ? target.box : null;
+  var hoverBinIdle = target && target.kind === "bin" ? target.bin : null;
+  // box then its sticker, far to near, so nearer boxes correctly cover what is behind them
+  order.forEach(function (b) { drawSlotBox(b.slot, b === hoverBox ? "rgba(255,255,255,.18)" : null); drawPlacedSticker(b); });
+  // bins sit nearest the door, so they draw last
+  BINS.forEach(function (bin) {
+    var tint = bin === hoverBin || bin === hoverBinIdle || bin === pressBin ? "rgba(255,255,255,.2)" : null;
+    drawBin(bin, tint);
+    if (bin === hoverBin) { path(bin.hull); ctx.lineWidth = 4; ctx.strokeStyle = bin.items.length >= BIN_CAP ? "#ff8787" : "#fff"; ctx.stroke(); }
+  });
+
+  // driver-walk marks on sections already walked (boxes, and bins holding those sections' smalls)
+  if (STATE.phase === "walk" || STATE.phase === "done") {
+    var walked = ROUTE.slice(0, Math.min(STATE.walkStep + 1, ROUTE.length));
+    order.forEach(function (b) {
+      if (walked.indexOf(b.placedIn) < 0) return;
+      var bad = !b.scanned ? "#ff3b3b" : (b.placedIn !== b.section ? "#ffd43b" : null);
+      if (!bad) return;
+      path(b.slot.hull); ctx.lineWidth = 5; ctx.strokeStyle = bad; ctx.stroke();
+    });
+    BINS.forEach(function (bin) {
+      var seen = bin.items.filter(function (s) { return walked.indexOf(s.section) >= 0; });
+      var bad = seen.some(function (s) { return !s.scanned; }) ? "#ff3b3b" : (seen.some(function (s) { return !rightPlace(s); }) ? "#ffd43b" : null);
+      if (bad) { path(bin.hull); ctx.lineWidth = 5; ctx.strokeStyle = bad; ctx.stroke(); }
+    });
+  }
+  ctx.restore();
+
+  drawBelt();
+
+  if (STATE.hand && m.x >= 0) {
+    if (STATE.hand.kind === "small") drawLooseSmall(m.x, m.y + 40, STATE.hand.section, 0.9);
+    else drawLooseBox(m.x, m.y + 60, STATE.hand.section, 0.85);
+  }
+
+  // readable callout for the box or bin under the cursor
+  var tip = null, cx = Math.min(W - 160, Math.max(160, m.x)), cy = Math.max(80, m.y - 70);
+  if (hoverBox && !STATE.ptr.down) {
+    drawSticker(cx, cy, 52, hoverBox.section, hoverBox.scanned);
+    tip = hoverBox.scanned ? "scanned · drag to move" : "click to scan · drag to move";
+  } else if (hoverBinIdle && !STATE.ptr.down) {
+    var todo = hoverBinIdle.items.filter(function (s) { return !s.scanned; }).length;
+    drawSticker(cx - 62, cy, 46, hoverBinIdle.sections[0], false);
+    drawSticker(cx + 62, cy, 46, hoverBinIdle.sections[1], false);
+    tip = !hoverBinIdle.items.length ? "smalls bin · empty" : todo ? todo + " to scan · click to scan · drag to pull one" : "all scanned · drag to pull one";
+  }
+  if (tip) {
+    ctx.font = "800 20px system-ui, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "top";
+    ctx.lineWidth = 4; ctx.strokeStyle = "#111"; ctx.fillStyle = "#fff";
+    ctx.strokeText(tip, cx, cy + 34); ctx.fillText(tip, cx, cy + 34);
+  }
+}
+
+function frame(ts) {
+  try {
+    var dt = STATE.lastTs ? Math.min(0.05, (ts - STATE.lastTs) / 1000) : 0;
+    STATE.lastTs = ts;
+    update(dt);
+    draw();
+  } catch (err) { console.error("frame:", err); }
+  requestAnimationFrame(frame);
+}
+
+// ---------- UI wiring ----------
+function buildLegend() {
+  var el = document.getElementById("legend");
+  ROUTE.forEach(function (sec) {
+    var d = document.createElement("div"); d.className = "tag"; d.textContent = sec;
+    d.style.background = STICKERS[sec].bg; d.style.color = STICKERS[sec].fg; el.appendChild(d);
+  });
+}
+function startPlay() {
+  ensureAudio();
+  document.getElementById("ovBrief").hidden = true;
+  document.getElementById("ovEnd").hidden = true;
+  document.querySelector(".stage").classList.remove("walking");
+  document.getElementById("btnStep").textContent = "Step in (Space)";
+  document.getElementById("btnStep").setAttribute("aria-pressed", "false");
+  STATE.phase = "play";
+  cv.focus();
+}
+document.getElementById("btnStart").addEventListener("click", startPlay);
+document.getElementById("btnAgain").addEventListener("click", function () { newShift(STATE.seed); startPlay(); });
+document.getElementById("btnNew").addEventListener("click", function () { newShift(1 + Math.floor(Math.random() * 99999)); startPlay(); });
+document.getElementById("btnDispatch").addEventListener("click", dispatch);
+document.getElementById("btnStep").addEventListener("click", toggleStep);
+document.getElementById("btnSound").addEventListener("click", function (e) {
+  STATE.muted = !STATE.muted;
+  e.target.textContent = "Sound: " + (STATE.muted ? "off" : "on");
+  e.target.setAttribute("aria-pressed", String(!STATE.muted));
+});
+document.addEventListener("keydown", function (e) {
+  // Space steps in/out; skipped when a button has focus so Space still presses buttons.
+  if (e.code === "Space" && STATE.phase === "play" && !(e.target && e.target.tagName === "BUTTON")) { e.preventDefault(); toggleStep(); return; }
+  if (e.key === "Escape" && STATE.hand && STATE.phase === "play") {   // set the held piece back on the belt
+    var b = STATE.hand; STATE.hand = null; b.where = "belt"; STATE.belt.push({ box: b, x: 200 }); SFX.drop(); say("Back on the belt.");
+  }
+});
+
+function loadImage(src) {
+  return new Promise(function (resolve, reject) {
+    var im = new Image();
+    im.onload = function () { resolve(im); };
+    im.onerror = function () { reject(new Error("Could not load " + src)); };
+    im.src = src;
+  });
+}
+
+// Loads art, then starts the loop. A failed load shows a visible card instead of a blank canvas.
+async function boot() {
+  buildGeometry();
+  buildLegend();
+  var q = new URLSearchParams(location.search).get("seed");
+  newShift(q && /^\d+$/.test(q) ? +q : 1 + Math.floor(Math.random() * 99999));
+  try {
+    IMG.van = await loadImage("van-open-cab.webp");
+    IMG.belt = await loadImage("belt.webp");
+  } catch (err) {
+    console.error("boot:", err);
+    document.getElementById("errMsg").textContent = err.message + ". Keep index.html next to van-open-cab.webp and belt.webp.";
+    document.getElementById("ovError").hidden = false;
+  }
+  requestAnimationFrame(frame);
+}
+boot();
+</script>
+</body>
+</html>
