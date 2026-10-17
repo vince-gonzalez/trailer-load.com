@@ -69,6 +69,13 @@ small,sub,sup{font-size:11px;}
        visualize incorrectly"): floor NCs were drawn over the lower shelves; the lower shelves are now repainted from
        the van art over the floor layer, so NCs tuck under the shelf lip. v0.7.2 rewords one code comment so the public
        page source names no company. No gameplay or scoring change. He played v0.7.0 to 66 of 67 with 8 extras.
+     PART 4. VAN STACK v0.7.4 (sha256 870e1fdc..., LF). (1) Vince flagged the pre-load meeting rules as confusing: the
+       card now lists only the job, in a loader's order (pull, set, scan, smalls, NCs, walkway, overflow, extras,
+       dispatch), with keyboard and mouse on a separate Controls line; "Space climbs into the van" (read as room) became
+       "Press the Space bar to step into the van". (2) His report "when I place something visually behind some stuff, it
+       doesn't visually place behind and appears in the foreground": the draw order is now a painter's order where a
+       box resting on another always draws after it and farther boxes draw first, click-targeting follows the same
+       order, and the shelves and wheel wells are repainted over the boxes behind them. No scoring or asset change.
      The Mini-Games clipboard ink, measured on the rendered pixels (the auditor in .tools reads background colours, so
        text on the clipboard picture reads as text on the scrim; t207a now samples the real pixels in each failing box):
        BACK #5a3f1a -> #2a1a08 (3.54:1 -> 6.12:1 on the darkest grey behind it), the subtitle #7a6748 -> #33230c

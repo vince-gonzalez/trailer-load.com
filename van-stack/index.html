@@ -83,18 +83,17 @@
     <div class="card" role="dialog" aria-labelledby="briefTitle">
       <h2 id="briefTitle">PRE-LOAD MEETING</h2>
       <ol>
-        <li><b>Pull.</b> Click a box on the belt. Boxes ride left to right.</li>
-        <li><b>Set.</b> Read the sticker, then point at that section. A <b>green</b> ghost shows where the box will go; click to set it. <b>Red</b> means it doesn't fit there and won't drop. Boxes come in different sizes, and nothing floats: a box on the second layer needs boxes under it.</li>
-        <li><b>Scan.</b> Click the box once it's set. The scan hands it to the driver. <b>No scan, no out-for-delivery.</b></li>
-        <li><b>NCs go on the floor.</b> Special handling (heavy, too long, tires, hazmat) waits on the NC cart at the left. Set each one on the floor beside its section, under the shelves. The painted <b>walkway</b> always stays clear, so the van is always safe.</li>
-        <li><b>Out of room?</b> A box that won't fit its shelf can go on the floor under its own section. That's within the rules.</li>
-        <li><b>Smalls go in the bins</b> at the end of their shelf. Click the bin to scan each one.</li>
-        <li><b>Fix a misload.</b> Drag a piece to pick it back up. Its scan stays good.</li>
-        <li><b>Step in.</b> Space climbs into the van for the back shelves.</li>
-        <li><b>Don't let it ride.</b> Missed pieces fall in the pool. A full pool stops the belt.</li>
-        <li><b>Room for more?</b> Once the planned load is in, the belt keeps sending <b>EXTRA</b> pieces while there's real room. Every one you fit is a bonus. Stop whenever you like.</li>
-        <li><b>Dispatch.</b> Once the planned belt and the NC cart are in, Dispatch lights up. Finish your scans, then send the driver: 1, then 2, then the rest.</li>
+        <li><b>Pull.</b> Grab each piece off the belt before it rides past. Missed pieces drop in the pool, and a full pool stops the belt.</li>
+        <li><b>Set it in its section.</b> The sticker number is the section. Boxes come in different sizes; build from the shelf up, nothing floats.</li>
+        <li><b>Scan it.</b> The scan hands the piece to the driver. <b>No scan, no out-for-delivery.</b></li>
+        <li><b>Smalls go in the bin</b> at the end of their shelf, one scan each.</li>
+        <li><b>NCs go on the floor</b> under their section. Special handling (heavy, too long, tires, hazmat) comes on the NC cart, not the belt.</li>
+        <li><b>Keep the walkway clear.</b> The painted lines on the floor stay open, always.</li>
+        <li><b>Box won't fit its shelf?</b> Set it on the floor under its section instead. That's still the right place.</li>
+        <li><b>Room left at the end?</b> Extra freight keeps coming while it fits. Every piece you fit is a bonus.</li>
+        <li><b>Dispatch</b> when your scans are done. The driver checks the van in route order: 1, then 2, then the rest.</li>
       </ol>
+      <p><b>Controls:</b> click to pick up, set and scan. Green shows where a piece fits; red won't take it. Drag a placed piece to move it (its scan stays good). Press the <b>Space bar</b> to step into the van for the back shelves, and Space again to step back. <b>Esc</b> puts back what you're holding.</p>
       <div class="legend" id="legend"></div>
       <div class="row"><button class="primary" id="btnStart">Open the doors</button></div>
     </div>
@@ -117,7 +116,7 @@
 
 <script>
 // ============================================================
-// VAN STACK v0.7.2
+// VAN STACK v0.7.4
 // Van loading drill: pull from the belt, set in the right place, scan to hand off.
 // F-Keys LLC | www.f-keys.com
 // ============================================================
@@ -479,7 +478,7 @@ function newShift(seed) {
   BINS.forEach(function (b) { b.items = []; });
   STATE.seed = seed; STATE.manifest = list; STATE.next = 0; STATE.skipped = [];
   STATE.cart = cart.slice(); STATE.ncs = cart.slice();
-  STATE.belt = []; STATE.pool = []; STATE.hand = null; STATE.placed = [];
+  STATE.belt = []; STATE.pool = []; STATE.hand = null; STATE.placed = []; ORDER.dirty = true;
   STATE.spawnClock = SPAWN_EVERY; STATE.elapsed = 0; STATE.down = 0; STATE.stopped = false; STATE.beltClear = false;
   STATE.walkStep = -1; STATE.walkClock = 0;
   STATE.extras = []; STATE.extraDone = false; STATE.extraSmalls = 0; STATE.plannedDone = false;
@@ -762,8 +761,39 @@ function toggleStep() {
 // Placed piece under the point. Among overlapping pieces the nearest UNSCANNED one wins (a click
 // only matters on a piece that still needs its scan). A near miss (~14 display px) still counts.
 // DECISION: unscanned-first targeting; every piece still needs its own click.
+// ---------- draw order (painter's algorithm) ----------
+// Shelf boxes: a box resting on another (same shelf, overlapping columns, higher layer) is drawn
+// after it; otherwise the box whose NEAR end is farther from the door goes first. Floor pieces:
+// farther first. Built as a topological order and cached until a piece is set or moved.
+// DECISION: replaces a single depth*10+layer key, which tied a column's top box with the next
+// column's bottom box and let a box on a 2-wide box draw underneath it (pieces overlapping wrong).
+var ORDER = { dirty: true, floor: [], shelf: [] };
+function mustDrawBefore(a, b) {
+  var sa = a.slot, sb = b.slot;
+  if (sa.shelf === sb.shelf && sa.i < sb.i + sb.w && sb.i < sa.i + sa.w) return sa.L < sb.L;
+  return sa.u1 < sb.u1 - 1e-9 || (Math.abs(sa.u1 - sb.u1) < 1e-9 && sa.L < sb.L);
+}
+function drawOrder() {
+  if (!ORDER.dirty) return ORDER;
+  var shelf = STATE.placed.filter(function (p) { return p.slot.kind === "shelf"; }), out = [], left = shelf.slice();
+  while (left.length) {
+    var pick = -1;
+    for (var i = 0; i < left.length && pick < 0; i++) {
+      var blocked = false;
+      for (var j = 0; j < left.length && !blocked; j++) if (j !== i && mustDrawBefore(left[j], left[i])) blocked = true;
+      if (!blocked) pick = i;
+    }
+    if (pick < 0) pick = 0;   // safety net; the relation is acyclic for stacked boxes
+    out.push(left.splice(pick, 1)[0]);
+  }
+  ORDER.shelf = out;
+  ORDER.floor = STATE.placed.filter(function (p) { return p.slot.kind === "floor"; }).sort(function (a, b) { return a.slot.u0 - b.slot.u0; });
+  ORDER.dirty = false;
+  return ORDER;
+}
+
 function placedBoxAt(p) {
-  var list = STATE.placed.slice().sort(function (a, b) { return b.slot.z - a.slot.z; });
+  var o = drawOrder(), list = o.floor.concat(o.shelf).reverse();   // topmost-drawn first
   var hits = list.filter(function (b) { return inPoly(p, b.slot.hull); });
   if (!hits.length) {
     var tol = 14 / vanScale();
@@ -850,7 +880,7 @@ function commitPlacement(it, pl) {
     it.placedIn = pl.bin.id; pl.bin.items.push(it); SFX.toss();
     say(it.scanned ? "Moved to the " + binLabel(pl.bin) + " bin. Scan still good." : "In the " + binLabel(pl.bin) + " bin. Click the bin to scan it.");
   } else {
-    it.slot = pl.slot; STATE.placed.push(it);
+    it.slot = pl.slot; STATE.placed.push(it); ORDER.dirty = true;
     if (pl.kind === "shelf") {
       it.placedIn = pl.slot.sec;
       for (var dc = 0; dc < pl.slot.w; dc++) for (var dl = 0; dl < pl.slot.h; dl++) GRID[pl.slot.shelf][pl.slot.i + dc][pl.slot.L + dl] = it;
@@ -880,7 +910,7 @@ function liftTarget(t) {
     for (dc = 0; dc < sl.w; dc++) for (var dl = 0; dl < sl.h; dl++) g[sl.i + dc][sl.L + dl] = null;
   }
   b.slot = null; b.placedIn = null;
-  STATE.placed.splice(STATE.placed.indexOf(b), 1);
+  STATE.placed.splice(STATE.placed.indexOf(b), 1); ORDER.dirty = true;
   takeInHand(b, "Picked up " + pieceName(b) + " to move it.");
   return true;
 }
@@ -1267,11 +1297,26 @@ function drawBin(bin, tint) {
 // than it on screen, so this is always the correct occlusion. LIP_BAND = lip thickness at the far
 // end (measured ~10 px; ~40 px at the near end at 4.2x).
 var LIP_BAND = 10;
-function occludeLowerShelves() {
+// Wheel wells (in the art, measured with an overlay): u 0.18-0.56, wall to 0.62 of the floor
+// width, 0.35 height units tall. They stand in front of the far floor zones.
+var WHEEL_WELL = { u0: 0.18, u1: 0.56, v1: 0.62, h: 0.35 };
+function occludeWheelWells() {
+  if (!IMG.van) return;
+  ["L", "R"].forEach(function (s) {
+    var pr = prism(FLOOR_SIDES[s], WHEEL_WELL.u0, WHEEL_WELL.u1, 0, WHEEL_WELL.v1, 0, WHEEL_WELL.h);
+    ctx.save(); path(pr.hull); ctx.clip(); ctx.drawImage(IMG.van, 0, 0, W, H); ctx.restore();
+  });
+}
+// Top shelves have a thicker front edge in the art (measured: 85 px at the near end at 3.84x
+// = ~22 px far). From the door it passes in front of the tops of farther lower-shelf stacks.
+var TOP_LIP_BAND = 22;
+function occludeTopShelves() { occludeShelves("top", TOP_LIP_BAND); }
+function occludeLowerShelves() { occludeShelves("lower", LIP_BAND); }
+function occludeShelves(which, band) {
   if (!IMG.van) return;
   SHELVES.forEach(function (sh) {
-    if (sh.name.indexOf("lower") < 0) return;
-    var low = { x: sh.lip.x, y: sh.lip.y + LIP_BAND };
+    if (sh.name.indexOf(which) < 0) return;
+    var low = { x: sh.lip.x, y: sh.lip.y + band };
     ctx.save();
     path([at(sh.wall, 0), at(sh.wall, 1), at(low, 1), at(low, 0)]); ctx.clip();
     ctx.drawImage(IMG.van, 0, 0, W, H);
@@ -1295,13 +1340,11 @@ function drawWalkway() {
   ctx.restore();
 }
 
-function drawPlacards() {
-  var minH = 16 / vanScale();
-  Object.keys(SECTIONS).forEach(function (id) {
-    var s = SECTIONS[id], h = Math.max(minH, 13 * s.placard.k);
-    drawSticker(s.placard.p.x, s.placard.p.y + h * 0.75, h, id, false);
-  });
+function drawPlacardFor(id) {
+  var s = SECTIONS[id], h = Math.max(16 / vanScale(), 13 * s.placard.k);
+  drawSticker(s.placard.p.x, s.placard.p.y + h * 0.75, h, id, false);
 }
+function drawPlacards() { Object.keys(SECTIONS).forEach(drawPlacardFor); }
 
 function drawBelt() {
   if (IMG.belt) ctx.drawImage(IMG.belt, 0, 360, W, 340, 0, BELT_TOP, W, H - BELT_TOP);
@@ -1364,9 +1407,12 @@ function draw() {
   var hoverBox = target && target.kind === "box" ? target.box : null;
   var hoverBinIdle = target && target.kind === "bin" ? target.bin : null;
   var pressBin = STATE.ptr.press && STATE.ptr.press.kind === "bin" ? STATE.ptr.press.bin : null;
-  var floor = STATE.placed.filter(function (p) { return p.slot.kind === "floor"; }).sort(function (a, b) { return a.slot.z - b.slot.z; });
-  var shelf = STATE.placed.filter(function (p) { return p.slot.kind === "shelf"; }).sort(function (a, b) { return a.slot.z - b.slot.z; });
-  floor.forEach(function (b) { drawPlacedPiece(b, b === hoverBox ? "rgba(255,255,255,.18)" : null); drawPlacedSticker(b); });
+  var order = drawOrder(), floor = order.floor, shelf = order.shelf;
+  // far floor pieces, then the wheel wells in front of them, then the near floor pieces
+  function drawFloorPiece(b) { drawPlacedPiece(b, b === hoverBox ? "rgba(255,255,255,.18)" : null); drawPlacedSticker(b); }
+  floor.filter(function (b) { return b.slot.u0 < WHEEL_WELL.u0; }).forEach(drawFloorPiece);
+  occludeWheelWells();
+  floor.filter(function (b) { return b.slot.u0 >= WHEEL_WELL.u0; }).forEach(drawFloorPiece);
 
   // placement ghost (LOCK IN rule): green where the held piece can go, red where it can't
   var pl = (STATE.phase === "play" && STATE.hand && m.x >= 0) ? findPlacement(STATE.hand, wm) : null;
@@ -1382,7 +1428,12 @@ function draw() {
   if (pl && pl.kind === "floor") ghost();   // the ghost stays visible over the shelf so you can aim
   if (walkSec) { path(SECTIONS[walkSec].hull); ctx.fillStyle = STICKERS[walkSec].bg + "40"; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = STICKERS[walkSec].bg; ctx.stroke(); }
   drawPlacards();
-  shelf.forEach(function (b) { drawPlacedPiece(b, b === hoverBox ? "rgba(255,255,255,.18)" : null); drawPlacedSticker(b); });
+  // lower-shelf boxes, then the top shelves' thick front edge in front of them, then top-shelf boxes
+  function drawShelfPiece(b) { drawPlacedPiece(b, b === hoverBox ? "rgba(255,255,255,.18)" : null); drawPlacedSticker(b); }
+  shelf.filter(function (b) { return b.slot.shelf.indexOf("lower") >= 0; }).forEach(drawShelfPiece);
+  occludeTopShelves();
+  Object.keys(SECTIONS).forEach(function (id) { if (SECTIONS[id].shelf.name.indexOf("top") >= 0) drawPlacardFor(id); });
+  shelf.filter(function (b) { return b.slot.shelf.indexOf("top") >= 0; }).forEach(drawShelfPiece);
   if (pl && pl.kind === "shelf") ghost();
   BINS.forEach(function (bin) { drawBin(bin, bin === hoverBinIdle || bin === pressBin ? "rgba(255,255,255,.2)" : null); });
   if (pl && pl.kind === "bin") ghost();
