@@ -112,9 +112,18 @@ small,sub,sup{font-size:11px;}
        height cells (STD 6, MC 4, DB 2, FARM 10); same-size tires laid flat one on another share one hollow (two STD = 12);
        a bag is malleable and needs only its 9 cells of room; a rigid box or hazmat must fit the opening, (width - 1) wide
        and as tall as the stack; anything nested keeps the whole stack in place; the real-box nest bonus keeps its old cap.
+     PART 11, BONUSES WORTH GOING FOR (Vince: "we should make these bonuses very much so worth it"). Sized against a
+       measured sealable wall, about 23,000 cubes at 150 pph (design206/probe_bonus.js). A nest pays 100 + 150 per hollow
+       cell (a bag in a stacked pair 340 -> 1,450); a hazmat shielded in a hollow +1,000 (was +120); STUFFED TO THE RIM
+       pays 250 per hollow cell when a stack fills completely (one standard tire 1,500, a pair 3,000), only for cells no
+       earlier rim paid; a roof bag 600 -> 1,000 (a wall term, so pace multiplies it); the fifth roof bag in a wall makes a
+       FULL CEILING COURSE, +2,500 once. DECISION: a hazmat nests only in a stack below the waist line. It used to nest
+       anywhere, and being off the grid it escaped the waist-line scan; with the shield worth 1,000 that would pay a
+       hazmat for riding high. The best wall still stays far under the 400,000 arcade-sign limit (measured p90 65,000).
      Measured (design206/sim206bags.js, a greedy loader bot, 80 walls x2, ramp off vs on): bags reaching a loader once
        the wall's top passes 75% went from 0.35 to 0.40 a wall to about 1.95; every wall still sealable.
-     Tests (every network call blocked): t206a 22/22, t206b 41/41, t206d 20/20, water 27/27, t205 101/101, t206c 73/73 at
+     Tests (every network call blocked): t206a 22/22, t206b 41/41, t206d 20/20, t206e 25/25, water 27/27, t205 101/101,
+       tdash 20/20, t206c 73/73 at
        1366x768, 1366x657, 1366x600, 1536x864, 1920x1080, 1024x768, 768x1024, 390x844, 360x780, 844x390.
 
    CHANGE LOG v3.5.205 - READY FOR GOODWILL: SIGN-OUT STICKS, NO HALL OF SHAME, ONE COACH VOICE, LESS DATA KEPT.
@@ -4158,7 +4167,14 @@ function sanePph(n){n=+n||0;return (n>0&&n<=PPH_CAP)?Math.round(n):(n>PPH_CAP?PP
 var LARGE_DANGER_FAIL=18;
 var PANIC_THRESHOLD=0.85, PANIC_DURATION=60, PANIC_BONUS_MAX=800;
 var STOW_BONUS=200, TETRIS_BONUS=500, BULKHEAD_BONUS=500, BRICK_BONUS=300;
-var BAG_CEIL_BONUS=600; // v3.5.142 huge bonus per 3x3 smalls bag packed against the trailer roof (dead air up top reclaimed); a full ceiling course = 5 bags (15 of 17 cells)
+var BAG_CEIL_BONUS=1000; // v3.5.206 part 11 was 600. v3.5.142 huge bonus per 3x3 smalls bag packed against the trailer roof (dead air up top reclaimed); a full ceiling course = 5 bags (15 of 17 cells)
+// v3.5.206 part 11 NEST AND ROOF PAY (Vince 2026-10-16: "we should make these bonuses very much so worth it"). Sized against a
+// measured sealable wall: about 23,000 cubes at 150 pieces an hour (design206/probe_bonus.js, a greedy bot, 30 walls).
+// Nest pay is banked, so pace does not scale it. A roof bag is a wall term, so pace does (1,000 x about 2.3 at 150 pph).
+var NEST_BASE_BONUS=100, NEST_CELL_BONUS=150; // a nest pays 100 + 150 per hollow cell it fills: a bag (9 cells) = 1,450 (was 340)
+var NEST_HAZ_BONUS=1000;    // a hazmat shielded in a hollow below the waist line (was +120)
+var NEST_RIM_BONUS=250;     // per hollow cell when a stack is stuffed to the rim: one standard tire 1,500, a stacked pair 3,000
+var CEIL_COURSE_BONUS=2500; // the fifth roof bag in a wall makes a full ceiling course, paid once per wall
 var FLOW_MIN=3, FLOW_STEP=25; // v3.5.147 FLOW streak: consecutive clean placements (no crunch/collapse) pay an escalating bonus from the 3rd on (+25, +50, +75 ...)
 // v3.5.187 CRUNCH_PENALTY was 80 and was ONLY ever read by the crunch banner, while calcScore
 // docked a hardcoded 300. The player was told a crushed box cost 80 and was charged 300 · the
@@ -6072,6 +6088,14 @@ function tryNest(src,idx,tcell){
   var _area=sb.cells?sb.cells.length:(sb.w*sb.h);
   if(sb.isNC&&!_isHazNest)return false; // special handling stays out, except hazmats
   var _stk=tireStack(tcell),_open=tireOpening(tcell,_stk);
+  if(_isHazNest){ // v3.5.206 part 11 DECISION: a nested hazmat escaped the waist-line scan (it is off the grid), and the shield now pays 1,000, so the stack must sit below the waist line
+    var _top=GH,_ti;for(_ti=0;_ti<_stk.length;_ti++)_top=Math.min(_top,_stk[_ti].ry);
+    if(_top<Math.floor(GH*(1-HAZMAT_MAX_FRAC))){
+      if(typeof playSfx==='function')playSfx('deny');
+      if(!G._nestHazHigh||Date.now()-G._nestHazHigh>2500){G._nestHazHigh=Date.now();showBanner('☢ HAZMAT STAYS LOW · shield it in a tire stack below the waist line.','warn',2400);}
+      return false;
+    }
+  }
   if(!sb.isBag&&!((sb.w<=_open.w&&sb.h<=_open.h)||(sb.h<=_open.w&&sb.w<=_open.h)))return false; // v3.5.206 a rigid piece must fit the opening
   var cost=_area; // v3.5.206 every piece costs its cells (a bag is 9; it used to be a token 2 and could never fit)
   var cap=stackHollow(_stk),used=stackNestUsed(_stk);
@@ -6091,9 +6115,17 @@ function tryNest(src,idx,tcell){
   if(src==='belt'){G.belt.splice(idx,1);selBeltIdx=null;selBeltRot=0;}
   else if(src==='nc'){G.ncSlots[idx]=null;selNC=-1;S.ncPlaced=(S.ncPlaced||0)+1;if(typeof buildNCPanel==='function')buildNCPanel();} // v3.5.72 hazmat/NC nested from the staging tray
   else{G.bagSlots[idx]=null;selBag=-1;if(typeof buildBagPanel==='function')buildBagPanel();}
+  // v3.5.206 part 11 the nest paid 70 + 30 per cell + 120 for a hazmat; now NEST_BASE_BONUS + NEST_CELL_BONUS per cell + NEST_HAZ_BONUS
   var _realBox=!(sb.type==='small'||sb.isBag)&&_area>=2; // a real regular/large box, not a smalls/bag
-  var bonus=70+30*cost+(isHaz?120:0)+(_realBox?Math.min(1000,200*(_area-1)):0); // v3.5.50 BIG bonus for stuffing an actual box into the hollow; v3.5.206 capped at its old maximum now that bigger boxes fit a stack
+  var bonus=NEST_BASE_BONUS+NEST_CELL_BONUS*cost+(isHaz?NEST_HAZ_BONUS:0)+(_realBox?Math.min(1000,200*(_area-1)):0); // v3.5.50 BIG bonus for stuffing an actual box into the hollow; v3.5.206 capped at its old maximum now that bigger boxes fit a stack
   bankScore(bonus); // v3.5.156 banked · the nest bonus used to evaporate on the next placement's recompute
+  // v3.5.206 part 11 STUFFED TO THE RIM: the stack's whole hollow is freight. Pays per hollow cell, only for cells no
+  // earlier rim paid, so a stuffed tire that later gets a same-size tire on top pays again only for the new tire's cells.
+  var _rim=0;
+  if(stackNestUsed(_stk)>=cap){
+    var _paid=0,_ri;for(_ri=0;_ri<_stk.length;_ri++)_paid+=(_stk[_ri].box._rimPaid||0);
+    if(cap>_paid){_rim=(cap-_paid)*NEST_RIM_BONUS;for(_ri=0;_ri<_stk.length;_ri++)_stk[_ri].box._rimPaid=tireHollow(_stk[_ri]);bankScore(_rim);S.rimStuffs=(S.rimStuffs||0)+1;}
+  }
   S.nests=(S.nests||0)+1;
   if(typeof gcurFlash==='function')gcurFlash('nest',520); // v3.5.22 nest-glove on a tire stuff
   // v3.5.9: a nest IS a placed small · count it toward throughput + smalls totals. Was logged ONLY as a "nest",
@@ -6103,8 +6135,11 @@ function tryNest(src,idx,tcell){
   S.totalPieces=(S.totalPieces||0)+1;
   if(sb.isBag||sb.type==='small')S.bagsPlaced=(S.bagsPlaced||0)+1; // v3.5.50 only count smalls/bags toward smalls-utility, not real boxes
   else S.boxPieces=(S.boxPieces||0)+1; // v3.5.90 a nested REAL box is freight; nested smalls/bags never count toward pph
-  if(typeof playSfx==='function')playSfx(isHaz?'bonus':'nest');
-  if(!G._nestTaught){
+  if(typeof playSfx==='function')playSfx((isHaz||_rim)?'bonus':'nest');
+  if(_rim>0){ // v3.5.206 part 11
+    G._nestTaught=true;G._nestLine=Date.now();
+    showBanner('🛞 STUFFED TO THE RIM · +'+(bonus+_rim)+' CUBES<br><span style="font-size:.72em">All '+cap+' cells of that hollow are freight now'+(isHaz?' · HAZMAT SHIELDED':'')+'.</span>','award',3000);
+  } else if(!G._nestTaught){
     G._nestTaught=true;
     showBanner('\ud83d\udccb THAT\u2019S NOT IN THE TRAINING \u00b7 YOU LEARNED THAT.<br><span style="font-size:.72em">Stuffing the tire hollow reclaims dead air. +'+bonus+' CUBES'+(isHaz?' \u00b7 HAZMAT LEAK-SHIELDED':'')+'</span>','ok',3200);
   } else if(!G._nestLine||Date.now()-G._nestLine>4000){
@@ -6514,7 +6549,8 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     if(typeof playSfx==='function')playSfx('bonus');
     if(typeof gcurFlash==='function')gcurFlash('nest',520);
     var _cb=countCeilingBags();
-    if(!G._bagCeilTaught){G._bagCeilTaught=true;showBanner('🌟 BAG ON THE ROOF · +'+BAG_CEIL_BONUS+' CUBES.<br><span style="font-size:.72em">Dead air up top is wasted space. Pack smalls bags against the ceiling · five make a full roof course.</span>','award',3000);}
+    if(_cb>=5&&!G._ceilCoursePaid){G._ceilCoursePaid=true;G._bagCeilTaught=true;bankScore(CEIL_COURSE_BONUS);showBanner('🌟 FULL CEILING COURSE · +'+CEIL_COURSE_BONUS+' CUBES<br><span style="font-size:.72em">Five bags against the roof. That load is finished, top to bottom.</span>','award',3200);} // v3.5.206 part 11
+    else if(!G._bagCeilTaught){G._bagCeilTaught=true;showBanner('🌟 BAG ON THE ROOF · +'+BAG_CEIL_BONUS+' CUBES.<br><span style="font-size:.72em">Dead air up top is wasted space. Pack smalls bags against the ceiling · five make a full ceiling course, worth +'+CEIL_COURSE_BONUS+' more.</span>','award',3000);}
     else showBanner('🌟 ROOF BAG '+_cb+(_cb>=5?'/5 · FULL CEILING COURSE!':'/5')+' · +'+BAG_CEIL_BONUS+' CUBES.','award',1500);
   }
   // v3.5.147 NESTING TEACH (one-shot) · the one mechanic the tutorial skips. First time a flat tire is on the wall AND a bag is in staging, surface the veteran move.
