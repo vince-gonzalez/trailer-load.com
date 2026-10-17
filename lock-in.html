@@ -91,7 +91,16 @@ small,sub,sup{font-size:11px;}
            sheet. Shorter windows (a phone held sideways) keep the original layout, restored element by element.
       (16) Clicking a tray or staging tile hands focus back to the wall; no [R] hint on touch screens; the STAGE
            label lost the dark outline that smudged it on yellow; the last static ',' placeholders show '·'.
-     Tests (every network call blocked): t206a 22/22, t206b 39/39, water 27/27, t205 101/101, t206c 73/73 at
+     PART 5: SPECIAL HANDLING is the word everywhere a player reads it (20 strings, the pieces' own label, Day One).
+     PART 6, STAGING ON THE TRAILER FLOOR (Vince, asked where a loader sets a box down: "Trailer floor").
+      (17) The chute narrows to 54% of the trailer frame (an extendable belt) and its freight lane follows it
+           (chuteLaneGeom). Three taped spots sit in the floor corners beside it, below the wall's base line, so a
+           staged box never covers the wall: slot 1 front left, slot 2 front right, slot 3 back left. The fourth
+           corner is a painted sign, STAGE n/3 (FULL · LOAD ONE at 3/3). A box too big for its spot is drawn
+           smaller with a ▾ on its WxH tag. Click a spot: a held chute box goes down there (or trades with the box
+           there); empty hands pick the box up; special handling is refused. The staging wheel is gone, and the
+           column keeps only STAGE, its count and one line.
+     Tests (every network call blocked): t206a 22/22, t206b 41/41, water 27/27, t205 101/101, t206c 73/73 at
        1366x768, 1366x657, 1366x600, 1536x864, 1920x1080, 1024x768, 768x1024, 390x844, 360x780, 844x390.
 
    CHANGE LOG v3.5.205 - READY FOR GOODWILL: SIGN-OUT STICKS, NO HALL OF SHAME, ONE COACH VOICE, LESS DATA KEPT.
@@ -2547,6 +2556,7 @@ body.cn-cols #stg-nc .sh-key{order:6;display:inline-flex;color:#111;}
 .cn-tile.full:hover{box-shadow:0 0 0 3px var(--acc-bright);}
 .cn-tile:focus-visible{outline:3px solid #2f7de1;outline-offset:2px;}
 .cn-stage-top{margin-bottom:calc(var(--u)*9);}
+.cn-stage-note{font:600 max(15px,calc(var(--u)*17))/1.25 'Barlow Condensed',sans-serif;color:var(--t2);}
 body.cn-cols #cn-stage #stage-btn{width:100%;min-height:calc(var(--u)*52);font-size:calc(var(--u)*26);}
 /* WATER (the bottle, moved into a tile) and ROTATE */
 .cn-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(var(--u)*10);}
@@ -6809,7 +6819,7 @@ function checkHydrationSafety(){
 // the run ends cost STAGE_LEFT_COST each. Nothing here draws a random number, so every daily player gets the same boxes.
 // FLAG is gone with its cooldown, its escalating charge past three, and the coworker bag (the daily's DTB bag too).
 function stageCount(){if(typeof G==='undefined'||!G||!G.bagSlots)return 0;var n=0,i;for(i=0;i<G.bagSlots.length;i++)if(G.bagSlots[i])n++;return n;}
-function _stageFree(){var i;for(i=0;i<G.bagSlots.length;i++)if(!G.bagSlots[i])return i;return -1;}
+function _stageFree(){var i,n=Math.min(STAGE_MAX,G.bagSlots.length);for(i=0;i<n;i++)if(!G.bagSlots[i])return i;return -1;} // one box per taped spot
 function _stageDeny(msg){if(typeof playSfx==='function')playSfx('deny');showBanner(msg,'warn',2200);}
 function stageHolding(){
   if(typeof G==='undefined'||!G)return '';
@@ -6831,10 +6841,10 @@ function _stageBeltOk(idx){
   return true;
 }
 // set the chute box in hand down on the staging floor
-function stageSet(){
+function stageSet(slotOpt){
   var idx=selBeltIdx;
   if(!_stageBeltOk(idx))return false;
-  var slot=(stageCount()<STAGE_MAX)?_stageFree():-1;
+  var slot=(stageCount()<STAGE_MAX)?((slotOpt!=null&&slotOpt<STAGE_MAX&&!G.bagSlots[slotOpt])?slotOpt:_stageFree()):-1;
   if(slot<0){_stageDeny('STAGING FULL · '+STAGE_MAX+' of '+STAGE_MAX+'. Load a staged box first.');return false;}
   _stageReach(idx);
   var box=G.belt.splice(idx,1)[0];
@@ -6952,6 +6962,7 @@ function takeSpecialHandling(){
 }
 // the strip's STAGE count, every frame (writes only on a change)
 function stageHUD(){
+  stageNormalize();
   var sb=document.getElementById('stage-btn'),sn=document.getElementById('stage-n');
   if(sb&&sn){
     var c=stageCount(),t=c+'/'+STAGE_MAX+(c>=STAGE_MAX?' FULL':'');
@@ -8071,7 +8082,8 @@ function _stgSet(key,used,max,warnFill,critFired){
 }
 function openStagingPopup(type){
   if(gOver||paused)return;
-  if(CN.mode==='cols'){if(type==='nc')takeSpecialHandling();else stageToggle();return;} // v3.5.206 the columns show both lanes in place
+  if(type==='bag'){stageToggle();return;} // v3.5.206 staged boxes sit on the trailer floor: no staging wheel
+  if(CN.mode==='cols'){takeSpecialHandling();return;} // v3.5.206 the column shows the tray in place
   if(STG_OPEN===type){stgClose();return;} // tapping the open lane's light closes it
   STG_OPEN=type;var ov=document.getElementById('ov-staging');if(ov)ov.classList.add('vis');
   var sep=document.getElementById('stg-sep');if(sep)sep.style.display='';
@@ -8133,11 +8145,17 @@ function stgPick(idx){
 }
 function drawChuteImg(c){
   if(!CHUTE_OK)return;
-  var nY=DB,fY=NW.bl.y+(NW.br.y-NW.bl.y)*.5; // wall base
-  var by=fY+(nY-fY)*CHUTE_DROP; // v3.4.8 drop the chute below the wood floor so the backdrop's wood shows above it; the chute leads up into the wood
-  var bL=DL,bw=DR-DL,bh=nY-by,jx=0,jy=0; // full play width: screen-wide trapezoid base
+  // v3.5.206 the chute is drawn into the middle STAGE_FLOOR.q of the frame, sides converging with the floor, so the
+  // floor corners beside it can hold the taped staging spots (it used to fill the whole frame width)
+  var g=stageFloorGeo(),bh=g.nY-g.by,jx=0,jy=0;
   if(chuteJiggleT){var dd=Date.now()-chuteJiggleT;if(dd<300){var k=1-dd/300;jx=Math.sin(dd/300*Math.PI*5)*7*k;jy=Math.cos(dd/300*Math.PI*4)*3*k;}else{chuteJiggleT=0;}}
-  try{c.drawImage(CHUTE_IMG,bL+jx,by+jy,bw,bh);}catch(e){CHUTE_OK=false;}
+  var hN=_sfChuteHalf(g,g.nY),hT=_sfChuteHalf(g,g.by);
+  c.save();
+  c.beginPath();c.moveTo(g.cx-hN-7,g.nY);c.lineTo(g.cx+hN+7,g.nY);c.lineTo(g.cx+hT+4,g.by+3);c.lineTo(g.cx-hT-4,g.by+3);c.closePath();
+  c.fillStyle='rgba(28,16,6,.38)';c.fill(); // contact shadow on the wood
+  c.beginPath();c.moveTo(g.cx-hN+jx,g.nY);c.lineTo(g.cx+hN+jx,g.nY);c.lineTo(g.cx+hT+jx,g.by+jy);c.lineTo(g.cx-hT+jx,g.by+jy);c.closePath();c.clip();
+  try{c.drawImage(CHUTE_IMG,g.cx-hN+jx,g.by+jy,hN*2,bh);}catch(e){CHUTE_OK=false;}
+  c.restore();
 }
 function drawScene(ts){
   juiceUpdate(ts);
@@ -8165,7 +8183,7 @@ function drawScene(ts){
 // NC and bag staging slots on the trailer floor, flanking the conveyor.
 // READS: G.ncSlots, G.bagSlots, FLOOR_* geometry vars, selNC, selBag
 function drawFloorSlots(c){
-  if(STAGING_LIGHTS){if(typeof updateStagingLights==='function')updateStagingLights();return;} // v3.4.11 slots -> HUD lights
+  if(STAGING_LIGHTS){if(typeof updateStagingLights==='function')updateStagingLights();drawStageFloor(c);return;} // v3.4.11 slots -> HUD lights; v3.5.206 + the taped staging spots
   if(!G.ncSlots)return;
   var sw=FLOOR_SLOT_W,sh=FLOOR_SLOT_H;
   if(sw<4||sh<4)return;
@@ -8361,7 +8379,7 @@ function drawLights(c,ts){
 function drawBeltFreight(c,ts){
   BELT_FREIGHT_HITS=[];
   if(typeof G==='undefined'||!G.belt||!G.belt.length)return;
-  var nW=W*.30,fW=W*.13,nX=W/2,fX=VPX,nY=DB,fY=NW.bl.y+(NW.br.y-NW.bl.y)*.5;
+  var _cl=chuteLaneGeom(),nW=_cl.nW,fW=_cl.fW,nX=_cl.nX,fX=_cl.fX,nY=DB,fY=NW.bl.y+(NW.br.y-NW.bl.y)*.5;
   var nL=nX-nW/2,nR=nX+nW/2,fL=fX-fW/2,fR=fX+fW/2;
   var N=Math.min(G.belt.length,BELT_PIECE_COUNT); // v3.5.3 render the FULL chute (was capped at 8)
   if(N<1)return;
@@ -9533,6 +9551,7 @@ scene.addEventListener('pointerup',function(e){
   var c2=getPC(e,scene);if(!c2)return;
 
   // ── Floor slot hit test first ── (v3.4.11: disabled when STAGING_LIGHTS · selection lives in the popup)
+  var _stgHit=stageFloorHit(c2.mx,c2.my);if(_stgHit!==null){stageSpotClick(_stgHit);return;} // v3.5.206 a taped staging spot
   var slotHit=STAGING_LIGHTS?null:hitTestFloorSlots(c2.mx,c2.my);
   if(slotHit){
     if(slotHit.type==='nc'){
@@ -9961,7 +9980,7 @@ function cnBuild(){
   CN.p={
     lTitle:el('div',null,'cn-title','SPECIAL FREIGHT'),
     lTray:el('section','cn-tray','cn-sec','<div class="cn-hd">TRAY<span class="cn-sub">pick one to take it</span><span class="cn-grow"></span></div><div class="cn-tiles" id="cn-tray-tiles"></div>'),
-    lStage:el('section','cn-stage','cn-sec','<div class="cn-stage-top"></div><div class="cn-tiles cn-stage-tiles" id="cn-stage-tiles"></div>'),
+    lStage:el('section','cn-stage','cn-sec','<div class="cn-stage-top"></div><div class="cn-stage-note">Three taped spots on the trailer floor. Click a spot or press F. Keep the aisle clear.</div>'),
     lSpacer:el('div',null,'cn-spacer'),
     rTitle:el('div',null,'cn-title','DOCK CONSOLE'),
     rSeal:el('section',null,'cn-sec cn-seal'),
@@ -10041,7 +10060,6 @@ function cnLanesRender(force){
   var nc=[];for(i=0;i<G.ncSlots.length;i++)nc.push(i);
   while(st.length<STAGE_MAX)st.push(-1);
   _cnLane('cn-tray-tiles','nc',G.ncSlots,nc,selNC,force);
-  _cnLane('cn-stage-tiles','bag',G.bagSlots,st,selBag,force);
 }
 function _cnLane(id,lane,slots,idx,sel,force){
   var box=document.getElementById(id);if(!box)return;
@@ -10102,6 +10120,125 @@ try{
   window.addEventListener('load',function(){setTimeout(cnLayout,0);});
   if(document.fonts&&document.fonts.ready&&document.fonts.ready.then)document.fonts.ready.then(function(){cnLayout();});
 }catch(_cne){console.error('cnLayout boot:',_cne);}
+// ═══ v3.5.206 STAGING ON THE TRAILER FLOOR ═══
+// Vince 2026-10-16, asked where a loader sets a box down: "Trailer floor". The chute narrows to STAGE_FLOOR.q of the
+// trailer frame (it reads as an extendable belt) and three taped spots sit in the floor corners beside it, below the
+// wall's base line so a staged box never covers the wall. Spot numbers follow G.bagSlots: slot 0 front left, slot 1
+// front right, slot 2 back left (the smallest spot takes the third box). The fourth corner is a painted sign with the
+// count. Boxes draw at the wall's own cell size when they fit; a bigger box is drawn smaller and keeps its WxH tag.
+// Ported from the design206 "floor" mockup, which measured these spots at 1366x768, 1366x657, 1920x1080 and 390x844.
+var STAGE_FLOOR={q:0.54,persp:0.10,spots:[]};
+function stageFloorGeo(){
+  var fw=DR-DL,cx=(DL+DR)/2,cell=(NW.tr.x-NW.tl.x)/GW,wallB=NW.bl.y,nY=DB;
+  var fY=NW.bl.y+(NW.br.y-NW.bl.y)*.5,by=fY+(nY-fY)*CHUTE_DROP;
+  return {fw:fw,cx:cx,cell:cell,wallB:wallB,nY:nY,fY:fY,by:by,cw:fw*STAGE_FLOOR.q};
+}
+function _sfPk(g,y){return 1-STAGE_FLOOR.persp*(g.nY-y)/Math.max(1,g.nY-g.wallB);} // share of a near half width left at height y
+function _sfChuteHalf(g,y){return g.cw/2*_sfPk(g,y);}
+// the chute freight lane, keyed to the narrowed chute (it was W*.30 wide, which ran past a narrower chute)
+function chuteLaneGeom(){var g=stageFloorGeo(),lane=g.cw*0.79*0.96;return {nW:lane,fW:lane*0.13/0.30,nX:g.cx,fX:g.cx};}
+function _sfPath(c,q){c.beginPath();c.moveTo(q[0].x,q[0].y);for(var i=1;i<q.length;i++)c.lineTo(q[i].x,q[i].y);c.closePath();}
+function _sfTape(c,q,lw,filled,sel){
+  c.save();c.lineJoin='round';
+  _sfPath(c,q);c.fillStyle=filled?'rgba(242,194,48,.20)':'rgba(242,194,48,.10)';c.fill();
+  _sfPath(c,q);c.lineWidth=lw+3;c.strokeStyle=sel?'#ffd400':'rgba(20,12,4,.55)';c.stroke();
+  _sfPath(c,q);c.lineWidth=lw;c.strokeStyle='#f2c230';c.stroke();
+  c.setLineDash([lw*1.3,lw*1.3]);_sfPath(c,q);c.strokeStyle='#17120a';c.stroke();
+  c.restore();
+}
+function _sfChip(c,txt,x,y,f,bg,fg,font){
+  c.save();c.font=font||('bold '+f+'px "Share Tech Mono",monospace');c.textBaseline='middle';c.textAlign='left';
+  var tw=c.measureText(txt).width,pw=tw+f*0.7,ph=f*1.35;
+  c.beginPath();c.roundRect(x,y,pw,ph,Math.max(3,f*0.25));c.fillStyle=bg;c.fill();
+  c.fillStyle=fg;c.fillText(txt,x+f*0.35,y+ph/2+1);
+  c.restore();return {w:pw,h:ph};
+}
+function _sfBoxIn(c,s,p,cell,ts,sel){
+  var q=s.q,y1=q[0].y,xl=Math.min(q[0].x,q[1].x),xr=Math.max(q[0].x,q[1].x),w=xr-xl,h=y1-q[3].y;
+  var pad=h*0.16,sc=Math.min(cell,(w*0.9)/p.w,(y1-pad-s.top)/p.h);
+  var bw=p.w*sc,bh=p.h*sc,bx=(xl+xr)/2-bw/2,by=y1-pad-bh;
+  c.save();c.globalAlpha=0.30;c.fillStyle='#000';c.beginPath();c.ellipse(bx+bw/2,by+bh+1,bw*0.56,Math.max(2,bh*0.10),0,0,Math.PI*2);c.fill();c.restore();
+  drawBeltPiece(c,p,bx,by,bw,bh,!!sel,-1,ts);
+  var f=Math.round(Math.max(12,Math.min(cell*0.62,19))),tag=p.w+'×'+p.h+((sc<cell-0.01)?' ▾':'');
+  c.save();c.font='bold '+f+'px "Share Tech Mono",monospace';var tw=c.measureText(tag).width;c.restore();
+  _sfChip(c,tag,bx+bw-tw-f*0.7-2,by+bh-f*1.35-2,f,'rgba(14,9,4,.92)','#ffffff');
+  return {x:bx,y:by,w:bw,h:bh,scale:sc/cell};
+}
+// called every frame from drawFloorSlots
+function drawStageFloor(c){
+  if(typeof G==='undefined'||!G||!G.grid||!G.bagSlots||typeof NW==='undefined'||!NW||!NW.tl)return;
+  var g=stageFloorGeo(),cell=g.cell,m=Math.max(4,cell*0.24),band=g.nY-g.wallB,ts=performance.now();
+  if(band<cell*2)return;
+  var ySplit=g.wallB+band*0.47;
+  function outerL(y){return g.cx-(g.cx-(DL+m))*_sfPk(g,y);}
+  function innerL(y){return g.cx-_sfChuteHalf(g,y)-m;}
+  function quad(side,y0,y1){
+    function ox(y){var x=outerL(y);return side<0?x:2*g.cx-x;}
+    function ix(y){var x=innerL(y);return side<0?x:2*g.cx-x;}
+    return [{x:ox(y1),y:y1},{x:ix(y1),y:y1},{x:ix(y0),y:y0},{x:ox(y0),y:y0}];
+  }
+  var back=[g.wallB+m,ySplit-m*0.5],front=[ySplit+m*0.5,g.nY-m],fd=front[1]-front[0];
+  // drawn back to front, so a front box overlaps the back one the way it would on a real floor
+  var spots=[{slot:2,q:quad(-1,back[0],back[1]),top:g.wallB+2},{slot:0,q:quad(-1,front[0],front[1]),top:front[0]-fd*0.3},{slot:1,q:quad(1,front[0],front[1]),top:front[0]-fd*0.3}];
+  var stencil=quad(1,back[0],back[1]),lw=Math.max(3,cell*0.2),used=stageCount(),k;
+  for(k=0;k<spots.length;k++)_sfTape(c,spots[k].q,lw,!!G.bagSlots[spots[k].slot],selBag===spots[k].slot);
+  // the fourth corner is not a spot: a painted sign says what the limit is
+  (function(){
+    var q=stencil,xl=Math.min(q[0].x,q[1].x),xr=Math.max(q[0].x,q[1].x),yt=q[3].y,yb=q[0].y;
+    var pw=(xr-xl)*0.94,ph=(yb-yt)*0.9,px=(xl+xr)/2-pw/2,py=(yt+yb)/2-ph/2;
+    if(pw<20||ph<14)return;
+    c.save();c.beginPath();c.roundRect(px,py,pw,ph,Math.max(4,cell*0.25));c.fillStyle='rgba(16,11,6,.92)';c.fill();
+    c.lineWidth=2;c.strokeStyle=used>=STAGE_MAX?'#ff5a36':'#f2c230';c.stroke();
+    var t1='STAGE '+used+'/'+STAGE_MAX,t2=used>=STAGE_MAX?'FULL · LOAD ONE':'F · '+STAGE_MAX+' SPOTS';
+    c.font='100px "Bebas Neue",sans-serif';var f1=Math.min(ph*0.42,pw*0.86/(c.measureText(t1).width/100));
+    c.font='bold 100px "Share Tech Mono",monospace';var f2=Math.min(ph*0.26,pw*0.88/(c.measureText(t2).width/100));
+    c.textAlign='center';c.textBaseline='middle';
+    c.font=f1+'px "Bebas Neue",sans-serif';c.fillStyle='#f2c230';c.fillText(t1,px+pw/2,py+ph*0.36);
+    c.font='bold '+f2+'px "Share Tech Mono",monospace';c.fillStyle=used>=STAGE_MAX?'#ffb4a2':'#f4ead6';c.fillText(t2,px+pw/2,py+ph*0.74);
+    c.restore();
+  })();
+  STAGE_FLOOR.spots=[];
+  for(k=0;k<spots.length;k++){
+    var s=spots[k],p=G.bagSlots[s.slot];
+    STAGE_FLOOR.spots.push({slot:s.slot,quad:s.q,box:p?_sfBoxIn(c,s,p,cell,ts,selBag===s.slot):null});
+  }
+  for(k=0;k<spots.length;k++){ // spot numbers on the tape, front outer corner
+    var f=Math.round(Math.max(13,Math.min(cell*0.66,20))),q2=spots[k].q,sx=q2[0].x<q2[1].x?q2[0].x+lw:q2[0].x-lw-f*1.05;
+    _sfChip(c,''+(spots[k].slot+1),sx,q2[0].y-lw-f*1.35,f,'#f2c230','#14100c',f+'px "Bebas Neue",sans-serif');
+  }
+}
+function _sfInQuad(q,x,y){var inside=false,i,j;for(i=0,j=q.length-1;i<q.length;j=i++){if(((q[i].y>y)!==(q[j].y>y))&&(x<(q[j].x-q[i].x)*(y-q[i].y)/(q[j].y-q[i].y)+q[i].x))inside=!inside;}return inside;}
+// which staging spot (slot index) is under a scene point, or null
+function stageFloorHit(x,y){
+  var i,s;
+  for(i=STAGE_FLOOR.spots.length-1;i>=0;i--){s=STAGE_FLOOR.spots[i];if(s.box&&x>=s.box.x&&x<=s.box.x+s.box.w&&y>=s.box.y&&y<=s.box.y+s.box.h)return s.slot;}
+  for(i=0;i<STAGE_FLOOR.spots.length;i++){if(_sfInQuad(STAGE_FLOOR.spots[i].quad,x,y))return STAGE_FLOOR.spots[i].slot;}
+  return null;
+}
+// a click or tap on a spot: set the held chute box down there (or trade with what is there); empty hands pick it up
+function stageSpotClick(slot){
+  if(gOver||paused||typeof G==='undefined'||!G)return;
+  var box=G.bagSlots[slot],h=stageHolding();
+  if(h==='belt'){if(box)stageSwap(slot);else stageSet(slot);}
+  else if(h==='bag'){
+    if(selBag===slot){selBag=-1;hCell=null;}
+    else if(box){selBag=slot;if(typeof kbCenterCursor==='function')kbCenterCursor();}
+    else{G.bagSlots[slot]=G.bagSlots[selBag];G.bagSlots[selBag]=null;selBag=slot;}
+    if(typeof playSfx==='function')playSfx('select');
+  }
+  else if(h==='nc'){_stageDeny('Special handling stays on its rack · it never goes on the staging floor.');}
+  else if(box){selBag=slot;selBeltIdx=null;selNC=-1;if(typeof kbCenterCursor==='function')kbCenterCursor();if(typeof playSfx==='function')playSfx('select');}
+  else{showBanner('Empty spot. Pick a box on the chute, then click a spot or press F to set it down.','',1800);}
+}
+// staged boxes live only in the first STAGE_MAX slots (one per taped spot); move any stray one into an open spot
+function stageNormalize(){
+  if(typeof G==='undefined'||!G||!G.bagSlots)return;
+  var i,j;
+  for(i=STAGE_MAX;i<G.bagSlots.length;i++){
+    if(!G.bagSlots[i])continue;
+    for(j=0;j<STAGE_MAX;j++){if(!G.bagSlots[j]){G.bagSlots[j]=G.bagSlots[i];G.bagSlots[i]=null;if(selBag===i)selBag=j;break;}}
+  }
+}
 // v3.5.206 FOCUS BACK TO THE WALL. After any click on a play control, focus returns to the scene, so Space and Enter
 // place the box instead of pressing the same button again. Skipped when the click opened a menu, pause or end screen.
 document.addEventListener('click',function(e){
