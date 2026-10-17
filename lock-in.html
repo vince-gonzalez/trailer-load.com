@@ -3315,7 +3315,7 @@ body[data-cb="trit"]{
       <div class="brief-rule"><div class="brief-rule-num">1</div><div class="brief-rule-txt"><b>Grab &amp; place.</b> Pull a box off the chute, click the wall to set it. <b>[R]</b> rotates.<span class="brief-why">Pieces queue in the chute · rotate before you place to fit tighter.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">2</div><div class="brief-rule-txt"><b>Build off the floor.</b> Every piece needs support under it · nothing floats.<span class="brief-why">A freestanding stack 4+ high with no wall beside it topples back to the belt.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">3</div><div class="brief-rule-txt"><b>Lock your shelves.</b> Fill a full row to lock it; a locked shelf braces the wall above.<span class="brief-why">Locked shelves also cap a hazmat safely beneath them.</span></div></div>
-      <div class="brief-rule"><div class="brief-rule-num">4</div><div class="brief-rule-txt"><b>🛞 SPEC freight loads low.</b> Too big, heavy or hazardous for the belt · tap <b>SPEC</b>, pick a piece, tap the wall.<span class="brief-why">Heavy on the floor anchors everything above it.</span></div></div>
+      <div class="brief-rule"><div class="brief-rule-num">4</div><div class="brief-rule-txt"><b>🛞 Special handling loads low.</b> Too big, heavy or hazardous for the belt · tap <b>SPECIAL HANDLING</b> (or press H), pick a piece, tap the wall.<span class="brief-why">Heavy on the floor anchors everything above it.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">5</div><div class="brief-rule-txt"><b>Fragile &amp; glass need a closed course.</b> Height does not save them · a crush is a write-up.<span class="brief-why">Only the heaviest freight crushes. A fragile is safe at any height with a real box on its left and right, or a locked shelf at or below its row. The trailer wall is not a box, so the corners are the danger.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">6</div><div class="brief-rule-txt"><b>Hazmat low &amp; locked.</b> Floor it, cap it under a shelf.<span class="brief-why">A hazmat in ANY collapse ends the round · keep it stable.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">7</div><div class="brief-rule-txt"><b>Lay tires flat.</b> On its edge, a tire rolls the second the door opens.<span class="brief-why">Standing one up is a safety warning · lay it flat before the door opens.</span></div></div>
@@ -5695,7 +5695,7 @@ function routeToNC(tmpl){
   var _pal=seedPal(_seed,tmpl.type,tmpl.shape,tmpl.color||null);
   var _lab=pickLabel('large',false,true,false);
   var _cells=(tmpl.cells||makeRect(tmpl.w,tmpl.h)).map(function(cc){return[cc[0],cc[1]];});
-  var _pc={...tmpl,cells:_cells,id:uid('NC'),pal:_pal,labelDef:_lab,label:'SPEC',seed:_seed,isFrag:false,isNC:true,hazClass:null,arrow:true};
+  var _pc={...tmpl,cells:_cells,id:uid('NC'),pal:_pal,labelDef:_lab,label:'SPECIAL HANDLING',seed:_seed,isFrag:false,isNC:true,hazClass:null,arrow:true};
   assignOrientReq(_pc);
   ncSlots[slot]=_pc;S.ncSpawned=(S.ncSpawned||0)+1;S.stagingActions=(S.stagingActions||0)+1;
   if(typeof buildNCPanel==='function')buildNCPanel();
@@ -5799,7 +5799,7 @@ function spawnNC(){
     var _seed=rnd(100,9999);
     var _pal=seedPal(_seed,tmpl.type,tmpl.shape,tmpl.color);
     var _lab=tmpl._isHaz?hazLabelDef(tmpl._hazClass):pickLabel('large',false,true,false);
-    var _pc={...tmpl,cells:tmpl.cells.map(function(c){return[c[0],c[1]];}),id:uid('NC'),pal:_pal,labelDef:_lab,label:tmpl._isHaz?'HAZ':'SPEC',seed:_seed,isFrag:false,isNC:true,hazClass:tmpl._hazClass||null,arrow:true};
+    var _pc={...tmpl,cells:tmpl.cells.map(function(c){return[c[0],c[1]];}),id:uid('NC'),pal:_pal,labelDef:_lab,label:tmpl._isHaz?'HAZ':'SPECIAL HANDLING',seed:_seed,isFrag:false,isNC:true,hazClass:tmpl._hazClass||null,arrow:true};
     assignOrientReq(_pc);
     ncSlots[_slot2]=_pc;_staged++;S.ncSpawned=(S.ncSpawned||0)+1;S.stagingActions=(S.stagingActions||0)+1;
     if(!piece)piece=_pc;
@@ -5936,14 +5936,14 @@ function triggerNCHazard(){
   if((placed||0)<1)return; // v2.10.11 no fail before first placement
   ncHazardFired=true;
   S.ncDwellWarn=(S.ncDwellWarn||0)+1;if(typeof playSfx==='function')playSfx('dwell'); // v2.4.3 count + audible SP dwell warning
-  showBanner('⚠ SPEC TRAY FULL · 8/8<br><span style="font-size:.72em">Tap SPEC and wall a piece.</span>','danger',3000);
+  showBanner('⚠ SPECIAL HANDLING FULL · 8/8<br><span style="font-size:.72em">Load a special-handling piece now (H takes the next one).</span>','danger',3000);
   flash('fl-danger');
   if(isForgiving()){ncHazardTO=setTimeout(function(){ncHazardFired=false;},6000);return;} // v2.1.10 coach, don't guillotine
   ncHazardTO=setTimeout(function(){
     // Re-check: if a slot opened (NC was placed), cancel the game-over
     var stillFull=G.ncSlots.every(function(s){return s!==null;});
     ncHazardFired=false;
-    if(stillFull)endGame('SPEC TRAY OVERLOADED · SAFETY HAZARD',false);
+    if(stillFull)endGame('SPECIAL HANDLING OVERLOADED · SAFETY HAZARD',false);
   },3200);
 }
 
@@ -6097,13 +6097,13 @@ function liftBox(cell){
       G.ncSlots[emptyIdx]=box;
       selNC=emptyIdx;selBeltIdx=null;selBag=-1;selNCRot=0;
       buildNCPanel();
-      showBanner('📦 SPEC LIFTED · PUT IT BACK','',1200);
+      showBanner('📦 LIFTED · BACK ON THE SPECIAL HANDLING RACK','',1200);
     } else {
       // No open NC slot · send to belt as fallback
       G.belt.unshift(box);
       var _bofN=false;if(G.belt.length>BELT_PIECE_COUNT+2){G.belt.pop();_bofN=true;} // v3.5.165 overflow is announced, not silent
       selBeltIdx=0;selBeltRot=0;selNC=-1;selBag=-1;
-      showBanner('📦 SPEC LIFTED → BELT (TRAY FULL)'+(_bofN?' · belt full, one piece routed back to the hub':''),'warn',1800);
+      showBanner('📦 LIFTED → BELT (THE SPECIAL HANDLING RACK IS FULL)'+(_bofN?' · belt full, one piece routed back to the hub':''),'warn',1800);
     }
   } else {
     // Regular / bag pieces return to front of belt
@@ -6278,7 +6278,7 @@ function dailyNCStage(tmpl,isHaz,m){
   var palSeed=100+Math.floor(m()*9800);
   var pal=seedPal(palSeed,t.type,t.shape,t.color);
   var lab=isHaz?hazLabelDef(hc):pickLabel('large',false,true,false);
-  var pc={...t,cells:t.cells.map(function(c){return[c[0],c[1]];}),id:uid('NC'),pal:pal,labelDef:lab,label:isHaz?'HAZ':'SPEC',seed:palSeed,isFrag:false,isNC:true,hazClass:hc};
+  var pc={...t,cells:t.cells.map(function(c){return[c[0],c[1]];}),id:uid('NC'),pal:pal,labelDef:lab,label:isHaz?'HAZ':'SPECIAL HANDLING',seed:palSeed,isFrag:false,isNC:true,hazClass:hc};
   slots[idx]=pc;S.ncSpawned=(S.ncSpawned||0)+1;S.stagingActions=(S.stagingActions||0)+1;
   return true;
 }
@@ -7394,7 +7394,7 @@ function checkKeystoneBonus(gx,gy,rot,box){
     // First NC on this trailer · Cornerstone
     bonus=400;
     if(typeof playSfx==='function')playSfx('bonus');
-    msg='CORNERSTONE! 🧱<br><span style="font-size:.72em">+'+bonus+' CUBES · FIRST SPEC PIECE LOCKED IN!</span>';
+    msg='CORNERSTONE! 🧱<br><span style="font-size:.72em">+'+bonus+' CUBES · FIRST SPECIAL-HANDLING PIECE LOCKED IN!</span>';
   } else {
     var atLeft=(gx===0);
     var atRight=(gx+d.w===GW);
@@ -7402,15 +7402,15 @@ function checkKeystoneBonus(gx,gy,rot,box){
     var edgeCount=(atLeft?1:0)+(atRight?1:0)+(atFloor?1:0);
     if(edgeCount>=2){
       bonus=350;
-      msg='CORNER LOCK! 🔩<br><span style="font-size:.72em">+'+bonus+' CUBES · SPEC ANCHORED IN CORNER!</span>';
+      msg='CORNER LOCK! 🔩<br><span style="font-size:.72em">+'+bonus+' CUBES · SPECIAL HANDLING ANCHORED IN THE CORNER!</span>';
     } else if(edgeCount===1){
       bonus=150;
-      msg='WALL ANCHOR! ⚓<br><span style="font-size:.72em">+'+bonus+' CUBES · SPEC FLUSH TO WALL!</span>';
+      msg='WALL ANCHOR! ⚓<br><span style="font-size:.72em">+'+bonus+' CUBES · SPECIAL HANDLING FLUSH TO THE WALL!</span>';
     } else {
       var vf=countVoidsFilled(gx,gy,d.w,d.h);
       if(vf>=2){
         bonus=200;
-        msg='VOID FILLER! 🎯<br><span style="font-size:.72em">+'+bonus+' CUBES · SPEC PLUGGED '+vf+' GAPS!</span>';
+        msg='VOID FILLER! 🎯<br><span style="font-size:.72em">+'+bonus+' CUBES · SPECIAL HANDLING PLUGGED '+vf+' GAPS!</span>';
       }
     }
   }
@@ -9236,7 +9236,7 @@ function updateRightHUD(pph){
     }
     var ncU=(G.ncSlots||[]).filter(function(x){return !!x;}).length;
     var bgU=(G.bagSlots||[]).filter(function(x){return !!x;}).length;
-    html+='<div class="nu-stage">SP <b>'+ncU+'/'+MAX_NC_SLOTS+'</b> \u00b7 SMALLS <b>'+bgU+'/'+MAX_BAG_SLOTS+'</b></div>';
+    html+='<div class="nu-stage">SPECIAL HANDLING <b>'+ncU+'/'+MAX_NC_SLOTS+'</b> \u00b7 SMALLS <b>'+bgU+'/'+MAX_BAG_SLOTS+'</b></div>';
     nu.innerHTML=html;
   }
   var el=elapsed(),pcs=el>0?(placed/el):0,spm=el>0?((G.tetrisTotal||0)/(el/60)):0;
@@ -9317,7 +9317,7 @@ function updateHUD(){
   // Conveyor status text
   document.getElementById('conv-lbl-txt').textContent=
     selBeltIdx!==null?('▶ PIECE '+(selBeltIdx+1)+' SELECTED · CLICK WALL TO PLACE'):
-    selNC>=0?'▶ SP SELECTED · CLICK WALL TO PLACE':
+    selNC>=0?'▶ SPECIAL HANDLING IN HAND · CLICK THE WALL TO PLACE':
     selBag>=0?'▶ BAG SELECTED · CLICK WALL TO PLACE':
     '▶ PRESELECTOR BELT · SELECT A PIECE';
 
@@ -9426,7 +9426,7 @@ function buildTips(hp,integ,voids,cog,ss,pph){
   if(ss<0.7)tips.push({h:'Support every piece.',s:'Over 30% of your freight is unsupported. Stack pieces on solid bases · unsupported freight risks collapse.'});
   if(pph<60&&elapsed()>60)tips.push({h:'Pick up the pace.',s:'Your PPH is below target. Keep the belt moving · clear pieces quickly rather than waiting for the perfect spot.'});
   if((G.tetrisTotal||0)===0&&hp>.3)tips.push({h:'Lock in a shelf.',s:'Complete a full row to earn LOCKED IN · bonus CUBES and structural integrity recovery. One shelf changes everything.'});
-  tips.push({h:'SPEC anchors the wall.',s:'SPEC freight on corners and floor edges earns bonus CUBES and stops wall drift.'});
+  tips.push({h:'Special handling anchors the wall.',s:'Special-handling freight on corners and floor edges earns bonus CUBES and stops wall drift.'});
   tips.push({h:'Stagger your rows.',s:'Offset box joints like a brick wall · pieces that bridge seams earn the BRICK LOCK bonus.'});
   tips.push({h:'Bag breakdown tip.',s:'Long-press or double-click a smalls bag to break it into 6 gap-fill pieces (three 2×1s + three singles) for tight voids near the top.'});
   return tips.length?tips:[{h:'Keep loading.',s:'Build toward 92% wall height to complete the trailer.'}];
@@ -10432,11 +10432,11 @@ function showCmtOverlay(text,cls,dur){
 // Context-weighted: source, piece type, and wall state influence selection.
 var PLACE_CMT_STD={
   nc:[
-    'SPEC piece anchored. Good start.',
-    'SPEC on the wall · that\'s the right call.',
-    'SPEC freight belongs on the wall, not the floor. Keep moving.',
+    'Special-handling piece anchored. Good start.',
+    'Special handling on the wall · that\'s the right call.',
+    'Special-handling freight belongs on the wall, not the floor. Keep moving.',
     'Corner anchor in. Build off it.',
-    'SPEC freight first. Always.',
+    'Special handling first. Always.',
   ],
   fragile:[ // v3.5.198 protected: a real piece on both sides, or a locked shelf at or below it
     'Fragile closed in · that one is protected.',
@@ -10661,7 +10661,7 @@ var DEMO_SCRIPT=[
    r:'The heaviest special-handling item belongs in a bottom corner. It locks the foundation, earns a Cornerstone, and stops the whole load shifting in transit.'},
   {src:'nc',n:'FRIDGE',w:5,h:8,gx:12,gy:12,rot:0,color:'#505878',
    p:'MIRROR IT · BALANCE BOTH CORNERS BEFORE BUILDING UP',
-   r:'A second heavy SPEC piece in the opposite corner balances the load immediately. Anchor in pairs so weight never drifts to one side.'},
+   r:'A second heavy special-handling piece in the opposite corner balances the load immediately. Anchor in pairs so weight never drifts to one side.'},
   {src:'nc',n:'RANGE',w:6,h:8,gx:6, gy:12,rot:0,color:'#584840',
    p:'CLOSE THE CENTER · NO VOIDS IN THE FOUNDATION',
    r:'Fill the gap between the anchors. A complete, solid floor means everything above it is supported. The foundation just locked solid.'},
@@ -10888,7 +10888,7 @@ var TUTORIAL_MODE=false, TUT=null;
 // then a collapse, then break-jam, then safety, then seal. rot = the forced orientation.
 var TUT_SCRIPT=[
   // ── FOUNDATION: NC/SP anchors (open the NC tray · the first piece is the anchor) ──
-  {tip:'First piece is the ANCHOR. Tap SPEC, grab the heavy piece, drop it in the bottom-left corner.', place:{src:'nc', w:6,h:8}, tx:0, ty:12, learn:'anchor'},
+  {tip:'First piece is the ANCHOR. Tap SPECIAL HANDLING (or press H), grab the heavy piece, drop it in the bottom-left corner.', place:{src:'nc', w:6,h:8}, tx:0, ty:12, learn:'anchor'},
   {tip:'Mirror it · a second anchor balances the far corner. SP freight comes in pairs.', place:{src:'nc', w:5,h:8}, tx:12, ty:12, learn:'balance'},
   {tip:'Close the center. A solid floor with zero voids holds everything above it.', place:{src:'nc', w:6,h:8}, tx:6, ty:12, learn:'foundation'},
   // ── FIRST SHELF: regular freight, rotate, arrows, heavy, LOCK IN ──
@@ -11971,7 +11971,7 @@ function psBuild(lifeState,life){
       row('Recoveries',lwv('recoveries'),S.recoveries||0,'recoveries')+
       row('Hydration breaks',lwv('drinks'),S.drinks||0,'hydration_breaks')+
       row('\u00b7 with the rhythm bonus',lwv('drinkBonuses'),S.drinkBonuses||0,null,true)+
-      row('SPEC left sitting',null,S.ncDwellWarn||0,'nc_dwell_warnings')+
+      row('Special handling left sitting',null,S.ncDwellWarn||0,'nc_dwell_warnings')+
       row('Smalls dwell warnings',null,S.smallsDwellWarn||0,'smalls_dwell_warnings')+'</div>';
 
     H+='<div class="ps-block"><h4><span class="d">\u25b8</span> LOAD QUALITY</h4>'+
@@ -11983,7 +11983,7 @@ function psBuild(lifeState,life){
       row('Pack %',lwv('cubePct'),wlAvg('cubePct'),'cube_eff','','%')+     // v3.5.135 raw cube-fill \u00b7 one canonical label (was "Cube fill %"); the scoreboard "PACK" is its live short form
       row('Wall height %',lwv('fillPct'),wlAvg('fillPct'),'avg_wall_pct','','%')+
       row('Avg pieces / wall',lwv('pieces'),(wl.length?wlAvg('pieces'):(walls>0?Math.round(pieces/walls):'\u00b7')),null)+
-      row('SPEC freight used',null,(ncU==null?'\u00b7':ncU),'nc_util_pct','','%')+
+      row('Special handling used',null,(ncU==null?'\u00b7':ncU),'nc_util_pct','','%')+
       row('Smalls used',null,(smU==null?'\u00b7':smU),'smalls_util_pct','','%')+
       row('Voids (open cells)',lwv('voids'),null,null)+
       row('Shelves locked',lwv('shelves'),S.shelvesLocked||0,'shelves_locked')+
