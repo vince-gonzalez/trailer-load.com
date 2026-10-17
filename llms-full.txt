@@ -13,7 +13,7 @@ It runs in any browser with no install and no login required. Gameplay is always
 
 Modes: Training (a trainer builds a full wall one placement at a time, with the reason for every move · then you load your own), Trailer-Load (the flagship: wall after wall at full tempo, chasing a personal best and a world rank), Daily (one shared deterministic wall for everyone on Earth, resetting 00:00 UTC).
 
-Companion mini-game: Smalls Sort (https://trailer-load.com/ss/) · sorting and stacking small parcels, testing speed and accuracy on the smalls line.
+Companion mini-games: Smalls Sort (https://trailer-load.com/ss/) · sorting and stacking small parcels, testing speed and accuracy on the smalls line. Van Stack (https://trailer-load.com/van-stack/) · loading a delivery van: pull each box off the belt, set it in its section, scan it; the scan hands the box to the driver, and an end-of-shift driver walk calls out every box that was never scanned, misloaded, or left behind.
 
 === BUSINESS MODEL: FREE FOR WORKERS, DASHBOARD FOR FACILITIES ===
 The game is free forever. What schools and employers pay for is the data.
