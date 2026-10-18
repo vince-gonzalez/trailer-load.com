@@ -76,6 +76,11 @@ small,sub,sup{font-size:11px;}
        doesn't visually place behind and appears in the foreground": the draw order is now a painter's order where a
        box resting on another always draws after it and farther boxes draw first, click-targeting follows the same
        order, and the shelves and wheel wells are repainted over the boxes behind them. No scoring or asset change.
+     PART 5. NO AD TECH ON VAN STACK. The VAN STACK page had carried a google-adsense-account meta since it went live
+       unlisted (9deda40), against the standing order "NO ADSENSE ON TRAILER-LOAD.COM. EVER AGAIN." and the promise
+       privacy.html and for-districts/ publish. The no-ads gate missed it because it scanned a fixed list of 13 pages;
+       .tools/noads.py now walks every public file (17 today), so a new page can never be left out. VAN STACK v0.7.5
+       (sha256 86b6b7e2..., the van stack session) drops the meta and its own noindex line, and ships byte for byte.
      The Mini-Games clipboard ink, measured on the rendered pixels (the auditor in .tools reads background colours, so
        text on the clipboard picture reads as text on the scrim; t207a now samples the real pixels in each failing box):
        BACK #5a3f1a -> #2a1a08 (3.54:1 -> 6.12:1 on the darkest grey behind it), the subtitle #7a6748 -> #33230c

@@ -14,7 +14,7 @@ It is also a published promise, in two places a district reviewer reads:
 
 WHY THIS GATE EXISTS: ad content has now reached this domain TWICE. AdSense in
 July 2026 (stripped in v3.5.155), and on 2026-08-10 a promotional banner for
-5best2buy.com — a monetised affiliate property — landed in the homepage footer,
+5best2buy.com · a monetised affiliate property · landed in the homepage footer,
 directly under the section promising there is no advertising anywhere on the
 domain. Neither tagcheck, parsecheck nor typefloor could see it: the markup was
 balanced, there was no script, and every font-size was above the floor. A defect
@@ -32,10 +32,23 @@ import io, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-PAGES = ['index.html', 'lock-in.html', 'privacy.html', 'terms.html',
-         'ss/index.html', 'me/index.html', 'dashboard/index.html',
-         'for-districts/index.html', 'for-districts/program-overview.html',
-         'llms.txt', 'llms-full.txt', 'robots.txt', 'sitemap.xml']
+# Every public file, found by walking the repo, so a new page can never be left out. Until 2026-10-17 this was a
+# fixed list of 13 pages, and it missed van-stack/index.html, which went live carrying a google-adsense-account meta.
+SKIP_DIRS = {'.git', '.tools', '.staging', '.claude', 'node_modules', 'fonts'}
+SCAN_EXT = ('.html', '.htm', '.txt', '.xml', '.js', '.css', '.json', '.webmanifest')
+
+
+def public_files():
+    out = []
+    for dp, dns, fns in os.walk(ROOT):
+        dns[:] = [d for d in dns if d not in SKIP_DIRS and not d.startswith('.')]
+        for fn in fns:
+            if fn.lower().endswith(SCAN_EXT):
+                out.append(os.path.relpath(os.path.join(dp, fn), ROOT).replace(os.sep, '/'))
+    return sorted(out)
+
+
+PAGES = public_files()
 
 # Every host the product legitimately reaches. Adding one is a deliberate act:
 # it means a district reviewer will see that domain in devtools.
@@ -85,7 +98,7 @@ def main():
 
     # an ads.txt in the root is an advertising declaration by itself
     if os.path.exists(os.path.join(ROOT, 'ads.txt')):
-        fails.append(('ads.txt', 0, 'ads.txt exists in the repo root — that file IS an ad declaration'))
+        fails.append(('ads.txt', 0, 'ads.txt exists in the repo root · that file IS an ad declaration'))
 
     for rel in PAGES:
         path = os.path.join(ROOT, rel)
@@ -117,7 +130,8 @@ def main():
         print('If a host genuinely belongs, add it to ALLOWED in this file deliberately.')
         return 1
 
-    print('NO-ADS GATE: CLEAN — no ad tech, no off-domain hosts.')
+    print('scanned %d public files' % len(PAGES))
+    print('NO-ADS GATE: CLEAN · no ad tech, no off-domain hosts.')
     return 0
 
 
