@@ -5,7 +5,6 @@
 ## Play
 - [LOCK IN · the game](https://trailer-load.com/lock-in.html): The full trailer-loading simulator. Free, no login. Modes: Training, Trailer-Load, Daily. Scored on integrity, density, pace, and safety; ranked Rookie to Yard Legend.
 - [Smalls Sort](https://trailer-load.com/ss/): Companion mini-game · sort and stack small parcels. Speed and accuracy on the smalls line.
-- [Van Stack](https://trailer-load.com/van-stack/): Companion mini-game · load a delivery van: pull each box off the belt, set it in its section, scan it. The scan hands the box to the driver; an end-of-shift driver walk calls out every box that was never scanned, misloaded, or left behind.
 
 ## For schools & employers
 - [Program & Funding Overview](https://trailer-load.com/for-districts/program-overview.html): Pricing ($1,950/yr site license, $1,450 founding/multi-campus, $29/student/semester, $490/yr employer bay, $4,999 custom edition), purchasing routes, and Perkins V allowability notes.

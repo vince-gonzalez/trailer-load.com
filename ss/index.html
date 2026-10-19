@@ -18,6 +18,76 @@
    shrink and land under 11px with no declaration for the gate to catch.
    Class-specific rules outrank this, so it only floors the uncovered ones. */
 small,sub,sup{font-size:11px;}
+/* ═══ LOCK IN COMPANION FAMILY v1 · CSS ═══ (byte-identical in every companion; .tools/familyblock.py) */
+:root{
+  --co-bar1:#3d3a36;--co-bar2:#2b2926;
+  --co-ink:#f0e6d2;--co-dim:#c9bba5;
+  --co-amber:#e0962e;--co-amber-hi:#f0ad4a;
+  --co-ok:#69db7c;
+  --co-paper-ink:#2a1a08;--co-paper-dim:#33230c;--co-paper-line:#8a7a62;
+}
+.co-hdr{position:relative;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  min-height:48px;padding:6px 14px;background:linear-gradient(180deg,var(--co-bar1),var(--co-bar2));
+  border-bottom:3px solid var(--co-accent,var(--co-amber));box-shadow:0 2px 8px rgba(0,0,0,.4);}
+.co-logo{display:inline-flex;align-items:baseline;gap:8px;flex:none;text-decoration:none;
+  font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;line-height:1;color:var(--co-amber);
+  text-shadow:0 1px 2px rgba(0,0,0,.5);}
+.co-kicker{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--co-dim);text-shadow:none;}
+.co-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap;}
+.co-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:0 12px;
+  font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;text-transform:uppercase;
+  text-decoration:none;white-space:nowrap;color:var(--co-ink);background:rgba(0,0,0,.32);
+  border:1.5px solid #6b5637;border-radius:6px;cursor:pointer;}
+.co-btn:hover{background:rgba(0,0,0,.52);border-color:var(--co-amber);}
+.co-btn[aria-pressed="true"]{border-color:var(--co-amber);color:var(--co-amber-hi);}
+.co-btn.co-hot{background:var(--co-amber);border-color:var(--co-amber);color:#1a1208;}
+.co-btn:disabled{opacity:.55;cursor:default;}
+.co-acct{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:12px;
+  letter-spacing:.5px;color:var(--co-dim);}
+.co-acct .co-who{color:var(--co-ok);max-width:14ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.co-logo:focus-visible,.co-btn:focus-visible,.co-cta:focus-visible,.co-btn2:focus-visible,.co-ftr a:focus-visible{
+  outline:3px solid var(--co-amber-hi);outline-offset:2px;}
+.co-stats{display:flex;flex-wrap:wrap;background:linear-gradient(180deg,#2e2e30,#262628);border-bottom:1px solid #1c1c1e;}
+.co-stat{flex:1 1 0;min-width:68px;text-align:center;padding:4px 4px;border-right:1px solid #1e1e20;}
+.co-stat:last-child{border-right:none;}
+.co-lbl{display:block;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;color:var(--co-dim);
+  text-transform:uppercase;font-weight:bold;white-space:nowrap;}
+.co-val{display:block;font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:1px;color:var(--co-amber);line-height:1.05;}
+/* Menus sit on the LOCK IN clipboard (clipboard.png, 619x905), the way lock-in.html's menus do. The width drives the
+   size so the picture and its writing area never drift apart; --co-clip-maxh is the tallest it may be. */
+.co-clip{position:relative;flex:none;width:min(100%,619px,calc(var(--co-clip-maxh,86vh) * 0.684));aspect-ratio:619/905;
+  background:url('/clipboard.png') center/100% 100% no-repeat;filter:drop-shadow(0 16px 42px rgba(0,0,0,.6));}
+.co-clip-in{position:absolute;left:7%;right:7%;top:22.5%;bottom:4.5%;overflow-y:auto;overscroll-behavior:contain;
+  display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;
+  color:var(--co-paper-ink);font-family:'Barlow Condensed',sans-serif;font-size:16px;line-height:1.35;}
+.co-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;line-height:1;color:var(--co-paper-ink);margin:0;}
+.co-sub{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;color:var(--co-paper-dim);margin:0;}
+.co-clip-in p,.co-clip-in li{color:var(--co-paper-ink);}
+/* A sheet laid on the clipboard: the same paper card as LOCK IN's Mini-Games menu (#f1ece0, a 7px tab in the accent).
+   On the sheet: ink #2a1a08 14.3:1, dim #5a4526 7.7:1, good #1f6b32 5.5:1, warn #7a4a00 6.3:1, bad #a61e1e 6.3:1. */
+.co-sheet,.co-note{width:100%;background:#f1ece0;color:var(--co-paper-ink);border:1px solid #cdbfa6;
+  border-left:7px solid var(--co-accent-deep,#7d4a0e);border-radius:4px;box-shadow:0 1px 2px rgba(42,26,8,.14);padding:10px 12px;text-align:left;}
+.co-note{font-family:'Share Tech Mono',monospace;font-size:12px;line-height:1.55;}
+.co-sheet .co-dim,.co-note .co-dim{color:#5a4526;}
+.co-good{color:#1f6b32;}.co-warn{color:#7a4a00;}.co-bad{color:#a61e1e;}
+.co-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:4px;}
+.co-cta,.co-btn2{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 20px;border-radius:6px;cursor:pointer;
+  font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;line-height:1;}
+.co-cta{color:#fff;background:var(--co-accent-deep,#7d4a0e);border:1.5px solid var(--co-accent-deep,#7d4a0e);}
+.co-btn2{color:var(--co-paper-ink);background:rgba(255,255,255,.35);border:1.5px solid var(--co-paper-ink);}
+.co-cta:active,.co-btn2:active{transform:translateY(1px);}
+.co-ftr{text-align:center;padding:8px 12px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;line-height:1.6;
+  color:var(--co-dim);background:#262628;border-top:1px solid #1c1c1e;}
+.co-ftr a{color:var(--co-dim);}
+@media (max-width:560px){
+  .co-hdr{padding:6px 10px;gap:6px;}
+  .co-logo{font-size:22px;letter-spacing:2px;}
+  .co-kicker{display:none;}
+  .co-actions{gap:6px;}
+  .co-btn{padding:0 8px;font-size:11px;}
+  .co-title{font-size:26px;}
+}
+/* ═══ END COMPANION FAMILY CSS ═══ */
 
 
 /* ============================================================
@@ -64,6 +134,7 @@ small,sub,sup{font-size:11px;}
   --border:#4a4a4c;--border2:#56565a;--border3:#646468;
   --shadow-md:0 4px 14px rgba(0,0,0,.35);
   --shadow-lg:0 10px 34px rgba(0,0,0,.5);
+  --co-accent:#3aa0c0;--co-accent-deep:#1a6a8a; /* v1.13 the family accent: this game's Mini-Games card in lock-in.html */
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;height:100dvh;
@@ -75,36 +146,20 @@ html,body{width:100%;height:100dvh;
   user-select:none;-webkit-user-select:none;-webkit-font-smoothing:antialiased;touch-action:none;}
 #root{display:flex;flex-direction:column;height:100dvh;max-width:680px;margin:0 auto;position:relative;}
 
-#hdr{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
-  padding:6px 12px;height:48px;background:linear-gradient(180deg,#404044,#323234);
-  border-bottom:1px solid #1e1e20;position:relative;z-index:60;box-shadow:0 2px 6px rgba(0,0,0,.4);} /* v1.9 header must sit ABOVE overlays (.ov is z40) or the start screen kills every header control */
-#hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--acc) 25%,var(--teal) 75%,transparent);opacity:.6;}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:4px;color:var(--acc);line-height:1;display:flex;align-items:baseline;gap:7px;text-shadow:0 1px 2px rgba(0,0,0,.5);}
-.logo sub{font-size:11px;letter-spacing:1px;color:var(--t3);font-family:'Share Tech Mono',monospace;}
-.logo-img{display:block;}
+/* v1.13 the header is the companion family's .co-hdr (its own z-index 60 keeps it above the overlays, .ov is 40) */
 
-#statbar{flex-shrink:0;display:flex;background:linear-gradient(180deg,#2e2e30,#262628);border-bottom:1px solid #1c1c1e;}
-.stat{flex:1;text-align:center;padding:4px 2px;border-right:1px solid #1e1e20;}
-.stat:last-child{border-right:none;}
-.stat .lbl{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;color:var(--t2);text-transform:uppercase;font-weight:bold;}
-.stat .val{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--acc);line-height:1.05;}
-.stat .val.ok{color:var(--ok);}.stat .val.warn{color:var(--warn);}.stat .val.danger{color:var(--danger);}
-.stat .val.teal{color:var(--teal);}
+/* v1.13 the stat bar is the family's .co-stats; the state colours live in the v1.13 block at the end */
 
 #field{flex:1;position:relative;min-height:0;}
 #cv{display:block;width:100%;height:100%;touch-action:none;}
 
-#ftr{flex-shrink:0;text-align:center;padding:4px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--t3);letter-spacing:1px;background:#262628;border-top:1px solid #1c1c1e;}
+/* v1.13 the footer is the family's .co-ftr */
 
-.ov{position:absolute;top:48px;left:0;right:0;bottom:0;z-index:40;/* v1.10 must track #hdr height */display:none;flex-direction:column;align-items:center;justify-content:safe center;/* v1.11 `safe` falls back to start-alignment instead of clipping the title into unscrollable space */
+.ov{position:absolute;top:var(--ss-hdr-h,48px);left:0;right:0;bottom:0;z-index:40;/* v1.10 must track #hdr height */display:none;flex-direction:column;align-items:center;justify-content:safe center;/* v1.11 `safe` falls back to start-alignment instead of clipping the title into unscrollable space */
   background:radial-gradient(ellipse 120% 100% at 50% 40%,#3a3a3e,#262628);padding:18px;text-align:center;overflow-y:auto;}
 .ov.vis{display:flex;}
 /* v1.2 board + settings cross-wire */
-#sm-board-btn,#sm-gear-btn{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;background:rgba(0,0,0,.35);border:1px solid var(--acc);color:var(--acc-bright);border-radius:5px;padding:5px 10px;cursor:pointer;}
-/* v1.10 the 14%-amber wash measured 3.42:1 on the header; the opaque dark fill puts these at 7.39:1 */
-#sm-gear-btn{padding:5px 9px;font-size:14px;}
-#sm-board-btn:hover,#sm-gear-btn:hover{background:rgba(0,0,0,.55);}
+/* v1.13 BOARD and settings are family .co-btn buttons now */
 .bd-tabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap;justify-content:center;}
 .bd-tab{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.28);color:#bbb;border-radius:6px;padding:7px 14px;cursor:pointer;}
 .bd-tab.active{background:var(--acc);color:#160c00;border-color:var(--acc);font-weight:bold;}
@@ -130,10 +185,7 @@ html,body{width:100%;height:100dvh;
 .mode-btn.fv{background:linear-gradient(180deg,var(--acc-bright),var(--acc));font-size:26px;}
 .mode-btn.sh{background:linear-gradient(180deg,var(--teal-bright),var(--teal));color:#0e2420;font-size:20px;}
 .mode-btn:active{transform:translateY(2px);}
-.ov h1{font-family:'Bebas Neue',sans-serif;font-size:54px;letter-spacing:5px;color:var(--acc);line-height:.95;text-shadow:0 2px 8px rgba(0,0,0,.5);}
-.ov h2{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--teal-bright);text-transform:uppercase;margin-bottom:14px;font-weight:bold;}
-.ov p{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:var(--t2);max-width:470px;line-height:1.4;margin-bottom:6px;}
-.ov .rules{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--t1);background:#2c2c2e;border:1px solid var(--border2);border-left:3px solid var(--acc);border-radius:6px;padding:11px 15px;margin:12px 0;text-align:left;line-height:1.7;max-width:490px;}
+/* v1.13 the menu type (title, subtitle, rules) is the family's: .co-title, .co-sub, .co-note on the clipboard */
 .btn{font-family:'Bebas Neue',sans-serif;font-size:23px;letter-spacing:3px;color:#1c1c1e;background:linear-gradient(180deg,var(--acc-bright),var(--acc));border:none;border-radius:8px;padding:11px 34px;cursor:pointer;box-shadow:var(--shadow-md);margin-top:6px;}
 .btn:active{transform:translateY(2px);}
 .btn.teal{background:linear-gradient(180deg,var(--teal-bright),var(--teal));color:#0e2420;}
@@ -142,13 +194,11 @@ html,body{width:100%;height:100dvh;
    1.5px outline · 6px radius · 34px minimum height. Every other surface in
    the product obeys it; this file shipped FIVE radius values and two of its
    biggest buttons had no outline at all. This block comes last so it wins. */
-.mode-btn,.btn,#copy-btn,.bd-tab,.tgl,.seg button,#sm-board-btn,#sm-gear-btn,#sm-signout{
+.mode-btn,.btn,#copy-btn,.bd-tab,.tgl,.seg button{
   border:1.5px solid var(--acc-dim);border-radius:6px;min-height:34px;line-height:1;
   display:inline-flex;align-items:center;justify-content:center;}
 .mode-btn{flex-direction:column;justify-content:center;}
 #result-card{border-radius:6px;}
-/* the two bare links get a real tap box instead of a 13px-tall text run */
-.hdr-link{display:inline-flex;align-items:center;min-height:34px;padding:0 8px;}
 
 #result-card{background:#2c2c2e;border:2px solid var(--acc);border-radius:12px;padding:14px 18px;box-shadow:var(--shadow-lg);max-width:400px;width:100%;}
 #result-grade{font-family:'Bebas Neue',sans-serif;font-size:58px;line-height:.9;color:var(--ok);letter-spacing:3px;}
@@ -160,114 +210,180 @@ html,body{width:100%;height:100dvh;
 .res-val.ok{color:var(--ok);}.res-val.warn{color:var(--warn);}.res-val.danger{color:var(--danger);}
 #copy-btn{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--teal-bright);background:var(--teal-wash);border:1px solid var(--teal);border-radius:6px;padding:8px 14px;cursor:pointer;margin-top:10px;width:100%;font-weight:bold;}
 #copy-btn:active{transform:translateY(1px);}
-.ov .sub{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--t3);margin-top:12px;letter-spacing:1px;}
+/* ── v1.13 THE COMPANION FAMILY (LOCK IN v3.5.208) ───────────────────
+   The header, stat bar, menus and footer come from the family block at the top of this <style>
+   (.tools/companion-family.html, gated by .tools/familyblock.py).
+   The menus now sit on the LOCK IN clipboard, so everything in them is ink on paper. Measured on the
+   sheet (#f1ece0): ink 14.3:1, dim #5a4526 7.7:1, good 5.5:1, warn 6.3:1, bad 6.3:1; on the bare clipboard
+   ink 5.5:1 and dim ink 4.99:1 at its darkest grey. This block comes last so it wins. */
+#root>.co-ftr{flex-shrink:0;padding:3px 10px;line-height:1.45;}
+#statbar .co-stat{min-width:0;}
+/* stat-bar states, measured on #2e2e30: ok 5.28, warn 5.95, danger #ff7a5c 5.29 (was #e0502a, 3.45),
+   teal #2dc0ad 5.97 (was #19a594, 4.42) */
+.co-val.ok{color:var(--ok);}.co-val.warn{color:var(--warn);}.co-val.danger{color:#ff7a5c;}.co-val.teal{color:var(--teal-bright);}
+.ov{--co-clip-maxh:calc(100dvh - var(--ss-hdr-h,48px) - 24px);padding:12px;}
+.ov .co-clip{margin:auto 0;}
+.co-clip-in{touch-action:pan-y;}
+.start-modes{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.mode-btn{border-color:#6b4a14;}
+#result-card{max-width:none;padding:10px 14px;background:#f1ece0;border:1px solid #cdbfa6;border-left:7px solid var(--co-accent-deep);
+  border-radius:4px;box-shadow:0 1px 2px rgba(42,26,8,.14);}
+#result-grade{font-size:44px;line-height:.95;text-align:center;}
+/* the report fits the clipboard with RUN AGAIN in view: nine rows in two columns (one column under 300px) */
+.res-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;}
+@media (max-width:330px){.res-grid{grid-template-columns:1fr;}}
+.res-grid .res-row{padding:2px 0;}
+.res-grid .res-row:last-of-type{border-bottom:1px solid #cdbfa6;}
+.res-grid .res-val{font-size:20px;}
+#copy-btn{margin-top:8px;}
+/* signed in, the account chip needs the kicker's room: the header stays one row in this 680 px column */
+.co-hdr:has(.co-who) .co-kicker{display:none;}
+#result-grade-lbl{color:#5a4526;text-align:center;}
+.res-row{border-bottom-color:#cdbfa6;}
+.res-lbl{color:#5a4526;}
+.res-val{color:var(--co-paper-ink);}
+.res-val.ok{color:#1f6b32;}.res-val.warn{color:#7a4a00;}.res-val.danger{color:#a61e1e;}
+#copy-btn{color:#fff;background:var(--co-accent-deep);border-color:var(--co-accent-deep);}
+.co-clip-in .bd-tabs{margin:4px 0;}
+.co-clip-in .bd-tab{color:var(--co-paper-ink);background:rgba(255,255,255,.4);border-color:var(--co-paper-ink);}
+.co-clip-in .bd-tab.active{color:#fff;background:var(--co-accent-deep);border-color:var(--co-accent-deep);}
+.co-clip-in .bd-list{width:100%;max-height:none;padding:4px 8px;}
+.co-clip-in .bd-row{border-bottom:1px solid #cdbfa6;}
+.co-clip-in .bd-rank{color:var(--co-accent-deep);}
+.co-clip-in .bd-name{color:var(--co-paper-ink);}
+.co-clip-in .bd-val{color:var(--co-accent-deep);}
+.co-clip-in .bd-empty{color:#5a4526;}
+.co-clip-in .set-sec,.co-clip-in .set-note,.co-clip-in .set-row,.co-clip-in .seg{width:100%;}
+.co-clip-in .set-sec{color:var(--co-paper-ink);border-bottom-color:var(--co-paper-line);}
+.co-clip-in .set-note{color:var(--co-paper-dim);}
+.co-clip-in .set-row{color:var(--co-paper-ink);}
+.co-clip-in .seg button,.co-clip-in .tgl{color:var(--co-paper-ink);background:rgba(255,255,255,.4);border-color:var(--co-paper-ink);}
+.co-clip-in .seg button.on,.co-clip-in .tgl.on{color:#fff;background:var(--co-accent-deep);border-color:var(--co-accent-deep);}
+.co-clip-in input[type=range]{accent-color:var(--co-accent-deep);}
 </style>
 </head>
 <body>
 <div id="root">
-  <div id="hdr">
-    <div class="logo">SMALLS SORT<sub>LOCK IN COMPANION</sub></div><!-- v1.10 was a 1 MB PNG rendered 24x down, with the product name spelled a third way ("SMALLSORT") baked into the art. The Bebas lockup below was already written and unused. -->
-    <div style="display:flex;align-items:center;gap:12px;">
-      <span id="sm-acct" style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;display:inline-flex;align-items:center;gap:8px;"></span>
-      <button id="sm-board-btn" onclick="smOpenBoard()">★ BOARD</button>
-      <button id="sm-gear-btn" onclick="smOpenSettings()" title="Sound, difficulty and display">⚙</button>
-      <a class="hdr-link" href="/lock-in.html" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--t3);text-decoration:none;letter-spacing:1px;">← LOCK IN</a>
-    </div>
-  </div>
-  <div id="statbar">
-    <div class="stat"><div class="lbl">Score</div><div class="val" id="s-score">0</div></div>
-    <div class="stat"><div class="lbl">Acc</div><div class="val ok" id="s-acc">100%</div></div>
-    <div class="stat"><div class="lbl">Combo</div><div class="val teal" id="s-combo">0</div></div>
-    <div class="stat"><div class="lbl">Pool</div><div class="val" id="s-pool">0</div></div>
-    <div class="stat"><div class="lbl" id="lbl-down">Down</div><div class="val" id="s-down">0s</div></div>
-    <div class="stat"><div class="lbl" id="lbl-time">Time</div><div class="val" id="s-time">1:00</div></div>
+  <!-- v1.13 THE COMPANION FAMILY: the header, stat bar and footer every LOCK IN companion wears (.tools/companion-family.html).
+       The logo was a 1 MB PNG until v1.10; the Bebas lockup is the family logo now. -->
+  <header class="co-hdr">
+    <div class="co-logo">SMALLS SORT<span class="co-kicker">LOCK IN COMPANION</span></div>
+    <nav class="co-actions" aria-label="Smalls Sort">
+      <span class="co-acct" id="co-acct"></span>
+      <button type="button" class="co-btn" id="sm-board-btn" onclick="smOpenBoard()">★ BOARD</button>
+      <button type="button" class="co-btn" id="sm-gear-btn" onclick="smOpenSettings()" title="Sound, difficulty and display" aria-label="Settings">⚙</button>
+      <a class="co-btn co-back" href="/lock-in.html#minigames">← LOCK IN</a>
+    </nav>
+  </header>
+  <div id="statbar" class="co-stats" aria-label="Smalls Sort stats">
+    <div class="co-stat"><span class="co-lbl">Score</span><span class="co-val" id="s-score">0</span></div>
+    <div class="co-stat"><span class="co-lbl">Acc</span><span class="co-val ok" id="s-acc">100%</span></div>
+    <div class="co-stat"><span class="co-lbl">Combo</span><span class="co-val teal" id="s-combo">0</span></div>
+    <div class="co-stat"><span class="co-lbl">Pool</span><span class="co-val" id="s-pool">0</span></div>
+    <div class="co-stat"><span class="co-lbl" id="lbl-down">Down</span><span class="co-val" id="s-down">0s</span></div>
+    <div class="co-stat"><span class="co-lbl" id="lbl-time">Time</span><span class="co-val" id="s-time">1:00</span></div>
   </div>
   <div id="field"><canvas id="cv"></canvas></div>
-  <div id="ftr">SMALLS SORT · a LOCK IN companion · trailer-load.com · © 2026</div>
+  <footer class="co-ftr">SMALLS SORT · a LOCK IN companion · <a href="/">trailer-load.com</a><br>www.f-keys.com | © 2026 F-Keys LLC</footer>
 
   <div class="ov vis" id="ov-start">
-    <h1>SMALLS SORT</h1>
-    <h2>Sort · Survive · QA</h2>
-    <p>Packages ride down the belt. <b>Drag</b> each into the right bin · bins line both sides.</p>
-    <div class="rules">
-      ◆ ROUTE CODE → drag to that route's bin (6 routes)<br>
-      ★ NE has TWO bins, low by the pool · grab it up front OR cherry-pick from the pool<br>
-      ⚠ FRAGILE (yellow stripe) → GENTLE (◇) &nbsp; ▼ HEAVY → FLOOR (▼)<br>
-      ✖ DAMAGED (torn/styrofoam) → the QA bin marked DAMAGE<br>
-      ☣ HAZMAT (candy stripe) → the bin marked ☣ HAZMAT<br>
-      ✦ OVERNIGHT (purple flash) → OVN bin · beats the route<br>
-      ⬇ Misses fall into the POOL · dig from the top to recover<br>
-      ⛔ Pool fills to the belt = BELT STOPPAGE. Clear it to resume; downtime counts.<br>
-      <b style="color:#f07a5c;">✖ FOREVER: 3 strikes and you're out · a wrong bin OR a belt stoppage each cost a life. The belt just keeps getting faster.</b>
-    </div>
-    <div class="start-modes">
-      <button class="mode-btn fv" id="start-forever">FOREVER<small>3 STRIKES · ENDLESS</small></button>
-      <button class="mode-btn sh" id="start-timed">60-SEC SHIFT<small>BEAT THE CLOCK</small></button>
-    </div>
-    <div class="sub">DRAG FROM BELT OR POOL INTO A BIN</div>
+    <div class="co-clip"><div class="co-clip-in">
+      <h1 class="co-title">SMALLS SORT</h1>
+      <p class="co-sub">SORT · SURVIVE · QA</p>
+      <p>Packages ride down the belt. <b>Drag</b> each into the right bin · bins line both sides.</p>
+      <div class="start-modes">
+        <button class="mode-btn fv" id="start-forever">FOREVER<small>3 STRIKES · ENDLESS</small></button>
+        <button class="mode-btn sh" id="start-timed">60-SEC SHIFT<small>BEAT THE CLOCK</small></button>
+      </div>
+      <div class="co-note">
+        ◆ ROUTE CODE → drag to that route's bin (6 routes)<br>
+        ★ NE has TWO bins, low by the pool · grab it up front OR cherry-pick from the pool<br>
+        ⚠ FRAGILE (yellow stripe) → GENTLE (◇) &nbsp; ▼ HEAVY → FLOOR (▼)<br>
+        ✖ DAMAGED (torn/styrofoam) → the QA bin marked DAMAGE<br>
+        ☣ HAZMAT (candy stripe) → the bin marked ☣ HAZMAT<br>
+        ✦ OVERNIGHT (purple flash) → OVN bin · beats the route<br>
+        ⬇ Misses fall into the POOL · dig from the top to recover<br>
+        ⛔ Pool fills to the belt = BELT STOPPAGE. Clear it to resume; downtime counts.<br>
+        <b class="co-bad">✖ FOREVER: 3 strikes and you're out · a wrong bin OR a belt stoppage each cost a life. The belt just keeps getting faster.</b>
+      </div>
+      <p class="co-sub">DRAG FROM BELT OR POOL INTO A BIN</p>
+    </div></div>
   </div>
 
   <div class="ov" id="ov-end">
-    <div id="result-card">
-      <div id="result-grade">A</div>
-      <div id="result-grade-lbl">SORT PERFORMANCE</div>
-      <div class="res-row"><span class="res-lbl">Score</span><span class="res-val" id="r-score">0</span></div>
-      <div class="res-row"><span class="res-lbl">Accuracy</span><span class="res-val ok" id="r-acc">0%</span></div>
-      <div class="res-row"><span class="res-lbl">Throughput</span><span class="res-val" id="r-tput">0/min</span></div>
-      <div class="res-row"><span class="res-lbl">Best Combo</span><span class="res-val" id="r-combo">0</span></div>
-      <div class="res-row"><span class="res-lbl">Sorted</span><span class="res-val" id="r-sorted">0</span></div>
-      <div class="res-row"><span class="res-lbl">Misroutes</span><span class="res-val" id="r-miss">0</span></div>
-      <div class="res-row"><span class="res-lbl">QA Caught</span><span class="res-val" id="r-qa">0</span></div>
-      <div class="res-row"><span class="res-lbl">Stoppages</span><span class="res-val" id="r-stop">0</span></div>
-      <div class="res-row"><span class="res-lbl">Downtime</span><span class="res-val" id="r-down">0s</span></div>
-      <button id="copy-btn">⧉ COPY RESULT</button>
-      <div id="r-posted" style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--t2);margin-top:8px;min-height:14px;"></div><!-- v1.8 (MED) run-recorded honesty -->
-    </div>
-    <!-- v1.10 RUN AGAIN replayed the mode you just played and nothing ever re-showed ov-start, so after
-         your first tap two-thirds of the game · the other mode and the rules card · was unreachable. -->
-    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center;">
-      <button class="btn teal" id="again-btn">RUN AGAIN</button>
-      <button class="btn" id="menu-btn">☰ MODES</button>
-    </div>
+    <div class="co-clip"><div class="co-clip-in">
+      <h2 class="co-title">SORT REPORT</h2>
+      <!-- v1.10 RUN AGAIN replayed the mode you just played and nothing ever re-showed ov-start, so after
+           your first tap two-thirds of the game · the other mode and the rules card · was unreachable. -->
+      <!-- v1.13 the two actions come first, so they are in reach on any screen without scrolling the clipboard -->
+      <div class="co-row">
+        <button type="button" class="co-cta" id="again-btn">RUN AGAIN</button>
+        <button type="button" class="co-btn2" id="menu-btn">☰ MODES</button>
+      </div>
+      <div id="result-card" class="co-sheet">
+        <div id="result-grade">A</div>
+        <div id="result-grade-lbl">SORT PERFORMANCE</div>
+        <div class="res-grid">
+        <div class="res-row"><span class="res-lbl">Score</span><span class="res-val" id="r-score">0</span></div>
+        <div class="res-row"><span class="res-lbl">Accuracy</span><span class="res-val ok" id="r-acc">0%</span></div>
+        <div class="res-row"><span class="res-lbl">Throughput</span><span class="res-val" id="r-tput">0/min</span></div>
+        <div class="res-row"><span class="res-lbl">Best Combo</span><span class="res-val" id="r-combo">0</span></div>
+        <div class="res-row"><span class="res-lbl">Sorted</span><span class="res-val" id="r-sorted">0</span></div>
+        <div class="res-row"><span class="res-lbl">Misroutes</span><span class="res-val" id="r-miss">0</span></div>
+        <div class="res-row"><span class="res-lbl">QA Caught</span><span class="res-val" id="r-qa">0</span></div>
+        <div class="res-row"><span class="res-lbl">Stoppages</span><span class="res-val" id="r-stop">0</span></div>
+        <div class="res-row"><span class="res-lbl">Downtime</span><span class="res-val" id="r-down">0s</span></div>
+        </div>
+        <button id="copy-btn">⧉ COPY RESULT</button>
+        <div id="r-posted" style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:#5a4526;margin-top:8px;min-height:14px;"></div><!-- v1.8 (MED) run-recorded honesty -->
+      </div>
+    </div></div>
   </div>
 
   <div class="ov" id="ov-board">
-    <h1 style="font-size:32px;">★ SORT BOARD</h1>
-    <div class="bd-tabs">
-      <button class="bd-tab active" data-m="rate" onclick="smBoardTab('rate')">SORT RATE</button>
-      <button class="bd-tab" data-m="accuracy" onclick="smBoardTab('accuracy')">ACCURACY</button>
-      <button class="bd-tab" data-m="score" onclick="smBoardTab('score')">SCORE</button>
-    </div>
-    <div id="sm-board-list" class="bd-list"></div>
-    <button class="btn" onclick="smCloseBoard()" style="margin-top:14px;">✕ CLOSE</button>
+    <div class="co-clip"><div class="co-clip-in">
+      <h2 class="co-title">★ SORT BOARD</h2>
+      <div class="bd-tabs">
+        <button class="bd-tab active" data-m="rate" onclick="smBoardTab('rate')">SORT RATE</button>
+        <button class="bd-tab" data-m="accuracy" onclick="smBoardTab('accuracy')">ACCURACY</button>
+        <button class="bd-tab" data-m="score" onclick="smBoardTab('score')">SCORE</button>
+      </div>
+      <div id="sm-board-list" class="bd-list co-sheet"></div>
+      <div class="co-row"><button type="button" class="co-btn2" onclick="smCloseBoard()">✕ CLOSE</button></div>
+    </div></div>
   </div>
 
   <div class="ov" id="ov-settings">
-    <h1 style="font-size:30px;">⚙ SETTINGS</h1>
+    <div class="co-clip"><div class="co-clip-in">
+      <h2 class="co-title">⚙ SETTINGS</h2>
 
-    <div class="set-sec">DIFFICULTY</div>
-    <div class="seg" id="seg-diff">
-      <button data-d="chill" onclick="smSetDiff('chill')">CHILL</button>
-      <button data-d="normal" class="on" onclick="smSetDiff('normal')">NORMAL</button>
-      <button data-d="brutal" onclick="smSetDiff('brutal')">BRUTAL</button>
-    </div>
-    <div class="set-note">Sets belt speed &amp; package flow. Forever mode still ramps up the longer you last.</div>
+      <div class="set-sec">DIFFICULTY</div>
+      <div class="seg" id="seg-diff">
+        <button data-d="chill" onclick="smSetDiff('chill')">CHILL</button>
+        <button data-d="normal" class="on" onclick="smSetDiff('normal')">NORMAL</button>
+        <button data-d="brutal" onclick="smSetDiff('brutal')">BRUTAL</button>
+      </div>
+      <div class="set-note">Sets belt speed &amp; package flow. Forever mode still ramps up the longer you last.</div>
 
-    <div class="set-sec">DISPLAY</div>
-    <div class="set-row" style="margin:8px 0;"><span>High-contrast bins</span><button class="tgl" id="tgl-hicon" onclick="smToggleHicon()">OFF</button></div>
-    <div class="set-note">Bolder bin outlines and brighter labels · easier to aim, colorblind-friendlier.</div>
+      <div class="set-sec">DISPLAY</div>
+      <div class="set-row" style="margin:8px 0;"><span>High-contrast bins</span><button class="tgl" id="tgl-hicon" onclick="smToggleHicon()">OFF</button></div>
+      <div class="set-note">Bolder bin outlines and brighter labels · easier to aim, colorblind-friendlier.</div>
 
-    <div class="set-sec">SOUND</div>
-    <div class="set-note" style="margin-bottom:6px;">Sort, miss, strike and line-resume cues. Set to 0 for a silent classroom.</div>
-    <div class="set-row"><span>Sound effects</span><input type="range" id="set-sfx" min="0" max="100" value="70" oninput="smSetVol('sfx',this.value,1)" onchange="smSetVol('sfx',this.value)"></div><!-- v1.11 preview+save on RELEASE, not per step -->
+      <div class="set-sec">SOUND</div>
+      <div class="set-note" style="margin-bottom:6px;">Sort, miss, strike and line-resume cues. Set to 0 for a silent classroom.</div>
+      <div class="set-row"><span>Sound effects</span><input type="range" id="set-sfx" min="0" max="100" value="70" oninput="smSetVol('sfx',this.value,1)" onchange="smSetVol('sfx',this.value)" aria-label="Sound effects volume"></div><!-- v1.11 preview+save on RELEASE, not per step -->
 
-    <button class="btn" onclick="smCloseSettings()" style="margin-top:16px;">✕ CLOSE</button>
+      <div class="co-row"><button type="button" class="co-btn2" onclick="smCloseSettings()">✕ CLOSE</button></div>
+    </div></div>
   </div>
 </div>
 
 <script>
 // ============================================================
-// SMALLS SORT v1.11 | var-only | single STATE object
+// SMALLS SORT v1.13 | var-only | single STATE object
+// v1.13 (LOCK IN v3.5.208) THE COMPANION FAMILY: the header, stat bar, clipboard menus, buttons and footer every LOCK IN
+// companion wears, from .tools/companion-family.html. The account chip is the family's (coFamilyBoot); smReadAuth
+// reads through it. The stamp said v1.11 through the v1.12 sign-out work; it is v1.13 now.
 // ============================================================
 
 // ───── TUNE ─────
@@ -659,17 +775,17 @@ function loop(ts){
 function updateHUD(){
   document.getElementById('s-score').textContent=STATE.score;
   var acc=STATE.attempts>0?Math.round((STATE.sorted/STATE.attempts)*100):100;
-  var ae=document.getElementById('s-acc');ae.textContent=STATE.attempts>0?(acc+'%'):' · ';ae.className='val '+(STATE.attempts>0?(acc>=90?'ok':acc>=75?'warn':'danger'):'');
+  var ae=document.getElementById('s-acc');ae.textContent=STATE.attempts>0?(acc+'%'):' · ';ae.className='co-val '+(STATE.attempts>0?(acc>=90?'ok':acc>=75?'warn':'danger'):'');
   document.getElementById('s-combo').textContent=STATE.combo;
-  var pe=document.getElementById('s-pool');pe.textContent=STATE.pool.length;var pf=poolFrac();pe.className='val '+(pf>=TUNE.poolJamFrac?'danger':pf>=0.6?'warn':'teal');
+  var pe=document.getElementById('s-pool');pe.textContent=STATE.pool.length;var pf=poolFrac();pe.className='co-val '+(pf>=TUNE.poolJamFrac?'danger':pf>=0.6?'warn':'teal');
   var de=document.getElementById('s-down');
   if(STATE.mode==='forever'){
     var lives=Math.max(0,TUNE.maxStrikes-STATE.strikes),hearts='';
     for(var hi=0;hi<TUNE.maxStrikes;hi++)hearts+=(hi<lives?'♥':'✖');
-    de.textContent=hearts;de.className='val '+(lives<=1?'danger':lives===2?'warn':'ok');
+    de.textContent=hearts;de.className='co-val '+(lives<=1?'danger':lives===2?'warn':'ok');
   }else{
     var dtv=STATE.downtime+(STATE.stopped?(Date.now()-STATE.stopStart)/1000:0);
-    de.textContent=Math.round(dtv)+'s';de.className='val '+(dtv>=10?'danger':dtv>=3?'warn':'ok');
+    de.textContent=Math.round(dtv)+'s';de.className='co-val '+(dtv>=10?'danger':dtv>=3?'warn':'ok');
   }
 }
 function updateTimer(){
@@ -708,7 +824,7 @@ function endGame(reason){
   var fv=(STATE.mode==='forever');
   var tput=fv?Math.round(STATE.sorted/Math.max(1/60,STATE.survivalT/60)):STATE.sorted;
   var gr=fv?foreverGrade(STATE.sorted):gradeFor(acc,tput,STATE.downtime);
-  var ge=document.getElementById('result-grade');ge.textContent=gr[0];ge.style.color='var(--'+gr[1]+')';
+  var ge=document.getElementById('result-grade');ge.textContent=gr[0];ge.style.color=({ok:'#1f6b32',warn:'#7a4a00',danger:'#a61e1e'})[gr[1]]||'#2a1a08'; // v1.13 ink for the paper sheet (the dark-card green measured 2.2:1 on it)
   var gl=document.getElementById('result-grade-lbl');
   if(gl)gl.textContent=fv?((reason==='strikes'?'FOREVER · STRUCK OUT':'FOREVER')+' · SURVIVED '+fmtMS(STATE.survivalT)):'SORT PERFORMANCE';
   document.getElementById('r-score').textContent=STATE.score;
@@ -748,7 +864,7 @@ function liSignOutAll(authUrl,anonKey,extraTok){
   try{p=JSON.parse(localStorage.getItem('liPlayer')||'null');if(p){p.email='';p.handle='';p.facility='';p.consentShare=false;delete p.recovery;delete p.pid;localStorage.setItem('liPlayer',JSON.stringify(p));}}catch(e){}
   for(i=0;i<toks.length;i++){try{fetch(authUrl+'/logout?scope=local',{method:'POST',headers:{'apikey':anonKey,'Authorization':'Bearer '+toks[i]}}).catch(function(){});}catch(e){}} // best effort: revoke these sessions server-side so a tab running older code cannot refresh back in
 }
-function _smPostNote(t,ok){var e=document.getElementById('r-posted');if(e){e.textContent=t;e.style.color=ok?'var(--ok)':'var(--t2)';}} // v1.8 run-recorded honesty
+function _smPostNote(t,ok){var e=document.getElementById('r-posted');if(e){e.textContent=t;e.style.color=ok?'#1f6b32':'#5a4526';}} // v1.8 run-recorded honesty
 function smSubmitSession(acc,tput,grade){
   try{
     var s=smReadAuth();
@@ -872,33 +988,49 @@ function boot(){
   document.getElementById('menu-btn').addEventListener('pointerdown',showModes,{passive:true});
   document.getElementById('copy-btn').addEventListener('pointerdown',copyResult,{passive:true});
   window.addEventListener('resize',resize);
-  smAcctRender();
+  coFamilyBoot(SM_AUTH,SM_ANON); // v1.13 the companion family's account chip
+  ssTrackHdr();
+}
+function ssTrackHdr(){ // v1.13 the family header can wrap to two rows on a phone (signed in); the menus and the canvas follow its real height
+  var h=document.querySelector('.co-hdr');if(!h)return;
+  function sync(){document.documentElement.style.setProperty('--ss-hdr-h',h.offsetHeight+'px');resize();}
+  sync();
+  try{if(window.ResizeObserver)new ResizeObserver(sync).observe(h);}catch(e){console.error('ssTrackHdr:',e);}
 }
 // v1.x ACCOUNT STATE · Smalls Sort shares the same origin (trailer-load.com) as LOCK IN, so it
 // reads the same localStorage session ('liAuth'). This is what makes SIGN OUT reachable from here
 // (was the reported gap). Sign-IN lives in the main game's profile, so we link there rather than
 // duplicate the whole auth form.
-function smReadAuth(){try{var r=localStorage.getItem('liAuth');if(!r)return null;var s=JSON.parse(r);
-  if(liAuthStale(s))return null; // v1.12 (LOCK IN v3.5.205) a session from before the last sign-out on this device is signed out here too
-  // v1.7 (HIGH #3) stale-token honesty: a ~1h GoTrue token past exp means every POST silently 401s.
-  // Treat expired as signed-out here (SIGN IN link shows, runs don't silently vanish) · but NEVER delete
-  // liAuth: it's the GAME's shared session and the game knows how to refresh it.
-  try{var p=JSON.parse(atob((s.access_token||'').split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));if((p.exp||0)*1000<=Date.now()+30000)return null;}catch(e){}
-  return s;}catch(e){return null;}}
-function smAcctRender(){
-  var el=document.getElementById('sm-acct');if(!el)return;
-  var s=smReadAuth();
+function smReadAuth(){return coReadAuth();} // v1.13 through the family reader: the same rules (signed out, from before the last sign-out on this device, or expired = null)
+// v1.13 the account chip, its sign-out and its storage listener are the family's now (coFamilyBoot below)
+// ═══ LOCK IN COMPANION FAMILY v1 · JS ═══ (byte-identical in every companion; .tools/familyblock.py)
+// The account chip in the companion header. Needs the v3.5.205 one-sign-out block (liAuthStale, liSignOutAll).
+function coEsc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':'&quot;';});}
+function coReadAuth(){ // the game's shared session, or null when it is signed out, from before the last sign-out, or expired
+  try{var r=localStorage.getItem('liAuth');if(!r)return null;var s=JSON.parse(r);
+    if(liAuthStale(s))return null;
+    try{var p=JSON.parse(atob((s.access_token||'').split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));if((p.exp||0)*1000<=Date.now()+30000)return null;}catch(e){}
+    return s;}catch(e){return null;}}
+function coAcctRender(authUrl,anonKey){
+  var el=document.getElementById('co-acct');if(!el)return;
+  var s=coReadAuth();
   if(s&&(s.handle||s.email)){
     var who=s.handle||(s.email||'').split('@')[0]||'LOADER';
-    el.innerHTML='<span style="color:var(--ok);">◉ '+smEsc(who)+'</span>'+
-      '<button id="sm-signout" style="font-family:inherit;font-size:11px;letter-spacing:1px;color:var(--t3);background:transparent;border:1px solid #3a3a3c;border-radius:5px;padding:3px 8px;cursor:pointer;">SIGN OUT ⏻</button>';
-    var b=document.getElementById('sm-signout');
-    if(b)b.addEventListener('click',function(){liSignOutAll(SM_AUTH,SM_ANON,s&&s.access_token);smAcctRender();},{passive:true}); // v1.12 one sign-out for the whole site on this device
+    el.innerHTML='<span class="co-who" title="Signed in to LOCK IN">◉ '+coEsc(who)+'</span><button type="button" class="co-btn" id="co-signout">SIGN OUT</button>';
+    var b=document.getElementById('co-signout');
+    if(b)b.addEventListener('click',function(){liSignOutAll(authUrl,anonKey,s&&s.access_token);coAcctRender(authUrl,anonKey);});
   }else{
-    el.innerHTML='<a class="hdr-link" href="/lock-in.html#signin" style="color:var(--t3);text-decoration:none;letter-spacing:1px;">SIGN IN →</a>';
+    el.innerHTML='<a class="co-btn" href="/lock-in.html#signin">SIGN IN →</a>';
   }
 }
-try{window.addEventListener('storage',function(e){if(e.key===null||e.key==='liAuth'||e.key==='liAuthEpoch')smAcctRender();});window.addEventListener('pageshow',function(e){if(e.persisted)smAcctRender();});}catch(e){} // v1.12 the header follows a sign-in or sign-out in another tab
+function coFamilyBoot(authUrl,anonKey){ // READS: localStorage liAuth, liAuthEpoch · WRITES: #co-acct
+  coAcctRender(authUrl,anonKey);
+  try{
+    window.addEventListener('storage',function(e){if(e.key===null||e.key==='liAuth'||e.key==='liAuthEpoch')coAcctRender(authUrl,anonKey);});
+    window.addEventListener('pageshow',function(e){if(e.persisted)coAcctRender(authUrl,anonKey);});
+  }catch(e){console.error('coFamilyBoot:',e);}
+}
+// ═══ END COMPANION FAMILY JS ═══
 boot();
 </script>
 </body>

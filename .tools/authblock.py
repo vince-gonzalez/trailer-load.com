@@ -8,7 +8,7 @@ import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PAGES = ['lock-in.html', 'me/index.html', 'dashboard/index.html', 'ss/index.html']
+PAGES = ['lock-in.html', 'me/index.html', 'dashboard/index.html', 'ss/index.html']  # v3.5.208 VAN STACK left the site
 START = '// v3.5.205 ONE SIGN-OUT FOR THE WHOLE SITE ON THIS DEVICE'
 END_MARK = "authUrl+'/logout?scope=local'"
 

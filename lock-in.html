@@ -41,9 +41,39 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.207
+   LOCK IN v3.5.208
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.208 - THE COMPANION FAMILY (SMALLS SORT WEARS THE LOCK IN HEADER, MENUS AND FOOTER), AND VAN STACK
+   LEAVES THE SITE.
+     Vince (2026-10-17): "we can do a sweep to make smalls sort and van stack in the same menu/header/etc.
+     family - full sweep." (2026-10-19): "Off the site entirely" / "taking it off lock in is the right move".
+     (1) THE FAMILY lives in ONE file, .tools/companion-family.html: a CSS block (header with the logo lockup and a
+         LOCK IN COMPANION kicker, the account chip, .co-btn buttons, the stat bar, menus on the real clipboard.png
+         with a paper sheet like the Mini-Games cards, .co-cta and .co-btn2 buttons, the house footer) and a JS block
+         (the account chip, through the v3.5.205 one-sign-out block). A companion sets only its own accent, the
+         colour of its Mini-Games card: Smalls Sort #3aa0c0 / #1a6a8a.
+     (2) .tools/familyblock.py refuses a ship unless every companion carries both blocks byte-identical to that file
+         and the markup contract (LOCK IN fonts, family header, kicker, account chip, the back link, stat bar,
+         clipboard menus, family footer with the house line, its accents, the chip booted, the sign-out block).
+     (3) SMALLS SORT v1.13: family header (BOARD and settings as .co-btn), stat bar, footer (it had no house line);
+         the start, report, board and settings menus moved onto the clipboard, with the rules, the report and the
+         board on a paper sheet and every colour in them re-inked for paper (the grade green measured 2.2:1 on it,
+         now #1f6b32 5.5:1). Stat-bar danger #e0502a (3.45:1) is #ff7a5c (5.29:1), teal #19a594 (4.42:1) is #2dc0ad
+         (5.97:1). The main action comes first: the two modes sit above the rules, and the report puts RUN AGAIN and
+         MODES above the results (they fell below the clipboard on a 390 px phone). The menus and the canvas follow
+         the header's real height (it can wrap on a phone when signed in).
+     (4) lock-in.html#minigames opens the Mini-Games menu, so the companion's "← LOCK IN" lands where you left.
+     (5) VAN STACK OFF THE SITE. It is Vince's own game and no longer lives on trailer-load.com: the Mini-Games card
+         and its colours, the sitemap entry, the footer link, the llms.txt and llms-full.txt entries and the van-stack/
+         page are gone (the menu reads TOUR, SMALLS SORT). .tools/authblock.py is back to 4 pages.
+     Tests: t208a 64/64 (Smalls Sort at 1366x768, 1920x1080, 390x844, 360x780 over a local server: fonts, the header,
+       the chip signed out and in, the footer line, no sideways scroll, the clipboard at its true shape, the main
+       action in view, WCAG AA measured on the rendered pixels with clipped or covered text skipped, the back link
+       landing on the Mini-Games menu), t207a 11/11 (the menu, its clipboard ink, VAN STACK nowhere on the site),
+       t205 101/101 (Smalls Sort's sign-out is the family chip now), t206a 22/22, t206b 41/41, t206d 20/20,
+       t206e 25/25, water 27/27, t206c 73/73, tdash 20/20.
 
    CHANGE LOG v3.5.207 - VAN STACK JOINS THE MINI-GAMES MENU.
      Vince (2026-10-17): "i kind of want to incorporate the game van-stack that i made ... like smallsort but it's a
@@ -84,7 +114,8 @@ small,sub,sup{font-size:11px;}
      The Mini-Games clipboard ink, measured on the rendered pixels (the auditor in .tools reads background colours, so
        text on the clipboard picture reads as text on the scrim; t207a now samples the real pixels in each failing box):
        BACK #5a3f1a -> #2a1a08 (3.54:1 -> 6.12:1 on the darkest grey behind it), the subtitle #7a6748 -> #33230c
-       (2.88:1 -> 4.99:1). Both predate 207; the heading already passed at 5.54:1 or better.
+       (2.88:1 -> 4.99:1). Both predate 207; the heading already passed at 5.54:1 or better. (v3.5.208: BACK gets an
+       opaque paper fill; on a 390 px phone it sits over the darker clip art and measured 4.16:1 through the old wash.)
      Tests (every network call blocked): t207a 16/16 (plus 4 lab-only checks), t206a 22/22, t206b 41/41, t206d 20/20,
        t206e 25/25, water 27/27, t206c 73/73, t205 101/101 (its version check now reads the game's own header), tdash 20/20.
 
@@ -1734,7 +1765,6 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 #sm-board .sm-card.mode-boards,#ov-minigames .sm-card.mode-boards{border-left-color:#8a5a0b;}      /* 5.1:1 */
 #sm-board .sm-card.mode-levels,#ov-minigames .sm-card.mode-levels{border-left-color:#4a4ab8;}
 #sm-board .sm-card.mode-smalls,#ov-minigames .sm-card.mode-smalls{border-left-color:#1a6a8a;}
-#sm-board .sm-card.mode-van,#ov-minigames .sm-card.mode-van{border-left-color:#a84f00;}          /* 4.71:1, v3.5.207 */
 /* Short viewports: give the board the height it needs rather than clipping the cards. */
 @media(max-height:700px){#sm-board{height:min(1040px,94vh);}}
 /* Top-right account / settings (placeholders, visible for reference) */
@@ -1779,8 +1809,6 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 .sm-card.mode-daily .sm-card-name{color:#d8c89a;}
 .sm-card.mode-smalls{border-left-color:#3aa0c0;}
 .sm-card.mode-smalls .sm-card-name{color:#6cc4de;}
-.sm-card.mode-van{border-left-color:#e8891c;}
-.sm-card.mode-van .sm-card-name{color:#f5a742;} /* 9.73:1 on the dark card, v3.5.207 */
 /* v3.5.103 THE FOUR PILLARS get their own brand accents · no more monotone amber. Flagship amber · DAILY cyan · Training green · Mini-Games pink. */
 .sm-card.mode-flagship{border-left-color:#e0a838;}
 .sm-card.mode-flagship .sm-card-name{color:#f4cd72;}
@@ -3105,7 +3133,7 @@ body[data-cb="trit"]{
 #ov-minigames .mg-wrap{background:url('clipboard.png') center/contain no-repeat;height:min(1060px,90vh);width:auto;max-width:94vw;aspect-ratio:619/905;position:relative;filter:drop-shadow(0 16px 42px rgba(0,0,0,.6));}
 #ov-minigames .mg-head{position:absolute;left:7%;right:7%;top:22%;margin:0;}
 #ov-minigames .mg-title{color:#2a1a08;font-size:26px;}
-#ov-minigames .mg-x{color:#2a1a08;border-color:#b89a6a;background:rgba(0,0,0,.05);} /* v3.5.207 was #5a3f1a: 3.54:1 on the clipboard grey, now 6.12:1 at its darkest */
+#ov-minigames .mg-x{color:#2a1a08;border-color:#b89a6a;background:#f1ece0;} /* v3.5.207 ink #2a1a08 (was #5a3f1a, 3.54:1); v3.5.208 an opaque paper fill, 14.3:1, because on a 390 px phone the button sits over the darker clip art (4.16:1 through the old .05 wash) */
 #ov-minigames .mg-sub{position:absolute;left:7%;right:7%;top:29%;color:#33230c;margin:0;} /* v3.5.207 was #7a6748: 2.88:1, now 4.99:1 at the darkest grey behind it */
 #ov-minigames .mg-grid{position:absolute;left:6.5%;right:6.5%;top:34%;bottom:5%;overflow-y:auto;}
 /* v3.5.120 mode names were CLIPPED ("PRACTIC"/"GAUNTLE"): a 34px flex-row name + icon + desc jammed into a ~185px 2-col cell with overflow:hidden. On the clipboard launcher, stack the card (icon over name), WRAP the name, size it to fit, hide the desc. */
@@ -3363,7 +3391,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.207 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.208 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -3486,7 +3514,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 16)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.5.205: updated Oct 16; back to "Privacy" after 2026-11-16. -->
-  <div id="sm-footer">LOCK IN v3.5.207 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.208 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3636,7 +3664,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.207 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.208 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -4058,12 +4086,7 @@ body[data-cb="trit"]{
       <div class="sm-card-name">SMALLS SORT</div>
       <div class="sm-card-desc">The companion game · sort and stack the smalls. Speed and accuracy on the small-parcel line.</div>
     </div>
-    <!-- v3.5.207 VAN STACK (Vince: "a TRULY VIABLE MINI GAME that actually holds relevance, just like smallsort") -->
-    <div class="sm-card mode-van" onclick="guardLaunch(function(){location.href='/van-stack/';})">
-      <div class="sm-card-ico">🚐</div>
-      <div class="sm-card-name">VAN STACK</div>
-      <div class="sm-card-desc">Load the delivery van · pull, set, scan. The scan hands the box to the driver, and the driver walk finds every miss.</div>
-    </div>
+    <!-- v3.5.208 VAN STACK left this menu and the site (Vince: "taking it off lock in is the right move"); it is his own game. -->
   </div>
 </div></div>
 <!-- v3.5.13 LEADERBOARD -->
@@ -4154,7 +4177,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.207
+// LOCK IN v3.5.208
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -4636,7 +4659,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.207'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.208'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -12252,7 +12275,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u00b7':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.207</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.208</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
@@ -13962,6 +13985,7 @@ try{
     if(_dlh==='#daily')setTimeout(function(){guardLaunch(startDaily);},380);
     else if(_dlh==='#shift')setTimeout(function(){guardLaunch(startTrailerLoad);},380);
     else if(_dlh==='#training')setTimeout(function(){startTrainDemo();},380);
+    else if(_dlh==='#minigames'&&typeof openMiniGames==='function')setTimeout(openMiniGames,300); // v3.5.208 a companion's back link lands on the Mini-Games menu
   }
 }catch(e){}
 </script>
