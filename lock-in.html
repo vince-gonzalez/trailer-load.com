@@ -41,9 +41,28 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.208
+   LOCK IN v3.5.209
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.209 - THE KEYBOARD REACHES EVERYTHING, AND THE WORDS SAY PRACTICE.
+     Found preparing for Tennessee VR (2026-10-20): /for-districts/ promised "full keyboard play", and a keyboard could
+     not reach the main menu: the mode cards were <div onclick> with no tabindex, so Tab skipped all of them (measured by
+     tabbing through the live game). Vince: "Yes, fix and ship today."
+     (1) KEYBOARD. The seven menu cards, the Tour level cards and the staging controls are role="button" with tabindex=0,
+         and one capture-phase handler makes Enter and Space press any role="button" that is not a real <button>, before
+         the gameplay keys see it (a focused card never also places a box). Locked levels are aria-disabled. A focus ring
+         (amber inside dark) shows on the dark menu and on the paper clipboard. Gameplay keys were already there: arrows
+         move, [ and ] choose a piece, Enter or Space places, R rotates, F stages, H special handling, W water, P or
+         Escape pauses.
+     (2) PRACTICE, NOT SCREENING. "tracks readiness" is "tracks practice progress", "competency" is "practice" on the
+         dashboard, the programs page and the pricing page, and the certificate is "a game achievement, not a credential"
+         (the card itself already said so). A score that sounds like readiness invites using it to decide who gets
+         referred or hired, which would make it an unvalidated selection test.
+     (3) His title is Operations President everywhere (the programs page's structured data said Founder).
+     (4) THE MENU CARDS SAY WHAT THE MODES DO. TRAINING promised "then load one yourself", but Training has been a
+         watch-and-sign-off demo since v3.5.150 (signing off returns to the menu); it now says so. TRAILER-LOAD called
+         the strictest mode "forgiving enough to flow"; that phrase is gone.
 
    CHANGE LOG v3.5.208 - THE COMPANION FAMILY (SMALLS SORT WEARS THE LOCK IN HEADER, MENUS AND FOOTER), AND VAN STACK
    LEAVES THE SITE.
@@ -1798,6 +1817,8 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 .sm-card.mode-levels{border-left-color:#9090ff;}
 .sm-card.mode-gauntlet{border-left-color:var(--danger);}
 .sm-card-ico{font-size:34px;line-height:1;flex:none;width:44px;text-align:center;}
+/* v3.5.209 keyboard focus: an amber ring inside a dark ring, visible on the dark menu and on the paper clipboard */
+.sm-card:focus-visible,.ls-card:focus-visible,.stg-light:focus-visible,.stg-tile:focus-visible,.stg-brk:focus-visible{outline:3px solid #f0ad4a;outline-offset:2px;box-shadow:0 0 0 7px #1d1710;}
 .sm-card-name{
   font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:2px;
   color:var(--t1);flex:1;min-width:0;line-height:1;
@@ -3391,7 +3412,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.208 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.209 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -3479,33 +3500,33 @@ body[data-cb="trit"]{
   <div id="sm-tagline">SELECT YOUR MODE</div>
   <!-- v3.5.91 THE FOUR PILLARS. Trailer-Load (flagship) · Daily (favored son) · Training (the teacher) · Mini-Games (the side games). Tour/Smalls Sort live inside Mini-Games. -->
   <div id="sm-modes">
-    <div class="sm-card mode-shift mode-flagship" onclick="guardLaunch(startTrailerLoad)">
+    <div class="sm-card mode-shift mode-flagship" role="button" tabindex="0" onclick="guardLaunch(startTrailerLoad)">
       <div class="sm-card-ico">🚛</div>
       <div class="sm-card-name">TRAILER-LOAD</div>
-      <div class="sm-card-desc">The main event. Wall after wall at full tempo · forgiving enough to flow, but the pile gets mean near the top and it's almost never a layup. Your record and your world rank live here.</div>
+      <div class="sm-card-desc">The main event. Wall after wall at full tempo · the pile gets mean near the top and it's almost never a layup. Your record and your world rank live here.</div>
     </div>
-    <div class="sm-card mode-daily" onclick="guardLaunch(startDaily)">
+    <div class="sm-card mode-daily" role="button" tabindex="0" onclick="guardLaunch(startDaily)">
       <div class="sm-card-ico">📅</div>
       <div class="sm-card-name">DAILY</div>
       <div class="sm-card-desc">Same pieces, same timer, everyone on Earth · one shared board, 00:00-23:59 UTC. Win it and you're the day's #1 loader on the planet.</div>
       <div class="sm-streak" id="daily-streak-badge" style="display:none;"></div>
     </div>
-    <div class="sm-card mode-training" onclick="startTrainDemo()">
+    <div class="sm-card mode-training" role="button" tabindex="0" onclick="startTrainDemo()">
       <div class="sm-card-ico">🎓</div>
       <div class="sm-card-name">TRAINING</div>
-      <div class="sm-card-desc">Watch a perfect wall build itself, then load one yourself. Every placement teaches a real hub rule · no clock, no fails. New here? Start on this.</div>
+      <div class="sm-card-desc">Watch a trainer build a full wall, one placement at a time, with the reason for every move, then sign off. No clock, no fails. New here? Start on this.</div>
     </div>
     <!-- v3.5.197 THE LEADERBOARD GETS A DOOR. Vince asked for this repeatedly and I kept
          answering with a reason not to: the boards were reachable only through CLOCK-IN, a
          button in the top-right corner that reads as an account control, not as competition.
          The daily is sold on "everyone on Earth gets the same wall" and the place you go to
          SEE that was hidden behind an account menu. It is a pillar now. -->
-    <div class="sm-card mode-boards" onclick="openSocial('daily')">
+    <div class="sm-card mode-boards" role="button" tabindex="0" onclick="openSocial('daily')">
       <div class="sm-card-ico">🏅</div>
       <div class="sm-card-name">LEADERBOARD</div>
       <div class="sm-card-desc">Today's board, the hall of fame, your own record and the people you follow. See where the wall you just loaded actually landed.</div>
     </div>
-    <div class="sm-card mode-minigames" onclick="openMiniGames()">
+    <div class="sm-card mode-minigames" role="button" tabindex="0" onclick="openMiniGames()">
       <div class="sm-card-ico">🎮</div>
       <div class="sm-card-name">MINI-GAMES</div>
       <div class="sm-card-desc">The side games · Tour &amp; Smalls Sort. No world rank, just reps and fun. Tap to pick one.</div>
@@ -3514,7 +3535,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 16)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.5.205: updated Oct 16; back to "Privacy" after 2026-11-16. -->
-  <div id="sm-footer">LOCK IN v3.5.208 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.209 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3664,7 +3685,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.208 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.209 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3934,7 +3955,7 @@ body[data-cb="trit"]{
         <button id="water-side" class="strip-act sa-water" onclick="takeDrink()" title="Drink water · 4 a trailer · 6s between drinks" aria-label="Drink water. 0 of 4 drinks this trailer">💧 WATER 0/4</button>
         <div class="conv-lbl" style="display:flex;align-items:center;gap:7px;">
           <button type="button" class="sh-plate" id="stg-nc" onclick="openStagingPopup('nc')" title="Special handling (H): too big, heavy or hazardous for the belt. Load it low." aria-label="Special handling. 0 of 8. Too big, heavy or hazardous for the belt. Load it low. Key H."><span class="sh-face"><span class="sh-word">SPECIAL HANDLING</span><span class="stg-pie" id="stg-nc-pie"></span><span class="sh-chip" id="stg-nc-n">0/8</span><span class="sh-br"></span><span class="sh-sub">Too big, heavy or hazardous for the belt. Load it low.</span><kbd class="sh-key" aria-hidden="true">H</kbd></span></button>
-          <span class="stg-light" id="stg-bag" onclick="openStagingPopup('bag')" title="Smalls staging" style="display:none;"><b>SM</b><span class="stg-pie" id="stg-bag-pie"></span><span id="stg-bag-n">0/8</span></span>
+          <span class="stg-light" id="stg-bag" role="button" tabindex="0" aria-label="Smalls staging" onclick="openStagingPopup('bag')" title="Smalls staging" style="display:none;"><b>SM</b><span class="stg-pie" id="stg-bag-pie"></span><span id="stg-bag-n">0/8</span></span>
         </div>
         <span class="conv-lbl" id="safety-live" style="font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:bold;letter-spacing:.5px;" title="Live safety · open warnings / incidents on record"></span>
         <button id="stage-btn" class="strip-act sa-stage" type="button" onclick="stageButton()" title="STAGE (F): set the box in your hand down beside the wall. 3 spots. With empty hands, choose a staged box to pick back up." aria-label="Stage. 0 of 3 staged. Key F.">⬇ STAGE <span id="stage-n">0/3</span></button>
@@ -4076,12 +4097,12 @@ body[data-cb="trit"]{
          hazmat, tire, bag or anchor mechanics the product is sold on. startRegular() and
          startGauntlet() are left defined on purpose: internal callers, the training-trailer
          fallback and the screenshot workflow still reach them, they are simply not advertised. -->
-    <div class="sm-card mode-levels" onclick="closeMiniGames();guardLaunch(openLevelSelect)">
+    <div class="sm-card mode-levels" role="button" tabindex="0" onclick="closeMiniGames();guardLaunch(openLevelSelect)">
       <div class="sm-card-ico">🏆</div>
       <div class="sm-card-name">TOUR</div>
       <div class="sm-card-desc">Graduating scenarios from Day One to Nightmare Mode. Real hubs, real pressure. Earn your stars.</div>
     </div>
-    <div class="sm-card mode-smalls" onclick="guardLaunch(function(){location.href='/ss/';})">
+    <div class="sm-card mode-smalls" role="button" tabindex="0" onclick="guardLaunch(function(){location.href='/ss/';})">
       <div class="sm-card-ico">🧩</div>
       <div class="sm-card-name">SMALLS SORT</div>
       <div class="sm-card-desc">The companion game · sort and stack the smalls. Speed and accuracy on the small-parcel line.</div>
@@ -4177,7 +4198,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.208
+// LOCK IN v3.5.209
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -4659,7 +4680,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.208'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.209'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -8319,7 +8340,7 @@ function stgRender(){
       var it=items[k], dim=(it.s.w||2)+'×'+(it.s.h||2);
       var nm=(STG_OPEN==='nc')?'Special handling':(it.s.isBag?'Staged bag of smalls':'Staged box');
       // v3.5.114 tap-to-break chip; event.stopPropagation so the tap doesn't also pick the tile
-      var brk=(STG_OPEN==='bag'&&it.s.isBag)?'<div class="stg-brk" onclick="event.stopPropagation();stgBreak('+it.i+')" title="Break the bag into loose smalls to fill gaps (costs PPH)">✂ BREAK</div>':'';
+      var brk=(STG_OPEN==='bag'&&it.s.isBag)?'<div class="stg-brk" role="button" tabindex="0" onclick="event.stopPropagation();stgBreak('+it.i+')" title="Break the bag into loose smalls to fill gaps (costs PPH)">✂ BREAK</div>':'';
       h+='<div class="stg-tile'+(sel===it.i?' sel':'')+'" role="button" tabindex="0" aria-label="'+nm+', '+(it.s.w||2)+' by '+(it.s.h||2)+'" style="left:'+x+'px;top:'+y+'px;" onclick="stgPick('+it.i+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();stgPick('+it.i+');}"><canvas class="stg-art" width="52" height="34" data-i="'+it.i+'"></canvas><div class="d">'+dim+'</div>'+brk+'</div>';
     }
   }
@@ -10124,6 +10145,16 @@ function kbHint(){
   if(_kbHinted)return;_kbHinted=true;
   if(typeof showBanner==='function')showBanner('\u2328 KEYBOARD \u00b7 \u2190\u2191\u2193\u2192 aim \u00b7 R rotate \u00b7 ENTER drop \u00b7 F stage \u00b7 H special handling \u00b7 W water \u00b7 P pause \u00b7 B break jam \u00b7 [ ] switch piece','',4200);
 }
+// v3.5.209 KEYBOARD: every role="button" that is not a real <button> (the menu cards, the Tour level cards, the
+// staging controls) answers Enter and Space like one. Capture phase on window, so a focused card never also places a box.
+window.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'&&e.key!==' ')return;
+  var t=e.target;
+  if(!t||!t.getAttribute||t.getAttribute('role')!=='button'||/^(BUTTON|A|INPUT|TEXTAREA|SELECT)$/.test(t.tagName))return;
+  if(t.getAttribute('aria-disabled')==='true')return;
+  e.preventDefault();e.stopPropagation();
+  if(!e.repeat)t.click();
+},true);
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
     // ESC exits training if active, otherwise toggles pause
@@ -12275,7 +12306,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u00b7':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.208</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.209</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
@@ -12564,6 +12595,7 @@ function buildLevelSelectCards(){
     var locked=!!lv.locked;
     var card=document.createElement('div');
     card.className='ls-card '+lv.diffClass+(locked?' ls-locked':'');
+    if(locked)card.setAttribute('aria-disabled','true');else{card.setAttribute('role','button');card.tabIndex=0;} // v3.5.209 keyboard reaches every open level
     card.style.setProperty('--ls-accent',lv.accent);
     // Stars display
     var starsHtml='<div class="ls-stars">';
