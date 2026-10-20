@@ -41,9 +41,40 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.209
+   LOCK IN v3.5.210
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.210 - EVERY AUTOMATED WCAG FAILURE CLEARED, ON EVERY PAGE.
+     I ran my a11yhat crew (WCAG 2.2, the DHS Trusted Tester method) on all twelve public pages: 21 automated
+     failures. This clears all of them. The REVIEW items still need a person to test them, and I will.
+     (1) LABELS. Every slider and text box has a programmatic label: the settings sliders point at their visible
+         row names, and the crew, join-code and follow boxes have names. The new-crew example code was a real test
+         crew's code, so anyone who copied it joined that crew; the box now says what to type instead.
+     (2) NAMES. The hidden pause button and the staging backdrop have accessible names.
+     (3) CANVASES. The board, the certificate and the old belt canvas carry text inside them; the board's says the
+         keyboard controls.
+     (4) LANDMARKS. The game board and HUD are the main landmark. Every content page has a "Skip to main content"
+         link and a main landmark, so a keyboard can jump past the navigation bar.
+     (5) FOCUS. The board removed its focus outline. It now shows an amber ring when the keyboard puts focus there.
+     (6) CONTRAST. a11yhat flagged nine pairs. Six were translucent tints the scanner reads as solid, so they are solid
+         now in the same color. Three were really below 4.5:1 and have darker ink: the profile tabs (3.18 to 6.23),
+         the post-sort legend (4.02 and 4.36 to about 5.9), and the profile close button's hover red (3.79 to 5.01).
+         My rendered-pixel audit then found three more that no stylesheet scanner can see, because the text sits
+         straight on the gray clipboard art: the profile close button (3.29, now on a paper chip, 5.95), the ADMIN
+         clipboard's COACH heading (3.94 to 5.37) and its key hint (3.87 to 6.51).
+         Then I swept every screen with it and found the same class all over: the light theme's secondary and
+         tertiary text were 4.07 and 2.09 on the darker paper cards, amber words on paper were 2.0 to 2.5, the boards'
+         words on the gray aluminum clipboard were 1.6 to 2.5, and the four hardest level badges were 2.15 to 3.83 on
+         their dark cards. I darkened --t2 and --t3, gave amber words their own ink (--acc-ink; --acc stays the
+         amber for fills), inked the boards for the aluminum, and lift each badge's words until they reach 4.6:1.
+         The dark theme's --t3 goes from about 4.0 to 5.4. The content pages' kickers and small print move to
+         their own darker ink the same way. The training panel's header and controls were shaded to a mid gray
+         (TRAINING measured 1.56:1); they take a light shade now. Status colors as words on paper (--ok, --warn,
+         --danger) get inks too, in the OPERATIONS drawer and on QUICK RESET; the colors stay for fills and borders.
+         In the dark theme the coach card on the ADMIN clipboard went near-black under paper inks (2.3:1); it is paper
+         in both themes now.
+     .tools/a11ygate.py runs a11yhat on every public page and fails on any automated FAIL, so this stays cleared.
 
    CHANGE LOG v3.5.209 - THE KEYBOARD REACHES EVERYTHING, AND THE WORDS SAY PRACTICE.
      I found this getting ready for Tennessee VR (2026-10-20): /for-districts/ promised "full keyboard play", and a
@@ -1381,7 +1412,10 @@ small,sub,sup{font-size:11px;}
 :root{
   --bg:#ece5d8;--bg2:#e3dac9;--bg3:#d9cfbb;
   --acc:#c8791e;--acc-bright:#e0962e;--acc-dim:#9a5c12;--acc-wash:#f4e6cf;
-  --t1:#2a2018;--t2:#6a5c48;--t3:#9a8b72;
+  /* v3.5.210 TEXT INK. --acc stays the amber for fills and borders; amber words on paper use --acc-ink (5.25:1 on the
+     darkest paper, the active settings button). --t2 and --t3 were 4.07 and 2.09 on the darker paper cards. */
+  --acc-ink:#6e3f08;--ok-ink:#0f5c31;--warn-ink:#7a4500;--danger-ink:#96270d;--teal-ink:#0a5a50;
+  --t1:#2a2018;--t2:#4f4230;--t3:#5c4f3b;
   --ok:#1f9d57;--warn:#d4820f;--danger:#c23a1a;--teal:#138578;--teal-bright:#19a594;--teal-wash:#def0ec;
   --border:#d2c6ad;--border2:#c0b193;--border3:#ab9a78;
   --sm:#7a4dd0;--sm-bright:#9a6fe8;
@@ -1396,8 +1430,8 @@ small,sub,sup{font-size:11px;}
 }
 [data-theme="dark"]{
   --bg:#1c1410;--bg2:#241a13;--bg3:#2e2016;
-  --acc:#e0962e;--acc-bright:#f0ad4a;--acc-dim:#b07820;--acc-wash:#3a2a16;
-  --t1:#f0e6d4;--t2:#c0ad90;--t3:#8a7860;
+  --acc:#e0962e;--acc-bright:#f0ad4a;--acc-dim:#b07820;--acc-wash:#3a2a16;--acc-ink:#e0962e;--ok-ink:#28b870;--warn-ink:#e0962e;--danger-ink:#e0593a;--teal-ink:#2dc0ad;
+  --t1:#f0e6d4;--t2:#c0ad90;--t3:#a08e74;
   --ok:#28b870;--warn:#e0962e;--danger:#e0593a;--teal:#19a594;--teal-bright:#2dc0ad;--teal-wash:#1a3a36;
   --border:#3a2c20;--border2:#4a3826;--border3:#5a4632;
   --sm:#a07de8;--sm-bright:#c0a0ff;
@@ -1413,13 +1447,18 @@ small,sub,sup{font-size:11px;}
    sign-in copy rendered dark-on-dark (~1.2-2.4:1, illegible). Scoped var overrides pin dark-surface ink to the
    dark-theme palette regardless of which theme the body wears. */
 #ov-end,#ov-signin-prompt,.sip-card,#level-select,#ov-level-end,#seal-rdy{ /* v3.5.206 #seal-rdy joins: its % values measured 1.03:1 */
-  --t1:#f0e6d4;--t2:#c0ad90;--t3:#8a7860;
+  --t1:#f0e6d4;--t2:#c0ad90;--t3:#a08e74;
   --border:#3a2c20;--border2:#4a3826;--border3:#5a4632;
-  --acc:#e0962e;--acc-bright:#f0ad4a;--acc-dim:#b07820;
+  --acc:#e0962e;--acc-bright:#f0ad4a;--acc-dim:#b07820;--acc-ink:#e0962e;--ok-ink:#28b870;--warn-ink:#e0962e;--danger-ink:#e0593a;--teal-ink:#2dc0ad;
   /* v3.5.178 SURFACES TOO. Scoping only the ink (v3.5.154) left --bg2/--bg3 on the LIGHT theme,
      so #daily-result painted a cream panel and inherited near-white ink · unreadable. */
   --bg:#1c1410;--bg2:#241a13;--bg3:#2e2016;
 }
+
+/* v3.5.210 DARK PANELS IN THE LIGHT THEME. These paint their own near-black, so they keep the dark-theme ink for --t2
+   and --t3 (the light theme's ink is dark brown now, which would be 1.8 to 3.5:1 here). The start-menu footer, the
+   joystick editor bar, the certificate screen and the empty staging note. */
+#sm-footer,#ctrl-edit-bar,#ov-cert,.stg-empty{--t2:#c0ad90;--t3:#a08e74;}
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;height:100dvh;color:var(--t1);
@@ -1648,8 +1687,8 @@ html,body{width:100%;height:100dvh;color:var(--t1);
   display:none;flex-direction:column;overflow:hidden;}
 #console-drawer.vis{display:flex;}
 .cd-hd{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;
-  border-bottom:1px solid var(--border2);background:rgba(0,0,0,.18);flex:none;}
-.cd-title{font-family:'Share Tech Mono',monospace;font-size:14px;letter-spacing:2px;color:var(--acc);
+  border-bottom:1px solid var(--border2);background:rgba(0,0,0,.06);flex:none;}
+.cd-title{font-family:'Share Tech Mono',monospace;font-size:14px;letter-spacing:2px;color:var(--acc-ink);
   text-transform:uppercase;font-weight:bold;}
 .cd-x{background:transparent;border:1px solid var(--border2);color:var(--t2);font-size:13px;letter-spacing:1px;
   border-radius:4px;padding:4px 11px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-weight:bold;}
@@ -1660,7 +1699,7 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 .ops-k{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--t2);
   text-transform:uppercase;font-weight:bold;margin-bottom:3px;}
 .ops-v{font-family:'Share Tech Mono',monospace;font-size:21px;font-weight:bold;color:var(--t1);line-height:1;}
-.ops-v.ok{color:var(--ok);}.ops-v.warn{color:var(--warn);}.ops-v.danger{color:var(--danger);}
+.ops-v.ok{color:var(--ok-ink);}.ops-v.warn{color:var(--warn-ink);}.ops-v.danger{color:var(--danger-ink);}
 /* LINEHAUL drawer rows · bigger/more legible than the old board (Vince) */
 .cd-lh-row{display:flex;align-items:baseline;gap:9px;padding:7px 2px;border-bottom:1px solid var(--border);}
 .cd-lh-row .msg-src{flex:none;font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:bold;
@@ -1679,10 +1718,10 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 .ops-verd{font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--t2);line-height:1.3;margin-top:2px;}
 .ops-pts{font-family:'Share Tech Mono',monospace;font-size:24px;font-weight:bold;flex:none;}
 .ops-pts span{font-size:13px;color:var(--t3);}
-.ops-sec{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--acc);text-transform:uppercase;font-weight:bold;margin:12px 0 7px;}
+.ops-sec{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--acc-ink);text-transform:uppercase;font-weight:bold;margin:12px 0 7px;}
 .ops-sec.first{margin-top:0;}
 .crew-box{border:2px solid var(--btn-line);border-radius:8px;padding:11px 13px;margin:10px 0;background:rgba(0,0,0,.06);}
-.crew-hd{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--acc);margin-bottom:7px;}
+.crew-hd{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--acc-ink);margin-bottom:7px;}
 .crew-state{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:var(--t2);margin-bottom:7px;}
 .crew-row{display:flex;gap:7px;align-items:center;}
 .crew-row input,.crew-create input{flex:1;min-width:0;padding:8px 10px;min-height:34px;border:2px solid var(--btn-line);border-radius:6px;background:var(--bg2);color:var(--t1);font-family:'Share Tech Mono',monospace;font-size:13px;}
@@ -1693,12 +1732,12 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 .crew-mine{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--t3);line-height:1.7;}
 .crew-msg{font-family:'Share Tech Mono',monospace;font-size:12px;margin-top:6px;min-height:15px;color:var(--t3);}
 .crew-msg.err{color:var(--danger);} .crew-msg.ok{color:var(--ok);}
-.crew-cf-name{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px;color:var(--acc);text-align:center;margin:4px 0 10px;}
+.crew-cf-name{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px;color:var(--acc-ink);text-align:center;margin:4px 0 10px;}
 .ov-data{position:fixed;inset:0;z-index:600;display:none;align-items:flex-start;justify-content:center;background:rgba(10,7,4,.55);overflow-y:auto;}/* v3.5.39 120->600 so ACCOUNT & DATA shows above the pause/menu (was buried); v3.5.131 scrollable so the bottom buttons are never clipped */
 .ov-data.vis{display:flex;}
 .data-card{margin-top:0;max-width:440px;width:92%;max-height:94vh;overflow-y:auto;background:var(--bg2);border:1px solid var(--acc);border-top:none;border-radius:0 0 12px 12px;padding:18px 20px 24px;box-shadow:0 12px 40px rgba(0,0,0,.5);animation:dataDrop .28s ease;}/* v3.5.131 cap height + scroll so SIGN OUT / SAVE / NOT NOW are always reachable (a playtester: "cant see what bottom buttons say") */
 @keyframes dataDrop{from{transform:translateY(-100%);}to{transform:translateY(0);}}
-.data-hdr{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.06em;color:var(--acc);margin-bottom:8px;}
+.data-hdr{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.06em;color:var(--acc-ink);margin-bottom:8px;}
 .data-p{font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--t2);line-height:1.35;margin:0 0 14px;}
 .data-fld{display:block;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--t2);margin-bottom:10px;} /* v3.5.145 was 10px/--t3 (sub-AA while typing) */
 .data-fld span{color:var(--t2);text-transform:none;letter-spacing:0;}
@@ -1919,11 +1958,11 @@ body.m-portrait #to-principle-card{overflow-y:auto;}
   flex-shrink:0;
   padding:14px 16px 10px;
   border-bottom:1px solid var(--border2);
-  background:rgba(0,0,0,.25);
+  background:rgba(0,0,0,.06); /* v3.5.210 was .25: a mid gray where TRAINING measured 1.56:1 */
 }
 #to-title{
   font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:5px;
-  color:var(--ok);line-height:1;display:block;
+  color:var(--ok-ink);line-height:1;display:block;
 }
 #to-sub{
   font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;
@@ -1934,7 +1973,7 @@ body.m-portrait #to-principle-card{overflow-y:auto;}
 #to-status{
   flex-shrink:0;
   font-family:'Share Tech Mono',monospace;font-size:11px;
-  color:var(--acc);font-weight:bold;letter-spacing:.8px;
+  color:var(--acc-ink);font-weight:bold;letter-spacing:.8px;
   padding:8px 16px 6px;
   border-bottom:1px solid var(--border);
   min-height:32px;display:flex;align-items:center;
@@ -1949,7 +1988,7 @@ body.m-portrait #to-principle-card{overflow-y:auto;}
 }
 #to-principle{
   font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;
-  color:var(--acc);line-height:1.1;
+  color:var(--acc-ink);line-height:1.1;
   border-left:3px solid var(--acc);
   padding-left:10px;
   transition:opacity .3s;
@@ -1966,7 +2005,7 @@ body.m-portrait #to-principle-card{overflow-y:auto;}
   padding:12px 16px;
   border-top:1px solid var(--border2);
   display:flex;flex-direction:column;gap:8px;
-  background:rgba(0,0,0,.2);
+  background:rgba(0,0,0,.06); /* v3.5.210 was .2 (the key hint measured 3.89:1) */
 }
 .to-btn-row{display:flex;gap:8px;}
 .to-btn{
@@ -2147,7 +2186,7 @@ body.m-portrait #to-principle-card{overflow-y:auto;}
 #world{flex:1;display:flex;min-height:0;position:relative;}
 #scene-wrap{flex:1;position:relative;min-width:0;min-height:0;}
 #scene{display:block;width:100%;height:100%;cursor:crosshair;touch-action:none;}
-#scene:focus,#scene:focus-visible{outline:none;}
+#scene:focus-visible{outline:3px solid #f0ad4a;outline-offset:-3px;} /* v3.5.210 was outline:none, which hid keyboard focus (WCAG 2.4.7) */
 
 /* ── RIGHT FEEDBACK PANEL ── */
 #fb-panel{grid-column:2;grid-row:2;background:var(--bg2);
@@ -2262,7 +2301,7 @@ body.m-portrait #to-principle-card{overflow-y:auto;}
 #pb-ribbon{display:none;font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:2px;color:#1a1206;background:linear-gradient(180deg,#ffdf7a,#f0b428);border:1px solid #d89a1a;border-radius:6px;padding:8px 18px;box-shadow:0 0 24px rgba(240,180,40,.5);text-align:center;margin:2px auto 8px;animation:pbpop .4s ease;}
 @keyframes pbpop{from{transform:scale(.8);opacity:0;}to{transform:scale(1);opacity:1;}}
 /* v3.5.146 DAILY streak badge on the menu card */
-.sm-streak{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:bold;letter-spacing:.5px;color:#ffb84a;background:rgba(224,120,30,.16);border:1px solid rgba(224,150,46,.5);border-radius:20px;padding:2px 10px;margin-top:6px;text-shadow:0 1px 2px rgba(0,0,0,.5);}
+.sm-streak{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:bold;letter-spacing:.5px;color:#ffb84a;background:#3a2410;border:1px solid rgba(224,150,46,.5);border-radius:20px;padding:2px 10px;margin-top:6px;text-shadow:0 1px 2px rgba(0,0,0,.5);}
 /* v3.5.147 anchored +N score tick (on the SCORE cell · never over the wall, per the v3.5.5 rule) */
 .score-pop{position:absolute;left:50%;top:-2px;transform:translateX(-50%);pointer-events:none;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:#5fe6a0;text-shadow:0 1px 3px #000,0 0 8px rgba(63,208,127,.6);opacity:0;white-space:nowrap;z-index:5;}
 .score-pop.go{animation:scorePop .8s ease-out;}
@@ -2381,9 +2420,9 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 .pause-clip .pmb-resume{background:linear-gradient(180deg,var(--acc-bright),var(--acc));color:#2a1c08;border-color:var(--acc);}
 .pause-clip .pmb-resume:hover{filter:brightness(1.05);color:#2a1c08;}
 .pause-clip .pmb-restart{color:#6a2418;border-color:#d0a08a;}
-.pause-clip .pmb-account{background:rgba(19,133,120,.12);border-color:#7fbcae;color:#0f5e52;}
+.pause-clip .pmb-account{background:#dcebe5;border-color:#7fbcae;color:#0f5e52;}
 .pause-clip #fp-tip{background:rgba(42,32,24,.05);border-radius:6px;padding:9px 11px;border:1px solid rgba(42,32,24,.08);}
-.pause-clip .fp-tip-hdr{color:var(--acc-dim);}
+.pause-clip .fp-tip-hdr{color:#7e4a0c;}
 .pause-clip #fp-tip-h{color:#3a2c1a;}
 .pause-clip #fp-tip-s{color:#6a5c44;}
 .pause-clip .pause-hint{color:#9a8a6c;}
@@ -2392,9 +2431,10 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
    labels pop. This is the "outline all front-facing text" pass for the light clipboard surfaces. */
 .pause-clip .pause-sub{color:#5e4e34;}
 .pause-clip #fp-tip-s{color:#4a3c26;}
-.pause-clip .pause-hint{color:#5e4e34;}
+.pause-clip .pause-hint{color:#3a2c1a;}
 .pause-clip .pmb{background:rgba(255,255,255,.9);border-color:#9a8a6c;color:#241a0e;font-weight:bold;}
 .pause-clip #fp-tip{background:rgba(255,250,240,.85);border:1px solid rgba(42,32,24,.2);}
+#ov-pause .pause-clip #fp-tip{background:#e3dac9;} /* v3.5.210 #ov-pause #fp-tip's var(--bg2) won here and went near-black in the dark theme */
 .pause-clip .pause-title,.pause-clip .pause-sub,.pause-clip .fp-tip-hdr,.pause-clip #fp-tip-h,.pause-clip #fp-tip-s,.pause-clip .pause-hint,
 .pause-clip .pmb-restart,.pause-clip .pmb:not(.pmb-resume):not(.pmb-account){
   text-shadow:0 1px 0 rgba(255,255,255,.95),0 -1px 0 rgba(255,255,255,.7),1px 0 0 rgba(255,255,255,.7),-1px 0 0 rgba(255,255,255,.7);}
@@ -2514,7 +2554,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 .tdl-row.on .tdl-box{border-color:#1f9d57;background:rgba(31,157,87,.12);}
 .tdl-t{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:600;color:#2a1c0a;}
 .tdl-row:last-child .tdl-t{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;}
-.td-ladder{font-family:'Barlow Condensed',sans-serif;font-size:14px;line-height:1.4;color:#4a3a20;background:rgba(178,59,46,.06);border-left:3px solid #b23b2e;padding:10px 12px;border-radius:0 6px 6px 0;margin-bottom:16px;}
+.td-ladder{font-family:'Barlow Condensed',sans-serif;font-size:14px;line-height:1.4;color:#4a3a20;background:#f3e6dc;border-left:3px solid #b23b2e;padding:10px 12px;border-radius:0 6px 6px 0;margin-bottom:16px;}
 .td-sign{width:100%;background:linear-gradient(180deg,#e0a838,#c8801a);color:#160c00;border:none;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.5px;padding:13px;border-radius:7px;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.3);}
 .td-skip{width:100%;background:none;border:none;color:#7a6a4a;font-family:'Barlow Condensed',sans-serif;font-size:15px;text-decoration:underline;cursor:pointer;padding:10px;margin-top:4px;}
 
@@ -2887,7 +2927,7 @@ body.m-portrait.cn-sheet.m-armed #m-rot{right:150px;bottom:14px;}
   color:#c040c0;background:rgba(8,2,8,.92);padding:3px 12px;border-radius:3px;
   border:1px solid rgba(192,64,192,.4);}
 #trainer-banner{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;
-  color:#fff;background:rgba(192,64,192,.18);padding:4px 16px;border-radius:3px;
+  color:#fff;background:#3d1f3d;padding:4px 16px;border-radius:3px;
   border:1px solid rgba(192,64,192,.5);opacity:0;transition:opacity .2s;}
 #trainer-banner.vis{opacity:1;}
 .nh-cell{outline:2px dashed rgba(192,64,192,.8) !important;}
@@ -2920,16 +2960,16 @@ body.m-portrait.cn-sheet.m-armed #m-rot{right:150px;bottom:14px;}
   background:linear-gradient(90deg,transparent,var(--acc) 30%,var(--acc) 70%,transparent);opacity:.55;border-radius:10px 10px 0 0;}
 #set-head{display:flex;align-items:center;justify-content:space-between;
   padding:16px 20px 12px;border-bottom:1px solid var(--border2);position:sticky;top:0;background:var(--bg2);z-index:2;}
-#set-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:6px;color:var(--acc);line-height:1;}
+#set-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:6px;color:var(--acc-ink);line-height:1;}
 #set-close{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;
   background:transparent;border:1px solid var(--border2);border-radius:6px;
   color:var(--t2);padding:6px 14px;cursor:pointer;}
-#set-close:hover{border-color:var(--acc);color:var(--acc);}
+#set-close:hover{border-color:var(--acc);color:var(--acc-ink);}
 #set-body{padding:6px 20px 16px;}
 .set-section{padding:14px 0 12px;border-bottom:1px solid var(--border);}
 .set-section:last-child{border-bottom:none;}
 .set-sec-title{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2.5px;
-  color:var(--acc);text-transform:uppercase;font-weight:bold;margin-bottom:12px;}
+  color:var(--acc-ink);text-transform:uppercase;font-weight:bold;margin-bottom:12px;}
 .set-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;}
 .set-row:last-child{margin-bottom:0;}
 .set-lbl{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--t1);line-height:1.15;}
@@ -2938,7 +2978,7 @@ body.m-portrait.cn-sheet.m-armed #m-rot{right:150px;bottom:14px;}
 .set-seg{display:flex;border:1.5px solid var(--border2);border-radius:6px;overflow:hidden;flex-shrink:0;}
 .set-seg-btn{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:bold;letter-spacing:1px;
   padding:8px 16px;cursor:pointer;background:transparent;color:var(--t2);border:none;transition:background .15s,color .15s;}
-.set-seg-btn.active{background:rgba(200,121,30,.20);color:var(--acc);}
+.set-seg-btn.active{background:rgba(200,121,30,.20);color:var(--acc-ink);}
 .set-seg-btn.active.teal{background:rgba(19,133,120,.20);color:var(--teal-bright);}
 /* v3.5.71 music-track grid · one button per song, wraps to rows */
 .set-mtrack-grid{flex-wrap:wrap;justify-content:flex-end;max-width:252px;overflow:visible;gap:4px;border:none;}
@@ -3077,14 +3117,14 @@ body[data-cb="trit"]{
 @media(max-width:560px){.mg-grid{grid-template-columns:1fr;}}
 #ov-profile.vis,#ov-leaderboard.vis{display:flex;}
 /* v3.5.13 LEADERBOARD board rows · dark on the cream clipboard card */
-.lb-tabline{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;color:#8b6a3a;margin:0 0 6px;font-weight:bold;}
+.lb-tabline{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;color:#4a3a22;margin:0 0 6px;font-weight:bold;}
 .lb-board{font-family:'Share Tech Mono',monospace;font-size:14px;margin-bottom:14px;}
 .lb-row{display:flex;justify-content:space-between;align-items:center;padding:5px 8px;border-bottom:1px solid #ddd2bc;}
 .lb-row span:first-child{color:#a08b6a;width:34px;font-weight:bold;}
 .lb-row span:nth-child(2){flex:1;color:#2a1a08;text-align:left;padding-left:10px;font-weight:bold;}
 .lb-row span:last-child{color:#8b4513;font-weight:bold;}
 .lb-row.lb-me{background:rgba(200,121,30,.14);border-radius:3px;}
-.lb-empty{color:#a08b6a;font-style:italic;padding:10px 4px;}
+.lb-empty{color:#4f4230;font-style:italic;padding:10px 4px;}
 .lb-note{font-family:'Share Tech Mono',monospace;font-size:11px;color:#a08b6a;line-height:1.5;margin-top:6px;border-top:1px dashed #d8cdb4;padding-top:8px;}
 /* v3.5.104 THE HALL LEDGER · World-Board fame cards + medal rows, cream-paper style (v3.5.205 shame removed) */
 .lb-colhd{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;margin:16px 0 9px;display:flex;align-items:center;gap:8px;}
@@ -3116,10 +3156,10 @@ body[data-cb="trit"]{
 .lb-daily-crown .dc-lbl{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.4px;color:#6a3a08;}
 .lb-daily-crown .dc-name{font-family:'Bebas Neue',sans-serif;font-size:27px;letter-spacing:1px;color:#3a1e04;line-height:1;margin:3px 0 2px;word-break:break-all;}
 .lb-daily-crown .dc-score{font-family:'Share Tech Mono',monospace;font-size:12px;color:#6a3a08;font-weight:bold;}
-.lb-daily-reset{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;color:#8b6a3a;text-align:center;margin-top:7px;}
+.lb-daily-reset{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;color:#4a3a22;text-align:center;margin-top:7px;}
 /* v3.5.107 ALL-TIME DAILY records strip */
 .lb-alltime{margin-top:12px;padding-top:11px;border-top:2px dashed #cebf9c;}
-.lb-at-hd{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#b07a12;margin:0 0 9px;display:flex;align-items:center;gap:7px;}
+.lb-at-hd{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#5a3a06;margin:0 0 9px;display:flex;align-items:center;gap:7px;}
 .lb-at-hd::after{content:'';flex:1;height:1px;background:#cebf9c;}
 .lb-at-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .lb-at{background:linear-gradient(180deg,#efe8d7,#e2d8bf);border:1px solid #cebf9c;border-radius:8px;padding:9px 10px;box-shadow:inset 3px 0 0 #e0a838;}
@@ -3144,16 +3184,16 @@ body[data-cb="trit"]{
 .pf-card::after{content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:28px;height:16px;background:#444;border-radius:2px;z-index:3;}
 .pf-top{display:flex;align-items:center;justify-content:space-between;padding:30px 24px 12px;background:#ece7d8;border-bottom:2px solid #c8b898;border-radius:3px 3px 0 0;flex-shrink:0;}
 .pf-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:#2a1a08;}
-.pf-x{background:rgba(0,0,0,.06);border:1px solid #d0bfa0;color:#8b6a3a;font-size:19px;cursor:pointer;line-height:1;width:40px;height:40px;min-width:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none;padding:0;}/* v3.5.46 real tappable close button (was a bare ✕ glyph nobody could hit) */
-.pf-x:hover{background:rgba(0,0,0,.12);color:#5a3f1a;border-color:#b89a6a;}
-.pf-x:hover{color:#c23a1a;}
+.pf-x{background:#ebe5d9;border:1px solid #d0bfa0;color:#6b5030;font-size:19px;cursor:pointer;line-height:1;width:40px;height:40px;min-width:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none;padding:0;}/* v3.5.46 real tappable close button (was a bare ✕ glyph nobody could hit) */
+.pf-x:hover{background:#dfd8cb;color:#5a3f1a;border-color:#b89a6a;}
+.pf-x:hover{color:#a32e12;}
 .pf-body{padding:18px 26px 20px;overflow-y:auto;flex:1;}
 /* v3.5.105 THE CLIPBOARD behind the SOCIAL / PROFILE / MINI-GAMES menus · the REAL clipboard.png (like pause + briefing). Content lives in the clear writing area below the clip (~top 22%). */
 #ov-leaderboard .pf-card,#ov-profile .pf-card{background:url('clipboard.png') center/contain no-repeat;height:min(1120px,93vh);width:auto;max-width:96vw;aspect-ratio:619/905;max-height:none;box-shadow:none;filter:drop-shadow(0 16px 42px rgba(0,0,0,.6));border-radius:0;position:relative;display:block;overflow:visible;}
 #ov-leaderboard .pf-card::before,#ov-leaderboard .pf-card::after,#ov-profile .pf-card::before,#ov-profile .pf-card::after{display:none;}
 #ov-leaderboard .pf-top,#ov-profile .pf-top{position:absolute;left:7%;right:7%;top:22.5%;background:transparent;border:none;padding:0 0 4px;z-index:2;}
 #ov-leaderboard .pf-title,#ov-profile .pf-title{color:#2a1a08;font-size:23px;letter-spacing:2px;}
-#ov-leaderboard .pf-x,#ov-profile .pf-x{width:34px;height:34px;min-width:34px;background:rgba(0,0,0,.06);}
+#ov-leaderboard .pf-x,#ov-profile .pf-x{width:34px;height:34px;min-width:34px;background:#ebe5d9;}
 #ov-leaderboard .pf-body,#ov-profile .pf-body{position:absolute;left:6.5%;right:6.5%;top:30%;bottom:5%;overflow-y:auto;padding:0;}
 #ov-minigames .mg-wrap{background:url('clipboard.png') center/contain no-repeat;height:min(1060px,90vh);width:auto;max-width:94vw;aspect-ratio:619/905;position:relative;filter:drop-shadow(0 16px 42px rgba(0,0,0,.6));}
 #ov-minigames .mg-head{position:absolute;left:7%;right:7%;top:22%;margin:0;}
@@ -3192,7 +3232,7 @@ body[data-cb="trit"]{
 .pf-note{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:#9a8a6e;margin-top:14px;line-height:1.4;}
 .pf-auth{padding:6px 2px 4px;}
 .pf-tabs{display:flex;gap:7px;margin-bottom:16px;}
-.pf-tab{flex:1;background:#e7e0d0;border:2px solid var(--btn-line);border-radius:6px;padding:9px 0;min-height:34px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1.5px;color:#8a7a5e;cursor:pointer;}
+.pf-tab{flex:1;background:#e7e0d0;border:2px solid var(--btn-line);border-radius:6px;padding:9px 0;min-height:34px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1.5px;color:#5c4d33;cursor:pointer;}
 .pf-tab.on{background:#8b4513;color:#fff;border-color:var(--btn-line);box-shadow:inset 0 -3px 0 #d4820f;}
 .pf-fld{margin-bottom:11px;}
 .pf-fld label{display:block;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:#7a6a52;margin-bottom:3px;}
@@ -3311,8 +3351,8 @@ body[data-cb="trit"]{
 .ps-legend .sp{margin-right:auto;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:.08em;color:#9a8b72;text-transform:uppercase;align-self:center;}
 .ps-legend .h{width:86px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.08em;padding:3px 0;border-radius:3px 3px 0 0;}
 .ps-legend .h.w{color:#0e6b60;background:#e0efec;}
-.ps-legend .h.s{color:#9a5c12;background:#f4e6cf;}
-.ps-legend .h.l{color:#8a6a3a;background:#efe6d0;}
+.ps-legend .h.s{color:#7e4a0c;background:#f4e6cf;}
+.ps-legend .h.l{color:#6a5130;background:#efe6d0;}
 /* v3.5.191 ONE column on screen. The report now lives in the board's writing area, which is
    ~500px wide, and two columns of 13px rows in 500px was unreadable. Print still gets two. */
 .ps-blocks{column-count:1;column-gap:28px;}
@@ -3404,7 +3444,7 @@ body[data-cb="trit"]{
 <div id="ctrl-edit-bar">
   <div class="ce-hint">Drag the joystick to move it · slide to resize · your layout is saved on this device.</div>
   <div class="ce-row">
-    <label>SIZE</label>
+    <label for="ce-scale">SIZE</label>
     <input id="ce-scale" type="range" min="70" max="170" value="100" oninput="ctrlSetScale(this.value)">
     <button id="ce-done" onclick="ctrlEditEnd()">DONE</button>
   </div>
@@ -3416,7 +3456,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.209 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.210 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -3539,7 +3579,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 16)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.5.205: updated Oct 16; back to "Privacy" after 2026-11-16. -->
-  <div id="sm-footer">LOCK IN v3.5.209 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.210 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3583,8 +3623,8 @@ body[data-cb="trit"]{
           </div>
         </div>
         <div class="set-row">
-          <div class="set-lbl">D-pad / Joystick Size</div>
-          <input class="set-range" id="set-ctrl-scale" type="range" min="70" max="170" value="100" oninput="ctrlSetScale(this.value)">
+          <div class="set-lbl" id="set-lbl-ctrl">D-pad / Joystick Size</div>
+          <input class="set-range" id="set-ctrl-scale" aria-labelledby="set-lbl-ctrl" type="range" min="70" max="170" value="100" oninput="ctrlSetScale(this.value)">
         </div>
         <div class="set-row">
           <div class="set-lbl">Reposition</div>
@@ -3595,17 +3635,17 @@ body[data-cb="trit"]{
       <div class="set-section">
         <div class="set-sec-title">◈ Audio</div>
         <div class="set-row">
-          <div class="set-lbl">Master Volume</div>
-          <input class="set-range" id="set-vol-master" type="range" min="0" max="100" value="80" oninput="setVolume('master',this.value)">
+          <div class="set-lbl" id="set-lbl-master">Master Volume</div>
+          <input class="set-range" id="set-vol-master" aria-labelledby="set-lbl-master" type="range" min="0" max="100" value="80" oninput="setVolume('master',this.value)">
         </div>
         <div class="set-row">
-          <div class="set-lbl">Sound Effects</div>
-          <input class="set-range" id="set-vol-sfx" type="range" min="0" max="100" value="80" oninput="setVolume('sfx',this.value)">
+          <div class="set-lbl" id="set-lbl-sfx">Sound Effects</div>
+          <input class="set-range" id="set-vol-sfx" aria-labelledby="set-lbl-sfx" type="range" min="0" max="100" value="80" oninput="setVolume('sfx',this.value)">
         </div>
         <!-- v3.5.155 music rows hidden, not removed · the slider/track ids stay in the DOM so refreshSettingsUI never breaks; unhide when re-licensed tracks land -->
         <div class="set-row" style="display:none;">
-          <div class="set-lbl">Music</div>
-          <input class="set-range" id="set-vol-music" type="range" min="0" max="100" value="60" oninput="setVolume('music',this.value)">
+          <div class="set-lbl" id="set-lbl-music">Music</div>
+          <input class="set-range" id="set-vol-music" aria-labelledby="set-lbl-music" type="range" min="0" max="100" value="60" oninput="setVolume('music',this.value)">
         </div>
         <div class="set-row" style="display:none;align-items:flex-start;">
           <div class="set-lbl">Music Track</div>
@@ -3685,11 +3725,11 @@ body[data-cb="trit"]{
         <div class="set-sec-title">◈ Session</div>
         <div class="set-row">
           <div class="set-lbl">Quick Reset<small>Restart this load from an empty trailer · current wall is lost</small></div>
-          <button class="set-seg-btn" style="padding:8px 16px;color:var(--warn);border-color:var(--warn);" onclick="quickReset()">↺ QUICK RESET</button>
+          <button class="set-seg-btn" style="padding:8px 16px;color:var(--warn-ink);border-color:var(--warn);" onclick="quickReset()">↺ QUICK RESET</button>
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.209 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.210 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3802,7 +3842,7 @@ body[data-cb="trit"]{
       <label class="data-fld">CONFIRM PASSWORD <span>(new accounts)</span><input id="auth-pw2" type="password" placeholder="re-type to confirm"></label>
       <div class="data-btns"><button class="data-save" id="auth-signin" onclick="zAuthLogin()">SIGN IN</button><button class="data-cancel" id="auth-signup" onclick="zAuthSignup()">CREATE ACCOUNT</button></div>
       <div class="auth-note" id="auth-note">Pick a username + password to keep your record across devices. No email needed. Free, always. CREATE ACCOUNT also turns on SAVE MY STATS; switch it off below anytime.</div>
-      <button id="auth-forgot" onclick="zForgotToggle()" style="background:none;border:none;color:var(--teal);text-decoration:underline;cursor:pointer;font-size:13px;padding:4px 0;">Forgot password?</button>
+      <button id="auth-forgot" onclick="zForgotToggle()" style="background:none;border:none;color:var(--teal-ink);text-decoration:underline;cursor:pointer;font-size:13px;padding:4px 0;">Forgot password?</button>
       <div id="auth-reset" style="display:none;">
         <label class="data-fld">USERNAME<input id="rst-user" type="text" placeholder="your handle"></label>
         <label class="data-fld">RECOVERY CODE<input id="rst-hex" type="text" maxlength="8" placeholder="e.g. a1b2c3d4"></label>
@@ -3817,15 +3857,15 @@ body[data-cb="trit"]{
       <div class="crew-hd">◈ YOUR CREW</div>
       <div id="crew-state" class="crew-state">Sign in to join a crew.</div>
       <div id="crew-join-row" class="crew-row" style="display:none;">
-        <input id="crew-code" type="text" maxlength="24" placeholder="join code" autocapitalize="off" autocorrect="off" spellcheck="false">
+        <input id="crew-code" type="text" maxlength="24" aria-label="Crew join code" placeholder="join code" autocapitalize="off" autocorrect="off" spellcheck="false">
         <button class="crew-btn" onclick="crewLookup()">JOIN</button>
       </div>
       <div id="crew-mine" class="crew-mine" style="display:none;"></div>
       <div id="crew-msg" class="crew-msg"></div>
       <button class="crew-mk" id="crew-mk" onclick="crewShowCreate()" style="display:none;">+ CREATE A CREW</button>
       <div id="crew-create" class="crew-create" style="display:none;">
-        <input id="crew-name-in" type="text" maxlength="48" placeholder="crew name (e.g. Logistics 101, Period 3)">
-        <input id="crew-code-in" type="text" maxlength="24" placeholder="join code (e.g. moregooder)" autocapitalize="off" autocorrect="off" spellcheck="false">
+        <input id="crew-name-in" type="text" maxlength="48" aria-label="Crew name" placeholder="crew name (e.g. Logistics 101, Period 3)">
+        <input id="crew-code-in" type="text" maxlength="24" aria-label="Join code for the new crew" placeholder="join code your crew will type" autocapitalize="off" autocorrect="off" spellcheck="false">
         <div class="crew-row"><button class="crew-btn" onclick="crewCreate()">CREATE</button><button class="crew-btn ghost" onclick="crewHideCreate()">CANCEL</button></div>
       </div>
     </div>
@@ -3847,7 +3887,7 @@ body[data-cb="trit"]{
   <div class="data-btns"><button class="data-save" onclick="crewJoinConfirm()">JOIN</button><button class="data-cancel" onclick="crewCancel()">CANCEL</button></div>
 </div></div>
 
-<div id="root">
+<div id="root" role="main">
 
   <!-- TOP SCOREBOARD · v3.5.8 order: MODE · TRAILER · SCORE · LOAD RATE · BALANCE · ELAPSED · WALL HEIGHT · PACK · PLACED -->
   <div id="stats-panel">
@@ -3875,16 +3915,16 @@ body[data-cb="trit"]{
     <!-- v3.5.8: in-game header strip ("pause shelf") removed · logo/version slop gone, PAUSE folded into the scoreboard, height given to the play window. Hidden carriers keep legacy code safe. -->
     <span id="shift-badge" style="display:none"></span>
     <span id="conv-lbl-txt" style="display:none"></span>
-    <button id="pause-btn" onclick="togglePause()" style="display:none"></button>
+    <button id="pause-btn" onclick="togglePause()" aria-label="Pause" style="display:none"></button>
     <div id="panic-wrap">
       <div id="panic-bg"><div id="panic-fill" style="width:100%"></div></div>
       <div id="panic-lbl">DISPATCH IN ,s</div>
     </div>
     <div id="world">
       <div id="scene-wrap">
-        <canvas id="scene" tabindex="0" role="img" aria-label="Freight trailer loading wall · stack boxes to build a stable, full wall"></canvas>
+        <canvas id="scene" tabindex="0" role="img" aria-label="Freight trailer loading wall · stack boxes to build a stable, full wall">Freight trailer loading wall. Keyboard: arrow keys move, [ and ] choose a piece, Enter or Space places it, R rotates, P or Escape pauses.</canvas>
         <div id="ov-cert"><div class="cert-wrap">
-  <canvas id="cert-canvas" width="1000" height="1300" role="img" aria-label="Your perfect wall certificate"></canvas>
+  <canvas id="cert-canvas" width="1000" height="1300" role="img" aria-label="Your perfect wall certificate">Your perfect wall certificate.</canvas>
   <div class="cert-acts">
     <button class="cert-btn" onclick="liSaveCert()">⬇ SAVE PNG</button>
     <button class="cert-btn ghost" onclick="liCloseCert()">✕ CLOSE</button>
@@ -3965,12 +4005,12 @@ body[data-cb="trit"]{
         <button id="stage-btn" class="strip-act sa-stage" type="button" onclick="stageButton()" title="STAGE (F): set the box in your hand down beside the wall. 3 spots. With empty hands, choose a staged box to pick back up." aria-label="Stage. 0 of 3 staged. Key F.">⬇ STAGE <span id="stage-n">0/3</span></button>
         <button id="rot-btn" onclick="rotateSel()" aria-label="Rotate the box in hand. Key R.">↻ ROT<span class="kh"> [R]</span></button>
       </div>
-      <canvas id="belt-canvas" style="display:none;width:100%;touch-action:none;"></canvas>
+      <canvas id="belt-canvas" aria-hidden="true" style="display:none;width:100%;touch-action:none;">Conveyor belt.</canvas>
     </div>
   </div>
 
   <!-- v3.4.11 NC/SMALLS staging popup (selector replaces the floor-corner slots) -->
-  <div id="ov-staging"><button type="button" class="stg-sep" id="stg-sep" onclick="stgClose()" style="display:none;"></button><div class="stg-wheel"><div class="stg-tiles" id="stg-tiles"></div></div></div>
+  <div id="ov-staging"><button type="button" class="stg-sep" id="stg-sep" onclick="stgClose()" aria-label="Close the staging selector" style="display:none;"></button><div class="stg-wheel"><div class="stg-tiles" id="stg-tiles"></div></div></div>
 
   <!-- v3.5.37 BOTTOM CONSOLE DRAWER · hosts OPERATIONS (live stats) + LINEHAUL (full log); ADMIN opens the pause surface -->
   <div id="console-drawer">
@@ -4156,7 +4196,7 @@ body[data-cb="trit"]{
     <div id="lb-friends-auth" class="lb-empty" style="display:none">Sign in on the <b>ME</b> tab to follow loaders and track their boards.</div>
     <div id="lb-friends-main">
       <div class="lb-follow-row">
-        <input id="lb-follow-input" type="text" maxlength="24" placeholder="follow a username…" autocomplete="off">
+        <input id="lb-follow-input" type="text" maxlength="24" aria-label="Username to follow" placeholder="follow a username…" autocomplete="off">
         <button id="lb-follow-btn" onclick="lbFollow()">FOLLOW</button>
       </div>
       <div class="lb-tabline">♦ YOUR CIRCLE · you + who you follow</div>
@@ -4202,7 +4242,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.209
+// LOCK IN v3.5.210
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -4684,7 +4724,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.209'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.210'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -12310,7 +12350,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u00b7':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.209</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.210</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
@@ -12579,6 +12619,16 @@ null, // index 0 unused · levels are 1-based
 ];
 
 // ── LEVEL SELECT UI ──
+// v3.5.210 the difficulty badge's words need 4.5:1 on the dark level card. I lift the accent toward white, 5% at a
+// time, until it gets 4.6:1 against #2a1a14 (a shade lighter than the lightest card, so it holds on all of them).
+function lsInk(hex){
+  var a=[parseInt(hex.substr(1,2),16),parseInt(hex.substr(3,2),16),parseInt(hex.substr(5,2),16)],bg=[42,26,20],f=0,m=a;
+  function lum(c){var s=0,w=[0.2126,0.7152,0.0722],i,v;for(i=0;i<3;i++){v=c[i]/255;v=v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);s+=w[i]*v;}return s;}
+  function mix(t){return [Math.round(a[0]+(255-a[0])*t),Math.round(a[1]+(255-a[1])*t),Math.round(a[2]+(255-a[2])*t)];}
+  var lb=lum(bg);
+  while(f<=1){m=mix(f);var lm=lum(m);if((Math.max(lm,lb)+0.05)/(Math.min(lm,lb)+0.05)>=4.6)break;f+=0.05;}
+  return 'rgb('+m[0]+','+m[1]+','+m[2]+')';
+}
 function openLevelSelect(){
   hideStartMenu();
   buildLevelSelectCards();
@@ -12608,7 +12658,7 @@ function buildLevelSelectCards(){
     }
     starsHtml+='</div>';
     // Difficulty badge color
-    var diffStyle='color:'+lv.accent+';border-color:'+lv.accent+';background:'+lv.accent+'18;';
+    var diffStyle='color:'+lsInk(lv.accent)+';border-color:'+lv.accent+';background:'+lv.accent+'18;'; // v3.5.210 words lifted to 4.6:1, the accent stays on the border
     card.innerHTML=(locked?'<div class="ls-lock-icon">🔒</div>':'')+
       '<div class="ls-num">LEVEL '+i+'</div>'+
       '<div class="ls-name">'+lv.abbr+'</div>'+

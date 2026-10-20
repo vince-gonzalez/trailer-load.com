@@ -62,12 +62,18 @@ footer{border-top:1px solid var(--border);padding:22px 0 40px;text-align:center;
 footer a{color:var(--teal);}
 @media(max-width:680px){h1{font-size:58px;}.cols{grid-template-columns:1fr;}.btn.play{font-size:26px;padding:17px 32px;}}
 </style>
+<style>/* v3.5.210 skip link (WCAG 2.4.1): off screen until the keyboard reaches it */
+.skip-link{position:absolute;left:-10000px;top:0;z-index:10000;}
+.skip-link:focus{left:8px;top:8px;padding:10px 16px;background:#1d1710;color:#f8f1e2;font:bold 16px/1.2 system-ui,sans-serif;text-decoration:underline;outline:3px solid #f0ad4a;outline-offset:2px;}
+</style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to main content</a>
 <div class="bar">
   <a class="logo" href="/">LOCK IN</a>
   <nav><a href="/">Home</a><a href="/lock-in.html">Full game</a><a href="/for-districts/">Documentation</a><a href="/programs/#facilities">For schools</a><a href="/me/" style="color:var(--acc-ink);font-weight:bold;">◕ Clock In</a></nav>
 </div>
+<main id="main">
 
 <div class="wrap">
   <div class="hero">
@@ -115,6 +121,7 @@ footer a{color:var(--teal);}
   <p class="note">Training supplement only. It builds intuition and tracks readiness. It does not replace employer safety training, OSHA training, or any certification requirement. See the <a href="/terms.html">Terms</a>.</p>
   <p style="margin-top:16px;"><a href="/programs/#facilities">Program pricing and the instructor dashboard</a> &nbsp;·&nbsp; <a href="/for-districts/">Technical documentation for district IT</a></p>
 </div></section>
+</main>
 
 <footer>
   <div class="wrap">

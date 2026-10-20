@@ -91,7 +91,7 @@ small,sub,sup{font-size:11px;}
 
 
 /* ============================================================
-   SMALLS SORT (LOCK IN)  v1.11
+   SMALLS SORT (LOCK IN)  v1.14
    Drag-sort: 6 routes (NE double-binned at pool corners),
    GENTLE/FLOOR, split QA (DAMAGE+HAZMAT), OVERNIGHT, recovery
    pool, belt-stoppage jam. Industrial-grit palette.
@@ -161,7 +161,7 @@ html,body{width:100%;height:100dvh;
 /* v1.2 board + settings cross-wire */
 /* v1.13 BOARD and settings are family .co-btn buttons now */
 .bd-tabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap;justify-content:center;}
-.bd-tab{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.28);color:#bbb;border-radius:6px;padding:7px 14px;cursor:pointer;}
+.bd-tab{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:1px;border:1px solid rgba(255,255,255,.28);border-radius:6px;padding:7px 14px;cursor:pointer;}
 .bd-tab.active{background:var(--acc);color:#160c00;border-color:var(--acc);font-weight:bold;}
 .bd-list{width:min(440px,90vw);max-height:52vh;overflow-y:auto;}
 .bd-row{display:flex;align-items:center;gap:12px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.08);font-family:'Share Tech Mono',monospace;}
@@ -283,7 +283,7 @@ html,body{width:100%;height:100dvh;
     <div class="co-stat"><span class="co-lbl" id="lbl-down">Down</span><span class="co-val" id="s-down">0s</span></div>
     <div class="co-stat"><span class="co-lbl" id="lbl-time">Time</span><span class="co-val" id="s-time">1:00</span></div>
   </div>
-  <div id="field"><canvas id="cv"></canvas></div>
+  <div id="field" role="main"><canvas id="cv" role="img" aria-label="The sort floor: packages ride down the belt and you drag each one into its bin">The sort floor: packages ride down the belt and you drag each one into its bin.</canvas></div>
   <footer class="co-ftr">SMALLS SORT · a LOCK IN companion · <a href="/">trailer-load.com</a><br>www.f-keys.com | © 2026 F-Keys LLC</footer>
 
   <div class="ov vis" id="ov-start">
@@ -380,7 +380,9 @@ html,body{width:100%;height:100dvh;
 
 <script>
 // ============================================================
-// SMALLS SORT v1.13 | var-only | single STATE object
+// SMALLS SORT v1.14 | var-only | single STATE object
+// v1.14 (LOCK IN v3.5.210) WCAG: the sort floor canvas has a text alternative and is the main landmark, and the BOARD
+// tabs lost two colors that never rendered (every tab is on the clipboard, which sets its own). a11yhat: 0 FAIL.
 // v1.13 (LOCK IN v3.5.208) THE COMPANION FAMILY: the header, stat bar, clipboard menus, buttons and footer every LOCK IN
 // companion wears, from .tools/companion-family.html. The account chip is the family's (coFamilyBoot); smReadAuth
 // reads through it. The stamp said v1.11 through the v1.12 sign-out work; it is v1.13 now.

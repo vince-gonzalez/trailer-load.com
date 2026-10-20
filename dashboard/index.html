@@ -186,8 +186,13 @@ tbody tr:hover td{background:#f6efdd;}
   body{background:#fff;} .board{box-shadow:none;border:none;}
 }
 </style>
+<style>/* v3.5.210 skip link (WCAG 2.4.1): off screen until the keyboard reaches it */
+.skip-link{position:absolute;left:-10000px;top:0;z-index:10000;}
+.skip-link:focus{left:8px;top:8px;padding:10px 16px;background:#1d1710;color:#f8f1e2;font:bold 16px/1.2 system-ui,sans-serif;text-decoration:underline;outline:3px solid #f0ad4a;outline-offset:2px;}
+</style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to main content</a>
 
 <div id="topbar"><div class="wrap">
   <div class="brand">LOCK<b> IN</b> &nbsp;<span style="font-size:13px;letter-spacing:2px;">PROGRAM DASHBOARD</span></div>
@@ -195,6 +200,7 @@ tbody tr:hover td{background:#f6efdd;}
 </div></div>
 
 <!-- LOGIN -->
+<main id="main">
 <div id="login">
   <h1>PROGRAM SIGN-IN</h1>
   <p class="sub">Your students' loading practice report.</p>
@@ -267,6 +273,7 @@ tbody tr:hover td{background:#f6efdd;}
     </div>
   </div>
 </div></div>
+</main>
 
 <script>
 /* ══════════════════════════════════════════════════════════════════════════

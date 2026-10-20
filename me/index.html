@@ -138,8 +138,13 @@ td.sig-ini{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px
 [data-theme="dark"] tr:hover td{background:#2e2016;}
 @media(max-width:560px){.brand{font-size:24px;letter-spacing:4px;}.me-hero .handle{font-size:32px;}}
 </style>
+<style>/* v3.5.210 skip link (WCAG 2.4.1): off screen until the keyboard reaches it */
+.skip-link{position:absolute;left:-10000px;top:0;z-index:10000;}
+.skip-link:focus{left:8px;top:8px;padding:10px 16px;background:#1d1710;color:#f8f1e2;font:bold 16px/1.2 system-ui,sans-serif;text-decoration:underline;outline:3px solid #f0ad4a;outline-offset:2px;}
+</style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to main content</a>
 
 <div id="topbar"><div class="wrap">
   <div class="brand">LOCK IN<small>CLOCK IN · YOUR RECORD</small></div>
@@ -147,6 +152,7 @@ td.sig-ini{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px
 </div></div>
 
 <!-- LOGIN -->
+<main id="main">
 <div id="login">
   <h1>Clock In</h1>
   <div class="sub">See your loading record</div>
@@ -211,7 +217,7 @@ td.sig-ini{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px
   </div>
   <div id="lp-friends" style="display:none;">
     <div class="lb-add">
-      <input id="lb-follow-user" type="text" placeholder="follow a loader by username">
+      <input id="lb-follow-user" type="text" aria-label="Username to follow" placeholder="follow a loader by username">
       <button class="btn btn-acc" onclick="mFollow()">+ Follow</button>
     </div>
     <div id="lb-follow-msg" class="lb-msg"></div>
@@ -220,6 +226,7 @@ td.sig-ini{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px
 
   <div class="foot">LOCK IN · trailer-load.com · your record, your device · saved only because you opted in · © 2026</div>
 </div></div>
+</main>
 
 <script>
 // ============================================================

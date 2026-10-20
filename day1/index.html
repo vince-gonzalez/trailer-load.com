@@ -101,13 +101,19 @@ footer a{color:var(--teal);}
   a{color:#000;text-decoration:none;}
 }
 </style>
+<style>/* v3.5.210 skip link (WCAG 2.4.1): off screen until the keyboard reaches it */
+.skip-link{position:absolute;left:-10000px;top:0;z-index:10000;}
+.skip-link:focus{left:8px;top:8px;padding:10px 16px;background:#1d1710;color:#f8f1e2;font:bold 16px/1.2 system-ui,sans-serif;text-decoration:underline;outline:3px solid #f0ad4a;outline-offset:2px;}
+</style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to main content</a>
 
 <div class="bar">
   <a class="logo" href="/">LOCK IN</a>
   <nav><a href="/">Home</a><a href="/daily/">★ Daily</a><a href="/lock-in.html">Play</a><a href="/programs/">Programs</a><a href="/for-districts/">Documentation</a></nav>
 </div>
+<main id="main">
 
 <div class="wrap">
 
@@ -420,6 +426,7 @@ footer a{color:var(--teal);}
 </div>
 
 </div>
+</main>
 
 <footer>
   <div class="wrap">

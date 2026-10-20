@@ -18,7 +18,7 @@ small,sub,sup{font-size:11px;}
 
 :root{
   --bg:#ece5d8;--bg2:#e6ddcb;--bg3:#dcd1bb;--ink:#211a12;
-  --t1:#2a2018;--t2:#544738;--t3:#6d6050;
+  --t1:#2a2018;--t2:#544738;--t3:#625543;
   --acc:#c8791e;--acc-bright:#e0962e;--acc-dim:#9a5c12;--acc-ink:#7d4a0e;--acc-wash:#f6e9d3;
   --teal:#0a6a5e;--teal-wash:#dcefec;--ok:#1f9d57;--danger:#c23a1a;
   --border:#cdbfa6;--border2:#bcaa8b;
@@ -31,10 +31,10 @@ body{margin:0;background:radial-gradient(1100px 380px at 50% -140px,rgba(200,121
 .bar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:12px 22px;margin:0 -22px 8px;background:rgba(236,229,216,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);}
 .bar .brand{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--t1);line-height:1;display:flex;align-items:baseline;gap:10px;}
-.bar .brand small{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--acc-dim);}
+.bar .brand small{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--acc-ink);}
 .bar nav a{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--teal);text-decoration:none;margin-left:16px;}
 .bar nav a:hover{color:var(--acc);}
-.kicker{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:3px;color:var(--acc-dim);margin-top:34px;}
+.kicker{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:3px;color:var(--acc-ink);margin-top:34px;}
 h1{font-family:'Bebas Neue',sans-serif;font-size:60px;line-height:.95;letter-spacing:1px;color:var(--ink);margin:6px 0 10px;}
 .eff{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--t3);
   background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:5px 13px;margin-bottom:6px;}
@@ -78,13 +78,18 @@ footer a{color:var(--teal);}
 @media(max-width:640px){h1{font-size:44px;}h2{font-size:25px;}.bar .brand small{display:none;}.bar nav a{margin-left:11px;}}
 @media print{.bar,.toc,.noprint{display:none!important;}body{background:#fff;}a{color:#000;border:none;}.tldr{box-shadow:none;}}
 </style>
+<style>/* v3.5.210 skip link (WCAG 2.4.1): off screen until the keyboard reaches it */
+.skip-link{position:absolute;left:-10000px;top:0;z-index:10000;}
+.skip-link:focus{left:8px;top:8px;padding:10px 16px;background:#1d1710;color:#f8f1e2;font:bold 16px/1.2 system-ui,sans-serif;text-decoration:underline;outline:3px solid #f0ad4a;outline-offset:2px;}
+</style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to main content</a>
 <div class="bar">
   <div class="brand">LOCK IN <small>www.trailer-load.com</small></div>
   <nav><a href="/">Home</a><a href="/programs/#facilities">For schools</a><a href="/privacy.html">Privacy</a><a href="/lock-in.html">Play</a></nav>
 </div>
-<div class="wrap">
+<div class="wrap" id="main" role="main">
 
   <div class="kicker">FOR DISTRICT IT · CTE DIRECTORS · PURCHASING</div>
   <h1>Technical Documentation</h1>
