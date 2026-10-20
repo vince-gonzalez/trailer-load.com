@@ -1,4 +1,4 @@
-# trailer-load.com · read us, cite us. AI crawlers explicitly welcome.
+# trailer-load.com · read and cite freely. AI crawlers explicitly welcome.
 User-agent: *
 Allow: /
 
@@ -30,5 +30,5 @@ Allow: /
 User-agent: Bytespider
 Allow: /
 
-Sitemap: https://trailer-load.com/sitemap.xml
+Sitemap: https://www.trailer-load.com/sitemap.xml
 # Curated map for LLMs: https://trailer-load.com/llms.txt

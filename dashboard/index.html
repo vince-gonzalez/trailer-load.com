@@ -373,7 +373,7 @@ var COLS={
 };
 var SHEET_SRC={life:'lockin_cohort', session:'lockin_cohort_session', wall:'lockin_cohort_wall'};
 // v2.1 SHOWCASE: the demo account reads a pseudonymous mirror of the REAL roster instead of seeded students,
-// so a prospect sees actual results (Vince, 2026-10-03: "display the actual dashboard with real results").
+// so a prospect sees actual results (I said on 2026-10-03: "display the actual dashboard with real results").
 // The views return rows only for the demo crew's instructor (lockin_private.showcase_ok); everyone else gets
 // none and stays on their own class. No real user_id leaves the database; usernames become student-xyz.
 var SHEET_SRC_SHOW={life:'lockin_showcase', session:'lockin_showcase_session', wall:'lockin_showcase_wall'};
@@ -494,7 +494,7 @@ function dFetchFacility(cb){
   }catch(e){console.error('dFetchFacility:',e);cb(false);}
 }
 // v2.2.2 one place decides the header. An instructor can own several crews and the API returns them in no
-// fixed order; Vince owns the demo crew plus two test crews, and one of those (since renamed) came back
+// fixed order; I own the demo crew plus two test crews, and one of those (since renamed) came back
 // FIRST and would have titled a prospect demo. In a SHOWCASE session the header is the demo crew's name.
 // The signed-in name shows the game username, not the hidden <username>@players.lockin.app address.
 function dWho(){
