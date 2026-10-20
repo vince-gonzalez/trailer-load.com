@@ -41,9 +41,27 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.212
+   LOCK IN v3.5.213
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.213 - A MISSED DISPATCH IS A PENALTY, NOT THE END OF THE SHIFT.
+     In TRAILER-LOAD the dispatch clock ended the run at zero (DISPATCH TIMEOUT). Now the trailer is just late: seal before
+     zero and the clock still pays up to +800; at zero it costs 500 (never below a zero score), the clock stays off for the
+     rest of that wall, the shift summary counts each late dispatch, and you keep loading. It also clears the one place
+     TRAILER-LOAD's clock could end a session (WCAG 2.2.1).
+     The chute works the same way. Eleven seconds starved was CHUTE JAMMED · SHIFT OVER; now the manager comes and breaks
+     the jam for you, which costs 300 (never below a zero score), the summary counts it, and you keep loading. Breaking
+     your own jam is your job, and leaving it costs the manager's time. The pre-sort meeting states both rules: rule 9
+     (the dispatch clock and what a miss costs) and a new rule 10, Break your jams. The briefing line says "see the
+     Privacy Policy" instead of "our".
+     The pre-sort itself failed contrast on the gray clipboard (rule numbers 2.1 to 2.5:1, titles 2.6 to 3.1, the why-lines
+     3.2 to 3.8, the I'M READY button 3.47, the legal line 3.94); every ink there is 5:1 or better now, and on a short
+     screen a MORE RULES BELOW cue shows until the list is scrolled to the end. The stall card's warning icon was 2.2.
+     The privacy policy, the terms, the district page and the program overview name F-Keys Creative LLC ("F-Keys") where
+     they said "we", "our" and "us" (about 180 places). I am one person; the company is the party making these
+     commitments, and none of them changed. The Day One guide states the dispatch and jam rules the same way the pre-sort
+     does, and the rule document is updated to match.
 
    CHANGE LOG v3.5.212 - A PAUSE STOPS EVERY CLOCK; PERKINS-ELIGIBLE, STATED EXACTLY.
      (1) PAUSE. Pause moved the shift, wall and session clocks past the break, but not the clocks that end a run. Pause
@@ -2892,14 +2910,14 @@ body.m-portrait.cn-sheet.m-armed #m-rot{right:150px;bottom:14px;}
 .brief-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(18px,3.6vw,23px);letter-spacing:2.5px;
   color:#2a1c0e;display:block;margin-bottom:1px;text-shadow:0 1px 0 rgba(255,255,255,.4);}
 .brief-sub{font-family:'Share Tech Mono',monospace;font-size:clamp(11px,1.6vw,13px);letter-spacing:2px;
-  color:#6a5a42;text-transform:uppercase;display:block;margin-bottom:clamp(7px,1.6vw,13px);}
-.brief-rule{display:flex;gap:8px;margin-bottom:clamp(2px,0.5vw,4px);align-items:baseline;} /* v3.5.84 tightened for 9 rules + why-lines */
-.brief-rule-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(14px,2.7vw,17px);color:#b5651a;
+  color:#3f3020;text-transform:uppercase;display:block;margin-bottom:clamp(7px,1.6vw,13px);}
+.brief-rule{display:flex;gap:8px;margin-bottom:clamp(2px,0.5vw,4px);align-items:baseline;} /* v3.5.84 tightened for 9 rules + why-lines; 10 rules since v3.5.213 */
+.brief-rule-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(14px,2.7vw,17px);color:#5a3306;
   line-height:1;flex-shrink:0;min-width:14px;}
 .brief-rule-txt{font-family:'Barlow Condensed',sans-serif;font-size:clamp(12px,2.3vw,14px);font-weight:600;
   letter-spacing:.3px;color:#2a1c0e;line-height:1.12;}
-.brief-rule-txt b{color:#a8511a;}
-.brief-why{display:block;font-weight:400;font-size:clamp(11px,1.8vw,13px);color:#6a5a42;line-height:1.08;margin-top:0;letter-spacing:.1px;} /* v3.5.84 the "why" detail line */
+.brief-rule-txt b{color:#5a3306;} /* v3.5.213 the pre-sort is printed on the gray clipboard: amber was 2.6 to 3.1:1 */
+.brief-why{display:block;font-weight:400;font-size:clamp(11px,1.8vw,13px);color:#3f3020;line-height:1.08;margin-top:0;letter-spacing:.1px;} /* v3.5.84 the "why" detail line */
 /* v3.5.179 THE TEACHING ARTIFACT CLIPPED ON THE HARDWARE SCHOOLS ACTUALLY BUY.
    #clipboard is HEIGHT-driven (min(1060px,88vh)) but every type size inside clamps off viewport
    WIDTH · so on a 1366x768 Chromebook the type pinned to its maximum while the writing area shrank
@@ -2918,12 +2936,14 @@ body.m-portrait.cn-sheet.m-armed #m-rot{right:150px;bottom:14px;}
 }
 #brief-cta-row{display:flex;align-items:center;justify-content:center;margin-top:16px;flex:none;}
 #brief-cta{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px;
-  background:linear-gradient(180deg,#c8791e,#9a5512);color:#1c1206;border:1.5px solid #e0a64e;border-radius:6px;
+  background:linear-gradient(180deg,#f3b64a,#e0902e);color:#1c1206;border:1.5px solid #533a12;border-radius:6px; /* v3.5.213 was 3.47:1 on the dark end */
   padding:11px 26px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.45);}
 #brief-cta:hover{filter:brightness(1.1);}
 #brief-legal{max-width:560px;margin:12px auto 0;font-family:'Share Tech Mono',monospace;
-  font-size:11px;color:#7a6e5c;line-height:1.5;text-align:center;padding:0 10px;flex:none;}
-#brief-legal a{color:#c8791e;}
+  font-size:11px;color:var(--t2);line-height:1.5;text-align:center;padding:0 10px;flex:none;} /* v3.5.213 on the page, not the clipboard: theme ink */
+#brief-legal a{color:var(--acc-ink);}
+/* v3.5.213 the rule list scrolls on short screens; this says so, so the last rules are never missed */
+#brief-more{position:absolute;left:8%;right:8%;bottom:1%;text-align:center;font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:bold;letter-spacing:1px;color:#3f3020;visibility:hidden;pointer-events:none;}
 #brief-voice-note{font-family:'Share Tech Mono',monospace;font-size:11px;
   letter-spacing:1px;color:#888;text-align:right;max-width:150px;line-height:1.4;}
 
@@ -3300,7 +3320,7 @@ body[data-cb="trit"]{
 #ov-recover{position:fixed;inset:0;z-index:360;display:none;align-items:center;justify-content:center;background:rgba(28,20,16,.9);}
 #ov-recover.vis{display:flex;}
 .rec-card{background:var(--bg2);border:2px solid var(--acc);border-radius:12px;padding:34px 36px;max-width:460px;text-align:center;box-shadow:0 22px 64px rgba(0,0,0,.55);}
-.rec-icon{font-size:48px;color:var(--warn);line-height:1;}
+.rec-icon{font-size:48px;color:var(--warn-ink);line-height:1;} /* v3.5.213 was 2.2:1 */
 .rec-title{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:2px;color:var(--t1);margin:12px 0 8px;}
 .rec-sub{font-family:'Barlow Condensed',sans-serif;font-size:19px;color:var(--t2);line-height:1.5;margin-bottom:22px;}
 .rec-btns{display:flex;flex-direction:column;gap:11px;}
@@ -3491,7 +3511,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.212 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.213 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -3527,16 +3547,18 @@ body[data-cb="trit"]{
       <div class="brief-rule"><div class="brief-rule-num">6</div><div class="brief-rule-txt"><b>Hazmat low &amp; locked.</b> Floor it, cap it under a shelf.<span class="brief-why">A hazmat in ANY collapse ends the round · keep it stable.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">7</div><div class="brief-rule-txt"><b>Lay tires flat.</b> On its edge, a tire rolls the second the door opens.<span class="brief-why">Standing one up is a safety warning · lay it flat before the door opens.</span></div></div>
       <div class="brief-rule"><div class="brief-rule-num">8</div><div class="brief-rule-txt"><b>📦 Bags break open.</b> Double-tap a bag on the chute · it spills six small pieces for gaps a box can’t reach.<span class="brief-why">Use them to fill the last voids before you seal.</span></div></div>
-      <div class="brief-rule"><div class="brief-rule-num">9</div><div class="brief-rule-txt"><b>Pack tight, then seal.</b> Density is the job · fill, seal at height, beat the clock.<span class="brief-why">Cube fill, not just height · the manager calls the target.</span></div></div>
+      <div class="brief-rule"><div class="brief-rule-num">9</div><div class="brief-rule-txt"><b>Pack tight, seal before dispatch.</b> At 85% full or 85% high a 60-second dispatch clock starts · seal before zero for up to +800.<span class="brief-why">Cube fill, not just height. In TRAILER-LOAD a missed dispatch costs 500, and you still finish the wall.</span></div></div>
+      <div class="brief-rule"><div class="brief-rule-num">10</div><div class="brief-rule-txt"><b>⚡ Break your jams.</b> An empty chute is a jam · hit BREAK JAM (or press B) to get freight moving.<span class="brief-why">In TRAILER-LOAD, leave it 11 seconds and the manager has to stop and break it for you: that costs 300.</span></div></div>
     </div>
   </div>
+  <div id="brief-more" aria-hidden="true">▼ MORE RULES BELOW · SCROLL</div>
 </div>
 <div id="brief-cta-row">
   <button id="brief-cta" onclick="acknowledgeBriefing()">I'M READY · OPEN THE DOOR</button>
 </div>
 <div id="brief-legal">
   Training supplement only · not a substitute for employer safety training or certification. &nbsp;·&nbsp;
-  No ads and no tracking. Your stats are saved only if you choose; the game keeps anonymous daily totals with nothing about you attached · see our
+  No ads and no tracking. Your stats are saved only if you choose; the game keeps anonymous daily totals with nothing about you attached · see the
   <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>. &nbsp;·&nbsp; &copy; 2026
 </div>
 </div>
@@ -3614,7 +3636,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 16)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.5.205: updated Oct 16; back to "Privacy" after 2026-11-16. -->
-  <div id="sm-footer">LOCK IN v3.5.212 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.213 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3771,7 +3793,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.212 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.213 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -4284,7 +4306,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.212
+// LOCK IN v3.5.213
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -4766,7 +4788,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.212'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.213'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -7253,8 +7275,12 @@ function stageLeftOnDock(){
   return n;
 }
 function stageEndNote(){
-  if(typeof S==='undefined'||!S||!S.stageLeft)return '';
-  return ' · '+S.stageLeft+' box'+(S.stageLeft>1?'es':'')+' left on the dock'+((S._stageLeftCost||0)>0?(': −'+S._stageLeftCost):'');
+  if(typeof S==='undefined'||!S)return '';
+  var out='';
+  if(S.stageLeft)out+=' · '+S.stageLeft+' box'+(S.stageLeft>1?'es':'')+' left on the dock'+((S._stageLeftCost||0)>0?(': −'+S._stageLeftCost):'');
+  if(S.lateDispatches)out+=' · '+S.lateDispatches+' late dispatch'+(S.lateDispatches>1?'es':'')+((S._lateCost||0)>0?(': −'+S._lateCost):''); // v3.5.213
+  if(S.managerJams)out+=' · the manager broke '+S.managerJams+' jam'+(S.managerJams>1?'s':'')+((S._jamCost||0)>0?(': −'+S._jamCost):''); // v3.5.213
+  return out;
 }
 // H: take the next special-handling piece into hand (cycles through the rack)
 function takeSpecialHandling(){
@@ -7761,7 +7787,7 @@ function checkPanic(){
   // v3.5.62 NO DISPATCH in practice/regular/training · the learning modes carry no clock pressure.
   if((G&&G.practice)||gameMode===''||gameMode==='training'){if(panicActive){panicActive=false;var _pw0=document.getElementById('panic-wrap');if(_pw0)_pw0.classList.remove('vis');}return;}
   var fill=countFilled()/(GW*GH);
-  if(!panicActive&&(fill>=PANIC_THRESHOLD||wallH()/GH>=PANIC_THRESHOLD)&&!gOver){
+  if(!panicActive&&!(G&&G._dispatchMissed)&&(fill>=PANIC_THRESHOLD||wallH()/GH>=PANIC_THRESHOLD)&&!gOver){
     panicActive=true;panicStartT=Date.now();panicSealed=false;
     document.getElementById('panic-wrap').classList.add('vis');
     flash('fl-panic');
@@ -7778,7 +7804,7 @@ function checkPanic(){
     var pct=(rem/PANIC_DURATION)*100;
     document.getElementById('panic-fill').style.width=pct+'%';
     document.getElementById('panic-lbl').textContent='DISPATCH IN '+Math.ceil(rem)+'s · LOCK IT IN!';
-    if(rem<=0){if(isForgiving()){panicActive=false;panicStartT=null;var _pw=document.getElementById('panic-wrap');if(_pw)_pw.classList.remove('vis');}else{checkWin();if(!(G&&G.sealed))endGame('DISPATCH TIMEOUT · TRAILER LEFT WITHOUT FULL WALL',false);}} // v2.1.10 + v3.5.10 buzzer-beater: seal a complete wall instead of failing it at 0s
+    if(rem<=0){if(isForgiving()){panicActive=false;panicStartT=null;var _pw=document.getElementById('panic-wrap');if(_pw)_pw.classList.remove('vis');}else{checkWin();if(!(G&&G.sealed))missedDispatch();}} // v2.1.10 + v3.5.10 buzzer-beater: seal a complete wall instead of failing it at 0s
   }
 }
 
@@ -7883,6 +7909,34 @@ function calcScore(segOverride){
 // dispatch bonuses and throw/drink/unseal/shed penalties all silently EVAPORATED (hazmat-shelf +1500 was a pure
 // no-op, and improving a daily wall after sealing COST the whole seal payout on the board). Every one-shot amount
 // now banks into a per-wall G.bonusPool that calcScore always includes. bankScore() is the single entry point.
+// v3.5.213 MISSED DISPATCH is a penalty, not the end of the shift. I want the clock's pressure without a run that just
+// ends: seal before zero and it still pays up to PANIC_BONUS_MAX; at zero the trailer is late. The penalty is banked (never
+// below a zero score), the miss is counted for the shift summary, the clock stays off for the rest of that wall, and
+// loading goes on. Nobody learns anything from a run that stops.
+var DISPATCH_LATE_PENALTY=500;
+function missedDispatch(){
+  panicActive=false;panicStartT=null;if(G)G._dispatchMissed=true;
+  var pw=document.getElementById('panic-wrap');if(pw)pw.classList.remove('vis');
+  var cost=Math.min(DISPATCH_LATE_PENALTY,Math.max(0,(typeof calcScore==='function')?calcScore():((G&&G.score)||0)));
+  if(cost>0)bankScore(-cost);
+  if(typeof S!=='undefined'&&S){S.lateDispatches=(S.lateDispatches||0)+1;S._lateCost=(S._lateCost||0)+cost;}
+  if(typeof zLog==='function')zLog('latedispatch',{cost:cost});
+  if(typeof playSfx==='function')playSfx('error');
+  if(typeof showBanner==='function')showBanner('⚠ MISSED DISPATCH'+(cost>0?' · −'+cost:'')+' · the trailer is late. Seal it and keep loading.','danger',2800);
+}
+// v3.5.213 THE MANAGER BREAKS YOUR JAM. An empty chute is your jam to break (BREAK JAM, or B). Leave it 11 seconds and
+// the manager has to stop what they are doing and come break it for you, which is not your job getting done and costs
+// their time. That is a penalty, banked (never below a zero score) and counted for the shift summary. The shift goes on.
+var JAM_MANAGER_PENALTY=300;
+function managerBreaksJam(){
+  var cost=Math.min(JAM_MANAGER_PENALTY,Math.max(0,(typeof calcScore==='function')?calcScore():((G&&G.score)||0)));
+  if(cost>0)bankScore(-cost);
+  if(typeof S!=='undefined'&&S){S.managerJams=(S.managerJams||0)+1;S._jamCost=(S._jamCost||0)+cost;}
+  if(typeof zLog==='function')zLog('managerjam',{cost:cost});
+  breakJam();
+  if(typeof playSfx==='function')playSfx('error');
+  if(typeof showBanner==='function')showBanner('⚠ THE MANAGER HAD TO BREAK YOUR JAM'+(cost>0?' · −'+cost:'')+' · break your own jams (BREAK JAM or B).','danger',3000);
+}
 function bankScore(n){
   if(typeof G==='undefined'||!G)return;
   G.bonusPool=(G.bonusPool||0)+n;
@@ -8348,7 +8402,7 @@ function tickChute(){
   if((placed||0)<1){updateChuteUI();return;}
   if(typeof isForgiving==='function'&&isForgiving()){if(jamWarnLevel!==1){jamWarnLevel=1;if(typeof playSfx==='function')playSfx('dwell');}updateChuteUI();return;}
   var dt=(Date.now()-jamStarvedT)/1000,WARN=4,FAIL=11;
-  if(dt>=FAIL){jamStarvedT=0;jamWarnLevel=0;endGame('CHUTE JAMMED \u00b7 SHIFT OVER',false);return;}
+  if(dt>=FAIL){managerBreaksJam();return;} // v3.5.213 the manager breaks it: a penalty, and the shift goes on
   var nl=(dt>=WARN)?2:1;
   if(nl!==jamWarnLevel){jamWarnLevel=nl;if(typeof playSfx==='function')playSfx(nl>=2?'error':'dwell');}
   updateChuteUI(Math.max(0,Math.ceil(FAIL-dt)));
@@ -11794,6 +11848,15 @@ function showBriefing(){
   var b=document.getElementById('briefing');
   if(b){b.style.display='';b.classList.remove('gone');}
   try{briefTab(activeVoice);}catch(e){console.error('showBriefing:',e);}
+  var bb=document.getElementById('brief-body');
+  if(bb&&!bb._moreWired){bb._moreWired=true;bb.addEventListener('scroll',briefMoreUpdate,{passive:true});window.addEventListener('resize',briefMoreUpdate);}
+  setTimeout(briefMoreUpdate,0);
+}
+// v3.5.213 shows the MORE RULES BELOW cue while the list has unread rules under the fold, and hides it at the bottom
+function briefMoreUpdate(){
+  var bb=document.getElementById('brief-body'),m=document.getElementById('brief-more');if(!bb||!m)return;
+  var more=bb.scrollHeight>bb.clientHeight+4&&bb.scrollTop+bb.clientHeight<bb.scrollHeight-4;
+  m.style.visibility=more?'visible':'hidden';
 }
 function guardLaunch(fn){
   if((fn===startTrailerLoad||fn===startDaily)&&!_briefingSeen()){_briefPending=fn;showBriefing();return;}
@@ -12393,7 +12456,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u00b7':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.212</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.213</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
