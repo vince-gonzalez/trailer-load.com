@@ -41,9 +41,34 @@ small,sub,sup{font-size:11px;}
 
 
 /* ================================================================
-   LOCK IN v3.5.211
+   LOCK IN v3.5.212
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
+
+   CHANGE LOG v3.5.212 - A PAUSE STOPS EVERY CLOCK; PERKINS-ELIGIBLE, STATED EXACTLY.
+     (1) PAUSE. Pause moved the shift, wall and session clocks past the break, but not the clocks that end a run. Pause
+         during the 60-second dispatch countdown for longer than the time left, and the trailer left the moment you
+         resumed (DISPATCH TIMEOUT). The chute starve (fails at 11 s), the Tour level clock (your stars), the collapse
+         recovery window, the idle counter and the work-stoppage timer had the same gap. All six move past the pause now.
+     (2) PERKINS. The programs page said "Perkins-eligible" with nothing behind it on that page. It now says what makes
+         it true: a software license is an allowable local use of Perkins V funds under Sec. 135(b)(5)(D) (20 U.S.C.
+         2355), "hardware and software, and other new and emerging instructional materials", and the state CTE agency
+         and the business office make the final call. The program overview adds the two conditions an auditor checks:
+         Perkins funds supplement, not supplant (Sec. 211(a)), and the purchase traces to the comprehensive local needs
+         assessment (Sec. 134(b)(2)(A), (c)). I checked every section cited against the statute text on 2026-10-20.
+     (3) The daily page still said LOCK IN "tracks readiness"; it says "tracks practice progress" like every other page.
+         The stall screen and the facility sign-in note no longer say "we".
+     (4) TEXT SIZE. Large and XL did nothing to the HUD (0 of 43 labels grew) and made the coach text smaller. It is one
+         multiplier now, 1.15x and 1.3x, on every reading label in the panels, the console and the ADMIN clipboard. On
+         the phone the stat strip goes to two rows at Large and XL, and the water count no longer runs past its button
+         (it did by 26px even at normal size).
+     (5) CONTRAST, the last two screens. The write-up and the post-sort report are printed on the gray clipboard; 37
+         labels and values were 1.6 to 3.7:1, and the report's footer and verdict labels were 1.6 and 3.0. Every ink on
+         both is 5:1 or better now, measured one screenful at a time down the whole report, in both themes.
+     (6) ONE-KEY SHORTCUTS (WCAG 2.1.4, Level A). R, P, F, H, W, B, [ ] and Space worked anywhere on the page with no
+         way to turn them off, so speech input could fire them. Settings, Accessibility has One-Key Shortcuts ON/OFF.
+     (7) INPUT PURPOSE (WCAG 1.3.5). The sign-in, create-account and password-reset fields name their purpose
+         (username, current-password, new-password), so browsers and password managers fill them correctly.
 
    CHANGE LOG v3.5.211 - THE PUBLIC PRICES ARE PAID FROM DAY ONE.
      The programs page, the program overview and the district page all promised a free first semester to every
@@ -2462,18 +2487,18 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 .wu-in{position:absolute;left:7%;right:7%;top:23%;bottom:4.5%;overflow-y:auto;text-align:left;}
 .wu-head{border-bottom:2px solid #2a1c0e;padding-bottom:8px;margin-bottom:12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
 .wu-brand{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:#2a1c0e;}
-.wu-brand b{color:#c8791e;}
+.wu-brand b{color:#5a3306;} /* v3.5.212 the clipboard is gray aluminum: amber was 1.94:1, this is 5.3 */
 .wu-doc{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:#8a1a1a;border:1px solid #c04a2a;padding:2px 7px;border-radius:3px;}
 .wu-meta{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-bottom:14px;}
 .wu-meta div{display:flex;flex-direction:column;}
-.wu-meta span{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:#7a6a4c;} /* v3.5.152 (Letterman) 9px->11px + darker */
+.wu-meta span{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:#3f3020;} /* v3.5.152 (Letterman) 9px->11px + darker */
 .wu-meta b{font-size:16px;color:#2a1c0e;word-break:break-all;}
 .wu-inf-lbl,.wu-why-lbl{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#8a1a1a;margin-bottom:3px;}
-.wu-why-lbl{color:#7a6a4c;margin-top:14px;}
+.wu-why-lbl{color:#3f3020;margin-top:14px;}
 .wu-inf{font-family:'Bebas Neue',sans-serif;font-size:23px;letter-spacing:1px;color:#8a1a1a;line-height:1.05;}
 .wu-why{font-size:16px;line-height:1.42;color:#3a2c1a;}
 .wu-ack{margin-top:18px;border-top:1px dashed #c8b898;padding-top:12px;}
-.wu-ack span{display:block;font-family:'Share Tech Mono',monospace;font-size:11px;color:#7a6a4c;margin-bottom:10px;line-height:1.45;} /* v3.5.152 (Letterman) 10px->11px + darker */
+.wu-ack span{display:block;font-family:'Share Tech Mono',monospace;font-size:11px;color:#3f3020;margin-bottom:10px;line-height:1.45;} /* v3.5.152 (Letterman) 10px->11px + darker */
 .wu-ack button{width:100%;padding:13px;border:none;border-radius:6px;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:#1a0f04;background:linear-gradient(180deg,#f3b64a,#e0902e);box-shadow:0 3px 0 #a9661a;}
 .wu-ack button:active{transform:translateY(2px);box-shadow:0 1px 0 #a9661a;}
 .pause-hint{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;
@@ -2825,7 +2850,7 @@ body.cn-sheet #stg-nc .sh-word{font-size:20px;}
 body.cn-sheet #stg-nc .stg-pie{display:none;}
 body.cn-sheet #cn-right #rot-btn{min-height:56px;font-size:19px;padding:0;flex-direction:column;}
 body.cn-sheet .cn-r2 #stage-btn{width:100%;min-height:46px;}
-body.cn-sheet .cn-r3{display:grid;grid-template-columns:132px minmax(0,1fr);gap:8px;}
+body.cn-sheet .cn-r3{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;} /* v3.5.212 was 132px: the water count ran 26px past its button even at normal size */
 body.cn-sheet #cn-right #water-bottle{display:flex;min-height:46px;padding:3px 10px;gap:8px;}
 body.cn-sheet #cn-right #water-bottle .wb-n{margin-left:auto;align-self:center;font-size:18px;}
 body.cn-sheet #cn-right #water-bottle::before{align-self:center;font-size:21px;}
@@ -3009,29 +3034,33 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,[t
   outline:3px solid var(--acc-bright);outline-offset:2px;border-radius:3px;}
 
 /* Text Scale (v2.1.25) · sizes the in-play reading surfaces */
-body[data-txt="lg"] #fp-tip-h{font-size:17px;}
-body[data-txt="lg"] #fp-tip-s{font-size:11.5px;}
+/* v3.5.212 TEXT SIZE IS ONE MULTIPLIER. The old rules set fixed sizes written for an older HUD; the current HUD rules
+   outranked them, so XL grew 0 of 43 HUD labels and shrank the coach text (11.5px under its 12.5px normal). Now Large is
+   1.15x and XL is 1.3x on every reading label in the side panels, the console buttons and the ADMIN clipboard. zoom scales
+   each label's box with its text, so nothing overlaps. The big numbers are already 30 to 46px and stay as they are. */
+body{--txt:1;}
+body[data-txt="lg"]{--txt:1.15;}
+body[data-txt="xl"]{--txt:1.3;}
+#cn-left .cn-title,#cn-left .sh-sub,#cn-left .sh-key,#cn-left .cn-hd,#cn-left .cn-sub,#cn-left .cn-dim,#cn-left .cn-stage-note,
+.console-btn,#cn-right .sp-lbl,#cn-right .sp-med,#sp-cog-s,#safety-live,#cn-right .cn-hd,#cn-right .cn-chute-t,#footer .msg-body,#footer .msg-src,
+#fp-tip-h,#fp-tip-s,.fp-tip-hdr,.pause-hint,.pause-sub,.pmb{zoom:var(--txt);}
+/* the desktop left panel scrolls at Large and XL when the bigger text needs more room than the panel has */
+body:not(.cn-sheet)[data-txt="lg"] #cn-left,body:not(.cn-sheet)[data-txt="xl"] #cn-left{overflow-y:auto;}
+/* the phone's stat strip: at Large and XL the stats take the full width and the console icons wrap under them */
+body.cn-sheet[data-txt="lg"] #cn-left,body.cn-sheet[data-txt="xl"] #cn-left{height:auto;flex-wrap:wrap;}
+body.cn-sheet[data-txt="lg"] #cn-left #stats-panel,body.cn-sheet[data-txt="xl"] #cn-left #stats-panel{flex:1 1 100%;}
+body.cn-sheet #cn-left .sb-cell .sp-lbl,body.cn-sheet #cn-left .sb-cell .sp-med,body.cn-sheet #cn-left .sb-cell .sp-big{zoom:var(--txt);}
+body.cn-sheet .console-btn{zoom:1;} /* icon-only on the phone */
+body.cn-sheet .sh-chip{zoom:var(--txt);}
+/* full-width phone buttons grow by font size, since zoom would widen them past the screen */
+body.cn-sheet .cn-r2 #stage-btn{font-size:calc(17px * var(--txt));}
+body.cn-sheet #cn-right #water-bottle .wb-n{font-size:calc(18px * var(--txt));}
 body[data-txt="lg"] #cmt-overlay{font-size:clamp(18px,3vw,27px);}
 body[data-txt="lg"] #banner{font-size:clamp(20px,3.6vw,32px);}
-body[data-txt="xl"] #fp-tip-h{font-size:20px;}
-body[data-txt="xl"] #fp-tip-s{font-size:13px;}
 body[data-txt="xl"] #cmt-overlay{font-size:clamp(22px,3.8vw,33px);}
 body[data-txt="xl"] #banner{font-size:clamp(24px,4.4vw,38px);}
-/* v3.5.151 OPEN DOOR (Rule-8 blocker) · text-scale now reaches the live HUD numbers, the dispatch line, and the staging tiles (was only touching coach tips + banners, so a player who scaled up for legibility got bigger tips and the actual scoreboard stayed put). */
-body[data-txt="lg"] .sb-cell .sp-med{font-size:25px;}
-body[data-txt="lg"] .sb-cell .sp-big{font-size:40px;}
-body[data-txt="lg"] .sb-cell .sp-lbl{font-size:13px;}
-body[data-txt="lg"] #footer .msg-body{font-size:19px;}
-body[data-txt="lg"] #footer .msg-src{font-size:12px;}
 body[data-txt="lg"] .stg-tile{font-size:12px;}
-body[data-txt="lg"] #safety-live{font-size:16px;}
-body[data-txt="xl"] .sb-cell .sp-med{font-size:28px;}
-body[data-txt="xl"] .sb-cell .sp-big{font-size:44px;}
-body[data-txt="xl"] .sb-cell .sp-lbl{font-size:14px;}
-body[data-txt="xl"] #footer .msg-body{font-size:21px;}
-body[data-txt="xl"] #footer .msg-src{font-size:13px;}
 body[data-txt="xl"] .stg-tile{font-size:13px;}
-body[data-txt="xl"] #safety-live{font-size:18px;}
 
 /* Colorblind palettes (v2.1.26) · status colors remapped per type; hazmat placards are
    already shape + class number. Deuteranopia/Protanopia (red-green) -> blue/cyan/orange/yellow.
@@ -3345,16 +3374,16 @@ body[data-cb="trit"]{
   background:none;border:none;border-radius:0;box-shadow:none;padding:0 2px;}
 .ps-mast{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #2a2018;padding-bottom:7px;}
 .ps-mast .lg{font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:.85;color:#2a2018;}
-.ps-mast .lg b{color:#c8791e;}
-.ps-mast .doc{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.15em;color:#6a5c48;margin-left:10px;}
-.ps-mast .stamp{font-family:'Share Tech Mono',monospace;font-size:11px;color:#c23a1a;border:2px solid #c23a1a;border-radius:4px;padding:3px 8px;transform:rotate(-4deg);letter-spacing:.06em;}
+.ps-mast .lg b{color:#5a3306;} /* v3.5.212 the report sits on the gray clipboard: every ink here is 5:1 or better on it */
+.ps-mast .doc{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.15em;color:#3f3020;margin-left:10px;}
+.ps-mast .stamp{font-family:'Share Tech Mono',monospace;font-size:11px;color:#7a1408;border:2px solid #7a1408;border-radius:4px;padding:3px 8px;transform:rotate(-4deg);letter-spacing:.06em;}
 .ps-rule{height:2px;background:#c8791e;margin:0 0 12px;}
 .ps-id{display:grid;grid-template-columns:repeat(4,1fr);gap:1px 22px;font-family:'Share Tech Mono',monospace;margin-bottom:14px;}
 .ps-id div{padding:4px 0;border-bottom:1px dotted #cdbf9f;}
-.ps-id .k{font-size:11px;letter-spacing:.12em;color:#9a8b72;display:block;}
+.ps-id .k{font-size:11px;letter-spacing:.12em;color:#4a3a22;display:block;}
 .ps-id .v{font-size:14px;color:#2a2018;}
 .ps-legend{display:flex;gap:0;margin-bottom:6px;align-items:flex-end;}
-.ps-legend .sp{margin-right:auto;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:.08em;color:#9a8b72;text-transform:uppercase;align-self:center;}
+.ps-legend .sp{margin-right:auto;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:.08em;color:#4a3a22;text-transform:uppercase;align-self:center;}
 .ps-legend .h{width:86px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.08em;padding:3px 0;border-radius:3px 3px 0 0;}
 .ps-legend .h.w{color:#0e6b60;background:#e0efec;}
 .ps-legend .h.s{color:#7e4a0c;background:#f4e6cf;}
@@ -3365,15 +3394,15 @@ body[data-cb="trit"]{
 @media(max-width:700px){#ov-postsort{padding:14px 6px 40px;}}
 .ps-block{break-inside:avoid;margin-bottom:15px;}
 .ps-block h4{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.07em;color:#2a2018;border-bottom:2px solid #2a2018;padding-bottom:2px;margin:0 0 1px;}
-.ps-block h4 .d{color:#c8791e;font-size:11px;}
+.ps-block h4 .d{color:#5a3306;font-size:11px;}
 .ps-row{display:grid;grid-template-columns:1fr 86px 86px 86px;align-items:center;border-bottom:1px solid #d9cdb4;min-height:22px;}
 .ps-row:nth-child(odd){background:rgba(120,96,40,.022);}
 .ps-row .m{font-family:'Barlow Condensed',sans-serif;font-size:13.5px;font-weight:500;color:#2a2018;padding-left:2px;}
-.ps-row .m.sub{font-size:12px;color:#6a5c48;padding-left:12px;}
+.ps-row .m.sub{font-size:12px;color:#3f3020;padding-left:12px;}
 .ps-row .n{font-family:'Share Tech Mono',monospace;font-size:13px;text-align:center;font-variant-numeric:tabular-nums;}
-.ps-row .n.w{color:#0e6b60;}
+.ps-row .n.w{color:#053f38;}
 .ps-row .n.s{color:#2a2018;font-weight:bold;}
-.ps-row .n.l{color:#8a6a3a;}
+.ps-row .n.l{color:#4a3a22;}
 .ps-verdict{break-inside:avoid;margin-top:2px;border:2px solid #2a2018;border-radius:6px;background:linear-gradient(180deg,#fff8ec,#f5eede);padding:13px 15px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
 .ps-ring{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:5px solid #1f9d57;box-shadow:0 0 0 3px #f5eede;flex:0 0 auto;}
 .ps-ring span{font-family:'Bebas Neue',sans-serif;font-size:44px;color:#1f9d57;line-height:1;}
@@ -3382,10 +3411,10 @@ body[data-cb="trit"]{
 .ps-vmid .ln{font-family:'Barlow Condensed',sans-serif;font-style:italic;font-size:14px;color:#6a5c48;}
 .ps-vsum{font-family:'Share Tech Mono',monospace;font-size:11px;min-width:210px;flex:0 0 auto;}
 .ps-vsum .vr{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dotted #cdbf9f;}
-.ps-vsum .vr .lb{color:#9a8b72;letter-spacing:.06em;}
+.ps-vsum .vr .lb{color:#5c4f3b;letter-spacing:.06em;}
 .ps-vsum .vr.s .va{color:#9a5c12;font-weight:bold;}
 .ps-vsum .vr.l .va{color:#8a6a3a;}
-.ps-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;border-top:2px solid #cdbf9f;padding-top:7px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#9a8b72;letter-spacing:.05em;}
+.ps-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;border-top:2px solid #cdbf9f;padding-top:7px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#4a3a22;letter-spacing:.05em;}
 .ps-tools{position:sticky;top:0;display:flex;gap:8px;justify-content:flex-end;margin:-12px -12px 8px 0;}
 .ps-tools button{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.05em;cursor:pointer;background:#2a2018;color:#f5eede;border:2px solid var(--btn-line);border-radius:6px;padding:7px 12px;min-height:34px;}
 .ps-login{color:#c23a1a;font-size:11px;}
@@ -3462,7 +3491,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.5.211 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.5.212 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -3585,7 +3614,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 16)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.5.205: updated Oct 16; back to "Privacy" after 2026-11-16. -->
-  <div id="sm-footer">LOCK IN v3.5.211 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.5.212 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -3724,6 +3753,13 @@ body[data-cb="trit"]{
             <button class="set-seg-btn" id="set-hapt-off" onclick="setHaptics(false)">OFF</button>
           </div>
         </div>
+        <div class="set-row">
+          <div class="set-lbl">One-Key Shortcuts<small>R, P, F, H, W, B, [ ] and Space. Turn off for speech input; arrows, Enter and Escape always work</small></div>
+          <div class="set-seg">
+            <button class="set-seg-btn" id="set-keys-on" onclick="setKeyShortcuts(true)">ON</button>
+            <button class="set-seg-btn" id="set-keys-off" onclick="setKeyShortcuts(false)">OFF</button>
+          </div>
+        </div>
         <div class="set-note">Hazmat shows a colorblind-safe diamond placard with its class number. Colorblind Mode forces high-contrast placards.</div>
       </div>
 
@@ -3735,7 +3771,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.5.211 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.5.212 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -3844,15 +3880,15 @@ body[data-cb="trit"]{
     <div class="auth-box">
       <div class="auth-toggle"><button id="auth-tab-w" class="auth-tab active" onclick="zAuthMode('worker')">WORKER</button><button id="auth-tab-f" class="auth-tab" onclick="zAuthMode('facility')">FACILITY</button></div>
       <label class="data-fld"><span id="auth-id-lbl">USERNAME</span><input id="auth-email" type="text" autocomplete="username" placeholder="pick a handle"></label>
-      <label class="data-fld">PASSWORD<input id="auth-pw" type="password" placeholder="••••••"></label>
-      <label class="data-fld">CONFIRM PASSWORD <span>(new accounts)</span><input id="auth-pw2" type="password" placeholder="re-type to confirm"></label>
+      <label class="data-fld">PASSWORD<input id="auth-pw" type="password" autocomplete="current-password" placeholder="••••••"></label>
+      <label class="data-fld">CONFIRM PASSWORD <span>(new accounts)</span><input id="auth-pw2" type="password" autocomplete="new-password" placeholder="re-type to confirm"></label>
       <div class="data-btns"><button class="data-save" id="auth-signin" onclick="zAuthLogin()">SIGN IN</button><button class="data-cancel" id="auth-signup" onclick="zAuthSignup()">CREATE ACCOUNT</button></div>
       <div class="auth-note" id="auth-note">Pick a username + password to keep your record across devices. No email needed. Free, always. CREATE ACCOUNT also turns on SAVE MY STATS; switch it off below anytime.</div>
       <button id="auth-forgot" onclick="zForgotToggle()" style="background:none;border:none;color:var(--teal-ink);text-decoration:underline;cursor:pointer;font-size:13px;padding:4px 0;">Forgot password?</button>
       <div id="auth-reset" style="display:none;">
-        <label class="data-fld">USERNAME<input id="rst-user" type="text" placeholder="your handle"></label>
+        <label class="data-fld">USERNAME<input id="rst-user" type="text" autocomplete="username" placeholder="your handle"></label>
         <label class="data-fld">RECOVERY CODE<input id="rst-hex" type="text" maxlength="8" placeholder="e.g. a1b2c3d4"></label>
-        <label class="data-fld">NEW PASSWORD<input id="rst-pw" type="password" placeholder="6+ characters"></label>
+        <label class="data-fld">NEW PASSWORD<input id="rst-pw" type="password" autocomplete="new-password" placeholder="6+ characters"></label>
         <div class="data-btns"><button class="data-save" onclick="zDoReset()">RESET PASSWORD</button></div>
       </div>
       <button class="auth-signout" id="auth-signout" onclick="zAuthLogout()" style="display:none;">SIGN OUT</button>
@@ -4134,7 +4170,7 @@ body[data-cb="trit"]{
   </div>
 </div>
 <div id="ov-postsort"><div class="ps-card" id="ps-card"></div></div>
-<div id="ov-recover"><div class="rec-card"><div class="rec-icon">⚠</div><div class="rec-title">WE'RE SORRY · THE SCREEN STALLED</div><div class="rec-sub">The display stopped updating. Your session is safe. Tap RESUME to retry · and if it stays stuck, do a HARD REFRESH (Ctrl+Shift+R, or Cmd+Shift+R on Mac) for a clean reset.</div><div class="rec-btns"><button class="btn-p" onclick="recoverResume()">▶ RESUME</button><button class="btn-p" onclick="recoverMenu()">CHOOSE MODE</button><button class="btn-p" onclick="location.reload()">⟳ HARD REFRESH</button></div><div class="rec-dbg" id="rec-dbg"></div></div></div>
+<div id="ov-recover"><div class="rec-card"><div class="rec-icon">⚠</div><div class="rec-title">SORRY · THE SCREEN STALLED</div><div class="rec-sub">The display stopped updating. Your session is safe. Tap RESUME to retry · and if it stays stuck, do a HARD REFRESH (Ctrl+Shift+R, or Cmd+Shift+R on Mac) for a clean reset.</div><div class="rec-btns"><button class="btn-p" onclick="recoverResume()">▶ RESUME</button><button class="btn-p" onclick="recoverMenu()">CHOOSE MODE</button><button class="btn-p" onclick="location.reload()">⟳ HARD REFRESH</button></div><div class="rec-dbg" id="rec-dbg"></div></div></div>
 <div id="ov-profile"><div class="pf-card"><div class="pf-top"><div class="pf-title" id="pf-title">PROFILE</div><button class="pf-x" onclick="closeProfile()">✕</button></div><div class="pf-body" id="pf-body"></div></div></div>
 <!-- v3.5.91 MINI-GAMES submenu · the side games, off the main pillars -->
 <div id="ov-minigames"><div class="mg-wrap">
@@ -4248,7 +4284,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.5.211
+// LOCK IN v3.5.212
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -4730,7 +4766,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.5.211'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
+var LI_APP_VER='3.5.212'; // v3.5.129 telemetry version stamp · bump WITH the LOCK IN version (was frozen at a stale '2.4.2', so every posted session was mislabeled)
 function zBuildSession(){
   var p=zLoadPlayer();
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
@@ -4881,7 +4917,7 @@ function zAuthMode(m){
   var _a2=document.getElementById('auth-pw2');if(_a2&&_a2.parentNode)_a2.parentNode.style.display=(m==='worker')?'':'none'; // v3.5.51 facility = sign-in only, no confirm field
   var ei=document.getElementById('auth-email'),nt=document.getElementById('auth-note');
   var lbl=document.getElementById('auth-id-lbl');
-  if(m==='facility'){if(ei){ei.placeholder='facility@org.com';ei.type='email';}if(lbl)lbl.textContent='EMAIL';if(nt)nt.textContent='Facility logins are issued by the publisher when you buy a dashboard. Enter the credentials we provided.';}
+  if(m==='facility'){if(ei){ei.placeholder='facility@org.com';ei.type='email';}if(lbl)lbl.textContent='EMAIL';if(nt)nt.textContent='Facility logins are issued by the publisher when you buy a dashboard. Enter the credentials that came with your license.';}
   else{if(ei){ei.placeholder='pick a handle';ei.type='text';}if(lbl)lbl.textContent='USERNAME';if(nt)nt.textContent='Pick a username + password to keep your record across devices. No email needed. Free, always. CREATE ACCOUNT also turns on SAVE MY STATS; switch it off below anytime.';}
 }
 function zAuthStatus(){
@@ -10213,6 +10249,7 @@ document.addEventListener('keydown',function(e){
   }
   var ae=document.activeElement,tag=ae?ae.tagName:'';
   if(/^(INPUT|TEXTAREA|SELECT)$/.test(tag))return; // typing · never hijack (also stops R rotating mid-type)
+  if(SETTINGS.keyShortcuts===false&&e.key&&e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey)return; // v3.5.212 WCAG 2.1.4 shortcuts off
   if(e.code==='KeyP'&&!e.repeat&&(kbPlayActive()||(paused&&_shown('ov-pause')))){togglePause();e.preventDefault();return;} // v3.5.206 P pauses and resumes
   // v3.5.119 GATE R/B (and everything) BEHIND ACTIVE GAMEPLAY. a playtester: "holding r makes the home-screen chat go
   // crazy; hold r + right-click on home screen, site reloads." R/rotateSel + B/breakJam fired on the MENU because they
@@ -12356,7 +12393,7 @@ function psBuild(lifeState,life){
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
       '<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='anon'?'\u00b7':(lifeState==='loading'?'\u2026':'?')))+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.5.211</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.5.212</span></div></div>';
     // v3.5.183 the legend has to tell the truth about the LIFETIME column, or a report that
     // could not read the career looks identical to a career that is genuinely empty.
     var _legend=(lifeState==='anon')?'\u25c6 LOG IN TO TRACK LIFETIME'
@@ -13510,7 +13547,11 @@ function togglePause(){
   } else {
     ov.classList.remove('vis');
     // v3.5.130 advance every clock PAST the pause so elapsed / PPH / session time never count paused seconds
-    if(_pauseStart){var _pd=Date.now()-_pauseStart;if(typeof startT!=='undefined'&&startT)startT+=_pd;if(S&&S._wallBase&&S._wallBase.startT)S._wallBase.startT+=_pd;if(S&&S.sessionStartT)S.sessionStartT+=_pd;_pauseStart=0;}
+    // v3.5.212 every clock that can end a run or cost points moves past the pause too, so a break never costs a trailer
+    if(_pauseStart){var _pd=Date.now()-_pauseStart;if(typeof startT!=='undefined'&&startT)startT+=_pd;if(S&&S._wallBase&&S._wallBase.startT)S._wallBase.startT+=_pd;if(S&&S.sessionStartT)S.sessionStartT+=_pd;
+      if(panicStartT)panicStartT+=_pd;if(jamStarvedT)jamStarvedT+=_pd;if(levelStartT)levelStartT+=_pd;if(recoveryT)recoveryT+=_pd;
+      if(typeof _M!=='undefined'&&_M){if(_M.lastPlaceT)_M.lastPlaceT+=_pd;if(_M.frozenEndT)_M.frozenEndT+=_pd;}
+      _pauseStart=0;}
     lastLoopT=0; // prevent dt spike on resume
     animF=requestAnimationFrame(loop);
   }
@@ -13533,7 +13574,7 @@ function toggleTheme(){
 // levels (a classroom can save muted), which is the NEXT step (per-account settings sync to the
 // backend). Music actually starts on the first user gesture (browser autoplay policy · see the
 // unlock listener by musicStart). theme / learnGrid / reducedMotion / voice apply live.
-var SETTINGS={volMaster:80,volSfx:80,volMusic:60,theme:'light',learnGrid:false,reducedMotion:false,colorblind:'off',textScale:'normal',boxGrid:false,musicTrack:'auto',haptics:true};
+var SETTINGS={volMaster:80,volSfx:80,volMusic:60,theme:'light',learnGrid:false,reducedMotion:false,colorblind:'off',textScale:'normal',boxGrid:false,musicTrack:'auto',haptics:true,keyShortcuts:true};
 function loadSettings(){
   try{
     var raw=localStorage.getItem('liSettings');
@@ -13573,6 +13614,8 @@ function refreshSettingsUI(){
   seg('set-motion-off',!SETTINGS.reducedMotion);
   seg('set-hapt-on',SETTINGS.haptics!==false);
   seg('set-hapt-off',SETTINGS.haptics===false);
+  seg('set-keys-on',SETTINGS.keyShortcuts!==false);
+  seg('set-keys-off',SETTINGS.keyShortcuts===false);
   seg('set-cb-off',!SETTINGS.colorblind||SETTINGS.colorblind==='off');
   seg('set-cb-deut',SETTINGS.colorblind==='deut');
   seg('set-cb-prot',SETTINGS.colorblind==='prot');
@@ -13636,6 +13679,9 @@ function setReducedMotion(on){
   document.body.classList.toggle('reduce-motion',!!on);
   refreshSettingsUI();saveSettings();
 }
+// v3.5.212 WCAG 2.1.4 (character key shortcuts): the one-letter keys can be turned off, so dictated words or a stray key
+// never move freight. Arrows, Enter and Escape are not character keys and always work.
+function setKeyShortcuts(on){SETTINGS.keyShortcuts=!!on;refreshSettingsUI();saveSettings();}
 function setHaptics(on){
   SETTINGS.haptics=!!on;
   if(on&&typeof hapt==='function')hapt('select');
