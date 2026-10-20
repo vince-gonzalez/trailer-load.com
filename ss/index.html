@@ -6,8 +6,8 @@
 <title>Smalls Sort · LOCK IN</title>
 <meta name="description" content="Smalls Sort · the LOCK IN sorting companion. Read the label, hit the bin, keep the belt moving.">
 <link rel="canonical" href="https://www.trailer-load.com/ss/">
-<!-- v1.11 this page reads the shared liAuth token out of localStorage and POSTs it to Supabase,
-     and shipped with no CSP at all while the flagship has had a strict one for versions. -->
+<!-- v1.11 the page posts to the LOCK IN database (a crew member's run, an initials signature), so it carries the
+     flagship's strict CSP. -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self' https://igqpgsqogfrpujdgvefs.supabase.co; frame-src 'none'; base-uri 'self'; form-action 'none'">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23140d08'/%3E%3Crect x='16' y='16' width='32' height='32' rx='3' fill='%23c8791e'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#c8791e">
@@ -247,6 +247,12 @@ html,body{width:100%;height:100dvh;
 .co-clip-in .bd-tabs{margin:4px 0;}
 .co-clip-in .bd-tab{color:var(--co-paper-ink);background:rgba(255,255,255,.4);border-color:var(--co-paper-ink);}
 .co-clip-in .bd-tab.active{color:#fff;background:var(--co-accent-deep);border-color:var(--co-accent-deep);}
+/* 4.0 sign the board with three initials on the sort report; ink on the paper sheet (#5a4526 measured 7.7:1) */
+.ss-sign{margin-top:10px;}
+.ss-sign-lbl{display:block;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;color:#5a4526;margin-bottom:5px;}
+.ss-sign-row{display:flex;gap:8px;justify-content:center;align-items:center;}
+.ss-sign input{width:6.5ch;min-height:40px;padding:4px 8px;font-family:'Share Tech Mono',monospace;font-size:18px;letter-spacing:3px;text-transform:uppercase;text-align:center;border:2px solid #5a4526;border-radius:6px;background:#fffaf0;color:#2a1a08;}
+.ss-sign-msg{font-family:'Share Tech Mono',monospace;font-size:12px;color:#5a4526;min-height:15px;margin-top:5px;}
 .co-clip-in .bd-list{width:100%;max-height:none;padding:4px 8px;}
 .co-clip-in .bd-row{border-bottom:1px solid #cdbfa6;}
 .co-clip-in .bd-rank{color:var(--co-accent-deep);}
@@ -335,6 +341,11 @@ html,body{width:100%;height:100dvh;
         <div class="res-row"><span class="res-lbl">Downtime</span><span class="res-val" id="r-down">0s</span></div>
         </div>
         <button id="copy-btn">⧉ COPY RESULT</button>
+        <div id="ss-sign" class="ss-sign">
+          <label for="ss-sign-in" class="ss-sign-lbl">SIGN THE BOARD · THREE INITIALS</label>
+          <div class="ss-sign-row"><input id="ss-sign-in" type="text" maxlength="3" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" aria-describedby="ss-sign-msg" onkeydown="if(event.key==='Enter')ssSign()"><button type="button" class="co-btn2" id="ss-sign-btn" onclick="ssSign()">SIGN</button></div>
+          <div id="ss-sign-msg" class="ss-sign-msg" role="status" aria-live="polite"></div>
+        </div>
         <div id="r-posted" style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:#5a4526;margin-top:8px;min-height:14px;"></div><!-- v1.8 (MED) run-recorded honesty -->
       </div>
     </div></div>
@@ -344,9 +355,8 @@ html,body{width:100%;height:100dvh;
     <div class="co-clip"><div class="co-clip-in">
       <h2 class="co-title">★ SORT BOARD</h2>
       <div class="bd-tabs">
-        <button class="bd-tab active" data-m="rate" onclick="smBoardTab('rate')">SORT RATE</button>
-        <button class="bd-tab" data-m="accuracy" onclick="smBoardTab('accuracy')">ACCURACY</button>
-        <button class="bd-tab" data-m="score" onclick="smBoardTab('score')">SCORE</button>
+        <button class="bd-tab active" data-m="today" aria-pressed="true" onclick="smBoardTab('today')">TODAY</button>
+        <button class="bd-tab" data-m="all" aria-pressed="false" onclick="smBoardTab('all')">ALL-TIME</button>
       </div>
       <div id="sm-board-list" class="bd-list co-sheet"></div>
       <div class="co-row"><button type="button" class="co-btn2" onclick="smCloseBoard()">✕ CLOSE</button></div>
@@ -839,58 +849,70 @@ function endGame(reason){
   document.getElementById('r-stop').textContent=STATE.stoppages;
   var rd=document.getElementById('r-down');rd.textContent=dts+'s';rd.className='res-val '+(dts>=10?'danger':dts>=3?'warn':'ok');
   document.getElementById('ov-end').classList.add('vis');
-  smSubmitSession(acc,tput,gr[0]); // v1.1 post the smalls run to the ONE shared lifetime (signed-in only)
+  ssSignReset();
+  smSubmitSession(acc,tput,gr[0]); // a crew member's run goes to the crew; nothing otherwise
 }
-// v1.1 SMALLS -> the unified lifetime. A signed-in run posts a session (mode='smalls') to the SAME lockin_sessions
-// table the main game uses · RLS self-insert via the shared liAuth token · so smalls feeds the one record + boards.
+// 4.0 THE DATA. There are no player accounts. A run on a device that is on a crew goes to the crew (the same
+// member_session the game uses, mode 'smalls'); a run anywhere else sends nothing. Any run can sign the public board
+// with three initials. SM_PREFIX is lis_ in the sandbox build, so the sandbox talks to its own tables.
 var SM_ENDPOINT='https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1';
 var SM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo';
-var SM_AUTH='https://igqpgsqogfrpujdgvefs.supabase.co/auth/v1'; // v1.12 for the one site-wide sign-out
-// v3.5.205 ONE SIGN-OUT FOR THE WHOLE SITE ON THIS DEVICE (owner, 2026-10-16: "if someone signs out they should
-// remain signed out"). liAuthEpoch counts sign-outs on this device. Every stored session carries the epoch it was born
-// in (ep). A sign-out bumps the epoch, so every older session, in this tab, another tab, /me/, Smalls Sort or the
-// dashboard, is dead on sight and is never written back. A deliberate sign-in stamps the CURRENT epoch, so it works.
-// The same block lives in lock-in.html, me/index.html, dashboard/index.html and ss/index.html: keep the copies identical.
-var LI_AUTH_STORES=['liAuth','lockinMeAuth','lockinDashAuth'];
-function liAuthEpoch(){try{return parseInt(localStorage.getItem('liAuthEpoch')||'0',10)||0;}catch(e){return 0;}}
-function liAuthStale(s){return !s||(+s.ep||0)<liAuthEpoch();}
-function liSignOutAll(authUrl,anonKey,extraTok){
-  var toks=[],i,r,s,p;
-  if(extraTok)toks.push(extraTok);
-  for(i=0;i<LI_AUTH_STORES.length;i++){try{r=localStorage.getItem(LI_AUTH_STORES[i]);s=r?JSON.parse(r):null;if(s&&s.access_token&&toks.indexOf(s.access_token)<0)toks.push(s.access_token);}catch(e){}}
-  try{localStorage.setItem('liAuthEpoch',''+(liAuthEpoch()+1));}catch(e){} // FIRST: a tab that hears the removals below already sees the new epoch
-  for(i=0;i<LI_AUTH_STORES.length;i++){try{localStorage.removeItem(LI_AUTH_STORES[i]);}catch(e){}}
-  try{localStorage.removeItem('liInitials');localStorage.removeItem('meNoSSO');localStorage.removeItem('liSessions');}catch(e){}
-  // the next person on this device inherits nothing of this account: username, recovery code, crew code, crew sharing,
-  // or the device ID (a new one is made on the next game load). The SAVE MY STATS choice is kept.
-  try{p=JSON.parse(localStorage.getItem('liPlayer')||'null');if(p){p.email='';p.handle='';p.facility='';p.consentShare=false;delete p.recovery;delete p.pid;localStorage.setItem('liPlayer',JSON.stringify(p));}}catch(e){}
-  for(i=0;i<toks.length;i++){try{fetch(authUrl+'/logout?scope=local',{method:'POST',headers:{'apikey':anonKey,'Authorization':'Bearer '+toks[i]}}).catch(function(){});}catch(e){}} // best effort: revoke these sessions server-side so a tab running older code cannot refresh back in
+var SM_PREFIX='lockin_';
+var SM_LIVE=/(^|\.)trailer-load\.com$/.test(location.hostname)||SM_PREFIX!=='lockin_';
+function smRpc(fn,body,cb){
+  try{
+    fetch(SM_ENDPOINT+'/rpc/'+SM_PREFIX+fn,{method:'POST',headers:{'Content-Type':'application/json','apikey':SM_ANON,'Authorization':'Bearer '+SM_ANON},body:JSON.stringify(body||{})})
+      .then(function(r){var ok=r.ok;return r.json().then(function(j){return ok?j:null;},function(){return ok?{}:null;});})
+      .then(function(j){if(cb)cb(j);})
+      .catch(function(e){console.error(fn+':',e);if(cb)cb(null);});
+  }catch(e){console.error(fn+':',e);if(cb)cb(null);}
 }
 function _smPostNote(t,ok){var e=document.getElementById('r-posted');if(e){e.textContent=t;e.style.color=ok?'#1f6b32':'#5a4526';}} // v1.8 run-recorded honesty
 function smSubmitSession(acc,tput,grade){
+  // READS: localStorage liPlayer.crew | WRITES: the crew's sessions on the server
   try{
-    var s=smReadAuth();
-    if(!s||!s.uid||!s.access_token){_smPostNote('NOT RECORDED · sign in (in the game) to post runs',false);return;} // signed-in only · the same account as the game
-    // v1.4 BLOCKER FIX (Gatekeeper #4): honor the game's save-my-stats consent switch (same-origin liPlayer).
-    // consent_self was HARDCODED true here · posting sessions the privacy policy promised stay on-device.
-    var _pl=null;try{_pl=JSON.parse(localStorage.getItem('liPlayer')||'null');}catch(e){}
-    if(!_pl||!_pl.consentSelf){_smPostNote('NOT RECORDED · stats saving is off (game → ACCOUNT & DATA)',false);return;} // no save without self-consent · identical rule to the game's zSendSession
+    var c=(typeof coCrew==='function')?coCrew():null;
+    if(!c){_smPostNote('NOT ON A CREW · nothing about this run left the device',false);return;}
+    if(!SM_LIVE){_smPostNote('OFFLINE COPY · not sent to the crew',false);return;}
     var dur=Math.max(1,Math.round((Date.now()-(STATE.startT||Date.now()))/1000));
-    var rec={
-      user_id:s.uid, mode:'smalls', app_ver:'ss-1.12',
-      consent_self:!!_pl.consentSelf, consent_share:!!_pl.consentShare, opt_in_share:!!_pl.consentShare,
-      started_at:new Date(STATE.startT||Date.now()).toISOString(), ended_at:new Date().toISOString(),
-      duration_s:dur,
-      total_score:STATE.score||0, best_pph:tput||0, walls_loaded:0, avg_integrity:acc||0, incident_count:STATE.miss||0,
-      summary:{ game:'smalls', ssMode:STATE.mode||'forever', survived_s:Math.round(STATE.survivalT||0), strikes:STATE.strikes||0,
-        grade:grade||'', score:STATE.score||0, accuracy:acc||0, sortRate:tput||0,
-        sorted:STATE.sorted||0, misroutes:STATE.miss||0, bestCombo:STATE.bestCombo||0, qaCaught:STATE.qaCaught||0,
-        stoppages:STATE.stoppages||0, downtime:Math.round(STATE.downtime||0) },
-      incidents:[], events:[]
-    };
-    var h={'apikey':SM_ANON,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'};
-    fetch(SM_ENDPOINT+'/lockin_sessions',{method:'POST',headers:h,body:JSON.stringify(rec)}).then(function(r){_smPostNote(r.ok?'RUN RECORDED ✓ · on your lifetime record':'NOT RECORDED · server refused the post',r.ok);}).catch(function(e){console.error('smSubmitSession net:',e);_smPostNote('NOT RECORDED · offline',false);});
+    smRpc('member_session',{p_token:c.token,p_mode:'smalls',p_app_ver:'ss-4.0',
+      p_started:new Date(STATE.startT||Date.now()).toISOString(),p_ended:new Date().toISOString(),p_duration:dur,
+      p_summary:{game:'smalls',ssMode:STATE.mode||'forever',survived_s:Math.round(STATE.survivalT||0),strikes:STATE.strikes||0,
+        grade:grade||'',score:STATE.score||0,accuracy:acc||0,sortRate:tput||0,
+        sorted:STATE.sorted||0,misroutes:STATE.miss||0,bestCombo:STATE.bestCombo||0,qaCaught:STATE.qaCaught||0,
+        stoppages:STATE.stoppages||0,downtime:Math.round(STATE.downtime||0)},p_incidents:[],p_events:[]},
+      function(j){
+        if(j&&j.ok)_smPostNote('SAVED TO '+String(c.crew).toUpperCase()+' ✓',true);
+        else if(j&&j.err==='not in a crew')_smPostNote('NOT SAVED · this device is no longer on '+c.crew,false);
+        else _smPostNote('NOT SAVED · no answer from the server',false);
+      });
   }catch(e){console.error('smSubmitSession:',e);}
+}
+// SIGN THE BOARD: three initials and this run's numbers, nothing else. One signature per run.
+var _ssSigned=false,_ssSigning=false;
+function ssSignReset(){
+  _ssSigned=false;_ssSigning=false;
+  var b=document.getElementById('ss-sign-btn'),m=document.getElementById('ss-sign-msg'),i=document.getElementById('ss-sign-in'),box=document.getElementById('ss-sign');
+  if(b){b.disabled=false;b.textContent='SIGN';}if(m)m.textContent='The board shows the three initials and this run\u2019s numbers.';
+  if(i&&!i.value){try{i.value=localStorage.getItem('liInitials')||'';}catch(e){}}
+  if(box)box.style.display=(STATE.sorted>0)?'':'none';
+}
+function ssSign(){
+  var b=document.getElementById('ss-sign-btn'),m=document.getElementById('ss-sign-msg'),i=document.getElementById('ss-sign-in');
+  if(_ssSigned||_ssSigning)return;
+  var v=((i&&i.value)||'').toUpperCase().replace(/[^A-Z]/g,'');
+  if(v.length!==3){if(m)m.textContent='Three letters, A to Z.';return;}
+  try{localStorage.setItem('liInitials',v);}catch(e){}
+  var acc=STATE.attempts>0?Math.round((STATE.sorted/STATE.attempts)*100):0;
+  var body={p_initials:v,p_mode:'smalls',p_score:Math.round(STATE.score||0),p_integrity:acc,p_pieces:Math.max(1,STATE.sorted||0),p_pack:acc};
+  if(!SM_LIVE){_ssSigned=true;if(b){b.disabled=true;b.textContent='SIGNED';}if(m)m.textContent='OFFLINE COPY · not posted. '+v+' would sign with '+body.p_score+'.';return;}
+  _ssSigning=true;if(b){b.disabled=true;b.textContent='SIGNING';}
+  smRpc('arcade_sign',body,function(j){
+    _ssSigning=false;
+    if(!j||!j.ok){if(b){b.disabled=false;b.textContent='SIGN';}if(m)m.textContent=(j&&j.err)||'No connection. Try again.';return;}
+    _ssSigned=true;if(b)b.textContent='SIGNED';
+    if(m)m.textContent=j.initials+' SIGNED · #'+j.rank_today+' TODAY.';
+  });
 }
 function copyResult(){
   var acc=STATE.attempts>0?Math.round((STATE.sorted/STATE.attempts)*100):0;var dts=Math.round(STATE.downtime);
@@ -902,26 +924,22 @@ function copyResult(){
   try{navigator.clipboard.writeText(txt);var b=document.getElementById('copy-btn');var o=b.textContent;b.textContent='✓ COPIED';setTimeout(function(){b.textContent=o;},1400);}
   catch(err){console.error('copyResult:',err);window.prompt('Copy result:',txt);}
 }
-// ── v1.2 LEADERBOARD (public lockin_smalls_board RPC · the same shared backend as LOCK IN) ──
-var SM_BOARD_METRIC='rate';
+// ── THE BOARD (4.0): three initials per run, today and all-time, ranked by score ──
+var SM_BOARD_SCOPE='today';
 function smEsc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':'&quot;';});}
 var SM_UIPAUSE=false; // v1.6 true while a full-screen overlay (board/settings) is up · loop freezes, no strikes mid-menu
-function smOpenBoard(){SM_UIPAUSE=true;document.getElementById('ov-board').classList.add('vis');smLoadBoard(SM_BOARD_METRIC);}
+function smOpenBoard(){SM_UIPAUSE=true;document.getElementById('ov-board').classList.add('vis');smLoadBoard(SM_BOARD_SCOPE);}
 function smCloseBoard(){SM_UIPAUSE=false;document.getElementById('ov-board').classList.remove('vis');}
-function smBoardTab(m){SM_BOARD_METRIC=m;var tabs=document.querySelectorAll('.bd-tab'),i;for(i=0;i<tabs.length;i++)tabs[i].classList.toggle('active',tabs[i].getAttribute('data-m')===m);smLoadBoard(m);}
-function smLoadBoard(metric){
+function smBoardTab(m){SM_BOARD_SCOPE=m;var tabs=document.querySelectorAll('.bd-tab'),i,on;for(i=0;i<tabs.length;i++){on=tabs[i].getAttribute('data-m')===m;tabs[i].classList.toggle('active',on);tabs[i].setAttribute('aria-pressed',on?'true':'false');}smLoadBoard(m);}
+function smLoadBoard(scope){
   var el=document.getElementById('sm-board-list');if(!el)return;el.innerHTML='<div class="bd-empty">Loading…</div>';
-  fetch(SM_ENDPOINT+'/rpc/lockin_smalls_board',{method:'POST',headers:{'apikey':SM_ANON,'Content-Type':'application/json'},body:JSON.stringify({p_metric:metric,p_limit:25})})
-    .then(function(r){return r.json();})
-    .then(function(j){
-      var rows=Array.isArray(j)?j:[];
-      if(!rows.length){el.innerHTML='<div class="bd-empty">No sorters ranked yet · play a signed-in run to claim the board.</div>';return;}
-      var h='',i;for(i=0;i<rows.length;i++){var r=rows[i];
-        var val=(metric==='accuracy')?(r.accuracy+'%'):(metric==='rate')?(r.sort_rate+'/min'):r.score;
-        var medal=(i===0)?'🥇':(i===1)?'🥈':(i===2)?'🥉':r.rank;
-        h+='<div class="bd-row"><span class="bd-rank">'+medal+'</span><span class="bd-name">'+smEsc(r.username)+'</span><span class="bd-val">'+val+'</span></div>';}
-      el.innerHTML=h;
-    }).catch(function(e){console.error('smBoard:',e);el.innerHTML='<div class="bd-empty">Could not load the board.</div>';});
+  smRpc('arcade_board',{p_mode:'smalls',p_scope:scope,p_limit:25},function(j){
+    if(!Array.isArray(j)){el.innerHTML='<div class="bd-empty">Board offline. That is a connection problem, not an empty board.</div>';return;}
+    if(!j.length){el.innerHTML='<div class="bd-empty">No initials on this board yet. Finish a run and sign it.</div>';return;}
+    var h='',i,r,medal;for(i=0;i<j.length;i++){r=j[i];medal=(i===0)?'🥇':(i===1)?'🥈':(i===2)?'🥉':r.rank;
+      h+='<div class="bd-row"><span class="bd-rank">'+medal+'</span><span class="bd-name">'+smEsc(r.initials)+'</span><span class="bd-val">'+(+r.score||0)+'</span></div>';}
+    el.innerHTML=h;
+  });
 }
 // -- v1.11 SETTINGS (difficulty / display / sfx). The music engine was culled here: the tracks
 // were free-tier generated with no distribution licence and are not coming back in that form.
@@ -990,7 +1008,7 @@ function boot(){
   document.getElementById('menu-btn').addEventListener('pointerdown',showModes,{passive:true});
   document.getElementById('copy-btn').addEventListener('pointerdown',copyResult,{passive:true});
   window.addEventListener('resize',resize);
-  coFamilyBoot(SM_AUTH,SM_ANON); // v1.13 the companion family's account chip
+  coFamilyBoot(); // the companion family's crew chip
   ssTrackHdr();
 }
 function ssTrackHdr(){ // v1.13 the family header can wrap to two rows on a phone (signed in); the menus and the canvas follow its real height
@@ -999,37 +1017,21 @@ function ssTrackHdr(){ // v1.13 the family header can wrap to two rows on a phon
   sync();
   try{if(window.ResizeObserver)new ResizeObserver(sync).observe(h);}catch(e){console.error('ssTrackHdr:',e);}
 }
-// v1.x ACCOUNT STATE · Smalls Sort shares the same origin (trailer-load.com) as LOCK IN, so it
-// reads the same localStorage session ('liAuth'). This is what makes SIGN OUT reachable from here
-// (was the reported gap). Sign-IN lives in the main game's profile, so we link there rather than
-// duplicate the whole auth form.
-function smReadAuth(){return coReadAuth();} // v1.13 through the family reader: the same rules (signed out, from before the last sign-out on this device, or expired = null)
-// v1.13 the account chip, its sign-out and its storage listener are the family's now (coFamilyBoot below)
 // ═══ LOCK IN COMPANION FAMILY v1 · JS ═══ (byte-identical in every companion; .tools/familyblock.py)
-// The account chip in the companion header. Needs the v3.5.205 one-sign-out block (liAuthStale, liSignOutAll).
+// The crew chip in the companion header. There are no player accounts (LOCK IN 4.0): the chip reads the crew membership
+// the game keeps on this device (liPlayer.crew) and otherwise links to the game's crew panel.
 function coEsc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':'&quot;';});}
-function coReadAuth(){ // the game's shared session, or null when it is signed out, from before the last sign-out, or expired
-  try{var r=localStorage.getItem('liAuth');if(!r)return null;var s=JSON.parse(r);
-    if(liAuthStale(s))return null;
-    try{var p=JSON.parse(atob((s.access_token||'').split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));if((p.exp||0)*1000<=Date.now()+30000)return null;}catch(e){}
-    return s;}catch(e){return null;}}
-function coAcctRender(authUrl,anonKey){
+function coCrew(){try{var p=JSON.parse(localStorage.getItem('liPlayer')||'null');return (p&&p.crew&&p.crew.token)?p.crew:null;}catch(e){return null;}}
+function coAcctRender(){
   var el=document.getElementById('co-acct');if(!el)return;
-  var s=coReadAuth();
-  if(s&&(s.handle||s.email)){
-    var who=s.handle||(s.email||'').split('@')[0]||'LOADER';
-    el.innerHTML='<span class="co-who" title="Signed in to LOCK IN">◉ '+coEsc(who)+'</span><button type="button" class="co-btn" id="co-signout">SIGN OUT</button>';
-    var b=document.getElementById('co-signout');
-    if(b)b.addEventListener('click',function(){liSignOutAll(authUrl,anonKey,s&&s.access_token);coAcctRender(authUrl,anonKey);});
-  }else{
-    el.innerHTML='<a class="co-btn" href="/lock-in.html#signin">SIGN IN →</a>';
-  }
+  var c=coCrew();
+  el.innerHTML=c?('<span class="co-who" title="On a crew">◆ '+coEsc(c.name)+'</span>'):'<a class="co-btn" href="/lock-in.html#crew">JOIN A CREW →</a>';
 }
-function coFamilyBoot(authUrl,anonKey){ // READS: localStorage liAuth, liAuthEpoch · WRITES: #co-acct
-  coAcctRender(authUrl,anonKey);
+function coFamilyBoot(){ // READS: localStorage liPlayer · WRITES: #co-acct
+  coAcctRender();
   try{
-    window.addEventListener('storage',function(e){if(e.key===null||e.key==='liAuth'||e.key==='liAuthEpoch')coAcctRender(authUrl,anonKey);});
-    window.addEventListener('pageshow',function(e){if(e.persisted)coAcctRender(authUrl,anonKey);});
+    window.addEventListener('storage',function(e){if(e.key===null||e.key==='liPlayer')coAcctRender();});
+    window.addEventListener('pageshow',function(e){if(e.persisted)coAcctRender();});
   }catch(e){console.error('coFamilyBoot:',e);}
 }
 // ═══ END COMPANION FAMILY JS ═══

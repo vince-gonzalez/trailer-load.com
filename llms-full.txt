@@ -4,7 +4,7 @@ Source: https://trailer-load.com/  ·  Made by F-Keys Creative LLC (Operations P
 === WHAT IT IS ===
 LOCK IN is a free, browser-based warehouse trailer-loading training simulator. Pieces ride in on a belt; you stack them into a trailer wall that has to physically hold up. It plays like a puzzle game but models real freight-loading: support and balance, load integrity, locking complete rows into shelves, hazmat placed low, fragiles boxed in on both sides, non-conveyables staged, dead air stuffed inside tires, and a dispatch clock counting down. Every wall is scored on integrity, density, pace, and safety, and ranked from Rookie to Yard Legend.
 
-It runs in any browser with no install and no login required. Gameplay is always free. Players can optionally create a free account to save their record, and can separately opt in to share their stats with a facility.
+It runs in any browser with no install and no login required. Gameplay is always free. There are no player accounts. Public boards take three initials. A player's results reach an instructor only after the player joins that instructor's crew with its join code, then a name and 4-digit PIN or a personal code the instructor issued.
 
 === HOW IT WORKS ===
 1. Build the wall · Select freight, place it, rotate it. Floor-up, support underneath, no floating boxes. The physics won't let you cheat gravity.
@@ -15,20 +15,19 @@ Modes: Training (a trainer builds a full wall one placement at a time, with the 
 
 Companion mini-game: Smalls Sort (https://trailer-load.com/ss/) · sorting and stacking small parcels, testing speed and accuracy on the smalls line.
 
-=== BUSINESS MODEL: FREE FOR WORKERS, DASHBOARD FOR FACILITIES ===
-The game is free forever. What schools and employers pay for is the program dashboard. Player data is never sold.
+=== BUSINESS MODEL: FREE FOR WORKERS, A LICENSE FOR FACILITIES ===
+The game is free forever. What schools and employers pay for is the program license: crews without the 9-person limit, the CSV export, a data agreement and support. Player data is never sold.
 
 Workers play free:
 - Full game, every mechanic, no paywall.
-- Optional free account to keep your record.
-- You decide if your stats are saved.
-- You decide, separately, if a facility can see them.
+- No player account: three initials on the boards, nothing else leaves the device without a crew.
+- Nothing about play is sent unless you join an instructor's crew.
 
-Facilities get the metrics (the paid product):
-- A dashboard of opted-in players' loading performance.
-- Load integrity (attention to detail), completed walls (follow-through), throughput (pieces per hour), and safety incidents · the numbers managers already track · per student, sortable, with CSV export.
+Instructors get the metrics:
+- The instructor dashboard: each crew member's loading performance. A crew of up to 9 is free; a license removes the limit and adds CSV export.
+- Load integrity (attention to detail), completed walls (follow-through), throughput (pieces per hour), and safety incidents · the numbers managers already track · per crew member, with CSV export on a license.
 - Built for CTE programs, trade and technical schools, and warehouse operations teams. Perkins-eligible: a software license is an allowable local use of Perkins V funds under Sec. 135(b)(5)(D); the state CTE agency makes the final call.
-- Provisioned by F-Keys Creative LLC when a program comes aboard.
+- An instructor signs up on the dashboard; F-Keys Creative LLC applies a license to a program's crews when it buys one.
 
 Who it's for: CTE high-school programs, trade and technical schools, warehouse and dock operations teams, logistics employers, workforce-readiness programs.
 

@@ -8,7 +8,7 @@
   HOW IT WORKS
   1. Paste the CSS block (from the FAMILY CSS marker to the END marker) into the page's <style>, unchanged.
   2. Paste the JS block (from the FAMILY JS marker to the END marker) into the page's <script>, unchanged.
-     It needs the v3.5.205 one-sign-out block (liAuthEpoch, liAuthStale, liSignOutAll) on the same page,
+     The crew chip reads the game's crew membership (liPlayer.crew); there are no player accounts (4.0).
      byte-identical to the copies in lock-in.html, me/, dashboard/ and ss/ (.tools/authblock.py).
   3. Load the LOCK IN fonts in <head>: <link rel="stylesheet" href="/fonts/fonts.css">
   4. Set the page's own accent, OUTSIDE the block, matching its Mini-Games card in lock-in.html:
@@ -123,30 +123,20 @@
 
 <script>
 // ═══ LOCK IN COMPANION FAMILY v1 · JS ═══ (byte-identical in every companion; .tools/familyblock.py)
-// The account chip in the companion header. Needs the v3.5.205 one-sign-out block (liAuthStale, liSignOutAll).
+// The crew chip in the companion header. There are no player accounts (LOCK IN 4.0): the chip reads the crew membership
+// the game keeps on this device (liPlayer.crew) and otherwise links to the game's crew panel.
 function coEsc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':'&quot;';});}
-function coReadAuth(){ // the game's shared session, or null when it is signed out, from before the last sign-out, or expired
-  try{var r=localStorage.getItem('liAuth');if(!r)return null;var s=JSON.parse(r);
-    if(liAuthStale(s))return null;
-    try{var p=JSON.parse(atob((s.access_token||'').split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));if((p.exp||0)*1000<=Date.now()+30000)return null;}catch(e){}
-    return s;}catch(e){return null;}}
-function coAcctRender(authUrl,anonKey){
+function coCrew(){try{var p=JSON.parse(localStorage.getItem('liPlayer')||'null');return (p&&p.crew&&p.crew.token)?p.crew:null;}catch(e){return null;}}
+function coAcctRender(){
   var el=document.getElementById('co-acct');if(!el)return;
-  var s=coReadAuth();
-  if(s&&(s.handle||s.email)){
-    var who=s.handle||(s.email||'').split('@')[0]||'LOADER';
-    el.innerHTML='<span class="co-who" title="Signed in to LOCK IN">◉ '+coEsc(who)+'</span><button type="button" class="co-btn" id="co-signout">SIGN OUT</button>';
-    var b=document.getElementById('co-signout');
-    if(b)b.addEventListener('click',function(){liSignOutAll(authUrl,anonKey,s&&s.access_token);coAcctRender(authUrl,anonKey);});
-  }else{
-    el.innerHTML='<a class="co-btn" href="/lock-in.html#signin">SIGN IN →</a>';
-  }
+  var c=coCrew();
+  el.innerHTML=c?('<span class="co-who" title="On a crew">◆ '+coEsc(c.name)+'</span>'):'<a class="co-btn" href="/lock-in.html#crew">JOIN A CREW →</a>';
 }
-function coFamilyBoot(authUrl,anonKey){ // READS: localStorage liAuth, liAuthEpoch · WRITES: #co-acct
-  coAcctRender(authUrl,anonKey);
+function coFamilyBoot(){ // READS: localStorage liPlayer · WRITES: #co-acct
+  coAcctRender();
   try{
-    window.addEventListener('storage',function(e){if(e.key===null||e.key==='liAuth'||e.key==='liAuthEpoch')coAcctRender(authUrl,anonKey);});
-    window.addEventListener('pageshow',function(e){if(e.persisted)coAcctRender(authUrl,anonKey);});
+    window.addEventListener('storage',function(e){if(e.key===null||e.key==='liPlayer')coAcctRender();});
+    window.addEventListener('pageshow',function(e){if(e.persisted)coAcctRender();});
   }catch(e){console.error('coFamilyBoot:',e);}
 }
 // ═══ END COMPANION FAMILY JS ═══

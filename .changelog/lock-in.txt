@@ -2,6 +2,27 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1000 - THE 4.0 CANDIDATE: NO PLAYER ACCOUNTS. INITIALS ON THE BOARDS, CREWS FOR INSTRUCTORS.
+     I said: "the accounts are out, it's arcade only." Usernames, sign-up, sign-in, CLOCK-IN, the ME and FRIENDS tabs,
+     follows, the RECORDS boards, recovery codes, SAVE MY STATS and the sharing box are gone, with the /me/ page (it now
+     says player records are retired). Every public board takes three initials: DAILY, TRAILER-LOAD and SMALLS SORT,
+     today and all-time. A device sends nothing about play unless it joins a crew: MENU > JOIN A CREW (or ADMIN > CREW),
+     the instructor's code, then a name and 4-digit PIN (a PIN crew) or the personal code the instructor issued (a
+     manual crew, my choice for the instructor: both kinds). The device keeps a random token; the server keeps only its
+     hash. The instructor is the only account, made on the rewritten dashboard (email and password): make crews, a
+     printable join card, the roster, RESET PIN / NEW CODE, REMOVE, DELETE, and the CSV export on a licensed crew. A free
+     crew holds 9. The database is .db/lockin-4.0.sql, one script with a name prefix: lis_ in the sandbox, lockin_ on
+     production; every table is closed and every call is a function that checks who asks. Retiring the 21 old accounts is
+     .db/lockin-4.0-retire.sql, run once on my click after 4.0 ships.
+     The commentary is in the cold mechanical register (I said: "professional only. no negativity"): 106 lines
+     rewritten, no jokes, praise, scolding, exclamation marks or expressive emoji; .tools/register.py fails on any.
+     .tools/deadcode.py fails on a function nothing calls (it would have caught triggerBagDwell a month ago); it found
+     17, all removed. .tools/noaccounts.py fails on a player sign-in or a direct table call; authblock.py is retired.
+     The privacy policy, terms, district documentation, program overview, programs page and llms files describe 4.0.
+     The rendered sweep measured the end-of-TRAINING check marks for the first time (2.67:1) and the new crew and board
+     notes; all fixed. A comment that described the old bag ramp (45% built) now matches the code (the wall's top).
+     The sandbox is the whole site on the lab address against its own database (sandbox_build.py in the test kit).
+
    CHANGE LOG v3.9.999 - THE 4.0.0 RELEASE CANDIDATE.
      The same game as 214. This build exists to run on the lab exactly as it will ship, and 4.0.0 changes nothing but
      the number. The drift pass before it: two code comments still described Google Analytics as live and the privacy

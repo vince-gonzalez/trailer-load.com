@@ -12,11 +12,21 @@ var m = /var CERT_MIN_PACK=(\d+);/.exec(src);
 if (!m) { console.log('FAIL: could not find CERT_MIN_PACK'); process.exit(1); }
 var BAR = parseInt(m[1], 10);
 
+// the block runs from the bar through the closing brace of liCertGrade(), found by matching braces: anchoring on a
+// neighbouring function broke this gate once (4.0 deleted the never-called liCertEarned it used as the end marker)
 var a = m.index;
-var END = 'function liCertEarned(){return !!liCertGrade();}';
-var b = src.indexOf(END);
-if (b < 0) { console.log('FAIL: could not locate the block'); process.exit(1); }
-var block = src.slice(a, b + END.length);
+var g0 = src.indexOf('function liCertGrade(', a);
+if (g0 < 0) { console.log('FAIL: could not locate liCertGrade'); process.exit(1); }
+var k = src.indexOf('{', g0), depth = 0, q = null;
+for (; k < src.length; k++) {
+  var c = src[k];
+  if (q) { if (c === '\\') { k++; continue; } if (c === q) q = null; continue; }
+  if (c === "'" || c === '"') { q = c; continue; }
+  if (c === '{') depth++;
+  else if (c === '}') { depth--; if (depth === 0) break; }
+}
+if (depth !== 0) { console.log('FAIL: could not locate the end of liCertGrade'); process.exit(1); }
+var block = src.slice(a, k + 1);
 
 var GW = 17, GH = 20, TOTAL = GW * GH;
 var G = null, S = null;

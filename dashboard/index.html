@@ -3,45 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <script>
-/* keep the page out of a frame; student data behind a login */
+/* keep the page out of a frame; crew results behind a sign-in */
 if (window.top !== window.self) { window.top.location = window.self.location; }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LOCK IN · Program Dashboard | trailer-load.com</title>
-<meta name="description" content="LOCK IN program dashboard · student loading practice report for CTE, logistics and warehouse training programs.">
+<title>LOCK IN · Instructor Dashboard | trailer-load.com</title>
+<meta name="description" content="LOCK IN instructor dashboard · make a crew, give out its join code, and see each person's loading practice results.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self' https://igqpgsqogfrpujdgvefs.supabase.co; frame-src 'none'; base-uri 'self'; form-action 'self'">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23140d08'/%3E%3Crect x='16' y='16' width='32' height='32' rx='3' fill='%23c8791e'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#c8791e">
 <link rel="canonical" href="https://www.trailer-load.com/dashboard/">
-<meta name="robots" content="noindex,nofollow"><!-- login wall over student data; never index -->
+<meta name="robots" content="noindex,nofollow"><!-- a sign-in over crew results; never index -->
 <!-- NO AD TECH ON TRAILER-LOAD.COM · EVER (2026-07-20). Do not re-add. -->
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 /* ══════════════════════════════════════════════════════════════════════════
-   THE PROGRAM DASHBOARD · v2.4
-   v2.4 · 2026-10-16 (LOCK IN v3.5.205, FIX-11): the dashboard and CSV export need a license. A crew owner
-   whose crews are all unlicensed sees a plain panel instead of the roster; free crews keep the in-game crew
-   view (YOUR CREW). Only members of licensed crews are listed or exported. The database enforces the same
-   rule for the session and wall sheets (lockin_cohort_session / lockin_cohort_wall), so this page is not the gate.
-   v2.3 · 2026-10-16: one sign-out for the whole site (liSignOutAll).
-   v2.2.2 · 2026-10-05: vince is now the demo crew's instructor, so a showcase session is titled with the
-   demo crew's name (dWho), never whichever test crew the API returns first. Header shows the username.
-   v2.2.1 · 2026-10-05: the SHOWCASE is opt-in (FIX-06: lockin_handles.showcase_consent) and the label says so.
-   v2.2 · 2026-10-03: sign in with a GAME USERNAME. Game accounts are username + password
-   (stored as <username>@players.lockin.app); this login took only an email, so the
-   self-serve path (make a crew in the game, then open the dashboard) dead-ended at the
-   sign-in box. A value without "@" now maps through the game's own rule. The login note
-   tells an instructor how to start a class instead of "credentials are issued by LOCK IN".
-   v2.1 · 2026-10-03: SHOWCASE. The demo account reads a pseudonymous mirror of the real
-   roster (lockin_showcase*, FIX-05) so prospects see actual results, with a visible label
-   saying so. One probe after sign-in picks the source; a missing view or zero rows means a
-   normal program, so this is inert until FIX-05 runs and invisible to every other program.
-   v2.0.1 · 2026-10-03: the instructor no longer appears in their own roster as a student
-   who never played. Found by impersonating the demo instructor's session in SQL: the view
-   returned their own account row (readable to them by lh_self_select) and the filter meant
-   to drop it never matched. Same check found the demo class empty under real auth: its
-   seeded sessions lacked consent_share, so RLS hid all of them. Seed data fixed in the DB.
-   Rebuilt 2026-10-02. The old one read lockin_cohort, which returned 0 walls
-   for 16 of 19 students, and showed 8 of the 30 metrics that exist.
+   THE INSTRUCTOR DASHBOARD · v3.0 (LOCK IN 4.0, 2026-10-20)
+   LOCK IN 4.0 has no player accounts. The instructor is the only account: an email and a password, made here. An
+   instructor makes a crew, picks how people join it (a name and a 4-digit PIN they choose, or a personal code the
+   instructor hands each person), and gives out the crew's join code. This page shows each crew's roster and results.
+   A licensed crew has no 9-person cap and exports every wall and session to CSV. Every read and write is a database
+   function that checks the instructor owns the crew (.db/lockin-4.0.sql); this page is not the gate.
+   v2.x (the licensed cohort sheets, the showcase, guests) is in the change log; none of it survives the account cut.
 
    CONTRAST, computed against the clipboard page #e8e4da (L=0.7657), never
    eyeballed:  #241a0c 13.9:1 · #4a3c28 6.95:1 · #7d4a0e 5.73:1
@@ -60,129 +43,107 @@ html,body{margin:0;background:var(--ground);color:var(--ink);
   font-family:'Barlow Condensed',system-ui,sans-serif;font-size:17px;line-height:1.45;}
 body::before{content:'';position:fixed;inset:0;z-index:0;
   background:url('/lockbackdrop.png') center/cover no-repeat;opacity:.13;}
-.wrap{max-width:1500px;margin:0 auto;padding:0 18px;}
+.wrap{max-width:1200px;margin:0 auto;padding:0 18px;}
 #topbar{position:relative;z-index:2;background:rgba(14,9,5,.9);border-bottom:2px solid var(--amber);
   padding:9px 0;color:#f1e7d6;}
 #topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
 .brand{font-family:'Bebas Neue',sans-serif;font-size:25px;letter-spacing:3px;color:#f1e7d6;}
 .brand b{color:var(--amber);}
-#who{font-family:'Share Tech Mono',monospace;font-size:12px;color:#d6c6a8;text-align:right;}
-#who b{display:block;color:#f1e7d6;font-size:14px;}
+#who{font-family:'Share Tech Mono',monospace;font-size:12px;color:#d6c6a8;text-align:right;display:flex;gap:10px;align-items:center;}
+#who b{color:#f1e7d6;font-size:14px;}
+#who .btn{font-size:15px;min-height:34px;padding:5px 12px;}
 
-/* ── LOGIN ───────────────────────────────────────────────────────────── */
-#login{position:relative;z-index:2;max-width:430px;margin:70px auto;background:var(--paper2);
+/* ── SIGN-IN ─────────────────────────────────────────────────────────── */
+#login{position:relative;z-index:2;max-width:460px;margin:60px auto;background:var(--paper2);
   border:1px solid var(--line2);border-radius:10px;padding:26px 26px 22px;
   box-shadow:0 20px 60px rgba(0,0,0,.5);}
 #login h1{font-family:'Bebas Neue',sans-serif;font-size:31px;letter-spacing:1px;margin:0 0 4px;color:var(--ink);}
 #login .sub{color:var(--ink2);margin:0 0 16px;font-size:16px;}
+.tabs{display:flex;gap:6px;margin:0 0 14px;}
+.tab{flex:1;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1.2px;min-height:38px;
+  border:2px solid var(--line2);border-radius:6px;background:transparent;color:var(--ink2);cursor:pointer;text-transform:uppercase;}
+.tab.on{background:var(--amber);color:#1b1206;border-color:var(--amberInk);font-weight:700;}
 .fld{display:block;margin-bottom:12px;}
 .fld span{display:block;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.4px;
   color:var(--amberInk);margin-bottom:4px;text-transform:uppercase;}
-.fld input{width:100%;padding:10px 12px;min-height:40px;border:2px solid var(--line2);border-radius:6px;
+.fld input,.fld select{width:100%;padding:10px 12px;min-height:40px;border:2px solid var(--line2);border-radius:6px;
   background:#fff;color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-size:17px;}
-.fld input:focus{outline:none;border-color:var(--amber);}
+.fld input:focus,.fld select:focus{outline:none;border-color:var(--amber);}
 .btn{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;min-height:40px;
   padding:9px 20px;border-radius:7px;cursor:pointer;border:2px solid var(--amberInk);
   background:var(--amber);color:#1b1206;}
 .btn:hover{background:#e0962e;}
 .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line2);}
 .btn.ghost:hover{border-color:var(--amberInk);color:var(--amberInk);}
-#login-msg{margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:12.5px;min-height:18px;}
-#login-msg.err{color:var(--bad);} #login-msg.good{color:var(--good);}
+#topbar .btn.ghost{color:#f1e7d6;border-color:#8a7a5c;}
+.btn.danger{background:transparent;color:var(--bad);border-color:var(--bad);}
+.btn.small{font-size:15px;min-height:34px;padding:4px 11px;letter-spacing:1px;}
+.linkbtn{background:none;border:none;padding:4px 0;color:var(--amberInk);text-decoration:underline;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;}
+.msg{margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:12.5px;min-height:18px;}
+.msg.err{color:var(--bad);} .msg.good{color:var(--good);}
 #login-note{margin-top:14px;font-size:14.5px;color:var(--ink2);border-top:1px solid var(--line);padding-top:10px;}
 #login-note a{color:var(--amberInk);}
 
 /* ── THE BOARD ───────────────────────────────────────────────────────── */
 #dash{display:none;position:relative;z-index:2;padding:18px 0 60px;}
 .board{background:var(--paper);border:1px solid var(--line2);border-radius:10px;
-  box-shadow:0 18px 50px rgba(0,0,0,.45);padding:0 0 16px;overflow:hidden;}
+  box-shadow:0 18px 50px rgba(0,0,0,.45);padding:0 0 16px;overflow:hidden;margin-bottom:18px;}
 .clip{height:34px;background:linear-gradient(180deg,#cfcbc2,#b3aea3);
   border-bottom:2px solid var(--line2);display:flex;align-items:center;justify-content:center;
   font-family:'Bebas Neue',sans-serif;letter-spacing:4px;font-size:15px;color:#3d342a;}
 .hdr{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;
   padding:16px 18px 8px;border-bottom:3px solid var(--ink);margin:0 18px;}
 .hdr .t{font-family:'Bebas Neue',sans-serif;font-size:33px;letter-spacing:1px;line-height:1;}
-.hdr .stamp{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--amberInk);
+.hdr .s{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--ink2);}
+.stamp{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--amberInk);
   border:2px solid var(--amberInk);border-radius:4px;padding:3px 9px;}
+.sec{padding:14px 18px 4px;}
+.sec h2{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;margin:0 0 8px;}
+.sec p{margin:0 0 10px;color:var(--ink2);}
 
-/* summary tiles */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;padding:14px 18px 6px;}
-.card{background:var(--paper2);border:1px solid var(--line);border-left:5px solid var(--line2);
-  border-radius:7px;padding:9px 12px;}
-.card.ok{border-left-color:var(--good);} .card.warn{border-left-color:var(--warn);}
-.card.danger{border-left-color:var(--bad);}
-.card .k{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.3px;color:var(--amberInk);text-transform:uppercase;}
-.card .v{font-family:'Bebas Neue',sans-serif;font-size:31px;line-height:1;color:var(--ink);}
-.card .c{font-size:13.5px;color:var(--ink2);}
+/* crew cards */
+.crews{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;}
+.crew{background:var(--paper2);border:1px solid var(--line);border-left:6px solid var(--amber);border-radius:8px;padding:12px 14px;}
+.crew.on{border-left-color:var(--good);box-shadow:0 0 0 2px var(--good) inset;}
+.crew .n{font-family:'Bebas Neue',sans-serif;font-size:25px;letter-spacing:.5px;line-height:1.05;}
+.crew .k{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--ink2);margin:3px 0 9px;}
+.crew .k b{color:var(--amberInk);font-size:14px;}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.make{display:grid;grid-template-columns:2fr 1.4fr 1.6fr auto;gap:10px;align-items:end;}
+.make .fld{margin-bottom:0;}
+@media(max-width:820px){.make{grid-template-columns:1fr;}}
 
-/* sheets (paper tabs) */
-.sheets{display:flex;gap:4px;padding:12px 18px 0;flex-wrap:wrap;}
-.sheet{font-family:'Share Tech Mono',monospace;font-size:11.5px;letter-spacing:1.2px;
-  padding:9px 15px;min-height:38px;border:1px solid var(--line2);border-bottom:none;
-  border-radius:6px 6px 0 0;background:#dcd7cb;color:var(--ink2);cursor:pointer;text-transform:uppercase;}
-.sheet:hover{background:#e6e1d5;}
-.sheet.on{background:var(--paper2);color:var(--amberInk);font-weight:700;
-  border-color:var(--ink);border-bottom:2px solid var(--paper2);margin-bottom:-2px;}
-.sheetbar{border-bottom:2px solid var(--ink);margin:0 18px;}
+/* the join card: what to tell people, printable */
+.joincard{background:#fff;border:2px solid var(--ink);border-radius:8px;padding:14px 18px;margin:6px 0 4px;}
+.joincard h3{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;margin:0 0 6px;}
+.joincard ol{margin:0;padding-left:22px;font-size:18px;}
+.joincard li{margin:3px 0;}
+.joincard .code{font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:700;color:var(--amberInk);letter-spacing:1px;}
 
-/* column-group switches */
-.scopes{display:flex;gap:6px;flex-wrap:wrap;padding:12px 18px 4px;align-items:center;}
-.scopes .lbl{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.3px;
-  color:var(--amberInk);text-transform:uppercase;margin-right:2px;}
-.scope{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.8px;
-  padding:6px 11px;min-height:32px;border:2px solid var(--line2);border-radius:5px;
-  background:transparent;color:var(--ink2);cursor:pointer;text-transform:uppercase;}
-.scope.on{background:var(--amber);color:#1b1206;border-color:var(--amberInk);font-weight:700;}
-
-.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 18px 6px;}
-.tools input[type=text]{flex:1;min-width:180px;padding:8px 11px;min-height:38px;
-  border:2px solid var(--line2);border-radius:6px;background:#fff;color:var(--ink);
-  font-family:'Barlow Condensed',sans-serif;font-size:16px;}
-.tools input[type=text]:focus{outline:none;border-color:var(--amber);}
-
-/* the table */
+/* the roster */
 .tblwrap{overflow-x:auto;margin:6px 18px 0;border:1px solid var(--line);border-radius:7px;background:var(--paper2);}
 table{border-collapse:collapse;width:100%;font-size:15px;}
-thead th{position:sticky;top:0;z-index:1;background:#ddd8cc;border-bottom:2px solid var(--ink);
-  padding:7px 8px;text-align:right;white-space:nowrap;cursor:pointer;
+caption{text-align:left;padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--ink2);}
+thead th{background:#ddd8cc;border-bottom:2px solid var(--ink);
+  padding:7px 8px;text-align:right;white-space:nowrap;
   font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;
   color:var(--amberInk);text-transform:uppercase;}
 thead th:first-child{text-align:left;}
-thead th.sorted{background:#f0e5cf;color:#5e3607;}
-thead th .g{display:block;font-size:11px;letter-spacing:.8px;color:var(--ink2);font-weight:400;}
 tbody td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;
   font-family:'Share Tech Mono',monospace;font-variant-numeric:tabular-nums;}
-tbody td:first-child{text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:16.5px;
-  font-weight:600;cursor:pointer;}
-tbody td:first-child:hover{color:var(--amberInk);text-decoration:underline;}
+tbody td:first-child{text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:16.5px;font-weight:600;}
+tbody td.seat{font-size:16px;font-weight:700;color:var(--amberInk);letter-spacing:1px;}
 tbody tr.zero td{background:#f7e2da;}
-tbody tr.guest td{background:#ece7f2;color:#413452;}
 tbody tr:hover td{background:#f6efdd;}
-.pill{display:inline-block;min-width:40px;padding:1px 6px;border-radius:4px;font-size:12.5px;
-  border:1px solid currentColor;}
-.pill.g{color:var(--good);} .pill.w{color:var(--warn);} .pill.d{color:var(--bad);}
-.tagsm{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.8px;border:1px solid currentColor;
-  border-radius:3px;padding:0 4px;margin-left:5px;}
-.tagsm.d{color:var(--bad);} .tagsm.g{color:#5a3f7a;}
-#empty{padding:22px 18px;color:var(--ink2);font-size:16px;}
-
-/* profile drill-down */
-#prof{display:none;margin:14px 18px 0;background:var(--paper2);border:1px solid var(--line2);
-  border-left:6px solid var(--amber);border-radius:8px;padding:14px 18px 16px;}
-#prof h3{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin:0 0 2px;}
-#prof .sub{font-family:'Share Tech Mono',monospace;font-size:11.5px;color:var(--ink2);margin-bottom:12px;}
-.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;}
-.pcell{border:1px solid var(--line);border-radius:6px;padding:7px 10px;background:#fff;}
-.pcell .k{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.1px;
-  color:var(--amberInk);text-transform:uppercase;}
-.pcell .v{font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1.05;color:var(--ink);}
-.psec{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.6px;color:var(--amberInk);
-  text-transform:uppercase;margin:14px 0 6px;border-bottom:1px solid var(--line);padding-bottom:3px;}
+.tag{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.8px;border:1px solid currentColor;border-radius:3px;padding:0 4px;}
+.tag.d{color:var(--bad);} .tag.g{color:var(--good);} .tag.w{color:var(--warn);}
+.empty{padding:16px 18px;color:var(--ink2);font-size:16px;}
 .foot{margin:18px 18px 0;padding-top:10px;border-top:1px solid var(--line);
   font-family:'Share Tech Mono',monospace;font-size:11.5px;color:var(--ink2);}
 @media(max-width:700px){.hdr .t{font-size:26px;}.wrap{padding:0 10px;}}
 @media print{
-  body::before{display:none;} #topbar,.tools,.scopes,.sheets,.btn{display:none!important;}
+  body::before{display:none;} #topbar,.noprint,.btn,.linkbtn{display:none!important;}
   body{background:#fff;} .board{box-shadow:none;border:none;}
 }
 </style>
@@ -195,80 +156,91 @@ tbody tr:hover td{background:#f6efdd;}
 <a class="skip-link" href="#main">Skip to main content</a>
 
 <div id="topbar"><div class="wrap">
-  <div class="brand">LOCK<b> IN</b> &nbsp;<span style="font-size:13px;letter-spacing:2px;">PROGRAM DASHBOARD</span></div>
+  <div class="brand">LOCK<b> IN</b> &nbsp;<span style="font-size:13px;letter-spacing:2px;">INSTRUCTOR DASHBOARD</span></div>
   <div id="who" style="display:none;"></div>
 </div></div>
 
-<!-- LOGIN -->
 <main id="main">
+<!-- SIGN-IN: the instructor is the only account in LOCK IN 4.0 -->
 <div id="login">
-  <h1>PROGRAM SIGN-IN</h1>
-  <p class="sub">Your students' loading practice report.</p>
-  <label class="fld"><span>LOCK IN username or program email</span><input id="li-email" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="your LOCK IN username"></label>
-  <label class="fld"><span>Password</span><input id="li-pw" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')dLogin();"></label>
-  <button class="btn" onclick="dLogin()">🔑 SIGN IN</button>
-  <div id="login-msg"></div>
-  <div id="login-note">This dashboard is for licensed programs; a free crew sees its results in the game under ME. Use the same username and password you use in the game. To start a class: sign in to the game, open YOUR CREW, choose + CREATE A CREW, and give your students the join code. Forgot your password, or need help? Email <a href="mailto:vince@trailer-load.com">vince@trailer-load.com</a>.</div>
+  <h1 id="login-h">INSTRUCTOR SIGN-IN</h1>
+  <p class="sub">Make a crew, give out its code, and see each person's practice results.</p>
+  <div class="tabs" role="group" aria-labelledby="login-h">
+    <button class="tab on" id="tab-in" aria-pressed="true" onclick="dMode('in')">Sign in</button>
+    <button class="tab" id="tab-new" aria-pressed="false" onclick="dMode('new')">Create an account</button>
+  </div>
+  <label class="fld" id="f-email"><span>Email</span><input id="li-email" type="email" autocomplete="email" autocapitalize="off" spellcheck="false"></label>
+  <label class="fld" id="f-pw"><span>Password <small>(8 or more characters)</small></span><input id="li-pw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')dSubmit();"></label>
+  <label class="fld" id="f-pw2" style="display:none"><span>Password again</span><input id="li-pw2" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')dSubmit();"></label>
+  <div class="row">
+    <button class="btn" id="li-go" onclick="dSubmit()">SIGN IN</button>
+    <button class="linkbtn" id="li-forgot" onclick="dForgot()">Forgot the password?</button>
+  </div>
+  <div id="login-msg" class="msg" role="status" aria-live="polite"></div>
+  <div id="login-note">Players never make an account. They join your crew from the game with the code you give them. Questions: <a href="mailto:vince@trailer-load.com">vince@trailer-load.com</a>.</div>
 </div>
 
-<!-- DASHBOARD -->
+<!-- a password-reset link from email lands here -->
+<div id="reset" style="display:none;position:relative;z-index:2;max-width:460px;margin:60px auto;background:var(--paper2);border:1px solid var(--line2);border-radius:10px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.5);">
+  <h1 style="font-family:'Bebas Neue',sans-serif;font-size:31px;letter-spacing:1px;margin:0 0 10px;">SET A NEW PASSWORD</h1>
+  <label class="fld"><span>New password <small>(8 or more characters)</small></span><input id="rs-pw" type="password" autocomplete="new-password"></label>
+  <label class="fld"><span>New password again</span><input id="rs-pw2" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')dSetPassword();"></label>
+  <button class="btn" onclick="dSetPassword()">SAVE THE PASSWORD</button>
+  <div id="rs-msg" class="msg" role="status" aria-live="polite"></div>
+</div>
+
+<!-- THE DASHBOARD -->
 <div id="dash"><div class="wrap">
   <div class="board">
     <div class="clip">LOCK-IN</div>
-
-    <div class="hdr">
-      <div>
-        <div class="t">COHORT REPORT</div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:11.5px;color:#4a3c28;">Sorted least engaged first · the students who need you are at the top</div>
+    <div class="hdr"><div><div class="t">YOUR CREWS</div><div class="s">A crew is a class or a cohort. Each has its own join code.</div></div></div>
+    <div class="sec"><div class="crews" id="crews"></div></div>
+    <div class="sec noprint">
+      <h2>MAKE A CREW</h2>
+      <div class="make">
+        <label class="fld"><span>Crew name</span><input id="mk-name" type="text" maxlength="48" placeholder="example: Region 3 Boot Camp, October"></label>
+        <label class="fld"><span>Join code <small>(4 to 24 letters or numbers)</small></span><input id="mk-code" type="text" maxlength="24" autocapitalize="off" spellcheck="false" placeholder="example: region3"></label>
+        <label class="fld"><span>How people join</span>
+          <select id="mk-mode">
+            <option value="pin">Name + PIN (people add themselves)</option>
+            <option value="manual">Manual (I add names and hand out codes)</option>
+          </select></label>
+        <button class="btn" onclick="dMake()">MAKE IT</button>
       </div>
-      <div class="stamp" id="stamp"></div>
+      <div id="mk-msg" class="msg" role="status" aria-live="polite"></div>
     </div>
-    <!-- v2.1 SHOWCASE label · only the demo account sees it. #4a3c28 on #e8e4da = 6.95:1, border #7d4a0e = 5.73:1 -->
-    <div id="showcase-note" style="display:none;margin:10px 18px 0;padding:8px 12px;border:2px dashed #7d4a0e;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:12px;color:#4a3c28;">SHOWCASE · real LOCK IN players who agreed to be shown, with their real results, under pseudonyms. A program's own dashboard shows only its students who joined its crew and agreed to share.</div>
+  </div>
 
-    <!-- v2.4 FREE CREW panel · same colors as the showcase note: #4a3c28 on #e8e4da = 6.95:1, border #7d4a0e = 5.73:1 -->
-    <div id="lic-note" style="display:none;margin:14px 18px 6px;padding:14px 16px;border:2px solid #7d4a0e;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:13px;line-height:1.6;color:#241a0c;">
-      <div style="font-family:'Barlow Condensed',system-ui,sans-serif;font-weight:700;font-size:20px;letter-spacing:.04em;color:#241a0c;">THIS CREW IS ON THE FREE PLAN</div>
-      <p style="margin:8px 0;">The program dashboard and CSV export come with a license. Your crew's results are still free to see in the game: open LOCK IN, sign in with this account, and choose ME.</p>
-      <p style="margin:8px 0;">A license adds this dashboard and CSV export, facility logins, a signed data agreement, purchase orders and invoices, and support. It also removes the free limit of 9 members plus the leader.</p>
-      <p style="margin:8px 0;">See <a href="/programs/" style="color:#7d4a0e;font-weight:700;">Programs</a> or email <a href="mailto:vince@trailer-load.com" style="color:#7d4a0e;font-weight:700;">vince@trailer-load.com</a>.</p>
-      <button class="btn ghost" onclick="dSignOut()">SIGN OUT</button>
+  <div class="board" id="crew-board" style="display:none;">
+    <div class="clip">LOCK-IN</div>
+    <div class="hdr"><div><div class="t" id="cb-name">CREW</div><div class="s" id="cb-sub"></div></div><div class="stamp" id="cb-stamp"></div></div>
+    <div class="sec">
+      <div class="joincard" id="cb-join"></div>
+      <div class="row noprint" style="margin-top:8px;">
+        <button class="btn ghost small" onclick="window.print()">PRINT THIS PAGE</button>
+        <button class="btn ghost small" onclick="dCrews(DASH.cur)">REFRESH</button>
+        <button class="btn ghost small" id="cb-export" onclick="dExport()">EXPORT CSV</button>
+        <button class="btn danger small" onclick="dDelete()">DELETE THIS CREW</button>
+      </div>
+      <div id="cb-lic" class="noprint" style="margin-top:8px;color:var(--ink2);font-size:15.5px;"></div>
     </div>
-
-    <div id="dash-body">
-    <div class="cards" id="cards"></div>
-
-    <div class="sheets" id="sheets">
-      <button class="sheet on" data-sheet="life"    onclick="dSheet('life')">📋 Lifetime</button>
-      <button class="sheet"    data-sheet="session" onclick="dSheet('session')">🕐 Most recent session</button>
-      <button class="sheet"    data-sheet="wall"    onclick="dSheet('wall')">🧱 Most recent wall</button>
+    <div class="sec noprint" id="cb-add" style="display:none;">
+      <h2>ADD A NAME</h2>
+      <p>Type the name the way you know the person. LOCK IN makes their personal code; hand it to them.</p>
+      <div class="row"><label class="fld" style="flex:1;margin:0;"><span>Name</span><input id="add-name" type="text" maxlength="40" autocomplete="off" onkeydown="if(event.key==='Enter')dAddSeat();"></label><button class="btn" onclick="dAddSeat()">ADD</button></div>
     </div>
-    <div class="sheetbar"></div>
-
-    <div class="scopes" id="scopes"></div>
-
-    <div class="tools">
-      <input id="search" type="text" aria-label="Filter students by handle" placeholder="Filter students…" oninput="dRender()">
-      <button class="btn ghost" onclick="dToggleGuests()" id="gbtn">👥 SHOW GUESTS</button>
-      <button class="btn ghost" onclick="dReload()">🔄 REFRESH</button>
-      <button class="btn ghost" onclick="dExport()">⭳ EXPORT CSV</button>
-      <button class="btn ghost" onclick="dSignOut()">🚪 SIGN OUT</button>
-    </div>
-
-    <div id="prof"></div>
-
+    <div id="cb-msg" class="msg noprint" role="status" aria-live="polite" style="margin:6px 18px 0;"></div>
     <div class="tblwrap">
       <table>
-        <thead><tr id="thead"></tr></thead>
-        <tbody id="tbody"></tbody>
+        <caption id="cb-cap">The roster</caption>
+        <thead id="cb-head"></thead>
+        <tbody id="cb-body"></tbody>
       </table>
     </div>
-    <div id="empty" style="display:none;"></div>
-    </div><!-- /dash-body -->
-
+    <div class="empty" id="cb-empty" style="display:none;"></div>
     <div class="foot">
       Training supplement only. Builds intuition and tracks practice progress; it does not replace employer
-      safety training, OSHA training, or any certification requirement.<br>
+      safety training, OSHA training, or any certification requirement. Not for hiring or placement decisions.<br>
       LOCK IN · F-Keys Creative LLC
     </div>
   </div>
@@ -276,470 +248,288 @@ tbody tr:hover td{background:#f6efdd;}
 </main>
 
 <script>
-/* ══════════════════════════════════════════════════════════════════════════
-   v2.0 · 2026-10-02
-
-   The old dashboard read eight columns off lockin_cohort, and that view
-   returned 0 walls / 0 sessions for 16 of 19 enrolled students because it
-   filtered on `since_join` and almost nobody has a crew-join date. An
-   instructor opened this and saw an empty class.
-
-   The view is rebuilt server-side. This reads it at full depth: 30 metrics
-   across six scopes, three sheets (lifetime / most recent session / most
-   recent wall), guests included as guest-1..n, and a per-student drill-down.
-
-   DEFAULT SORT IS WALLS ASCENDING. A scoreboard sorts by winner; a roster
-   sorts by who needs you.
-   ══════════════════════════════════════════════════════════════════════════ */
+// ══════════════════════════════════════════════════════════════════════════
+// INSTRUCTOR DASHBOARD v3.0 (LOCK IN 4.0)
+// WORKFLOW STACK: boot (a reset link, a stored sign-in, or the sign-in form) -> sign in / create an account ->
+//   YOUR CREWS (crew_mine) -> MAKE A CREW (crew_create) -> open a crew (crew_roster) -> add a name (crew_seat_add),
+//   reset a PIN or a code (crew_member_reset), remove a person (crew_member_remove), delete the crew (crew_delete),
+//   export CSV on a licensed crew (crew_export_walls, crew_export_sessions) -> sign out.
+// ASSET MANIFEST: /fonts/fonts.css, /lockbackdrop.png, the LOCK IN database (Supabase: Auth for the instructor,
+//   database functions for everything else).
+// ══════════════════════════════════════════════════════════════════════════
 var DASH={
   endpoint:'https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1',
   authUrl:'https://igqpgsqogfrpujdgvefs.supabase.co/auth/v1',
   anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo',
-  session:null, rows:[], guests:[], showGuests:false, sheet:'life',
-  name:'', code:'', sortKey:'walls', sortDir:1, scopes:{}
+  rpcPrefix:'lockin_', store:'lockinDashAuth',
+  session:null, mode:'in', crews:[], cur:null, crew:null, roster:[]
 };
-
-/* ── COLUMN MODEL ────────────────────────────────────────────────────────
-   Every column the rebuilt views expose, grouped. A group can be switched
-   off so an instructor can scope the board down to the question they are
-   actually asking. ENGAGEMENT and QUALITY are on by default because those
-   are the two an instructor opens for. */
-var GROUPS={
-  engagement:{label:'Engagement', on:true},
-  quality:   {label:'Quality',    on:true},
-  throughput:{label:'Throughput', on:false},
-  craft:     {label:'Craft',      on:false},
-  faults:    {label:'Faults',     on:true},
-  habits:    {label:'Habits',     on:false}
-};
-var COLS={
-  life:[
-    {k:'username',      l:'Student',    g:'id',         t:'name'},
-    {k:'sessions',      l:'Sessions',   g:'engagement', t:'n'},
-    {k:'walls',         l:'Walls',      g:'engagement', t:'n'},
-    {k:'pieces',        l:'Pieces',     g:'engagement', t:'n'},
-    {k:'smalls_runs',   l:'Smalls runs',g:'engagement', t:'n'},
-    {k:'last_seen',     l:'Last active',g:'engagement', t:'ago'},
-    {k:'best_pph',      l:'Best PPH',   g:'throughput', t:'n'},
-    {k:'avg_pph',       l:'Avg PPH',    g:'throughput', t:'n'},
-    {k:'best_score',    l:'Best wall',  g:'throughput', t:'n'},
-    {k:'total_score',   l:'Total score',g:'throughput', t:'n'},
-    {k:'avg_integrity', l:'Integrity',  g:'quality',    t:'pctpill'},
-    {k:'avg_wall_pct',  l:'Wall %',     g:'quality',    t:'pct'},
-    {k:'density_pct',   l:'Density',    g:'quality',    t:'pct'},
-    {k:'cube_eff',      l:'Cube eff',   g:'quality',    t:'pct'},
-    {k:'nc_util_pct',   l:'NC use',     g:'quality',    t:'pct'},
-    {k:'smalls_util_pct',l:'Smalls use',g:'quality',    t:'pct'},
-    {k:'shelves_locked',l:'Shelves',    g:'craft',      t:'n'},
-    {k:'double_locks',  l:'Bulkheads',  g:'craft',      t:'n'},
-    {k:'nests',         l:'Nests',      g:'craft',      t:'n'},
-    {k:'recoveries',    l:'Recoveries', g:'craft',      t:'n'},
-    {k:'bonuses',       l:'Bonuses',    g:'craft',      t:'n'},
-    {k:'incidents',     l:'Incidents',  g:'faults',     t:'incpill'},
-    {k:'collapses',     l:'Collapses',  g:'faults',     t:'n'},
-    {k:'crunches',      l:'Crunches',   g:'faults',     t:'n'},
-    {k:'rejected_drops',l:'Rejects',    g:'faults',     t:'n'},
-    {k:'hydration_breaks',l:'Water',    g:'habits',     t:'n'},
-    {k:'nc_dwell_warnings',l:'NC dwell',g:'habits',     t:'n'},
-    {k:'smalls_dwell_warnings',l:'Sm dwell',g:'habits', t:'n'},
-    {k:'rotations',     l:'Rotations',  g:'habits',     t:'n'},
-    {k:'lifts',         l:'Lifts',      g:'habits',     t:'n'}
-  ],
-  session:[
-    {k:'username',      l:'Student',    g:'id',         t:'name'},
-    {k:'mode',          l:'Mode',       g:'engagement', t:'txt'},
-    {k:'walls',         l:'Walls',      g:'engagement', t:'n'},
-    {k:'duration_s',    l:'Duration',   g:'engagement', t:'dur'},
-    {k:'last_seen',     l:'When',       g:'engagement', t:'ago'},
-    {k:'best_pph',      l:'Best PPH',   g:'throughput', t:'n'},
-    {k:'score',         l:'Score',      g:'throughput', t:'n'},
-    {k:'avg_integrity', l:'Integrity',  g:'quality',    t:'pctpill'},
-    {k:'incidents',     l:'Incidents',  g:'faults',     t:'incpill'},
-    {k:'app_ver',       l:'Build',      g:'habits',     t:'txt'}
-  ],
-  wall:[
-    {k:'username',      l:'Student',    g:'id',         t:'name'},
-    {k:'mode',          l:'Mode',       g:'engagement', t:'txt'},
-    {k:'pieces',        l:'Pieces',     g:'engagement', t:'n'},
-    {k:'dur_s',         l:'Duration',   g:'engagement', t:'dur'},
-    {k:'loaded_at',     l:'When',       g:'engagement', t:'ago'},
-    {k:'pph',           l:'PPH',        g:'throughput', t:'n'},
-    {k:'score',         l:'Score',      g:'throughput', t:'n'},
-    {k:'integrity',     l:'Integrity',  g:'quality',    t:'pctpill'},
-    {k:'density',       l:'Density',    g:'quality',    t:'pct'},
-    {k:'incidents',     l:'Incidents',  g:'faults',     t:'incpill'},
-    {k:'collapses',     l:'Collapses',  g:'faults',     t:'n'}
-  ]
-};
-var SHEET_SRC={life:'lockin_cohort', session:'lockin_cohort_session', wall:'lockin_cohort_wall'};
-// v2.1 SHOWCASE: the demo account reads a pseudonymous mirror of the REAL roster instead of seeded students,
-// so a prospect sees actual results (I said on 2026-10-03: "display the actual dashboard with real results").
-// The views return rows only for the demo crew's instructor (lockin_private.showcase_ok); everyone else gets
-// none and stays on their own class. No real user_id leaves the database; usernames become student-xyz.
-var SHEET_SRC_SHOW={life:'lockin_showcase', session:'lockin_showcase_session', wall:'lockin_showcase_wall'};
-var SHEET_SORT={life:'walls', session:'last_seen', wall:'loaded_at'};
-
-function dHeaders(){
-  if(DASH.session&&liAuthStale(DASH.session))dAuthSync(); // v2.3 never send a token from before the last sign-out on this device
-  var h={'apikey':DASH.anonKey,'Content-Type':'application/json'};
-  h['Authorization']='Bearer '+((DASH.session&&DASH.session.access_token)||DASH.anonKey);
-  return h;
-}
-function dMsg(t,cls){var e=document.getElementById('login-msg');if(e){e.textContent=t||'';e.className=cls||'';}}
 function dEsc(s){return (''+(s==null?'':s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function dNum(v){return (v==null||isNaN(v))?0:(+v);}
-// v3.5.205 ONE SIGN-OUT FOR THE WHOLE SITE ON THIS DEVICE (owner, 2026-10-16: "if someone signs out they should
-// remain signed out"). liAuthEpoch counts sign-outs on this device. Every stored session carries the epoch it was born
-// in (ep). A sign-out bumps the epoch, so every older session, in this tab, another tab, /me/, Smalls Sort or the
-// dashboard, is dead on sight and is never written back. A deliberate sign-in stamps the CURRENT epoch, so it works.
-// The same block lives in lock-in.html, me/index.html, dashboard/index.html and ss/index.html: keep the copies identical.
-var LI_AUTH_STORES=['liAuth','lockinMeAuth','lockinDashAuth'];
-function liAuthEpoch(){try{return parseInt(localStorage.getItem('liAuthEpoch')||'0',10)||0;}catch(e){return 0;}}
-function liAuthStale(s){return !s||(+s.ep||0)<liAuthEpoch();}
-function liSignOutAll(authUrl,anonKey,extraTok){
-  var toks=[],i,r,s,p;
-  if(extraTok)toks.push(extraTok);
-  for(i=0;i<LI_AUTH_STORES.length;i++){try{r=localStorage.getItem(LI_AUTH_STORES[i]);s=r?JSON.parse(r):null;if(s&&s.access_token&&toks.indexOf(s.access_token)<0)toks.push(s.access_token);}catch(e){}}
-  try{localStorage.setItem('liAuthEpoch',''+(liAuthEpoch()+1));}catch(e){} // FIRST: a tab that hears the removals below already sees the new epoch
-  for(i=0;i<LI_AUTH_STORES.length;i++){try{localStorage.removeItem(LI_AUTH_STORES[i]);}catch(e){}}
-  try{localStorage.removeItem('liInitials');localStorage.removeItem('meNoSSO');localStorage.removeItem('liSessions');}catch(e){}
-  // the next person on this device inherits nothing of this account: username, recovery code, crew code, crew sharing,
-  // or the device ID (a new one is made on the next game load). The SAVE MY STATS choice is kept.
-  try{p=JSON.parse(localStorage.getItem('liPlayer')||'null');if(p){p.email='';p.handle='';p.facility='';p.consentShare=false;delete p.recovery;delete p.pid;localStorage.setItem('liPlayer',JSON.stringify(p));}}catch(e){}
-  for(i=0;i<toks.length;i++){try{fetch(authUrl+'/logout?scope=local',{method:'POST',headers:{'apikey':anonKey,'Authorization':'Bearer '+toks[i]}}).catch(function(){});}catch(e){}} // best effort: revoke these sessions server-side so a tab running older code cannot refresh back in
-}
-function dSince(ts){
-  if(!ts)return 'never';
-  try{
-    var d=Math.floor((Date.now()-new Date(ts).getTime())/86400000);
-    if(d<=0)return 'today'; if(d===1)return '1d ago'; if(d<30)return d+'d ago';
-    return Math.floor(d/30)+'mo ago';
-  }catch(e){return '·';}
-}
-function dDur(s){s=dNum(s);if(!s)return '·';var m=Math.floor(s/60);return m?(m+'m '+(s%60)+'s'):(s+'s');}
+function dSet(id,t,cls){var e=document.getElementById(id);if(e){e.textContent=t||'';e.className='msg'+(cls?(' '+cls):'');}}
+function dDate(t){if(!t)return '·';try{var d=new Date(t);return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});}catch(e){return '·';}}
 
-function dLogin(){
-  var email=((document.getElementById('li-email')||{}).value||'').trim();
-  // v2.2 game accounts are username + password; under the hood the game signs them up as
-  // <clean username>@players.lockin.app (lock-in.html zHandleEmail). The login only took an email, so an
-  // instructor who created a crew in the game could not sign in here without knowing that hidden address.
-  // A value with no "@" is now treated as a game username, cleaned by the game's own rule (zHandleClean).
-  if(email&&email.indexOf('@')<0)email=email.toLowerCase().replace(/[^a-z0-9_]/g,'')+'@players.lockin.app';
-  var pw=(document.getElementById('li-pw')||{}).value||'';
-  if(!email||!pw){dMsg('Enter your username (or program email) and password.','err');return;}
-  dMsg('Signing in…','');
+// ── THE INSTRUCTOR'S SIGN-IN ──
+// READS/WRITES: localStorage lockinDashAuth, DASH.session
+function dSave(j,email){
+  DASH.session={access_token:j.access_token,refresh_token:j.refresh_token,exp:Date.now()+((j.expires_in||3600)*1000),email:email||(DASH.session&&DASH.session.email)||''};
+  try{localStorage.setItem(DASH.store,JSON.stringify(DASH.session));}catch(e){console.error('dSave:',e);}
+}
+function dForget(){DASH.session=null;try{localStorage.removeItem(DASH.store);}catch(e){}}
+function dAuth(path,body,cb,tok){
   try{
-    fetch(DASH.authUrl+'/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':DASH.anonKey},body:JSON.stringify({email:email,password:pw})})
-      .then(function(r){return r.json();}).then(function(j){
-        if(j&&j.access_token){
-          DASH.session={access_token:j.access_token,refresh_token:j.refresh_token,email:email,uid:(j.user&&j.user.id)||'',ep:liAuthEpoch()};
-          try{localStorage.setItem('lockinDashAuth',JSON.stringify(DASH.session));}catch(e){}
-          dMsg('','');dEnter();
-        } else { dMsg((j&&(j.error_description||j.msg))||'Sign-in failed. Check your username and password, or email vince@trailer-load.com.','err'); }
-      }).catch(function(e){console.error('dLogin:',e);dMsg('Network error. Try again.','err');});
-  }catch(e){console.error('dLogin:',e);dMsg('Network error. Try again.','err');}
+    var h={'Content-Type':'application/json','apikey':DASH.anonKey};if(tok)h['Authorization']='Bearer '+tok;
+    fetch(DASH.authUrl+path,{method:tok&&path==='/user'?'PUT':'POST',headers:h,body:JSON.stringify(body||{})})
+      .then(function(r){var st=r.status;return r.json().then(function(j){return {st:st,j:j};},function(){return {st:st,j:{}};});})
+      .then(function(x){cb(x.j||{},x.st);})
+      .catch(function(e){console.error('dAuth:',e);cb(null,0);});
+  }catch(e){console.error('dAuth:',e);cb(null,0);}
 }
+function dAuthErr(j,fallback){return (j&&(j.error_description||j.msg||j.message||j.error))||fallback;}
+// a live token, refreshed if it is about to expire; cb(false) means sign in again
+function dToken(cb){
+  var s=DASH.session;if(!s||!s.access_token){cb(false);return;}
+  if(Date.now()<s.exp-30000){cb(true);return;}
+  if(!s.refresh_token){dForget();cb(false);return;}
+  dAuth('/token?grant_type=refresh_token',{refresh_token:s.refresh_token},function(j){
+    if(j&&j.access_token){dSave(j);cb(true);}else{dForget();cb(false);}
+  });
+}
+// one door to the database for the instructor: cb(json) or cb(null) when there was no usable answer
+function dRpc(fn,body,cb){
+  dToken(function(ok){
+    if(!ok){dShowLogin('Your sign-in expired. Sign in again.','err');return;}
+    try{
+      fetch(DASH.endpoint+'/rpc/'+DASH.rpcPrefix+fn,{method:'POST',headers:{'Content-Type':'application/json','apikey':DASH.anonKey,'Authorization':'Bearer '+DASH.session.access_token},body:JSON.stringify(body||{})})
+        .then(function(r){var ok2=r.ok,st=r.status;return r.json().then(function(j){return {ok:ok2,st:st,j:j};},function(){return {ok:ok2,st:st,j:null};});})
+        .then(function(x){
+          if(x.st===401||x.st===403){dForget();dShowLogin('Your sign-in expired. Sign in again.','err');return;}
+          cb(x.ok?x.j:null);
+        })
+        .catch(function(e){console.error(fn+':',e);cb(null);});
+    }catch(e){console.error(fn+':',e);cb(null);}
+  });
+}
+function dMode(m){
+  DASH.mode=m;var nw=(m==='new');
+  document.getElementById('tab-in').classList.toggle('on',!nw);document.getElementById('tab-in').setAttribute('aria-pressed',nw?'false':'true');
+  document.getElementById('tab-new').classList.toggle('on',nw);document.getElementById('tab-new').setAttribute('aria-pressed',nw?'true':'false');
+  document.getElementById('f-pw2').style.display=nw?'':'none';
+  document.getElementById('li-forgot').style.display=nw?'none':'';
+  document.getElementById('li-go').textContent=nw?'CREATE THE ACCOUNT':'SIGN IN';
+  document.getElementById('login-h').textContent=nw?'CREATE AN INSTRUCTOR ACCOUNT':'INSTRUCTOR SIGN-IN';
+  document.getElementById('li-pw').setAttribute('autocomplete',nw?'new-password':'current-password');
+  dSet('login-msg','');
+}
+function dSubmit(){
+  var em=document.getElementById('li-email').value.trim(),pw=document.getElementById('li-pw').value,pw2=document.getElementById('li-pw2').value;
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){dSet('login-msg','Enter an email address.','err');return;}
+  if(pw.length<8){dSet('login-msg','The password needs 8 or more characters.','err');return;}
+  if(DASH.mode==='new'){
+    if(pw!==pw2){dSet('login-msg','The two passwords do not match.','err');return;}
+    dSet('login-msg','Creating the account…');
+    dAuth('/signup',{email:em,password:pw},function(j,st){
+      if(j&&j.access_token){dSave(j,em);dEnter();return;}
+      if(j&&(j.id||(j.user&&j.user.id))&&!j.access_token){dSet('login-msg','Account made. Open the confirmation email sent to '+em+', then sign in here.','good');dMode('in');return;}
+      dSet('login-msg',dAuthErr(j,st?'Could not create the account.':'No connection. Try again.'),'err');
+    });
+    return;
+  }
+  dSet('login-msg','Signing in…');
+  dAuth('/token?grant_type=password',{email:em,password:pw},function(j,st){
+    if(j&&j.access_token){dSave(j,em);document.getElementById('li-pw').value='';dEnter();return;}
+    dSet('login-msg',st?dAuthErr(j,'Email or password is wrong.'):'No connection. Try again.','err');
+  });
+}
+function dForgot(){
+  var em=document.getElementById('li-email').value.trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){dSet('login-msg','Type the account email above, then choose Forgot the password.','err');return;}
+  dAuth('/recover?redirect_to='+encodeURIComponent(location.origin+'/dashboard/'),{email:em},function(j,st){
+    dSet('login-msg',st&&st<300?'If '+em+' has an instructor account, a reset link is on its way. It opens this page.':dAuthErr(j,'Could not send the reset email.'),st&&st<300?'good':'err');
+  });
+}
+// a reset link arrives as #access_token=...&type=recovery
+function dRecoveryToken(){var h=location.hash||'';if(h.indexOf('type=recovery')<0)return null;var m=h.match(/access_token=([^&]+)/);return m?decodeURIComponent(m[1]):null;}
+function dSetPassword(){
+  var a=document.getElementById('rs-pw').value,b=document.getElementById('rs-pw2').value,tok=dRecoveryToken();
+  if(a.length<8){dSet('rs-msg','The password needs 8 or more characters.','err');return;}
+  if(a!==b){dSet('rs-msg','The two passwords do not match.','err');return;}
+  if(!tok){dSet('rs-msg','This reset link is incomplete. Ask for a new one.','err');return;}
+  dAuth('/user',{password:a},function(j,st){
+    if(st&&st<300){try{history.replaceState(null,'',location.pathname);}catch(e){}document.getElementById('reset').style.display='none';dShowLogin('Password saved. Sign in with it.','good');}
+    else dSet('rs-msg',dAuthErr(j,'The link has expired. Ask for a new one.'),'err');
+  },tok);
+}
+function dShowLogin(t,cls){
+  document.getElementById('dash').style.display='none';document.getElementById('who').style.display='none';
+  document.getElementById('login').style.display='';dMode('in');if(t)dSet('login-msg',t,cls);
+}
+function dSignOut(){
+  var tok=DASH.session&&DASH.session.access_token;dForget();
+  if(tok){try{fetch(DASH.authUrl+'/logout?scope=local',{method:'POST',headers:{'apikey':DASH.anonKey,'Authorization':'Bearer '+tok}}).catch(function(){});}catch(e){}}
+  DASH.cur=null;document.getElementById('crew-board').style.display='none';dShowLogin('Signed out.','good');
+}
+
+// ── YOUR CREWS ──
 function dEnter(){
-  document.getElementById('login').style.display='none';
-  document.getElementById('dash').style.display='block';
-  var who=document.getElementById('who');if(who)who.style.display='block';
-  dWho(); dScopeBar(); dGate();
+  document.getElementById('login').style.display='none';document.getElementById('dash').style.display='block';
+  var w=document.getElementById('who');w.style.display='flex';
+  w.innerHTML='<span><b>'+dEsc(DASH.session.email||'Instructor')+'</b></span><button class="btn ghost small" onclick="dSignOut()">SIGN OUT</button>';
+  dCrews();
 }
-// v2.4 facilities first (they carry the license), then the showcase probe, then the sheet. Nothing loads for an
-// account with no licensed crew; the demo crew is licensed, so the showcase still opens.
-function dGate(){
-  // READS: DASH.facilities, DASH.showcase | WRITES: DASH.licensed
-  var emp=document.getElementById('empty');if(emp){emp.style.display='block';emp.textContent='Loading…';}
-  dFetchFacility(function(ok){
-    if(!ok){if(emp){emp.style.display='block';emp.textContent='Could not load · try REFRESH.';}return;}
-    dProbeShowcase(function(){
-      DASH.licensed=DASH.showcase||dLicensedCodes().length>0;
-      var n=document.getElementById('lic-note');if(n)n.style.display=DASH.licensed?'none':'block';
-      var b=document.getElementById('dash-body');if(b)b.style.display=DASH.licensed?'':'none';
-      var st=document.getElementById('stamp');if(st&&!DASH.licensed)st.textContent='FREE PLAN';
-      if(DASH.licensed)dFetchSheet();
+function dCrews(open){
+  var box=document.getElementById('crews');box.innerHTML='<div class="empty">Loading…</div>';
+  dRpc('crew_mine',{},function(j){
+    if(!Array.isArray(j)){box.innerHTML='<div class="empty">The crews did not load. That is a connection problem, not an empty list. Refresh to try again.</div>';return;}
+    DASH.crews=j;
+    if(!j.length){box.innerHTML='<div class="empty">No crews yet. Make one below; it takes a name and a join code.</div>';document.getElementById('crew-board').style.display='none';return;}
+    var h='',i,c;
+    for(i=0;i<j.length;i++){c=j[i];
+      h+='<div class="crew'+(c.code===DASH.cur?' on':'')+'"><div class="n">'+dEsc(c.name)+'</div>'+
+        '<div class="k">CODE <b>'+dEsc(c.code)+'</b> · '+(c.mode==='manual'?'MANUAL':'NAME + PIN')+' · '+dNum(c.members)+(c.licensed?' PEOPLE · LICENSED':(' OF 9 PEOPLE'))+'</div>'+
+        '<button class="btn small" onclick="dOpen(\''+dEsc(c.code)+'\')">OPEN</button></div>';}
+    box.innerHTML=h;
+    if(open)dOpen(open,true);else if(DASH.cur)dOpen(DASH.cur,true); // a refresh after an action keeps its message
+  });
+}
+function dMake(){
+  var nm=document.getElementById('mk-name').value.trim(),cd=document.getElementById('mk-code').value.trim(),md=document.getElementById('mk-mode').value;
+  if(nm.length<2){dSet('mk-msg','Give the crew a name.','err');return;}
+  if(!/^[A-Za-z0-9_-]{4,24}$/.test(cd)){dSet('mk-msg','The join code is 4 to 24 letters, numbers, dashes or underscores.','err');return;}
+  dSet('mk-msg','Making the crew…');
+  dRpc('crew_create',{p_name:nm,p_code:cd,p_mode:md},function(j){
+    if(!j){dSet('mk-msg','No connection. Try again.','err');return;}
+    if(!j.ok){dSet('mk-msg',j.err||'Could not make the crew.','err');return;}
+    document.getElementById('mk-name').value='';document.getElementById('mk-code').value='';
+    dSet('mk-msg','Made '+j.name+'. Its join code is '+j.code+'.','good');
+    dCrews(j.code);
+  });
+}
+
+// ── ONE CREW ──
+function dCrewByCode(code){var i;for(i=0;i<DASH.crews.length;i++)if(DASH.crews[i].code===code)return DASH.crews[i];return null;}
+function dJoinCard(c){
+  var site='trailer-load.com';
+  var step4=(c.mode==='manual')?'<li>Type the <b>personal code</b> I gave you. It joins you under your name.</li>'
+    :'<li>Type your <b>name</b> the way I know you, and choose a <b>4-digit PIN</b>. Use the same name and PIN on any other computer.</li>';
+  return '<h3>HOW TO JOIN '+dEsc(c.name).toUpperCase()+'</h3><ol>'+
+    '<li>Open <b>'+site+'</b> in a web browser. No download, no account.</li>'+
+    '<li>Choose <b>◆ JOIN A CREW</b>, top right of the menu.</li>'+
+    '<li>Enter the crew code: <span class="code">'+dEsc(c.code)+'</span>, then NEXT.</li>'+step4+
+    '<li>Choose JOIN. The button now shows your name. Play TRAINING first, then TRAILER-LOAD.</li></ol>';
+}
+function dOpen(code,keep){
+  var c=dCrewByCode(code);if(!c)return;DASH.cur=code;DASH.crew=c;
+  var cards=document.querySelectorAll('.crew'),i;for(i=0;i<cards.length;i++)cards[i].classList.toggle('on',cards[i].innerHTML.indexOf('<b>'+dEsc(code)+'</b>')>=0);
+  document.getElementById('crew-board').style.display='block';
+  document.getElementById('cb-name').textContent=c.name.toUpperCase();
+  document.getElementById('cb-sub').textContent=(c.mode==='manual'?'Manual: you add each name and hand out a personal code.':'Name + PIN: each person adds themselves with a name and a PIN.');
+  document.getElementById('cb-stamp').textContent=c.licensed?'LICENSED':'FREE CREW · UP TO 9';
+  document.getElementById('cb-join').innerHTML=dJoinCard(c);
+  document.getElementById('cb-add').style.display=(c.mode==='manual')?'':'none';
+  document.getElementById('cb-export').style.display=c.licensed?'':'none';
+  document.getElementById('cb-lic').innerHTML=c.licensed?'':'A free crew holds 9 people. A license removes the limit and adds the CSV export of every wall and session. See <a href="/programs/#facilities" style="color:var(--amberInk);font-weight:700;">pricing</a>.';
+  if(!keep)dSet('cb-msg','');
+  var body=document.getElementById('cb-body');body.innerHTML='';document.getElementById('cb-empty').style.display='none';
+  dRpc('crew_roster',{p_code:code},function(rows){
+    if(!Array.isArray(rows)){document.getElementById('cb-empty').style.display='block';document.getElementById('cb-empty').textContent='The roster did not load. That is a connection problem, not an empty crew.';return;}
+    DASH.roster=rows;dRoster();
+  });
+}
+function dRoster(){
+  var c=DASH.crew,rows=DASH.roster,man=(c.mode==='manual');
+  document.getElementById('cb-cap').textContent=rows.length+' '+(rows.length===1?'person':'people')+' on '+c.name+(c.licensed?'':' (a free crew holds 9)')+'. Least practiced first.';
+  document.getElementById('cb-head').innerHTML='<tr><th scope="col">Name</th>'+(man?'<th scope="col">Personal code</th>':'<th scope="col">PIN</th>')+
+    '<th scope="col">Joined</th><th scope="col">Last played</th><th scope="col">Sessions</th><th scope="col">Walls</th><th scope="col">Best score</th><th scope="col">Avg integrity</th><th scope="col">Best pieces/hr</th><th scope="col">Incidents</th><th scope="col">Collapses</th><th scope="col" class="noprint">Manage</th></tr>';
+  var em=document.getElementById('cb-empty');
+  if(!rows.length){document.getElementById('cb-body').innerHTML='';em.style.display='block';
+    em.textContent=man?'No names yet. Add each person above, then hand them their personal code.':'No one has joined yet. Give out the join code above.';return;}
+  em.style.display='none';
+  rows=rows.slice().sort(function(a,b){return dNum(a.walls)-dNum(b.walls)||(''+a.name).localeCompare(''+b.name);});
+  var h='',i,r,id;
+  for(i=0;i<rows.length;i++){r=rows[i];id=dEsc(r.id);
+    h+='<tr'+(dNum(r.walls)===0?' class="zero"':'')+'><td>'+dEsc(r.name)+(r.locked?' <span class="tag d">LOCKED</span>':'')+'</td>'+
+      (man?'<td class="seat">'+dEsc(r.seat||'·')+'</td>':'<td>'+(r.pin_set?'<span class="tag g">SET</span>':'<span class="tag w">NEW PIN</span>')+'</td>')+
+      '<td>'+dDate(r.joined)+'</td><td>'+dDate(r.last_seen)+'</td><td>'+dNum(r.sessions)+'</td><td>'+dNum(r.walls)+'</td>'+
+      '<td>'+(r.best_score==null?'·':dNum(r.best_score))+'</td><td>'+(r.avg_integrity==null?'·':dNum(r.avg_integrity)+'%')+'</td>'+
+      '<td>'+(r.best_pph==null?'·':dNum(r.best_pph))+'</td><td>'+(dNum(r.incidents)?'<span class="tag d">'+dNum(r.incidents)+'</span>':'0')+'</td><td>'+dNum(r.collapses)+'</td>'+
+      '<td class="noprint"><button class="btn ghost small" onclick="dReset(\''+id+'\')">'+(man?'NEW CODE':'RESET PIN')+'</button> '+
+      '<button class="btn danger small" onclick="dRemove(\''+id+'\')">REMOVE</button></td></tr>';}
+  document.getElementById('cb-body').innerHTML=h;
+}
+function dMember(id){var i;for(i=0;i<DASH.roster.length;i++)if(DASH.roster[i].id===id)return DASH.roster[i];return null;}
+function dAddSeat(){
+  var el=document.getElementById('add-name'),nm=el.value.trim();
+  if(nm.length<2){dSet('cb-msg','Type the person’s name.','err');return;}
+  dRpc('crew_seat_add',{p_code:DASH.cur,p_name:nm},function(j){
+    if(!j){dSet('cb-msg','No connection. Try again.','err');return;}
+    if(!j.ok){dSet('cb-msg',j.err||'Could not add the name.','err');return;}
+    el.value='';dSet('cb-msg',j.name+'’s personal code is '+j.seat+'. It is in the roster below; print the page to hand them out.','good');
+    dCrews(DASH.cur);
+  });
+}
+function dReset(id){
+  var m=dMember(id),man=(DASH.crew.mode==='manual');if(!m)return;
+  var ask=man?('Make a new personal code for '+m.name+'? The old one stops working and every device using it leaves the crew.')
+    :('Reset '+m.name+'’s PIN? Every device they used leaves the crew; the next time they join with this name, the PIN they type becomes the new one.');
+  if(!window.confirm(ask))return;
+  dRpc('crew_member_reset',{p_member:id},function(j){
+    if(!j||!j.ok){dSet('cb-msg',(j&&j.err)||'Could not reset.','err');return;}
+    dSet('cb-msg',man?(m.name+'’s new personal code is '+j.seat+'.'):(m.name+'’s PIN is cleared. They join again with their name and a new PIN.'),'good');
+    dOpen(DASH.cur,true);
+  });
+}
+function dRemove(id){
+  var m=dMember(id);if(!m)return;
+  if(!window.confirm('Remove '+m.name+' from '+DASH.crew.name+'? Their walls and sessions on this crew are deleted. This cannot be undone.'))return;
+  dRpc('crew_member_remove',{p_member:id},function(j){
+    if(!j||!j.ok){dSet('cb-msg',(j&&j.err)||'Could not remove.','err');return;}
+    dSet('cb-msg',m.name+' is removed, with their results.','good');dCrews(DASH.cur);
+  });
+}
+function dDelete(){
+  var c=DASH.crew;if(!c)return;
+  var typed=window.prompt('Deleting '+c.name+' removes everyone on it and all their results. This cannot be undone.\nType the join code ('+c.code+') to delete it.');
+  if(typed===null)return;
+  if(typed.trim().toLowerCase()!==c.code){dSet('cb-msg','The code did not match, so nothing was deleted.','err');return;}
+  dRpc('crew_delete',{p_code:c.code},function(j){
+    if(!j||!j.ok){dSet('cb-msg',(j&&j.err)||'Could not delete.','err');return;}
+    DASH.cur=null;document.getElementById('crew-board').style.display='none';dSet('mk-msg',c.name+' is deleted.','good');dCrews();
+  });
+}
+// CSV: every wall and every session on a licensed crew. A cell that starts with = + - @ is prefixed so a spreadsheet
+// never runs it as a formula.
+function dCsv(rows,cols){
+  function q(v){v=(v==null?'':(typeof v==='object'?JSON.stringify(v):''+v));if(/^[=+\-@]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"';}
+  var out=[cols.join(',')],i,k,line;
+  for(i=0;i<rows.length;i++){line=[];for(k=0;k<cols.length;k++)line.push(q(rows[i][cols[k]]));out.push(line.join(','));}
+  return out.join('\r\n');
+}
+function dDownload(name,text){
+  try{var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);}catch(e){console.error('dDownload:',e);}
+}
+function dExport(){
+  var c=DASH.crew;if(!c||!c.licensed)return;
+  dSet('cb-msg','Preparing the export…');
+  dRpc('crew_export_walls',{p_code:c.code},function(w){
+    if(!Array.isArray(w)){dSet('cb-msg','The export did not load. Try again.','err');return;}
+    dRpc('crew_export_sessions',{p_code:c.code},function(s){
+      if(!Array.isArray(s)){dSet('cb-msg','The export did not load. Try again.','err');return;}
+      var day=new Date().toISOString().slice(0,10);
+      dDownload('lock-in-'+c.code+'-walls-'+day+'.csv',dCsv(w,['name','mode','score','pieces','dur_s','pph','integrity','density','incidents','collapses','loaded_at']));
+      dDownload('lock-in-'+c.code+'-sessions-'+day+'.csv',dCsv(s,['name','mode','app_ver','started_at','ended_at','duration_s','summary','incidents']));
+      dSet('cb-msg','Exported '+w.length+' walls and '+s.length+' sessions.','good');
     });
   });
 }
-function dLicensedCodes(){
-  var f=DASH.facilities||[],out=[],i;
-  for(i=0;i<f.length;i++){if(f[i].licensed===true&&f[i].facility_code)out.push(f[i].facility_code);}
-  return out;
-}
-// v2.1 one probe after sign-in decides the source. A missing view (404) or an empty answer means a normal program.
-function dProbeShowcase(cb){
-  // WRITES: DASH.showcase
-  try{
-    fetch(DASH.endpoint+'/lockin_showcase?select=username&limit=1',{headers:dHeaders()})
-      .then(function(r){return r.ok?r.json():[];})
-      .then(function(j){
-        DASH.showcase=!!(j&&j.length);
-        var n=document.getElementById('showcase-note');if(n)n.style.display=DASH.showcase?'block':'none';
-        dWho(); // v2.2.2 re-title once we know this is a showcase session
-        cb();
-      }).catch(function(e){console.error('dProbeShowcase:',e);DASH.showcase=false;cb();});
-  }catch(e){console.error('dProbeShowcase:',e);DASH.showcase=false;cb();}
-}
-function dFetchFacility(cb){
-  // WRITES: DASH.facilities · cb(true) once they are known, cb(false) on a network or server error
-  cb=cb||function(){};
-  try{var _r=null;
-    fetch(DASH.endpoint+'/lockin_facilities?select=name,facility_code,licensed',{headers:dHeaders()})
-      .then(function(r){_r=r;if(r.status===401){dExpired();return null;}return r.json();}).then(function(j){
-        if(j===null)return;
-        if(!_r.ok||!Array.isArray(j)){console.error('dFetchFacility:',_r.status,j);cb(false);return;}
-        DASH.facilities=j;
-        dWho();cb(true);
-      }).catch(function(e){console.error('dFetchFacility:',e);cb(false);});
-  }catch(e){console.error('dFetchFacility:',e);cb(false);}
-}
-// v2.2.2 one place decides the header. An instructor can own several crews and the API returns them in no
-// fixed order; I own the demo crew plus two test crews, and one of those (since renamed) came back
-// FIRST and would have titled a prospect demo. In a SHOWCASE session the header is the demo crew's name.
-// The signed-in name shows the game username, not the hidden <username>@players.lockin.app address.
-function dWho(){
-  // READS: DASH.facilities, DASH.showcase, DASH.session | WRITES: DASH.name, DASH.code
-  var f=DASH.facilities||[],pick=null,i;
-  if(DASH.showcase){for(i=0;i<f.length;i++){if(f[i].facility_code==='ZG-DEMO-01')pick=f[i];}}
-  if(!pick){for(i=0;i<f.length;i++){if(f[i].licensed===true){pick=f[i];break;}}}
-  if(!pick&&f.length)pick=f[0];
-  if(pick){DASH.name=pick.name||pick.facility_code||'Your program';DASH.code=pick.facility_code||'';}
-  var em=((DASH.session&&DASH.session.email)||'').replace(/@players\.lockin\.app$/,'');
-  var who=document.getElementById('who');if(who)who.innerHTML='<b>'+dEsc(DASH.name||'Your program')+'</b>'+dEsc(em);
-}
-function dReload(){if(DASH.licensed)dFetchSheet();else dGate();}
-function dSheet(s){
-  if(!SHEET_SRC[s])return;
-  DASH.sheet=s; DASH.sortKey=SHEET_SORT[s]; DASH.sortDir=(s==='life')?1:-1;
-  var b=document.querySelectorAll('.sheet'),i;
-  for(i=0;i<b.length;i++)b[i].classList.toggle('on', b[i].getAttribute('data-sheet')===s);
-  document.getElementById('prof').style.display='none';
-  dFetchSheet();
-}
-function dToggleGuests(){
-  DASH.showGuests=!DASH.showGuests;
-  var b=document.getElementById('gbtn');
-  if(b)b.textContent=DASH.showGuests?'👥 HIDE GUESTS':'👥 SHOW GUESTS';
-  dRender();
-}
-function dScopeBar(){
-  var h='<span class="lbl">Columns</span>',g;
-  for(g in GROUPS){ if(!GROUPS.hasOwnProperty(g))continue;
-    h+='<button class="scope'+(GROUPS[g].on?' on':'')+'" data-g="'+g+'" onclick="dScope(\''+g+'\')">'+GROUPS[g].label+'</button>';
-  }
-  document.getElementById('scopes').innerHTML=h;
-}
-function dScope(g){ if(!GROUPS[g])return; GROUPS[g].on=!GROUPS[g].on; dScopeBar(); dRender(); }
 
-function dFetchSheet(){
-  var tb=document.getElementById('tbody');if(tb)tb.innerHTML='';
-  var emp=document.getElementById('empty');if(emp){emp.style.display='block';emp.textContent='Loading…';}
-  var src=(DASH.showcase?SHEET_SRC_SHOW:SHEET_SRC)[DASH.sheet];
-  try{
-    fetch(DASH.endpoint+'/'+src+'?select=*',{headers:dHeaders()})
-      .then(function(r){if(r.status===401){dExpired();return null;}return r.json();})
-      .then(function(j){
-        if(j===null)return;
-        // v2.0.1 the instructor's own account is readable to them (lh_self_select), so it arrived as a roster
-        // row and rendered as a student who NEVER PLAYED. The old test also required username===undefined,
-        // which is never true, so it filtered nothing. Drop the instructor's own row unless they enrolled in a class.
-        var _lic=dLicensedCodes();
-        DASH.rows=(j&&j.length)?j.filter(function(r){return !(DASH.session&&r.user_id===DASH.session.uid&&!r.facility_code);}):[];
-        if(!DASH.showcase)DASH.rows=DASH.rows.filter(function(r){return _lic.indexOf(r.facility_code)>=0;}); // v2.4 licensed crews only
-        var st=document.getElementById('stamp');
-        if(st)st.textContent=DASH.rows.length+' on roster';
-        if(DASH.sheet==='life')dFetchGuests(); else dRender();
-      }).catch(function(e){console.error('dFetchSheet:',e);if(emp)emp.textContent='Could not load · try REFRESH.';});
-  }catch(e){console.error('dFetchSheet:',e);}
-}
-function dFetchGuests(){
-  try{
-    fetch(DASH.endpoint+'/'+(DASH.showcase?'lockin_showcase_guests':'lockin_guests')+'?select=*',{headers:dHeaders()})
-      .then(function(r){return r.ok?r.json():[];})
-      .then(function(j){DASH.guests=j&&j.length?j:[];dRender();})
-      .catch(function(){DASH.guests=[];dRender();});
-  }catch(e){DASH.guests=[];dRender();}
-}
-function dSort(k){
-  if(DASH.sortKey===k){DASH.sortDir*=-1;}else{DASH.sortKey=k;DASH.sortDir=(k==='username')?1:-1;}
-  dRender();
-}
-function dActiveCols(){
-  return COLS[DASH.sheet].filter(function(c){return c.g==='id'||(GROUPS[c.g]&&GROUPS[c.g].on);});
-}
-function dCards(rows){
-  var n=rows.length,ai=0,aiN=0,walls=0,flagged=0,never=0,i;
-  for(i=0;i<rows.length;i++){
-    var r=rows[i];
-    if(dNum(r.avg_integrity||r.integrity)>0){ai+=dNum(r.avg_integrity||r.integrity);aiN++;}
-    walls+=dNum(r.walls);
-    if(dNum(r.incidents)>=2)flagged++;
-    if(r.never_played)never++;
-  }
-  var avgInt=aiN?Math.round(ai/aiN):0;
-  function card(k,v,c,cls){return '<div class="card '+(cls||'')+'"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="c">'+c+'</div></div>';}
-  return card('ON ROSTER',n,'registered accounts','')
-    +card('NEVER STARTED',never,'signed up, no wall',never>0?'danger':'ok')
-    +card('AVG INTEGRITY',(aiN?avgInt+'%':'·'),'attention to detail',avgInt>=80?'ok':avgInt>=60?'warn':'danger')
-    +card('WALLS LOADED',walls,'total follow-through','')
-    +card('FLAGGED',flagged,'2+ safety incidents',flagged>0?'danger':'ok');
-}
-function dFmt(c,r){
-  var v=r[c.k];
-  if(c.t==='name'){
-    var tag='';
-    if(r.is_guest)tag='<span class="tagsm g">GUEST</span>';
-    else if(r.never_played)tag='<span class="tagsm d">NEVER PLAYED</span>';
-    return dEsc(v||'·')+tag;
-  }
-  if(c.t==='ago')return '<span style="color:#4a3c28">'+dSince(v)+'</span>';
-  if(c.t==='dur')return dDur(v);
-  if(c.t==='txt')return dEsc(v||'·');
-  if(c.t==='pct'){var p=dNum(v);return p?(p+'%'):'·';}
-  if(c.t==='pctpill'){var a=dNum(v);return a?('<span class="pill '+(a>=80?'g':a>=60?'w':'d')+'">'+a+'%</span>'):'·';}
-  if(c.t==='incpill'){var n=dNum(v);return '<span class="pill '+(n>=2?'d':n===1?'w':'g')+'">'+n+'</span>';}
-  var num=dNum(v); return num?num.toLocaleString():'0';
-}
-function dRender(){
-  var q=((document.getElementById('search')||{}).value||'').toLowerCase().trim();
-  var base=DASH.rows.slice();
-  if(DASH.sheet==='life'&&DASH.showGuests)base=base.concat(DASH.guests);
-  var rows=base.filter(function(r){return !q||(''+(r.username||'')).toLowerCase().indexOf(q)>=0;});
-  var k=DASH.sortKey,dir=DASH.sortDir;
-  rows.sort(function(a,b){
-    var av=a[k],bv=b[k];
-    if(k==='username'||k==='mode'||k==='app_ver'){av=(''+(av||'')).toLowerCase();bv=(''+(bv||'')).toLowerCase();return av<bv?-dir:av>bv?dir:0;}
-    if(k==='last_seen'||k==='loaded_at'){av=av?new Date(av).getTime():0;bv=bv?new Date(bv).getTime():0;return (av-bv)*dir;}
-    return (dNum(av)-dNum(bv))*dir;
-  });
-  document.getElementById('cards').innerHTML=dCards(DASH.rows);
-  var cols=dActiveCols(),th='',c;
-  for(c=0;c<cols.length;c++){
-    var col=cols[c],isS=(DASH.sortKey===col.k);
-    th+='<th class="'+(isS?'sorted':'')+'" tabindex="0" role="columnheader" aria-sort="'+(isS?(DASH.sortDir<0?'descending':'ascending'):'none')+'"'
-      +' onclick="dSort(\''+col.k+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();dSort(\''+col.k+'\');}">'
-      +dEsc(col.l)+(isS?(' '+(DASH.sortDir<0?'▼':'▲')):'')
-      +(col.g!=='id'?('<span class="g">'+dEsc(GROUPS[col.g].label)+'</span>'):'')+'</th>';
-  }
-  document.getElementById('thead').innerHTML=th;
-  var emp=document.getElementById('empty');
-  if(!rows.length){
-    document.getElementById('tbody').innerHTML='';
-    if(emp){emp.style.display='block';emp.textContent=DASH.rows.length?'No students match that filter.':'Your roster fills in as students sign up. Share your join code'+(DASH.code?(' · '+DASH.code):'')+'.';}
-    return;
-  }
-  if(emp)emp.style.display='none';
-  var h='',i,j;
-  for(i=0;i<rows.length;i++){
-    var r=rows[i],cls=r.is_guest?'guest':(r.never_played?'zero':'');
-    h+='<tr class="'+cls+'">';
-    for(j=0;j<cols.length;j++){
-      var cc=cols[j];
-      h+='<td'+(cc.t==='name'?(' onclick="dProfile(\''+dEsc((''+(r.username||'')).replace(/'/g,"\\'"))+'\')"'):'')+'>'+dFmt(cc,r)+'</td>';
-    }
-    h+='</tr>';
-  }
-  document.getElementById('tbody').innerHTML=h;
-}
-/* click a name → that student's full record, every metric, grouped */
-function dProfile(name){
-  var base=DASH.rows.concat(DASH.guests),r=null,i;
-  for(i=0;i<base.length;i++){if((''+base[i].username)===(''+name)){r=base[i];break;}}
-  var p=document.getElementById('prof');
-  if(!r||!p){if(p)p.style.display='none';return;}
-  var secs=[
-    ['Engagement',['sessions','walls','pieces','smalls_runs']],
-    ['Throughput',['best_pph','avg_pph','best_score','total_score']],
-    ['Quality',   ['avg_integrity','avg_wall_pct','density_pct','cube_eff','nc_util_pct','smalls_util_pct']],
-    ['Craft',     ['shelves_locked','double_locks','nests','recoveries','bonuses']],
-    ['Faults',    ['incidents','collapses','crunches','rejected_drops']],
-    ['Habits',    ['hydration_breaks','nc_dwell_warnings','smalls_dwell_warnings','rotations','lifts']]
-  ];
-  var byKey={},i2;
-  for(i2=0;i2<COLS.life.length;i2++)byKey[COLS.life[i2].k]=COLS.life[i2];
-  var h='<h3>'+dEsc(r.username)+(r.is_guest?' <span class="tagsm g">GUEST</span>':'')+'</h3>'
-    +'<div class="sub">last active '+dSince(r.last_seen)+(r.facility_code?(' · '+dEsc(r.facility_code)):'')+'</div>';
-  var s,kk;
-  for(s=0;s<secs.length;s++){
-    var any=false,cells='';
-    for(kk=0;kk<secs[s][1].length;kk++){
-      var key=secs[s][1][kk]; if(!(key in r))continue; any=true;
-      var col=byKey[key]||{l:key,t:'n'};
-      cells+='<div class="pcell"><div class="k">'+dEsc(col.l)+'</div><div class="v">'+dFmt(col,r)+'</div></div>';
-    }
-    if(any)h+='<div class="psec">'+secs[s][0]+'</div><div class="pgrid">'+cells+'</div>';
-  }
-  h+='<div style="margin-top:14px;"><button class="btn ghost" onclick="document.getElementById(\'prof\').style.display=\'none\'">✕ CLOSE</button></div>';
-  p.innerHTML=h; p.style.display='block';
-  try{p.scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}
-}
-function dExport(){
-  if(!DASH.licensed)return; // v2.4 export comes with a license
-  var cols=dActiveCols();
-  var base=DASH.rows.slice();
-  if(DASH.sheet==='life'&&DASH.showGuests)base=base.concat(DASH.guests);
-  var _xb=document.querySelector('button[onclick="dExport()"]');
-  if(!base.length){if(_xb){_xb.textContent='NOTHING TO EXPORT';setTimeout(function(){if(_xb)_xb.textContent='⭳ EXPORT CSV';},2200);}return;}
-  function q(v){v=(v==null?'':(''+v));
-    /* a handle starting = + - @ evaluates as a formula when an instructor opens this in Excel */
-    if(/^[=+\-@\t\r]/.test(v))v="'"+v;
-    return /[",\n]/.test(v)?('"'+v.replace(/"/g,'""')+'"'):v;}
-  var lines=[cols.map(function(c){return q(c.l);}).join(',')],i,j;
-  for(i=0;i<base.length;i++){var row=[];
-    for(j=0;j<cols.length;j++)row.push(q(base[i][cols[j].k]));
-    lines.push(row.join(','));}
-  var blob=new Blob([lines.join('\n')],{type:'text/csv'});
-  var url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='lockin-'+DASH.sheet+'-'+((DASH.name||'program').toLowerCase().replace(/[^a-z0-9]+/g,'-'))+'.csv';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  if(_xb){_xb.textContent='✓ EXPORTED ('+base.length+')';setTimeout(function(){if(_xb)_xb.textContent='⭳ EXPORT CSV';},2200);}
-  setTimeout(function(){URL.revokeObjectURL(url);},1500);
-}
-function dShowLogin(t,cls){
-  try{var _e=document.getElementById('li-email');if(_e)_e.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
-  var d=document.getElementById('dash');if(d)d.style.display='none';
-  var l=document.getElementById('login');if(l)l.style.display='block';
-  var who=document.getElementById('who');if(who)who.style.display='none';
-  dMsg(t,cls);
-}
-function dSignOut(){
-  var tok=DASH.session&&DASH.session.access_token;
-  DASH.session=null;DASH.rows=[];DASH.guests=[];DASH.name='';DASH.licensed=false;DASH.facilities=null;
-  liSignOutAll(DASH.authUrl,DASH.anonKey,tok); // v2.3 (LOCK IN v3.5.205) one sign-out for the whole site on this device: the game and /me/ too
-  dShowLogin('Signed out.','good');
-}
-/* GoTrue tokens live ~1h; a stale one made every fetch 401 and the page rendered an
-   apparently WIPED roster. Expired means expired, said out loud. */
-function dJwtFresh(tok){try{var p=JSON.parse(atob(tok.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));return (p.exp||0)*1000>Date.now()+30000;}catch(e){return true;}}
-function dExpired(){
-  try{localStorage.removeItem('lockinDashAuth');var _e=document.getElementById('li-email');if(_e)_e.value='';var _p=document.getElementById('li-pw');if(_p)_p.value='';}catch(e){}
-  DASH.session=null;DASH.licensed=false;DASH.facilities=null;
-  var d=document.getElementById('dash');if(d)d.style.display='none';
-  var w=document.getElementById('who');if(w)w.style.display='none';
-  var l=document.getElementById('login');if(l)l.style.display='block';
-  var m=document.getElementById('login-msg');if(m){m.textContent='Session expired · sign in again.';m.className='err';}
-}
+// ── BOOT ──
 function dBoot(){
-  try{var r=localStorage.getItem('lockinDashAuth');if(r){var ds=JSON.parse(r);
-    if(ds&&ds.access_token){
-      if(liAuthStale(ds)){localStorage.removeItem('lockinDashAuth');return;} // v2.3 signed out on this device after this login
-      DASH.session=ds;
-      if(!dJwtFresh(ds.access_token)){dExpired();return;}
-      dEnter();return;}}}catch(e){console.error('dBoot:',e);}
+  if(dRecoveryToken()){document.getElementById('login').style.display='none';document.getElementById('reset').style.display='block';return;}
+  try{var r=localStorage.getItem(DASH.store);if(r)DASH.session=JSON.parse(r);}catch(e){DASH.session=null;}
+  if(DASH.session&&DASH.session.access_token&&DASH.session.email!==undefined&&DASH.session.exp){dToken(function(ok){if(ok)dEnter();else dShowLogin('Your sign-in expired. Sign in again.','err');});}
+  else{dForget();dShowLogin();}
 }
-// v2.3 (LOCK IN v3.5.205) OPEN TABS FOLLOW A SIGN-OUT made anywhere on the site: drop to the login form, never write anything back.
-function dAuthSync(){
-  if(!DASH.session)return;
-  var s=null;try{var r=localStorage.getItem('lockinDashAuth');s=r?JSON.parse(r):null;}catch(e){}
-  if(s&&s.access_token&&!liAuthStale(s)&&!liAuthStale(DASH.session)&&s.uid===DASH.session.uid){if(s.access_token!==DASH.session.access_token)DASH.session=s;return;}
-  DASH.session=null;DASH.rows=[];DASH.guests=[];DASH.name='';DASH.licensed=false;DASH.facilities=null;
-  dShowLogin('Signed out on this device.','good');
-}
-try{
-  window.addEventListener('storage',function(e){if(e.key===null||e.key==='lockinDashAuth'||e.key==='liAuthEpoch')dAuthSync();});
-  window.addEventListener('pageshow',function(e){if(e.persisted)dAuthSync();});
-  document.addEventListener('visibilitychange',function(){if(!document.hidden)dAuthSync();});
-}catch(e){console.error('dAuthSync boot:',e);}
 dBoot();
 </script>
 </body>

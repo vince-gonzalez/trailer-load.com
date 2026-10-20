@@ -24,7 +24,7 @@ CONTRACT = [
     ('the family header', '<header class="co-hdr">'),
     ('the logo lockup', 'class="co-logo"'),
     ('the companion kicker', '<span class="co-kicker">LOCK IN COMPANION</span>'),
-    ('the account chip', 'id="co-acct"'),
+    ('the crew chip', 'id="co-acct"'),
     ('the way back to the Mini-Games menu', 'class="co-btn co-back" href="/lock-in.html#minigames"'),
     ('a stat bar', 'class="co-stats"'),
     ('a clipboard menu', 'class="co-clip"'),
@@ -32,8 +32,7 @@ CONTRACT = [
     ('the house footer line', 'www.f-keys.com | © 2026 F-Keys LLC'),
     ('its own accent', '--co-accent:'),
     ('its own deep accent', '--co-accent-deep:'),
-    ('the account chip booted', 'coFamilyBoot('),
-    ('the one-sign-out block', '// v3.5.205 ONE SIGN-OUT FOR THE WHOLE SITE ON THIS DEVICE'),
+    ('the crew chip booted', 'coFamilyBoot('),
 ]
 
 

@@ -82,7 +82,7 @@ h2{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:1px;margin:
 .card h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin:0 0 6px;color:var(--acc-dim);}
 .card p{color:var(--t2);margin:0;font-size:16px;}
 /* .card.teal was used on two pricing cards with NO rule defined · the highlighted offers
-   rendered identically to the standard one. Inset rail matches .hall-card.fame in /me/. */
+   rendered identically to the standard one. Inset rail, the hall-of-fame card style. */
 .card.teal{border-color:var(--teal);box-shadow:inset 4px 0 0 var(--teal-bright);}
 .card.teal h3{color:var(--acc-dim);}
 .steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
@@ -132,11 +132,11 @@ footer .zw a:hover{color:var(--acc);}
     {"@type":"Person","@id":"https://www.trailer-load.com/#founder","name":"Vince Gonzalez","jobTitle":"Operations President"},
     {"@type":"VideoGame","@id":"https://www.trailer-load.com/#game","name":"LOCK IN","url":"https://trailer-load.com/lock-in.html","applicationCategory":"GameApplication","operatingSystem":"Web browser","gamePlatform":"Web","author":{"@id":"https://www.trailer-load.com/#founder"},"publisher":{"@id":"https://www.trailer-load.com/#org"},"description":"Warehouse trailer-loading training simulator · load integrity, balance, hazmat segregation, non-conveyables, a dispatch clock, safety incidents, and a daily challenge everyone shares.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},
     {"@type":"FAQPage","@id":"https://www.trailer-load.com/#faq","mainEntity":[
-      {"@type":"Question","name":"Is LOCK IN free?","acceptedAnswer":{"@type":"Answer","text":"Yes. The full game is free forever, no login required. Workers and students never pay. The program dashboard · for schools and employers who want the metrics · is a paid license; the prices are on this page."}},
+      {"@type":"Question","name":"Is LOCK IN free?","acceptedAnswer":{"@type":"Answer","text":"Yes. The full game is free forever, with no account. Workers and students never pay. An instructor can run a free crew of up to 9 people on the dashboard; the program license, for schools and employers who want every student and the CSV export, is priced on this page."}},
       {"@type":"Question","name":"What does LOCK IN teach?","acceptedAnswer":{"@type":"Answer","text":"Load theory: support and balance, locking complete rows into shelves, keeping the center of gravity centered, boxing fragiles in on both sides, hazmat below the waist line, and using dead air inside tires. Every wall is scored on integrity, density, pace, and safety."}},
       {"@type":"Question","name":"What is the daily challenge?","acceptedAnswer":{"@type":"Answer","text":"One wall, the same freight and clock for everyone on Earth, resetting at 00:00 UTC. Everybody plays the identical puzzle and posts to one shared world board. It is a two-minute daily brain-warmup · many classrooms use it to get into work mode."}},
       {"@type":"Question","name":"Do I need experience to start?","acceptedAnswer":{"@type":"Answer","text":"No. Training walks you through a full wall one placement at a time · you watch a trainer build it the right way and sign off when you are ready, exactly like a real first day on the dock. Then you load your own."}},
-      {"@type":"Question","name":"Who is the dashboard for?","acceptedAnswer":{"@type":"Answer","text":"CTE programs (Perkins-eligible: a software license is an allowable local use of Perkins V funds under Sec. 135(b)(5)(D); your state CTE agency makes the final call), trade and technical schools, and warehouse operations teams. It reports opted-in students' loading practice: attention to detail, follow-through, throughput, and safety. It's live at trailer-load.com/dashboard · if that's your program, ask about a pilot."}},
+      {"@type":"Question","name":"Who is the dashboard for?","acceptedAnswer":{"@type":"Answer","text":"CTE programs (Perkins-eligible: a software license is an allowable local use of Perkins V funds under Sec. 135(b)(5)(D); your state CTE agency makes the final call), trade and technical schools, and warehouse operations teams. It reports the loading practice of the people who joined a crew: attention to detail, follow-through, throughput, and safety. It's live at trailer-load.com/dashboard · if that's your program, ask about a pilot."}},
       {"@type":"Question","name":"Does LOCK IN replace safety training?","acceptedAnswer":{"@type":"Answer","text":"No. LOCK IN is a training supplement that builds intuition and tracks practice progress. It does not replace employer safety training, OSHA training, or any certification requirement."}}
     ]}
   ]
@@ -151,7 +151,7 @@ footer .zw a:hover{color:var(--acc);}
 <a class="skip-link" href="#main">Skip to main content</a>
 <div class="bar">
   <div class="left"><a href="/" class="logo" style="text-decoration:none;color:inherit;">LOCK IN</a></div>
-  <nav><a href="/">Home</a><a href="/daily/">★ Daily</a><a href="/lock-in.html">Play</a><a href="#how">How it works</a><a href="#facilities">Pricing</a><a href="/for-districts/">Documentation</a><a href="#faq">FAQ</a><a href="/privacy.html">Privacy</a><a href="/me/" style="color:var(--acc-ink);font-weight:bold;">◕ Clock In</a></nav>
+  <nav><a href="/">Home</a><a href="/daily/">★ Daily</a><a href="/lock-in.html">Play</a><a href="#how">How it works</a><a href="#facilities">Pricing</a><a href="/for-districts/">Documentation</a><a href="#faq">FAQ</a><a href="/privacy.html">Privacy</a><a href="/dashboard/" style="color:var(--acc-ink);font-weight:bold;">◆ Instructor sign-in</a></nav>
 </div>
 <main id="main">
 
@@ -217,31 +217,31 @@ footer .zw a:hover{color:var(--acc);}
 
 <section id="facilities"><div class="wrap">
   <h2>Free for workers. Metrics for the people training them.</h2>
-  <p class="lead">The game is free forever. The <a href="/dashboard/">program dashboard</a> is live: your opted-in students' loading practice · integrity, pace, safety, follow-through · per student, in one view. Pilot slots are open now.</p>
+  <p class="lead">The game is free forever and players never make an account. Instructors make crews on the <a href="/dashboard/">instructor dashboard</a>: each person's loading practice · integrity, pace, safety, follow-through · in one view. A crew of up to 9 is free. Pilot slots are open now.</p>
   <div class="pitch">
     <div class="free">
-      <h3>Workers play free <span class="badge live">LIVE NOW</span></h3>
+      <h3>Free for players and instructors <span class="badge live">LIVE NOW</span></h3>
       <ul>
-        <li>Full game, every mechanic, no paywall.</li>
-        <li>Optional free account to keep your record.</li>
-        <li>You decide if your stats are saved.</li>
-        <li>You decide, separately, if a facility can see them.</li>
-        <li>Start a free crew of up to 9 players plus you, and see their shared results in the game.</li>
+        <li>Full game, every mechanic, no paywall, no account.</li>
+        <li>The boards take three initials, never a name.</li>
+        <li>Nothing about play leaves the device unless the player joins a crew.</li>
+        <li>A player joins with the crew's code, then a name and PIN, or a personal code the instructor issued.</li>
+        <li>An instructor runs a free crew of up to 9 people on the dashboard, with each person's results.</li>
       </ul>
     </div>
     <div class="paid">
-      <h3>The program dashboard <span class="badge live">LIVE NOW</span></h3>
+      <h3>The program license <span class="badge live">LIVE NOW</span></h3>
       <ul>
-        <li>A dashboard of opted-in players' performance · integrity, pace, safety, practice progress.</li>
-        <li>The numbers managers already track, from the students who opt in.</li>
+        <li>Every crew without the 9-person limit · integrity, pace, safety, practice progress for each person.</li>
+        <li>The numbers managers already track, from the people on the crew.</li>
         <li>Built for CTE programs, trade schools, and warehouse ops teams. Perkins-eligible: a software license is an allowable local use under Perkins V Sec. 135(b)(5)(D). <a href="/for-districts/program-overview.html#perkins">The allowability notes</a> cite each section.</li>
-        <li>A license adds this dashboard and CSV export, facility logins, a signed data agreement, purchase orders and invoices, and support. No member limit.</li>
+        <li>A license adds the CSV export of every wall and session, a signed data agreement, purchase orders and invoices, and support. No member limit.</li>
       </ul>
     </div>
   </div>
   <h3 style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;margin:28px 0 10px;">Pricing · published, because your purchasing office deserves a straight number</h3>
   <div class="cards">
-    <div class="card"><h3>Site License · $1,950<span style="font-size:14px;color:var(--t2);">/year</span></h3><p>Unlimited students, unlimited instructors, one campus. Full program dashboard + reporting. A 100-student program reads that as ~$20 a student. <a href="https://buy.stripe.com/4gMaEXf8CcN17rFbZJ4Ni00" rel="noopener">Buy now · card checkout, invoice included →</a></p></div>
+    <div class="card"><h3>Site License · $1,950<span style="font-size:14px;color:var(--t2);">/year</span></h3><p>Unlimited students, unlimited instructors, one campus. Every crew unlimited, with the CSV export. A 100-student program reads that as ~$20 a student. <a href="https://buy.stripe.com/4gMaEXf8CcN17rFbZJ4Ni00" rel="noopener">Buy now · card checkout, invoice included →</a></p></div>
     <div class="card teal"><h3>Founding Programs · $1,450<span style="font-size:14px;color:var(--t2);">/yr, locked</span></h3><p>First 10 institutions: $1,450/yr, held at that rate while you renew without a lapse. You help shape what the dashboard reports. <a href="https://buy.stripe.com/00weVd6C6aET8vJ2p94Ni01" rel="noopener">Buy a founding slot →</a></p></div>
     <div class="card"><h3>Per-Seat · $29<span style="font-size:14px;color:var(--t2);">/student/semester</span></h3><p>For small college sections and cohorts (10-seat minimum). Caps at the site-license price automatically · it can only ever get cheaper. <a href="https://buy.stripe.com/4gMfZh9OidR5bHVd3N4Ni03" rel="noopener">Buy seats · choose your count at checkout →</a></p></div>
     <div class="card teal"><h3>Multi-Campus · $1,450<span style="font-size:14px;color:var(--t2);">/campus/yr</span></h3><p>Three or more campuses under one district or system. The same unlimited-student site license at each campus, on one invoice.</p></div>
@@ -267,11 +267,11 @@ footer .zw a:hover{color:var(--acc);}
 <section id="faq"><div class="wrap">
   <h2>FAQ</h2>
   <div class="faq">
-    <details open><summary>Is LOCK IN free?</summary><p>Yes. The full game is free forever, no login required. Workers and students never pay. The program dashboard · for schools and employers who want the metrics · is a paid license; the prices are on this page.</p></details>
+    <details open><summary>Is LOCK IN free?</summary><p>Yes. The full game is free forever, with no account. Workers and students never pay. An instructor can run a free crew of up to 9 people on the dashboard; the program license, for schools and employers who want every student and the CSV export, is priced on this page.</p></details>
     <details><summary>What does it teach?</summary><p>Load theory · support and balance, locking complete rows into shelves, keeping the center of gravity centered, boxing fragiles in on both sides, hazmat below the waist line, and using the dead air inside tires. Every wall is scored on integrity, density, pace, and safety.</p></details>
     <details><summary>What's the daily challenge?</summary><p>One wall, the same freight and clock for everyone on Earth, resetting at 00:00 UTC. Everybody plays the identical puzzle and posts to one shared world board. It's a two-minute daily brain-warmup · many classrooms use it to get into work mode.</p></details>
     <details><summary>Do I need experience to start?</summary><p>No. Training walks you through a full wall one placement at a time · you watch a trainer build it the right way and sign off when you're ready, exactly like a real first day on the dock. Then you load your own.</p></details>
-    <details><summary>Who is the dashboard for?</summary><p>CTE programs (Perkins-eligible: a software license is an allowable local use of Perkins V funds under Sec. 135(b)(5)(D); your state CTE agency makes the final call), trade and technical schools, and warehouse operations teams. It reports opted-in students' loading practice: attention to detail, follow-through, throughput, and safety. It's live at <a href="/dashboard/">trailer-load.com/dashboard</a> · if that's your program, ask about a pilot.</p></details>
+    <details><summary>Who is the dashboard for?</summary><p>CTE programs (Perkins-eligible: a software license is an allowable local use of Perkins V funds under Sec. 135(b)(5)(D); your state CTE agency makes the final call), trade and technical schools, and warehouse operations teams. It reports the loading practice of the people who joined a crew: attention to detail, follow-through, throughput, and safety. It's live at <a href="/dashboard/">trailer-load.com/dashboard</a> · if that's your program, ask about a pilot.</p></details>
     <details><summary>Does it replace safety training?</summary><p>No. LOCK IN is a training supplement that builds intuition and tracks practice progress. It does not replace employer safety training, OSHA training, or any certification requirement.</p></details>
   </div>
 </div></section>
