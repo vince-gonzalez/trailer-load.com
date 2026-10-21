@@ -2,6 +2,38 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1005 - THE FIDELITY AUDIT: EVERY STATED RULE MATCHES THE CODE.
+     I asked whether calling it a simulator is valid, then for an audit of every rule it states. Six rule families were
+     checked against the code (and hazmat against the saved 49 CFR text), each finding put to a skeptic: 344
+     claims, 106 findings that held. All are fixed. My four calls: a bag of smalls is light freight (weight class 1; at 9
+     it crushed fragiles and fell as heavy freight); a hazmat can be crushed, so that first-time write-up is real; FINISH
+     TRAILER on a sealed wall opens the wall-complete card, where the certificate is graded on the finished wall and the
+     board signature is offered (a TRAILER-LOAD wall could be signed only at 340 of 340 cells, and the certificate was
+     graded only at the first seal, where it cannot pass); every announced amount is exact (a strike or a staged box
+     left on the dock comes off the wall and then the shift total, never below zero, and the shelf, brick, recovery,
+     roof-bag and crunch amounts are banked as shown instead of scaled by pace).
+     Code that broke its own rules, now fixed: after one missed dispatch no later TRAILER-LOAD wall ran a dispatch clock,
+     and after one ceiling course no later wall paid one; rotated pieces were judged on their unrotated shape by the
+     freestanding-stack and heavy-freight checks; integrity 0 read as 100; a collapse could leave boxes floating, a
+     locked row that lost a piece kept its lock, and a hazmat knocked loose with it did not end the round; DOUBLE LOCK
+     was announced for single locks once any two rows touched; a broken bag could lose pieces on a busy chute; a bag
+     placed from the chute was not counted; a crush started the next streak at 1; a pause did not hold the full-rack
+     timer; a rate of 0 never built the slow-pace clock; water and aisle washes never reached the record; the lock
+     floor for four shelves was 60 where the table says 55. Hazmat: a corrosive liquid above an oxidizer is now a killer
+     pair (177.848(e)(3)); a second killer pair is logged as one, not as segregation; HAZMAT SHELF LOCKED pays only a
+     hazmat that is low and capped; the corrosive placard's white triangle ends 38 mm above center (172.558(b)).
+     The words: Day One has seven collapses, the real freestanding, column, staircase and tire-on-edge rules, the lock
+     floor's limits, the first-time write-ups, the washes, the practice-trailer and stacked-tire ladder, and the strike
+     math; the write-ups, banners and Training say what the code does; the 38-rule count is gone; the terms say the
+     move log is stored and not shown; the district page says which walls and sessions a crew receives. The crunch
+     banner says safety warning only from the third broken box, when one is logged.
+     t1005a.js checks each fix (18 checks; 16 of them fail on 3.9.1004).
+     The rule count. The old "38 named load-theory rules" came from a codex written against v3.5.156. Recounted against
+     this build there are 41: FLAG A HAND left with the STAGE change on 10-16, and STAGE IT, ANCHOR THE SPECIAL HANDLING,
+     HEAVY LEFT HIGH and KILLER PAIRS were enforced but not on the list. The list is .tools/load-rules.json, each rule
+     tied to the code and the numbers that enforce it; .tools/rulecount.py fails if a rule's code leaves, a number
+     drifts, or a page states another count. The district overview says 41 again, and it cannot go stale.
+
    CHANGE LOG v3.9.1004 - THE HAZMAT FREIGHT MATCHES THE FEDERAL LIST.
      I chose "Match the federal list." Read at the source the same day (49 CFR 172.101 classes, 172.519-172.560
      placards, 177.848 segregation). Propane and a grill's cylinder are 2.1 (red), the extinguisher and the air tank 2.2

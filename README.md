@@ -19,8 +19,10 @@ daily challenge that is the same trailer for everyone.
 
 ## What it is
 
-Every piece carries a weight, a footprint and a crush limit, and fragile
-freight fails when the stack above it is heavier than it can take. Playing well
+Every piece carries a weight class and a footprint. Only the heaviest freight
+(weight class 5) crushes: set directly on an exposed fragile, small package, bag
+or hazmat, it breaks it, unless that piece has a box on each side or sits on or
+above a locked shelf. Playing well
 means the things a loader actually thinks about: heavy low, nothing spanning a
 gap it cannot bridge, fragile off the floor and out from under the weight, and
 the load braced before the doors close.

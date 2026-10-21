@@ -3,7 +3,7 @@
 > LOCK IN is a free, browser-based warehouse trailer-loading training simulator. It plays like Tetris but models the real job: load integrity, weight and balance, hazmat segregation, non-conveyables, a dispatch clock, and safety incidents scored the way a dock supervisor would call them. Built by F-Keys Creative LLC (Operations President: Vince Gonzalez). Free forever for workers and students, with no player accounts. Instructors make crews on a dashboard; a crew of up to 9 is free, and a license (unlimited crews, CSV export, a data agreement) is the paid product for CTE programs, trade schools, and warehouse employers.
 
 ## Play
-- [LOCK IN · the simulator](https://trailer-load.com/lock-in.html): The full trailer-loading simulator. Free, no account. Modes: Training, Trailer-Load, Daily. Public boards take three initials. Scored on integrity, density, pace, and safety; ranked Rookie to Yard Legend.
+- [LOCK IN · the simulator](https://trailer-load.com/lock-in.html): The full trailer-loading simulator. Free, no account. Modes: Training, Trailer-Load, Daily. Public boards take three initials. Scored on integrity, density, pace, and safety; each session graded Re-train to Yard Legend.
 
 ## For schools & employers
 - [Program & Funding Overview](https://trailer-load.com/for-districts/program-overview.html): Pricing ($1,950/yr site license, $1,450 founding/multi-campus, $29/student/semester, $490/yr employer bay, $4,999 custom edition), purchasing routes, and Perkins V allowability notes.

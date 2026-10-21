@@ -40,7 +40,7 @@
 small,sub,sup{font-size:11px;}
 
 /* ================================================================
-   LOCK IN v3.9.1004
+   LOCK IN v3.9.1005
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -1676,7 +1676,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.9.1004 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.9.1005 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -1776,7 +1776,7 @@ body[data-cb="trit"]{
     <div class="sm-card mode-training" role="button" tabindex="0" onclick="startTrainDemo()">
       <div class="sm-card-ico">🎓</div>
       <div class="sm-card-name">TRAINING</div>
-      <div class="sm-card-desc">Watch a trainer build a full wall, one placement at a time, with the reason for every move, then sign off. No clock, no fails. New here? Start on this.</div>
+      <div class="sm-card-desc">Watch a trainer build a full wall, one placement at a time, with the reasons behind the key moves, then sign off. No clock, no fails. New here? Start on this.</div>
     </div>
     <!-- v3.5.197 THE LEADERBOARD GETS A DOOR. I asked for this repeatedly and kept
          getting a reason not to: the boards were reachable only through CLOCK-IN, a
@@ -1792,7 +1792,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 21)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.9.999: updated Oct 20, the date on the policy; back to "Privacy" after 2026-11-20. -->
-  <div id="sm-footer">LOCK IN v3.9.1004 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.9.1005 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -1949,7 +1949,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.9.1004 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.9.1005 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -2087,7 +2087,7 @@ body[data-cb="trit"]{
             <button class="btn-p" onclick="dailyRestart()">↺ RESTART DAILY · FRESH ATTEMPT</button>
           </div>
         </div>
-        <button id="maxpack-finish" onclick="nextTrailer()" style="display:none;position:absolute;top:10px;right:10px;z-index:30;background:linear-gradient(180deg,#50d890,#28b870);color:#040f06;border:1.5px solid #0d3a1e;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;padding:7px 14px;min-height:34px;border-radius:6px;cursor:pointer;box-shadow:0 0 16px rgba(40,184,112,.4);">✓ FINISH TRAILER ▶</button>
+        <button id="maxpack-finish" onclick="finishSealedWall()" style="display:none;position:absolute;top:10px;right:10px;z-index:30;background:linear-gradient(180deg,#50d890,#28b870);color:#040f06;border:1.5px solid #0d3a1e;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;padding:7px 14px;min-height:34px;border-radius:6px;cursor:pointer;box-shadow:0 0 16px rgba(40,184,112,.4);">✓ FINISH TRAILER ▶</button>
         <!-- v3.5.147 FLOW streak pip -->
         <div id="flow-pip" aria-hidden="true"></div>
         <!-- v3.5.203 THE WATER BOTTLE (my design): blue fill = drinks this trailer, 4 max. Press it to drink. -->
@@ -2240,7 +2240,7 @@ body[data-cb="trit"]{
     <div class="td-hdr">LOCK IN <span class="td-badge">TRAINING RECORD</span></div>
     <div class="td-sub">You watched a trainer load a full wall · the way it's done. Everything you saw is checked off. Sign to clock in.</div>
     <div id="tutdone-list" class="td-list"></div>
-    <div class="td-ladder"><b>⚠ THE LADDER</b><br>SLIP → ⚠ WARNING → ⛔ INCIDENT → ✍ WRITE-UP<br><small>5 incidents = practice trailer · 4 write-ups = shift over</small><br><small>🔒 a locked shelf clears a warning · 💧 water fixes a thirst warning</small></div>
+    <div class="td-ladder"><b>⚠ THE LADDER</b><br>COLLAPSE → ⚠ WARNING → ⛔ INCIDENT → ✍ WRITE-UP<br><small>5 incidents = practice trailer · 4 write-ups = shift over</small><br><small>🔒 a locked shelf clears a tire or fragile warning · 💧 water fixes a thirst warning</small></div>
     <button class="td-sign" onclick="tutSign()">✍ SIGN HERE · TRAINING COMPLETE</button>
     <button class="td-skip" onclick="tutExit()">Skip · back to menu</button>
   </div>
@@ -2309,7 +2309,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.9.1004
+// LOCK IN v3.9.1005
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -2375,7 +2375,7 @@ var TETRIS_BONUS=500, BULKHEAD_BONUS=500, BRICK_BONUS=300;
 var BAG_CEIL_BONUS=1000; // v3.5.206 part 11 was 600. v3.5.142 huge bonus per 3x3 smalls bag packed against the trailer roof (dead air up top reclaimed); a full ceiling course = 5 bags (15 of 17 cells)
 // v3.5.206 part 11 NEST AND ROOF PAY (I said on 2026-10-16: "we should make these bonuses very much so worth it"). Sized against a
 // measured sealable wall: about 23,000 cubes at 150 pieces an hour (design206/probe_bonus.js, a greedy bot, 30 walls).
-// Nest pay is banked, so pace does not scale it. A roof bag is a wall term, so pace does (1,000 x about 2.3 at 150 pph).
+// Nest pay is banked, so pace does not scale it. Since 3.9.1005 a roof bag is banked too: 1,000 is 1,000.
 var NEST_BASE_BONUS=100, NEST_CELL_BONUS=150; // a nest pays 100 + 150 per hollow cell it fills: a bag (9 cells) = 1,450 (was 340)
 var NEST_HAZ_BONUS=1000;    // a hazmat shielded in a hollow below the waist line (was +120)
 var NEST_RIM_BONUS=250;     // per hollow cell when a stack is stuffed to the rim: one standard tire 1,500, a stacked pair 3,000
@@ -2404,7 +2404,7 @@ var BELT_PIECE_COUNT=10; // v3.5.0 chute shows ~10 selectable pieces (was 6) · 
 var FLOOR_NC_SLOTS_X=[],FLOOR_BAG_SLOTS_X=[],FLOOR_NC_SLOTS_Y=[],FLOOR_BAG_SLOTS_Y=[],FLOOR_SLOT_Y=0,FLOOR_SLOT_W=0,FLOOR_SLOT_H=0;
 var STG_OPEN=null;       // which staging popup is open: 'nc' | 'bag' | null
 // BUG FIX: NC stale hazard guard
-var ncHazardFired=false,ncHazardTO=null;
+var ncHazardFired=false,ncHazardTO=null,ncHazardDue=0; // 3.9.1005 ncHazardDue: a deadline a pause can move
 // BUG FIX: tetris fresh-lock · prevents calcIntegrity overwriting shelf recovery
 var _freshLock=false;
 
@@ -2760,7 +2760,7 @@ function pickLabel(type,isPanic,isNC,isGap){
 }
 
 // ── GAME STATE ──
-var S={truck:1,totalScore:0,bestPPH:0,trucksDone:0,intHistory:[],densHistory:[],crunches:0,incidents:[],collapses:0,rotations:0,lifts:0,bagsBroken:0,bagsPlaced:0,totalPieces:0,shelvesLocked:0,doubleLocks:0,recoveries:0,bestTrailerAvg:0,rejects:0,sessionStartT:0,hazShelfLocks:0,nests:0,drinks:0,hazViolations:0,ncDwellWarn:0,smallsDwellWarn:0,stagingActions:0,ncSpawned:0,ncPlaced:0,smallsSpawned:0};
+var S={truck:1,totalScore:0,bestPPH:0,trucksDone:0,intHistory:[],densHistory:[],crunches:0,incidents:[],collapses:0,rotations:0,lifts:0,bagsBroken:0,bagsPlaced:0,totalPieces:0,shelvesLocked:0,doubleLocks:0,recoveries:0,bestTrailerAvg:0,rejects:0,sessionStartT:0,hazShelfLocks:0,nests:0,drinks:0,hazViolations:0,ncDwellWarn:0,stagingActions:0,ncSpawned:0,ncPlaced:0,smallsSpawned:0};
 // ============================================================
 // DATA LAYER (4.0) · there are no player accounts.
 // The public boards take three initials and nothing else. A crew member is known to their instructor by a name,
@@ -2788,7 +2788,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.9.1004'; // the version a crew session records · bump WITH the LOCK IN version
+var LI_APP_VER='3.9.1005'; // the version a crew session records · bump WITH the LOCK IN version
 function zBuildSession(){
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
   var inc=S.incidents||[];
@@ -2809,7 +2809,7 @@ function zBuildSession(){
       shelvesLocked:S.shelvesLocked||0, doubleLocks:S.doubleLocks||0, nests:S.nests||0,
       incTotal:inc.length, incHazHigh:_ic('HAZMAT_HIGH'), incHazCrush:_ic('HAZMAT_CRUSH'), incSeg:_ic('SEGREGATION'), incKiller:_ic('KILLER'),
       crunches:S.crunches||0, collapses:S.collapses||0, recoveries:S.recoveries||0,
-      hydrationBreaks:S.drinks||0, ncDwellWarn:S.ncDwellWarn||0, smallsDwellWarn:S.smallsDwellWarn||0,
+      hydrationBreaks:S.drinks||0, ncDwellWarn:S.ncDwellWarn||0,
       rotations:S.rotations||0, lifts:S.lifts||0, rejectedDrops:S.rejects||0,
       bagsBroken:S.bagsBroken||0, bagsPlaced:S.bagsPlaced||0, hazmatLocks:S.hazShelfLocks||0,
       stagingActions:S.stagingActions||0, bonuses:_bonuses,
@@ -3493,7 +3493,7 @@ function calcIntegrity(grid){
 
   // Lock floor: each locked shelf guarantees minimum integrity
   // 1 lock=15, 2=30, 3=45, 4=55, 5+=65 · wall cannot collapse through tetrises
-  var lockFloor=Math.min(65, lockCount*15);
+  var lockFloor=[0,15,30,45,55,65][Math.min(5,lockCount)]; // 3.9.1005 the published table (four locks = 55; the arithmetic gave 60)
   var score=100;
 
   var seen={};
@@ -3512,7 +3512,7 @@ function calcIntegrity(grid){
     var penMult=hasAnyLock?(lockCount>=2?.2:.45):0.9;
 
     // Check if this piece has solid support below it
-    var cells2=getCells(c.box,0);
+    var cells2=c.cells||getCells(c.box,0); // 3.9.1005 the placed cells (a rotated heavy was read unrotated)
     var bpc={};
     for(var i=0;i<cells2.length;i++){
       var cx=cells2[i][0],cy2=cells2[i][1];
@@ -3739,7 +3739,7 @@ function spawnNC(){
 var BAG_LABEL={t:'SMALLS',s:'SMALLS',ico:'',bg:'rgba(205,172,110,.92)',tc:'#2a2008',isFrag:false};
 function makeBagPiece(){
   var seed=rnd(100,9999);
-  return {type:'bag',w:3,h:3,wc:9,isBag:true,cells:makeRect(3,3),
+  return {type:'bag',w:3,h:3,wc:1,isBag:true,cells:makeRect(3,3), // 3.9.1005 wc 1: a bag of smalls is light (it was 9, so it crushed fragiles and fell as heavy freight)
     id:uid('BAG'),pal:{b:'#2b2b2f',l:'#3d3d42',d:'#181819',t:'rgba(30,30,34,.5)'}, /* v3.5.32 black-shaded cardboard (was bag.png) */
     labelDef:BAG_LABEL,label:'SMALLS',seed:seed,isFrag:false,isPanic:false,isGap:false};
 }
@@ -3758,11 +3758,12 @@ function makeSpillPiece(w,h){
     labelDef:LABELS[14],label:'FILL',isFrag:false,isGap:true,isBrokenBag:true};
 }
 var BAG_SPILL=[[2,1],[2,1],[2,1],[1,1],[1,1],[1,1]];
-function spillBag(){var si,c=0;for(si=0;si<BAG_SPILL.length&&G.belt.length<BELT_PIECE_COUNT+8;si++){var p=makeSpillPiece(BAG_SPILL[si][0],BAG_SPILL[si][1]);G.belt.push(p);c+=p.wc;}return c;}
+function spillBag(){var si,c=0;for(si=0;si<BAG_SPILL.length&&G.belt.length<BELT_PIECE_COUNT+5+BAG_SPILL.length;si++){var p=makeSpillPiece(BAG_SPILL[si][0],BAG_SPILL[si][1]);G.belt.push(p);c+=p.wc;}return c;}
 function breakdownBeltBag(idx){
   var b=G.belt[idx];if(!b||!b.isBag)return;
   G.belt.splice(idx,1);
   S.bagsBroken=(S.bagsBroken||0)+1;
+  if(typeof zLog==='function')zLog('bagbreak',{from:'chute'}); // 3.9.1005
   var cubes=spillBag();                            // 3x 2x1 + 3x 1x1 = 9 cubes into the chute
   if(typeof playSfx==='function')playSfx('bagbreak');
   if(selBeltIdx===idx)selBeltIdx=null;else if(selBeltIdx!==null&&selBeltIdx>idx)selBeltIdx--;
@@ -3791,7 +3792,7 @@ var WATER_PER_WALL=4,WATER_BONUS=150,WATER_RHYTHM=3; // drinks 1-2 pay WATER_BON
 function takeDrink(){
   if(gOver)return;
   if((G.drinks||0)>=WATER_PER_WALL){showBanner('💧 FULLY HYDRATED · your bottle is done for this trailer. A fresh one comes with the next wall.','',1600);return;}
-  if(Date.now()-_lastDrinkT<DRINK_CD){showBanner('💧 TOO SOON · water is available again after a few more boxes.','',1300);return;}
+  if(Date.now()-_lastDrinkT<DRINK_CD){showBanner('💧 TOO SOON · water again in a few seconds.','',1300);return;}
   _lastDrinkT=Date.now();_coolBtn('water-side',DRINK_CD); // the bottle itself never fades: its count must stay readable right after a drink
   if(typeof zLog==='function')zLog('water',{n:(S.drinks||0)+1}); // v3.5.132 raw timeline
   var _since=(S.totalPieces||0)-(G._lastDrinkPieces==null?0:G._lastDrinkPieces); // boxes loaded since the last drink
@@ -3817,7 +3818,7 @@ function takeDrink(){
 function resolveHydrationWarn(){
   if(typeof S==='undefined'||!S||!S.warnings)return false;
   var i,w;
-  for(i=S.warnings.length-1;i>=0;i--){w=S.warnings[i];if(w.offense==='HYDRATION'&&!w.mitigated){w.mitigated=true;w.washedBy='water';return true;}}
+  for(i=S.warnings.length-1;i>=0;i--){w=S.warnings[i];if(w.offense==='HYDRATION'&&!w.mitigated){w.mitigated=true;w.washedBy='water';S.safetiesWashed=(S.safetiesWashed||0)+1;return true;}}
   return false;
 }
 // draw the bottle: the blue fill rises one quarter per drink. The strip button mirrors the count in words,
@@ -3863,7 +3864,10 @@ function triggerNCHazard(){
   showBanner('⚠ SPECIAL HANDLING FULL · 8/8<br><span style="font-size:.72em">Load a special-handling piece now (H takes the next one).</span>','danger',3000);
   flash('fl-danger');
   if(isForgiving()){ncHazardTO=setTimeout(function(){ncHazardFired=false;},6000);return;} // v2.1.10 coach, don't guillotine
-  ncHazardTO=setTimeout(function(){
+  ncHazardDue=Date.now()+3200;
+  ncHazardTO=setTimeout(function rackFullCheck(){
+    if(paused||Date.now()<ncHazardDue){ncHazardTO=setTimeout(rackFullCheck,250);return;} // 3.9.1005 a pause stops this clock too
+    ncHazardDue=0;
     // Re-check: if a slot opened (NC was placed), cancel the game-over
     var stillFull=G.ncSlots.every(function(s){return s!==null;});
     if(stillFull)timeoutStrike('spfull'); // v3.5.214 a strike, not the end of the shift
@@ -3963,7 +3967,7 @@ function tryNest(src,idx,tcell){
   var cap=stackHollow(_stk),used=stackNestUsed(_stk);
   if(cap<cost){ // too big for this hollow even empty: say what would hold it
     if(typeof playSfx==='function')playSfx('deny');
-    if(!G._nestBig||Date.now()-G._nestBig>2500){G._nestBig=Date.now();showBanner(sb.isBag?('🛞 A BAG NEEDS 9 CELLS OF HOLLOW · this one has '+cap+'. Stack two same-size tires flat and their hollows join.'):('🛞 TOO BIG FOR THIS HOLLOW · '+cap+' cells of room.'),'warn',2400);}
+    if(!G._nestBig||Date.now()-G._nestBig>2500){G._nestBig=Date.now();showBanner(sb.isBag?('🛞 A BAG NEEDS 9 CELLS OF HOLLOW · this one has '+cap+'. Same-size tires stacked flat join their hollows: one farm tire, two standard, three motorcycle or five dirt-bike tires hold a bag.'):('🛞 TOO BIG FOR THIS HOLLOW · '+cap+' cells of room.'),'warn',2400);}
     return false;
   }
   if(cap-used<cost){
@@ -3995,7 +3999,7 @@ function tryNest(src,idx,tcell){
   placed++;
   if(!startT)startT=Date.now(); // v3.5.144 clock starts on first piece (a nest counts as a placement too)
   S.totalPieces=(S.totalPieces||0)+1;
-  if(sb.isBag||sb.type==='small')S.bagsPlaced=(S.bagsPlaced||0)+1; // v3.5.50 only count smalls/bags toward smalls-utility, not real boxes
+  if(sb.isBag)S.bagsPlaced=(S.bagsPlaced||0)+1; // 3.9.1005 bags only, the same test as placeBox · v3.5.50 only count smalls/bags toward smalls-utility, not real boxes
   else S.boxPieces=(S.boxPieces||0)+1; // v3.5.90 a nested REAL box is freight; nested smalls/bags never count toward pph
   if(typeof playSfx==='function')playSfx((isHaz||_rim)?'bonus':'nest');
   if(_rim>0){ // v3.5.206 part 11
@@ -4039,7 +4043,7 @@ function liftBox(cell){
   G.tetrisRows=G.tetrisRows||{};
   var _lc=cell.cells||makeRect(cell.w,cell.h),_lci,_lbroke=false;
   for(_lci=0;_lci<_lc.length;_lci++){var _lry=cell.ry+_lc[_lci][1];if(G.tetrisRows[_lry]){delete G.tetrisRows[_lry];_lbroke=true;}}
-  if(_lbroke){bankScore(-150);G.tetrisTotal=Math.max(0,(G.tetrisTotal||0)-1);if(typeof showBanner==='function')showBanner('⚠ UNSEALED A LOCKED SHELF · −150, shelf score off until it’s re-locked','danger',2400);if(typeof playSfx==='function')playSfx('error');}
+  if(_lbroke){bankScore(-150-TETRIS_BONUS);G.tetrisTotal=Math.max(0,(G.tetrisTotal||0)-1);if(typeof showBanner==='function')showBanner('⚠ UNSEALED A LOCKED SHELF · −150, shelf score off until it’s re-locked','danger',2400);if(typeof playSfx==='function')playSfx('error');}
   // Remove from grid
   var cells2=cell.cells||makeRect(cell.w,cell.h);
   for(var i=0;i<cells2.length;i++){
@@ -4313,16 +4317,16 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   else if(source==='bag')box=G.bagSlots[sourceIdx];
   if(!box)return false;
   if(!isLegal(G.grid,box,gx,gy,rot)){S.rejects=(S.rejects||0)+1;if(typeof zLog==='function')zLog('reject',{x:gx,y:gy});if(typeof gcurFlash==='function')gcurFlash('bad',420);if(typeof playSfx==='function')playSfx('error');if(typeof addShake==='function')addShake(7);if(typeof spawnBurst==='function'&&typeof gridToCanvas==='function'){var _rj=gridToCanvas(gx+0.5,gy+0.5);spawnBurst(_rj.x,_rj.y,14,'rgba(214,64,40,.92)',150,0.5,60);} /* v3.5.24 misplace red shards */hapt('error');if(typeof showBanner==='function'&&(!G._rejWarn||Date.now()-G._rejWarn>2500)){G._rejWarn=Date.now();showBanner('\u2715 NO SUPPORT THERE \u00b7 every box needs something solid under it.','warn',1800);}return false;} // v2.1.9 / v2.1.33 reject feedback
-  var _segB=countSegregationViolations(G.grid),_kB=anyKillerTooClose(G.grid); // v2.1.6 pre-commit state
+  var _segB=countSegregationViolations(G.grid),_kB=countKillerPairs(G.grid); // v2.1.6 pre-commit state
 
 
   // Fragile crush check · only fires for wc>=5, locked rows protect boxes
   var crushed=checkFragileCrush(box,gx,gy,rot);
   if(crushed.length){
     crushed.forEach(function(c){c.isCrushed=true;});
-    G.crunchCount=(G.crunchCount||0)+crushed.length;playSfx('crunch');addShake(8);if(typeof breakFlow==='function')breakFlow(); // v3.5.147 a crunch breaks the FLOW streak
+    G.crunchCount=(G.crunchCount||0)+crushed.length;bankScore(-CRUNCH_PENALTY*crushed.length);playSfx('crunch'); /* 3.9.1005 banked: the banner's number is the charge */addShake(8);if(typeof breakFlow==='function')breakFlow(); // v3.5.147 a crunch breaks the FLOW streak
     S.crunches=(S.crunches||0)+crushed.length;
-    var _hazCr=false,_smCr=false,_cci;for(_cci=0;_cci<crushed.length;_cci++){var _cb=crushed[_cci].box;if(_cb&&_cb.hazClass)_hazCr=true;if(_cb&&(_cb.isBag||_cb.type==='small'))_smCr=true;} // v3.5.100 track smalls-crush for the right callout
+    var _hazCr=false,_smCr=false,_cci;for(_cci=0;_cci<crushed.length;_cci++){var _cb=crushed[_cci].box;if(_cb&&_cb.hazClass)_hazCr=true;if(_cb&&(_cb.isBag||(_cb.type==='small'&&!_cb.isFrag)))_smCr=true;} // v3.5.100 track smalls-crush for the right callout
     if(_hazCr)logIncident('HAZMAT_CRUSH',''); // hazmat crushed = the write-up pool (bad the first time · a hurt-somebody event, unchanged)
     // v3.5.157 PATTERN-BASED CRUSH LADDER (my design): ONE crushed box is a mistake that already costs you
     // (-300 real score each, flow broken, the freight itself ruined) · that is NOT a safety event. Eyes go on you
@@ -4330,7 +4334,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     // starts (and safetyWarn itself still needs a repeat to become an incident · so paper lands on a PATTERN).
     else if((S.crunches||0)>=3&&typeof safetyWarn==='function')safetyWarn('FRAGILE_CRUSH',_smCr?'you smashed a bag of smalls · those are customers’ packages.':'that’s not the first box you’ve broken · close fragiles in on both sides, or lock a shelf under them.');
     flash('fl-crunch');
-    showBanner('⚠ CRUNCH · -'+(CRUNCH_PENALTY*crushed.length)+' CUBES<br><span style="font-size:.72em">'+(_hazCr?'HAZMAT CRUSHED · that’s a write-up.':_smCr?'NOTHING HEAVY ON SMALLS · heavy freight crushes customers’ packages. Box them in on both sides or lock a shelf under them.':'EXPOSED FRAGILE · safety warning. Box it in left and right, or lock a shelf under it.')+'</span>','danger',3000);
+    showBanner('⚠ CRUNCH · -'+(CRUNCH_PENALTY*crushed.length)+' CUBES<br><span style="font-size:.72em">'+(_hazCr?'HAZMAT CRUSHED · that’s a write-up.':_smCr?'NOTHING HEAVY ON SMALLS · heavy freight crushes customers’ packages. Box them in on both sides or lock a shelf under them.':('EXPOSED FRAGILE · '+((S.crunches||0)>=3?'safety warning. ':'damaged freight. ')+'Box it in left and right, or lock a shelf under it.'))+'</span>','danger',3000);
   }
 
   // Hazmat height check · dangerous goods must load below waist height.
@@ -4348,9 +4352,9 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     var cx=d.cells[i][0],cy=d.cells[i][1];
     G.grid[gy+cy][gx+cx]=cell;
   }
-  var _segA=countSegregationViolations(G.grid),_kA=anyKillerTooClose(G.grid); // v2.1.6
+  var _segA=countSegregationViolations(G.grid),_kA=countKillerPairs(G.grid); // v2.1.6
   if(box.arrow){if((rot||0)===0){S.arrowsUp=(S.arrowsUp||0)+1;}else{S.arrowsMissed=(S.arrowsMissed||0)+1;if(typeof playSfx==='function')playSfx('arrowmiss');}} // v2.10.9 this-side-up tally
-  if(_kA&&!_kB)logIncident('KILLER',box.hazClass||'');
+  if(_kA>_kB)logIncident('KILLER',box.hazClass||'');
   else if(_segA>_segB)logIncident('SEGREGATION',box.hazClass||'');
   // v3.5.64 SIDEWAYS TIRE · a tire stood on edge (rotated off its natural flat orientation) is a minor safety.
   // safetyWarn() escalates a 2nd unmitigated one to an incident; a locked shelf clears it (v3.5.203: water no longer does). A ROW draws extra heat.
@@ -4375,11 +4379,11 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   placed++;
   if(!startT)startT=Date.now(); // v3.5.144 THE CLOCK STARTS ON THE FIRST PIECE · elapsed / PPH never count the time before you place anything (fair on mobile, where the opening piece is slower). startT is null from mode-start until here.
   if(typeof gcurFlash==='function')gcurFlash('drop',420); // v3.5.20 drop-glove on a successful place
-  S.totalPieces=(S.totalPieces||0)+1; if(source==='bag'||box._fromStage){S.stagePlaced=(S.stagePlaced||0)+1;box._fromStage=false;} if(source!=='bag')stageAisleTick(); topBagCheck(); if(source==='bag'&&(box.isBag||box.type==='small'))S.bagsPlaced=(S.bagsPlaced||0)+1; // v2.1.7; v3.5.206 only real smalls (a regular box from that lane counted too)
+  S.totalPieces=(S.totalPieces||0)+1; if(source==='bag'||box._fromStage){S.stagePlaced=(S.stagePlaced||0)+1;box._fromStage=false;} if(source!=='bag')stageAisleTick(); topBagCheck(); if(box.isBag)S.bagsPlaced=(S.bagsPlaced||0)+1; /* 3.9.1005 a bag counts wherever it came from (the chute too) */ // v2.1.7; v3.5.206 only real smalls (a regular box from that lane counted too)
   if(!(box.type==='small'||box.isBag)&&!((box._gen||0)>0))S.boxPieces=(S.boxPieces||0)+1; // v3.5.90 PPH = REAL freight only; v3.5.99 first placement ONLY · a re-placed (churned) box earns ZERO pph, so the autoclicker's place-lift-place spam gains nothing
   // v3.5.142 CEILING SMALLS-BAG BONUS · a 3x3 bag stuffed against the trailer roof (top edge at row 0) reclaims the dead air up top. Huge, once per bag (feedback only; calcScore scores the live wall). 5 bags fill a ceiling course (15 of 17 cells).
   if(box.isBag&&gy===0&&!box._bagCeilAwarded){
-    box._bagCeilAwarded=true;
+    box._bagCeilAwarded=true;bankScore(BAG_CEIL_BONUS); // 3.9.1005 banked once per bag: the banner's +1000 is what it pays
     G._roofThisPlace=true; // v3.5.151 suppress a dehydration nudge on the same tick as a +600 roof bonus (The Invisible)
     if(typeof playSfx==='function')playSfx('bonus');
     if(typeof gcurFlash==='function')gcurFlash('nest',520);
@@ -4391,7 +4395,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   // v3.5.147 NESTING TEACH (one-shot) · the one mechanic the tutorial skips. First time a flat tire is on the wall AND a bag is in staging, surface the veteran move.
   if(!G._nestHintShown&&(G.bagSlots||[]).some(function(b){return b&&b.isBag;})&&_wallHasTire()){
     G._nestHintShown=true;
-    showBanner('🛞 TIRE STACK · two same-size tires stacked flat join their hollows. A smalls bag fits inside for bonus cubes.','ok',3400);
+    showBanner('🛞 TIRE STACK · same-size tires stacked flat join their hollows. A bag needs 9 cells: one farm tire, two standard, three motorcycle or five dirt-bike tires.','ok',3400);
   }
   if(!S.sessionStartT){S.sessionStartT=startT||Date.now();ZDATA.events=[];} // v2.1.9 session clock; v3.5.132 reset the raw event timeline per session (timestamps are relative to sessionStartT) so it never accumulates across sessions · BEFORE the first place is logged
   if(typeof zLog==='function')zLog('place',{x:gx,y:gy,n:box.n||box.label||'?',r:rot||0,src:source});
@@ -4408,7 +4412,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
   G.integrity=calcIntegrity(G.grid);
   // v3.5.147 FLOW streak · a clean FRESH placement bumps the streak + an escalating bonus (added BEFORE scoring so it lands on this piece); a crunch/collapse resets it to 0.
   // v3.5.153 EXPLOIT FIX (I found re-placing a bag farmed points): a CHURNED piece (box._gen>0 = already picked up at least once) earns NO flow · the pick-up/put-down spam can't grow flowBonus. Same guard PPH already uses.
-  if(!((box._gen||0)>0)){
+  if(!crushed.length&&!((box._gen||0)>0)){ // 3.9.1005 a crush resets the streak to nothing, this placement included
     G.flow=(G.flow||0)+1;
     if(G.flow>=FLOW_MIN)G.flowBonus=(G.flowBonus||0)+FLOW_STEP*(G.flow-FLOW_MIN+1);
   }
@@ -4452,12 +4456,12 @@ function placeBox(source,sourceIdx,gx,gy,rot){
       setTimeout(function(){collapseFreeStack({boxes:_hb,cx:cell.rx,why:_huWhy});collapseAnimating=false;},220);
     } else if(_tt&&!collapseAnimating&&!gOver){
       collapseAnimating=true;
-      var _ttWhy='COLUMN INTEGRITY · a 2×'+_tt.Bh+' pillar holds a 2×'+_tt.maxTop+' at most. A 2×'+_tt.Th+' up there snaps the column.';
+      var _ttWhy='COLUMN INTEGRITY · a '+((_tt.support&&_tt.support.w)||1)+'×'+_tt.Bh+' pillar carries '+_tt.maxTop+' cells of height at most. This piece is '+_tt.Th+' tall, so it comes off.';
       setTimeout(function(){collapseFreeStack({boxes:[cell],cx:cell.rx,why:_ttWhy});collapseAnimating=false;},220);
     } else if((_dv=(!_hu&&!_tt&&typeof diagonalViolation==='function')?diagonalViolation(cell):null)&&!collapseAnimating&&!gOver){
       // v3.5.97 SWEEP #5 · an overhang stacked on another overhang = the staircase/diagonal. Both fall.
       collapseAnimating=true;
-      var _dvWhy='OVERHANG ON AN OVERHANG · that’s a staircase, not a wall. Two hangs in a row and the packages come down. Build a full base or throw for a piece that lines up.';
+      var _dvWhy='OVERHANG ON AN OVERHANG · that’s a staircase, not a wall. Two hangs in a row and the packages come down. Build a full base, or stage the piece (F) and wait for one that lines up.';
       var _db=[cell];if(_dv.under&&_dv.under.id!==cell.id)_db.push(_dv.under);
       setTimeout(function(){collapseFreeStack({boxes:_db,cx:cell.rx,why:_dvWhy});collapseAnimating=false;},220);
     } else {
@@ -4468,9 +4472,14 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     if(_unstable&&!collapseAnimating&&!gOver){
       collapseAnimating=true;
       // v3.5.194 this one never had a reason at all, in either branch of the rule
-      _st.why=(_st.h>=5)
-        ? '📦 FIVE HIGH · nothing freestanding stands that tall. Taper it, or lock a shelf under it first.'
-        : '📦 SAME WIDTH, THREE HIGH · a column that never narrows has nothing holding its middle. Taper it, narrower each layer, or lock the shelf first.';
+      // 3.9.1005 the banner names the rule that fired (it said SAME WIDTH, THREE HIGH for all four)
+      _st.why=(_st.h>=4)
+        ? '📦 FOUR HIGH · a freestanding stack of four comes down even when it tapers. Lock a shelf under it first.'
+        : (_st.hasSmall&&_st.h>=3)
+        ? '📦 A SMALL IN A THREE-HIGH STACK · a small or a bag gives the stack nothing to hold. Brace it, or lock the shelf first.'
+        : (!_st.tapering&&_st.h>=3)
+        ? '📦 THREE HIGH, NO TAPER · every layer has to be narrower than the one below it. Taper it, or lock the shelf first.'
+        : '📦 TOO TALL FOR ITS FOOTPRINT · the narrowest piece in this stack cannot carry that many cells of height. Taper it, or lock the shelf first.';
       setTimeout(function(){collapseFreeStack(_st);collapseAnimating=false;},220);
     } else if(_st&&!_st.tapering&&_st.h===2){
       if(!G._col2||Date.now()-G._col2>2600){G._col2=Date.now();showBanner('TWO HIGH, SAME WIDTH, NO SUPPORT · that’s the limit. Taper it (narrower on top) or lock the shelf before one more.','warn',1900);}
@@ -4478,7 +4487,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     } // v3.5.93 close the tall-thin else
   }
 
-  if((G.integrity||100)<=8&&!collapseAnimating)scheduleCollapse();
+  if((G.integrity!=null?G.integrity:100)<=8&&!collapseAnimating)scheduleCollapse(); // 3.9.1005 0 is 0, not 100
   if(typeof checkHydrationSafety==='function'&&!G._roofThisPlace)checkHydrationSafety(); // v3.5.59 hydration-as-safety; v3.5.151 skip on a roof-bonus tick so reward+nag don't collide
   G._roofThisPlace=false;
   checkWin();
@@ -4502,7 +4511,7 @@ function scheduleCollapse(){
   collapseTimeout=setTimeout(function(){
     collapseTimeout=null;
     // Re-check integrity NOW before actually collapsing · tetrises may have saved it
-    if((G.integrity||100)<=8&&!collapseAnimating&&!gOver){
+    if((G.integrity!=null?G.integrity:100)<=8&&!collapseAnimating&&!gOver){
       triggerCollapse();
     }
   },180);
@@ -4524,7 +4533,7 @@ function checkFragileCrush(box,gx,gy,rot){
     if(!target||seen[target.id])continue;
     // v3.5.100 heavy freight crushes FRAGILES *and* smalls bags · a heavy box on a bag smashes the customers'
     // packages inside. Same real rule you're taught: nothing heavy on top of a fragile OR a bag of smalls.
-    if(!(target.box.isFrag||target.box.isBag||target.box.type==='small'))continue;
+    if(!(target.box.isFrag||target.box.isBag||target.box.type==='small'||target.box.hazClass))continue; // 3.9.1005 a hazmat is crushable (the HAZMAT_CRUSH write-up was unreachable)
     // Is this row locked in (full shelf)? If so, box is protected.
     if(isRowLockedIn(landY))continue;
     // Does the fragile box have lateral support on BOTH sides? Protected.
@@ -4565,7 +4574,7 @@ function countHazmatViolations(grid){
 // clear cells between nearest edges. Killer pairs: hard violation when too close.
 // Live grid scan like the height rule · separate them and the penalty clears.
 // 3.9.1004 the killer pairs are the pairs 177.848's table marks O among the classes this dock carries: kept apart so a
-// leak cannot mix them. Flares (1.4) with flammable gas, flammable liquid or corrosive; an oxidizer with a flammable
+// leak cannot mix them (class 8 in the table is corrosive LIQUIDS; the dock's CORROSIVE is UN1760, a liquid). Flares (1.4) with flammable gas, flammable liquid or corrosive; an oxidizer with a flammable
 // liquid or a corrosive. Gas 2.1 or 2.2 with an oxidizer or a corrosive is blank in the table, a pesticide is not the
 // table's 6.1 row (that row is PG I zone A, an inhalation hazard), and class 9 is not in the table. Every other pair of
 // classes still gets the two-cell dock rule in countSegregationViolations.
@@ -4590,6 +4599,15 @@ function _hazMinCheb(a,b){
   return m;
 }
 function _ufFind(p,z){while(p[z]!==z){p[z]=p[p[z]];z=p[z];}return z;}
+// 3.9.1005 177.848(e)(3): "Class 8 (corrosive) liquids may not be loaded above or adjacent to ... Class 5 (oxidizing)
+// materials". Adjacent is already inside two cells; above is anywhere higher in the wall, so it is checked on its own.
+function _corrosiveOverOxidizer(a,b){
+  var c8=(a.cls==='8')?a:(b.cls==='8')?b:null,ox=(a.cls==='5.1')?a:(b.cls==='5.1')?b:null,i,c8Low=-1,oxTop=99;
+  if(!c8||!ox)return false;
+  for(i=0;i<c8.cells.length;i++){if(c8.cells[i][1]>c8Low)c8Low=c8.cells[i][1];}
+  for(i=0;i<ox.cells.length;i++){if(ox.cells[i][1]<oxTop)oxTop=ox.cells[i][1];}
+  return c8Low<oxTop; // the corrosive's lowest row is above the oxidizer's top row
+}
 function countSegregationViolations(grid){
   var hp=hazPiecesOnGrid(grid),v=0,i,j,a,b,gap;
   // different-class proximity (need cheb>=3 = 2 clear cells); killer adds an extra hit
@@ -4599,6 +4617,7 @@ function countSegregationViolations(grid){
     gap=_hazMinCheb(a,b);
     if(gap<=2)v++;
     if(gap<=2&&isKillerPair(a.cls,b.cls))v++;
+    else if(_corrosiveOverOxidizer(a,b))v++;
   }
   // same-class 3+ touching chains (union-find on cheb==1)
   var byClass={},k;
@@ -4618,12 +4637,14 @@ function countSegregationViolations(grid){
 // Permanent, EVENT-based session record (does NOT un-log when the player fixes
 // the placement). 2+ incidents = FLAGGED (the documented-discussion threshold).
 // This is the hire/don't-hire metric · what a manager filters on.
-function anyKillerTooClose(grid){
-  var hp=hazPiecesOnGrid(grid),i,j;
+// 3.9.1005 a COUNT, not a yes/no: with one killer pair already on the wall, a second one was logged as segregation
+function countKillerPairs(grid){
+  var hp=hazPiecesOnGrid(grid),i,j,n=0;
   for(i=0;i<hp.length;i++)for(j=i+1;j<hp.length;j++){
-    if(hp[i].cls!==hp[j].cls&&isKillerPair(hp[i].cls,hp[j].cls)&&_hazMinCheb(hp[i],hp[j])<=2)return true;
+    if(hp[i].cls===hp[j].cls)continue;
+    if((isKillerPair(hp[i].cls,hp[j].cls)&&_hazMinCheb(hp[i],hp[j])<=2)||_corrosiveOverOxidizer(hp[i],hp[j]))n++;
   }
-  return false;
+  return n;
 }
 function logIncident(type,cls){
   S.incidents=S.incidents||[];
@@ -4639,7 +4660,7 @@ function logIncident(type,cls){
 // resolves only a HYDRATION warning, and FLAG no longer opens a cover window. Hazmat-high and collapses are incidents outright \u00b7 no
 // pardon. Washed safeties are STILL published (the "1501 safeties, 1490 for throwing" bit).
 var SAFETY_PRACTICE_THRESHOLD=5;
-var SAFETY_MINOR=['HYDRATION','TIRE_SIDEWAYS','SP_DWELL','SMALLS_DWELL','THROW','FRAGILE_CRUSH','AISLE']; // warn-eligible; a locked shelf clears one (HYDRATION clears only by drinking)
+var SAFETY_MINOR=['HYDRATION','TIRE_SIDEWAYS','FRAGILE_CRUSH','AISLE']; // 3.9.1005 the warnings that exist (SP_DWELL, SMALLS_DWELL and THROW have no caller) // warn-eligible; a locked shelf clears one (HYDRATION clears only by drinking)
 function _sfMinor(o){return SAFETY_MINOR.indexOf(o)>=0;}
 function _sfInit(){S.warnings=S.warnings||[];S.incidents=S.incidents||[];}
 function _sfLabel(o){return {HYDRATION:'hydration',TIRE_SIDEWAYS:'sideways tire',TIRE_STACK:'stacked tires',THROW:'over-flagging for help',AISLE:'blocked aisle',FRAGILE_CRUSH:'crushed fragile',SP_DWELL:'staging dwell',SMALLS_DWELL:'smalls dwell',HAZMAT_HIGH:'hazmat-high',HAZMAT_CRUSH:'hazmat-crush',SEGREGATION:'segregation',KILLER:'killer pair',COLLAPSE:'collapse',HYDRATION_100:'no-hydration'}[o]||(''+o).toLowerCase();}
@@ -4653,12 +4674,12 @@ var WRITEUP_DOCS={
   TIMEOUT_PACE:{t:'PACE UNDER '+MIN_PPH+' PIECES AN HOUR',w:'The load rate stayed under '+MIN_PPH+' pieces an hour for three minutes again. Keep freight moving: pick a piece, place it, take the next one.'},
   TIMEOUT_IDLE:{t:'NO FREIGHT MOVED FOR FIVE MINUTES',w:'No freight moved for five minutes again. If you need a break, pause (P): a pause stops every clock.'},
   TIMEOUT_HEAVY:{t:'HEAVY FREIGHT LEFT UNSUPPORTED',w:'Heavy freight keeps sitting high with no base under it. Build under it or bring it down: a locked shelf or solid support below makes it safe.'},
-  HAZMAT_HIGH:{t:'HAZMAT LOADED ABOVE SHOULDER HEIGHT',w:'Hazardous freight rides LOW and LOCKED under a shelf so it can never fall. A high hazmat that falls is a chemical-spill injury and an automatic write-up. Hazmat may not ride loose.'},
+  HAZMAT_HIGH:{t:'HAZMAT LOADED ABOVE THE WAIST LINE',w:'Hazardous freight rides low, in the bottom half of the bay, ideally capped by a locked shelf. A hazmat that comes down in a collapse is a chemical-spill injury, and it ends the round.'},
   HAZMAT_CRUSH:{t:'HAZMAT LOADED UNDER WEIGHT',w:'Never bury a hazmat under heavy freight \u00b7 crushed containers leak. Load it low, cap it with a LOCKED shelf, put nothing heavy on top.'},
-  KILLER:{t:'INCOMPATIBLE HAZMAT CLASSES TOO CLOSE',w:'These two classes stay at least two clear cells apart. 49 CFR 177.848 requires them to be kept apart so a leak cannot mix them: flares with a flammable gas, a flammable liquid or a corrosive, and an oxidizer with a flammable liquid or a corrosive. A killer pair closer than that is an automatic write-up.'},
-  SEGREGATION:{t:'HAZMAT SEGREGATION BREACH',w:'Different hazmat classes need two clear cells between them. That is the dock rule, stricter than the federal segregation table (49 CFR 177.848), which separates some class pairs only. Keep them apart.'},
-  TIRE_STACK:{t:'TIRES STACKED VERTICALLY',w:'Tires stacked on their edge ROLL the second the door opens. Lay them flat \u00b7 an obvious hazard is an immediate write-up.'},
-  FRAGILE_CRUSH:{t:'REPEATED CRUSHED FRAGILES',w:'Only the heaviest freight crushes, and it has landed on exposed fragiles repeatedly. Height does not protect them · crushed fragiles are damage claims. Put a real box on each side of every fragile, or lock a shelf under it first.'},
+  KILLER:{t:'INCOMPATIBLE HAZMAT CLASSES TOO CLOSE',w:'These two classes stay at least two clear cells apart, and a corrosive liquid never rides above an oxidizer. 49 CFR 177.848 keeps these pairs apart so a leak cannot mix them: flares with a flammable gas, a flammable liquid or a corrosive liquid, and an oxidizer with a flammable liquid or a corrosive liquid. Breaking either rule is an automatic write-up.'},
+  SEGREGATION:{t:'HAZMAT SEGREGATION BREACH',w:'Different hazmat classes need two clear cells between them, and no more than two pieces of one class may touch. That is the dock rule, stricter than the federal segregation table (49 CFR 177.848) for every class on this dock. Keep them apart.'},
+  TIRE_STACK:{t:'TIRES STACKED VERTICALLY',w:'Tires stacked on their edge ROLL the second the door opens. Lay them flat. The first stack is a warning, the second is this write-up, the third loads a practice trailer and the fourth ends the round.'},
+  FRAGILE_CRUSH:{t:'REPEATED CRUSHED FREIGHT',w:'Only the heaviest freight crushes, and it has landed on exposed fragiles, small packages or bags repeatedly. Height does not protect them · crushed fragiles are damage claims. Put a real box on each side of every fragile, or lock a shelf under it first.'},
   COLLAPSE:{t:'REPEATED WALL COLLAPSES',w:'The wall has collapsed repeatedly. Taper stacks (wide base, narrow top) and lock shelves. Repeated collapses are documented.'},
   ACCUMULATED:{t:'MULTIPLE SAFETY VIOLATIONS',w:'Multiple safety violations this session. Each one is now documented.'},
   SENT_HOME:{t:'SHIFT OVER · FOUR WRITE-UPS',w:'Four documented write-ups this shift. The shift ends here. Sign to clock out.'},
@@ -4718,9 +4739,10 @@ function safetyWarn(offense,msg){
   var i,prior=null;
   for(i=0;i<S.warnings.length;i++){if(S.warnings[i].offense===offense&&!S.warnings[i].mitigated){prior=S.warnings[i];break;}}
   if(prior){safetyIncident(offense,'Repeat '+_sfLabel(offense)+' \u00b7 an unmitigated warning became an incident.');return;}
-  S.warnings.push({offense:offense,t:Date.now(),wall:(S.truck||1),mitigated:false,washedBy:null});
-  var _fix=(offense==='HYDRATION')?'FIX IT: 💧 drink water.':(offense==='AISLE')?'FIX IT: ⬇ load a staged box.':'FIX IT: 🔒 lock a full shelf.'; // v3.5.203 the real fix for THIS offense (water no longer washes everything)
-  showBanner('⚠ SAFETY WARNING · '+msg+'<br><span style="font-size:.72em">'+_fix+' Repeat it before it\u2019s fixed = INCIDENT.</span>','warn',3200);
+  S.warnings.push({offense:offense,t:Date.now(),wall:(S.truck||1),mitigated:false,washedBy:null});S.warnTotal=(S.warnTotal||0)+1; // 3.9.1005 a session total (S.warnings resets each wall)
+  var _fix=(offense==='HYDRATION')?'FIX IT: 💧 drink water.':(offense==='AISLE')?'FIX IT: ⬇ load a staged box or clear a spot.':(offense==='COLLAPSE')?'FIX IT: taper stacks and lock shelves. The next collapse is an incident.':'FIX IT: 🔒 lock a full shelf.'; // v3.5.203 the real fix for THIS offense (water no longer washes everything)
+  var _rep=(offense==='HYDRATION'||offense==='COLLAPSE')?'':' Repeat it before it\u2019s fixed = INCIDENT.'; // 3.9.1005 a hydration warning cannot repeat on a wall; a collapse warning cannot be washed
+  showBanner('⚠ SAFETY WARNING · '+msg+'<br><span style="font-size:.72em">'+_fix+_rep+'</span>','warn',3200);
   if(typeof playSfx==='function')playSfx('dwell');
   updateSafetyHUD();
 }
@@ -4742,16 +4764,17 @@ function mitigateWarn(source){
   updateSafetyHUD();
   return true;
 }
-function sendToPractice(){
+function sendToPractice(why){
   if(G&&G._practiceSent)return;if(G)G._practiceSent=true;
   S.practiceKicks=(S.practiceKicks||0)+1;
-  showBanner('\u26d4 PRACTICE TRAILER \u00b7 incident limit reached.<br><span style="font-size:.72em">A clean practice trailer is loaded. Incidents already logged stay on this session.</span>','danger',4200);
+  showBanner('\u26d4 PRACTICE TRAILER \u00b7 '+(why||'incident limit reached')+'.<br><span style="font-size:.72em">A clean practice trailer is loaded. Incidents already logged stay on this session.</span>','danger',4200);
   setTimeout(function(){
     S.warnings=[]; // new wall, warnings reset (incidents/record persist)
     G.grid=makeGrid();placed=0;G.score=0;G.cog=.5;G.support=1;G.integrity=100;G._finalized=false;G._practiceSent=false;
   try{liCertReset();}catch(_cr0){} // v3.5.185 the certificate never carries to the next wall
     G.drinks=0;G.throws=0;G.stageDwell=0;G._topBags=0;G._divertTold=false;G._hyd75=false;G._hyd100=false;G.tetrisTotal=0;G.tetrisRows={};G.tetrisPaid={};G.bulkheadRows={};G.bulkheadCount=0;
     G.practice=true;startT=null; // v3.5.144 clock deferred to first piece
+    G._ceilCoursePaid=false; // 3.9.1005 a fresh trailer can pay its own ceiling course
     if(typeof wallBaseline==='function')wallBaseline(); // v3.5.81 per-wall stat baseline (practice trailer)
     selBeltIdx=null;selBeltRot=0;selNC=-1;selBag=-1;
     if(typeof refillBelt==='function')refillBelt();
@@ -4894,7 +4917,7 @@ function stageAisleClear(){
   G.stageDwell=0;
   if(typeof S==='undefined'||!S||!S.warnings)return;
   var i,w,hit=false;
-  for(i=S.warnings.length-1;i>=0;i--){w=S.warnings[i];if(w.offense==='AISLE'&&!w.mitigated){w.mitigated=true;w.washedBy='aisle';hit=true;}}
+  for(i=S.warnings.length-1;i>=0;i--){w=S.warnings[i];if(w.offense==='AISLE'&&!w.mitigated){w.mitigated=true;w.washedBy='aisle';S.safetiesWashed=(S.safetiesWashed||0)+1;hit=true;}}
   if(hit&&typeof updateSafetyHUD==='function')updateSafetyHUD();
 }
 // the run is over: every box still staged was left on the dock. Once per run; it never takes this wall below 0.
@@ -4903,8 +4926,7 @@ function stageLeftOnDock(){
   S._stageLeftDone=true;
   var n=stageCount();S.stageLeft=n;S._stageLeftCost=0;
   if(!n||typeof G==='undefined'||!G)return n;
-  var cost=Math.min(n*STAGE_LEFT_COST,Math.max(0,(typeof calcScore==='function')?calcScore():(G.score||0)));
-  if(cost>0)bankScore(-cost);
+  var cost=chargeShift(n*STAGE_LEFT_COST); // 3.9.1005 off the wall, then the shift
   S._stageLeftCost=cost;
   if(typeof zLog==='function')zLog('stageleft',{n:n,cost:cost});
   return n;
@@ -5034,10 +5056,10 @@ function worstFreeStack(){
     }
     if(boxes.length<2)continue;
     var tapering=true,i;
-    for(i=0;i<boxes.length-1;i++){var wu=(boxes[i].box&&boxes[i].box.w)||1,wl=(boxes[i+1].box&&boxes[i+1].box.w)||1;if(wu>=wl){tapering=false;break;}} // upper must be strictly narrower
+    for(i=0;i<boxes.length-1;i++){var wu=boxes[i].w||1,wl=boxes[i+1].w||1;if(wu>=wl){tapering=false;break;}} // upper must be strictly narrower · 3.9.1005 as placed (a rotated piece read its unrotated width)
     // v3.5.60 DIMENSIONAL cap: narrowest footprint in the run sets a max CELL height (wide slabs tip sooner).
-    var minW=99,_bi;for(_bi=0;_bi<boxes.length;_bi++){var _bw=(boxes[_bi].box&&boxes[_bi].box.w)||1;if(_bw<minW)minW=_bw;}
-    var minRy=1e9,maxRy=-1e9;for(_bi=0;_bi<boxes.length;_bi++){var _b=boxes[_bi],_ry=(_b.ry!=null?_b.ry:0),_bh=(_b.box&&_b.box.h)||1;if(_ry<minRy)minRy=_ry;if(_ry+_bh>maxRy)maxRy=_ry+_bh;}
+    var minW=99,_bi;for(_bi=0;_bi<boxes.length;_bi++){var _bw=boxes[_bi].w||1;if(_bw<minW)minW=_bw;}
+    var minRy=1e9,maxRy=-1e9;for(_bi=0;_bi<boxes.length;_bi++){var _b=boxes[_bi],_ry=(_b.ry!=null?_b.ry:0),_bh=_b.h||1;if(_ry<minRy)minRy=_ry;if(_ry+_bh>maxRy)maxRy=_ry+_bh;}
     var runCellH=(maxRy>minRy)?(maxRy-minRy):boxes.length;
     var cellCap=freestandCellCap(minW)+(tapering?FREESTAND_TAPER_BONUS:0);
     // unstable: any freestanding 4+ (even tapered · the n-1 rule), OR non-taper 3+, OR a smalls/bag in a 3+ stack,
@@ -5138,7 +5160,9 @@ function boxHasSupport(c){
 }
 // v3.5.56 after a collapse, no gravity re-settles the wall · so any box left FLOATING (nothing under it)
 // gets shed back to the belt too. Recurses since shedding one floater can expose another.
-function settleFloaters(){
+// 3.9.1005 out (optional) collects every piece swept off, so a collapse can see a hazmat it knocked loose. When nothing
+// more moves, a locked row that lost a piece gives up its lock.
+function settleFloaters(out){
   var moved=false,seen={},y,x,g=0;
   for(y=0;y<GH;y++)for(x=0;x<GW;x++){
     var c=G.grid[y]&&G.grid[y][x];
@@ -5147,10 +5171,24 @@ function settleFloaters(){
       var cs=c.cells||makeRect(c.w,c.h),i;
       for(i=0;i<cs.length;i++){var ax=c.rx+cs[i][0],ay=c.ry+cs[i][1];if(G.grid[ay]&&G.grid[ay][ax]===c)G.grid[ay][ax]=null;}
       if(G.belt.length<BELT_PIECE_COUNT)G.belt.push({...c.box,id:'F'+Date.now().toString(36)+(g++)});
+      if(out)out.push(c);
       moved=true;
     }
   }
-  if(moved)settleFloaters();
+  if(moved)settleFloaters(out);
+  else unlockHoledRows();
+}
+// 3.9.1005 a locked shelf that loses a piece to a collapse or a shed is not a shelf any more: its lock goes (the floor,
+// the crush cover and the shelf pay) until the row is full again. Only lifting a piece did this before.
+function unlockHoledRows(){
+  if(!G||!G.tetrisRows)return;
+  var k,x,r,full;
+  for(k in G.tetrisRows){
+    if(!G.tetrisRows.hasOwnProperty(k))continue;
+    r=G.grid[+k];full=!!r;
+    if(r)for(x=0;x<GW;x++){if(!r[x]){full=false;break;}}
+    if(!full){delete G.tetrisRows[k];G.tetrisTotal=Math.max(0,(G.tetrisTotal||0)-1);bankScore(-TETRIS_BONUS);}
+  }
 }
 // v3.5.65 is the just-placed cell resting directly on a ROTATED (vertical) tire? A tire on its edge rolls ,
 // it can't bear a load, so anything one higher topples. Returns the offending tire cell or null.
@@ -5208,7 +5246,7 @@ function tireStackStrike(){
   addShake(12);
   if(n===1){showBanner('⚠ TIRES STACKED ON EDGE · on-edge tires roll. First warning.','warn',3000);}
   else if(n===2){if(typeof logIncident==='function')logIncident('TIRE_STACK','');showBanner('⛔ STACKED TIRES AGAIN · that’s an incident on your record.','danger',3200);}
-  else if(n===3){showBanner('⛔ THIRD TIME · a practice trailer is loaded.','danger',2800);if(typeof sendToPractice==='function')sendToPractice();}
+  else if(n===3){showBanner('⛔ THIRD TIME · a practice trailer is loaded.','danger',2800);if(typeof sendToPractice==='function')sendToPractice('third stacked tire');}
   else if(!gOver&&typeof endGame==='function'){endGame('WALL COLLAPSE · stacked tires rolled the load. A rolled load is an injury hazard.',false);}
 }
 // v3.5.66 COLLAPSE ESCALATION · a collapse is a LEARNING CURVE, not an instant violation.
@@ -5237,14 +5275,14 @@ function collapseFreeStack(st){
     if(G.belt.length<BELT_PIECE_COUNT)G.belt.push({...cell.box,id:'C'+Date.now().toString(36)+(n++),_gen:(cell.box._gen||0)+1}); // v3.5.156 BLOCKER #3: a shed piece is CHURNED · re-placing it earns zero PPH and zero FLOW (the place-slip-replace farm is dead)
     placed=Math.max(0,placed-1); // v3.5.156 its placement credit leaves with it
   });
-  settleFloaters(); // v3.5.56 sweep anything left hanging by the topple
-  G.integrity=clamp((G.integrity||100)-(_slip?5:COLLAPSE_INT_COST),0,100);
+  var _swept=[];settleFloaters(_swept); // v3.5.56 sweep anything left hanging by the topple
+  G.integrity=clamp((G.integrity!=null?G.integrity:100)-(_slip?5:COLLAPSE_INT_COST),0,100);
   G.cog=calcCOG(G.grid);G.support=supportScore(G.grid);
   addShake(_slip?7:18);if(typeof playSfx==='function')playSfx(_slip?'gaplock':'collapse');hapt(_slip?'error':'collapse');
   if(typeof gridToCanvas==='function'){var _c=gridToCanvas((st.cx||Math.floor(GW/2))+0.5,GH*0.4);spawnBurst(_c.x,_c.y,_slip?12:32,'rgba(120,90,60,.95)',170,0.7,_slip?90:240);}
   if(!_slip)flash('fl-danger');
   // v3.5.65 HAZMAT in ANY collapse OR slip = the shift ends. A dropped hazmat is a hurt-somebody event.
-  var _cHaz=false;st.boxes.forEach(function(c){if(c&&c.box&&(c.box.isHaz||c.box.hazClass))_cHaz=true;});
+  var _cHaz=false;st.boxes.concat(_swept).forEach(function(c){if(c&&c.box&&(c.box.isHaz||c.box.hazClass))_cHaz=true;}); // 3.9.1005 a hazmat swept off with it counts
   if(_cHaz&&!gOver&&typeof endGame==='function'){
     showBanner('⛔ HAZMAT DROPPED · a fallen hazmat package is an injury hazard. Load hazmat low and locked.','danger',3600);
     setTimeout(function(){endGame('HAZMAT IN A COLLAPSE · a fallen hazmat package is an injury hazard.',false);},700);
@@ -5270,12 +5308,12 @@ function collapseFreeStack(st){
 function checkTetris(){
   G.tetrisRows=G.tetrisRows||{};
   G.hazShelved=G.hazShelved||{}; // v2.1.11 hazmat pieces already credited for shelf-lock
-  var newLocks=0;
+  var newLocks=0,_newRows=[];
   for(var y=0;y<GH;y++){
     var full=true;
     for(var x=0;x<GW;x++){if(!G.grid[y][x]){full=false;break;}}
     if(full&&!G.tetrisRows[y]){
-      G.tetrisRows[y]=true;newLocks++;
+      G.tetrisRows[y]=true;newLocks++;_newRows.push(y);bankScore(TETRIS_BONUS); // 3.9.1005 banked: every lock pays exactly the +500 the feed shows
       G.tetrisPaid=G.tetrisPaid||{};
       // v3.5.161 EVERY lock counts in the shelf score term: unseal −1 / re-lock +1 nets zero, so restoring
       // a shelf restores its score (the −150 unseal fine stays the only lasting cost). One-time extras below.
@@ -5288,14 +5326,14 @@ function checkTetris(){
       var prevInt=G.integrity||100;
       var intBonus=Math.min(30,100-prevInt);
       G.integrity=Math.min(100,prevInt+intBonus);
-      // v3.5.167 the +TETRIS_BONUS direct-add that lived here is GONE: calcScore's shelfB term
+      // 3.9.1005 the shelf pay is banked at the lock above (TETRIS_BONUS); the history: v3.5.167 removed a direct-add here, calcScore's shelfB term
       // ((G.tetrisTotal)*TETRIS_BONUS) already pays every lock, and placeBox recomputes right after ,
       // so the add was overwritten in the same call. Last residue of the dual-scoring model. One source now.
       // v2.1.11 HAZMAT SHELF LOCKED · vet move: hazmat loaded low, now capped by a locked shelf
       var _hzc=0,_hseen={},_hy,_hx,_hcell;
       for(_hy=y+1;_hy<GH;_hy++){for(_hx=0;_hx<GW;_hx++){
         _hcell=G.grid[_hy][_hx];
-        if(_hcell&&_hcell.box&&_hcell.box.hazClass&&!_hseen[_hcell.id]&&!G.hazShelved[_hcell.id]){_hseen[_hcell.id]=true;G.hazShelved[_hcell.id]=true;_hzc++;}
+        if(_hcell&&_hcell.box&&_hcell.box.hazClass&&!_hseen[_hcell.id]&&!G.hazShelved[_hcell.id]&&_hcell.ry>=y&&_hcell.ry>=Math.floor(GH*(1-HAZMAT_MAX_FRAC))){/* 3.9.1005 low and capped, as the banner says */_hseen[_hcell.id]=true;G.hazShelved[_hcell.id]=true;_hzc++;}
       }}
       if(_hzc>0){
         bankScore(HAZMAT_SHELF_BONUS); // v3.5.156 banked · this +1500 was a PURE NO-OP before (added then overwritten inside the same placeBox call)
@@ -5310,11 +5348,10 @@ function checkTetris(){
     if(collapseTimeout){clearTimeout(collapseTimeout);collapseTimeout=null;}
     // DECISION: Fire LOCKED IN flash overlay · the big moment, properly named.
     // Bulkhead check: if two consecutive rows are both newly locked, it's a bulkhead.
-    var isBulkhead=false;
-    var rowKeys=Object.keys(G.tetrisRows).map(Number).sort(function(a,b){return a-b;});
-    for(var i=1;i<rowKeys.length;i++){
-      if(rowKeys[i]-rowKeys[i-1]===1){isBulkhead=true;break;}
-    }
+    // 3.9.1005 only a row locked NOW, touching another locked row, makes this a double lock (an old pair used to
+    // turn every later single lock into DOUBLE LOCK)
+    var isBulkhead=false,_nr;
+    for(_nr=0;_nr<_newRows.length;_nr++){if(G.tetrisRows[_newRows[_nr]-1]||G.tetrisRows[_newRows[_nr]+1]){isBulkhead=true;break;}}
     var pts=TETRIS_BONUS*newLocks;
     fireLockinFlash(isBulkhead,newLocks,pts);
     flash('fl-ok');
@@ -5349,7 +5386,7 @@ function checkBrickLock(){
     }
   }
   if(stagger>=4){
-    G.brickAwarded=true;if(typeof playSfx==='function')playSfx('brick');
+    G.brickAwarded=true;bankScore(BRICK_BONUS);if(typeof playSfx==='function')playSfx('brick'); // 3.9.1005 banked
     showBanner('BRICK LOCK<br><span style="font-size:.72em">+'+BRICK_BONUS+' CUBES · STAGGERED WALL</span>','ok',2200);
     flash('fl-ok');
   }
@@ -5362,7 +5399,7 @@ function checkRecovery(){
   recoveryCount++;
   if(recoveryCount>=3){
     recoveryActive=false;
-    G.recoveryCount=(G.recoveryCount||0)+1;S.recoveries=(S.recoveries||0)+1; // v2.1.8
+    G.recoveryCount=(G.recoveryCount||0)+1;S.recoveries=(S.recoveries||0)+1;bankScore(RECOVERY_BONUS); // v2.1.8 · 3.9.1005 banked
     if(typeof playSfx==='function')playSfx('recovery');showBanner('RECOVERY<br><span style="font-size:.72em">+'+RECOVERY_BONUS+' CUBES</span>','ok',2000);
     flash('fl-ok');
   }
@@ -5478,13 +5515,14 @@ function triggerCollapse(){
     if(G.belt.length<BELT_PIECE_COUNT)G.belt.push({...cell.box,id:'C'+Date.now().toString(36)+_ci,_gen:(cell.box._gen||0)+1}); // v3.5.156 churn-marked · v3.5.168 +_ci = collision-free
     placed=Math.max(0,placed-1); // v3.5.156
   });
-  G.integrity=clamp((G.integrity||100)-COLLAPSE_INT_COST,0,100);
+  var _tSwept=[];settleFloaters(_tSwept); // 3.9.1005 nothing is left floating on a shed piece
+  G.integrity=clamp((G.integrity!=null?G.integrity:100)-COLLAPSE_INT_COST,0,100);
   bankScore(-80*toRemove.length); // v3.5.156 banked · collapse cost is PERSISTENT now (was wiped by the next recompute)
   recoveryActive=true;recoveryT=Date.now();recoveryCount=0;
   addShake(22);playSfx('collapse');hapt('collapse');if(typeof gridToCanvas==='function'){var _cc=gridToCanvas(GW/2,GH*0.5);spawnBurst(_cc.x,_cc.y,40,'rgba(120,90,60,.95)',180,0.7,280);}
   flash('fl-danger');
   // v3.5.66 hazmat in this collapse = round over; otherwise the learning-curve ladder.
-  var _tHaz=false;toRemove.forEach(function(c){if(c&&c.box&&(c.box.isHaz||c.box.hazClass))_tHaz=true;});
+  var _tHaz=false;toRemove.concat(_tSwept).forEach(function(c){if(c&&c.box&&(c.box.isHaz||c.box.hazClass))_tHaz=true;});
   if(_tHaz&&!gOver&&typeof endGame==='function'){
     showBanner('⛔ HAZMAT DROPPED · a fallen hazmat package is an injury hazard. Load hazmat low and locked.','danger',3600);
     setTimeout(function(){endGame('HAZMAT IN A COLLAPSE · a fallen hazmat package is an injury hazard.',false);},700);
@@ -5507,7 +5545,7 @@ function calcScore(segOverride){
   var ss=supportScore(G.grid);
   var voids=getVoids(G.grid).length;S.lastGaps=countGaps(G.grid);
   var cogDev=Math.abs((G.cog||.5)-.5);
-  var integ=(G.integrity||100)/100;
+  var integ=(G.integrity!=null?G.integrity:100)/100; // 3.9.1005 a wall at 0 integrity scores as 0
   var base=Math.round(eff*700+hp*500);
   // DECISION: Speed multiplier curves up more aggressively for elite pace.
   // Old: cap 2.5 at ~130 PPH · a 1000 PPH run got the same multiplier as 130 PPH.
@@ -5517,19 +5555,16 @@ function calcScore(segOverride){
   var speedM=clamp(0.4+(pph/200)*2.8,0.4,4.0);
   var supM=clamp(.6+ss*.4,.6,1.0);
   var integM=clamp(.5+integ*.5,.5,1.0);
-  var shelfB=(G.tetrisTotal||0)*TETRIS_BONUS;
   var bulkB=(G.bulkheadCount||0)*BULKHEAD_BONUS;
-  var brickB=G.brickAwarded?BRICK_BONUS:0;
-  var recovB=(G.recoveryCount||0)*RECOVERY_BONUS;
-  var bagCeilB=countCeilingBags()*BAG_CEIL_BONUS; // v3.5.142 ceiling smalls-bag shelf
+  // 3.9.1005 the shelf, brick, recovery and roof-bag pay and the crunch charge are banked when they happen, at the exact
+  // amount the banner shows, so they are not wall terms scaled by pace any more
   var flowB=(G.flowBonus||0); // v3.5.147 accumulated FLOW-streak bonus (reset per wall, broken by crunch/collapse)
-  var crunchP=(G.crunchCount||0)*CRUNCH_PENALTY; // v3.5.187 was a hardcoded 300 that disagreed with the banner
   var voidP=voids*8;
   var cogP=Math.round(cogDev*200);
   var preselectP=(G.preselectDepth||0)*PRESELECT_COST; // v2.1.3 cherry-pick cost
   var seamP=countColumnSeams(G.grid)*COLUMN_SEAM_PENALTY; // v2.1.4 running-bond violation
   var arrowP=(S.arrowsMissed||0)*16; // v2.10.9 small this-side-up ding (locked-in still holds)
-  var raw=base+shelfB+bulkB+brickB+recovB+bagCeilB+flowB-crunchP-voidP-cogP-preselectP-seamP-arrowP;
+  var raw=base+bulkB+flowB-voidP-cogP-preselectP-seamP-arrowP;
   // HAZMAT: each hazmat currently loaded above the waist line halves the score.
   // Live grid scan, so moving it back down un-penalizes. 1 viol=50%, 2=25%, etc.
   var segViol=(segOverride===undefined||segOverride===null)?countSegregationViolations(G.grid):segOverride;
@@ -5559,6 +5594,15 @@ var TIMEOUT_KINDS={
   heavy:{banner:'HEAVY FREIGHT LEFT HIGH WITH NO BASE FOR 30 SECONDS',sum:['heavy-freight strike','heavy-freight strikes'],doc:'TIMEOUT_HEAVY'}
 };
 function fmtPts(n){return Number(n||0).toLocaleString('en-US');}
+// 3.9.1005 a charge comes off the wall first and then off the shift total, and never takes either below zero. Only the
+// wall's own score could pay before, so a strike early on a fresh wall cost about nothing.
+function chargeShift(want){
+  var wallNow=Math.max(0,(typeof calcScore==='function')?calcScore():((G&&G.score)||0)),shift=Math.max(0,(S&&S.totalScore)||0);
+  var cost=Math.min(want,wallNow+shift),fromWall=Math.min(cost,wallNow);
+  if(fromWall>0)bankScore(-fromWall);
+  if(cost>fromWall)S.totalScore=shift-(cost-fromWall);
+  return cost;
+}
 function timeoutStrike(kind){
   var K=TIMEOUT_KINDS[kind];if(!K||typeof S==='undefined'||!S)return 0;
   S.timeouts=S.timeouts||{};S._timeoutAt=S._timeoutAt||{};S._timeoutCost=S._timeoutCost||{};
@@ -5566,8 +5610,7 @@ function timeoutStrike(kind){
   S._timeoutAt[kind]=now;
   var n=(S.timeouts[kind]||0)+1;S.timeouts[kind]=n;
   var want=TIMEOUT_P*TIMEOUT_LADDER[Math.min(n,TIMEOUT_LADDER.length)-1];
-  var cost=Math.min(want,Math.max(0,(typeof calcScore==='function')?calcScore():((G&&G.score)||0)));
-  if(cost>0)bankScore(-cost);
+  var cost=chargeShift(want);
   S._timeoutCost[kind]=(S._timeoutCost[kind]||0)+cost;
   if(typeof zLog==='function')zLog('timeout',{kind:kind,n:n,cost:cost});
   if(typeof playSfx==='function')playSfx('error');
@@ -5716,8 +5759,11 @@ function liCertGrade(){
     var pack=packPct();
     var hgt=Math.round(wallH()/GH*100);
     var integ=Math.round((G.integrity!=null)?G.integrity:0);
-    var col=w?(w.collapses||0):((S&&S.collapses)||0);
-    var inc=w?(w.incidentsWall||0):((S&&S.incidents)?S.incidents.length:0);
+    // 3.9.1005 this wall's collapses and incidents, counted live from the wall's start: the wall log is frozen at the
+    // first seal, and the certificate is now graded when the wall is finished
+    var base=(S&&S._wallBase)||null;
+    var col=base?Math.max(0,((S&&S.collapses)||0)-(base.collapses||0)):(w?(w.collapses||0):((S&&S.collapses)||0));
+    var inc=base?Math.max(0,((S&&S.incidents)?S.incidents.length:0)-(base.incidents||0)):(w?(w.incidentsWall||0):0);
     if(hgt<100)return null;              // stopped short = the NEXT-early case, refused
     if(pack<CERT_MIN_PACK)return null;
     if(integ<100)return null;
@@ -5843,7 +5889,7 @@ function liSaveCert(){
 function liCertOffer(){
   try{
     var gr=liCertGrade();
-    if(!gr)return;
+    if(!gr){liCertReset();return;} // 3.9.1005 graded again at FINISH: a wall that no longer qualifies loses the button
     CERT_GRADE=gr;
     CERT_LAST=liWallShot();
     var b=document.getElementById('cert-earn-btn');
@@ -5909,6 +5955,20 @@ function sealWall(reason){
 }
 
 // nextTrailer() defined in mode system section · handles both shift and standard modes
+// 3.9.1005 FINISH TRAILER on a sealed TRAILER-LOAD wall opens the wall-complete card, the same as a full wall: the
+// certificate is graded on the finished wall and the board signature is offered. NEXT TRAILER on the card rolls out.
+// Before this FINISH went straight to the next wall, so a TRAILER-LOAD wall could be signed only at 340 of 340 cells
+// and the certificate was graded only at the first seal (92% high), where it cannot pass.
+function finishSealedWall(){
+  if(gameMode!=='shift'||!G||!G.sealed){nextTrailer();return;}
+  var mf=document.getElementById('maxpack-finish');if(mf){mf.style.display='none';mf.classList.remove('pulse');}
+  try{liCertOffer();}catch(_ce){}
+  _elapsedFrozen=(typeof startT!=='undefined'&&startT)?(Date.now()-startT)/1000:0;
+  var sh=document.getElementById('np-shift'),da=document.getElementById('np-daily');if(sh)sh.style.display='';if(da)da.style.display='none';
+  liSignPrepare();
+  var np=document.getElementById('next-popup');if(np)np.classList.add('vis');
+  var nb=document.getElementById('next-popup-badge');if(nb)nb.textContent='\u2713 WALL FINISHED \u00b7 '+packPct()+'% PACKED';
+}
 
 // ── GAME LOOP ──
 function liShowErr(where,e){
@@ -6018,6 +6078,7 @@ function jamCheck(){if(G&&G.belt&&G.belt.length<=0&&!jamStarvedT)jamStarvedT=Dat
 function breakJam(){
   if(typeof G==='undefined'||!G.belt)return;
   if(G.belt.length>=BELT_PIECE_COUNT)return;
+  if(typeof zLog==='function')zLog('jam'); // 3.9.1005 every action is on the move log
   var before=G.belt.length;refillBelt();
   if(G.belt.length>before){chuteJiggleT=Date.now();if(typeof playSfx==='function')playSfx('gaplock');}
   jamStarvedT=0;jamWarnLevel=0;updateChuteUI();
@@ -6624,7 +6685,7 @@ function drawHazPlacard(c,cx,cy,d,cls,cb){
   // below; CLASS 9 is white with seven black vertical stripes down the top half
   if(!cb&&(hc.top||hc.stripes)){
     c.save();c.clip();
-    if(hc.top){c.fillStyle=hc.top;c.fillRect(cx-hh,cy-hh,d,hh);}
+    if(hc.top){c.fillStyle=hc.top;c.fillRect(cx-hh,cy-hh,d,hh*0.79);}
     if(hc.stripes){var _sw=d/15,_k;c.fillStyle='#111';for(_k=0;_k<7;_k++)c.fillRect(cx-hh+_sw*(1+2*_k),cy-hh,_sw,hh*0.88);}
     c.restore();
   }
@@ -7290,7 +7351,7 @@ function checkPPHFail(dt){
   }
   var el=elapsed();if(el<LOW_PPH_GRACE)return;
   var pph=getPPH();
-  if(pph>0&&pph<MIN_PPH){
+  if(pph<MIN_PPH){ // 3.9.1005 0 counts as under the floor; the grace above covers the warm-up
     pphLowSec+=dt;
     // v3.5.118 WARN before the kick · a playtester: "no warning for low load rate." Heads-up at the halfway mark.
     if(!_lowRateWarned&&pphLowSec>=LOW_PPH_FAIL*0.5){_lowRateWarned=true;pushMsg(isForgiving()?'👷 MANAGER: load rate under '+MIN_PPH+'. Increase the pace.':'👷 MANAGER: load rate under '+MIN_PPH+'. Another 90 seconds under it costs points.','warn');}
@@ -7315,7 +7376,7 @@ function checkLargeDanger(dt){
       // Exempt if below or at a locked row
       if(isRowLockedIn(y))continue;
       // Exempt if the piece has solid support underneath (>50% of bottom cells backed)
-      var cells2=getCells(c.box,0);
+      var cells2=c.cells||getCells(c.box,0); // 3.9.1005 the placed cells (a rotated heavy was read unrotated)
       var bpc={};
       for(var i=0;i<cells2.length;i++){
         var cx2=cells2[i][0],cy2=cells2[i][1];
@@ -7517,7 +7578,7 @@ function rotateSel(){
     buildNCPanel();
     rotated=true;
     if(_ncp&&_ncp.cat==='tire'&&selNCRot===1){
-      showBanner('⚠ SIDEWAYS TIRE · a safety warning on placement (water clears it).','warn',2400);
+      showBanner('⚠ SIDEWAYS TIRE · a safety warning on placement. Locking a new full shelf clears your most recent open warning.','warn',2400);
     }
   } else if(selBag>=0&&G.bagSlots[selBag]){
     var bs=G.bagSlots[selBag];
@@ -8611,9 +8672,9 @@ var DEMO_SCRIPT=[
    r:'Start this course offset from the one below. Staggered joints spread weight across pieces · bricklayers never stack seam over seam.'},
   {src:'reg',n:'CARTON',w:3,h:2,gx:5, gy:8, rot:0,
    p:'BRIDGE THE SEAMS BELOW',
-   r:'Each piece bridging the joint under it earns a Brick Lock. A wall cannot split along a seam that nothing crosses.'},
+   r:'Bridge the seams. Four pieces offset from the piece under them earn the wall its one Brick Lock. A wall cannot split along a seam that nothing crosses.'},
   {src:'reg',n:'CARTON',w:3,h:2,gx:8, gy:8, rot:0,
-   p:'STAGGER PAYS OFF ON EVERY PIECE',
+   p:'STAGGER THE SEAMS',
    r:'Shelf-1 seams sat at 3, 6, 9, 12; this course breaks them at 2, 5, 8, 11 · offset everywhere.'},
   {src:'reg',n:'CARTON-F',w:4,h:2,gx:11,gy:8,rot:0,
    p:'A WIDE PIECE CARRIES THE STAGGER ACROSS',
@@ -8621,9 +8682,9 @@ var DEMO_SCRIPT=[
   {src:'sml',n:'FLAT',w:2,h:1,gx:15,gy:8,rot:0,
    p:'CAP THE NOTCH YOUR PROTRUSION LEFT',
    r:'The rotated carton poked one cell up. A small flat package caps it flush · smalls finish what big freight cannot.'},
-  {src:'bag',n:'SMALLS',w:2,h:2,gx:0,gy:8,rot:0,color:'#7a4dd0',
-   p:'THE HUMBLE BAG JUST LOCKED YOUR SHELF',
-   r:'Seat a smalls bag whole, or double-click it for six gap-fillers. This one closes the last gap and DOUBLE LOCKS the second shelf.'},
+  {src:'sml',n:'SMALLS',w:2,h:2,gx:0,gy:8,rot:0,color:'#7a4dd0', // 3.9.1005 small packages: a real bag is 3x3
+   p:'SMALLS JUST LOCKED YOUR SHELF',
+   r:'Smalls finish what big freight cannot. A whole bag is 3 by 3; double-click one for six gap-fillers. These close the last gap and DOUBLE LOCK the second shelf.'},
 
   // ── 1.4  SEAL: a long plank bars the whole top row (row 7) ──
   {src:'reg',n:'PLANK-XL',w:12,h:1,gx:0,gy:7,rot:0,
@@ -8631,7 +8692,7 @@ var DEMO_SCRIPT=[
    r:'One plank laid across the top is a bar over everything below it · the strongest single lock on the wall.'},
   {src:'sml',n:'PLANK',w:5,h:1,gx:12,gy:7,rot:0,
    p:'FINISH THE BAR · PLANK LOCK IN',
-   r:'Cap the rest of the row and it seals. Every shelf locked, zero voids: a perfect seal. This wall dealt you a favorable hand so you would feel it.'},
+   r:'Cap the rest of the row and it locks. Every shelf so far locked, zero voids. This wall dealt you a favorable hand so you would feel it.'},
 
   // ── 1.5  THE ONE HAZMAT RULE, TAUGHT BY FAILURE (no placement -> STAGE) ──
   {src:'stage',n:'HAZMAT',
@@ -8649,8 +8710,8 @@ var DEMO_TOP=[
   {src:'reg',n:'CARTON',w:3,h:2,gx:6, gy:5,rot:0,p:'NO GAPS',r:''},
   {src:'reg',n:'CARTON',w:3,h:2,gx:9, gy:5,rot:0,p:'WEIGHT STAYS BALANCED',r:''},
   {src:'reg',n:'CARTON',w:3,h:2,gx:12,gy:5,rot:0,p:'BRICKLAYER STAGGER',r:''},
-  {src:'bag',n:'SMALLS',w:2,h:2,gx:15,gy:5,rot:0,color:'#7a4dd0',p:'SHELF LOCKED',r:''},
-  {src:'bag',n:'SMALLS',w:2,h:2,gx:0, gy:3,rot:0,color:'#7a4dd0',p:'BAG FILLS THE CORNER',r:''},
+  {src:'sml',n:'SMALLS',w:2,h:2,gx:15,gy:5,rot:0,color:'#7a4dd0',p:'SHELF LOCKED',r:''},
+  {src:'sml',n:'SMALLS',w:2,h:2,gx:0, gy:3,rot:0,color:'#7a4dd0',p:'SMALLS FILL THE CORNER',r:''},
   {src:'reg',n:'CARTON',w:3,h:2,gx:2, gy:3,rot:0,p:'COURSE BRIDGES THE SEAM',r:''},
   {src:'reg',n:'CARTON',w:3,h:2,gx:5, gy:3,rot:0,p:'NEXT COURSE',r:''},
   {src:'reg',n:'CARTON',w:3,h:2,gx:8, gy:3,rot:0,p:'READING THE WALL',r:''},
@@ -8661,7 +8722,7 @@ var DEMO_TOP=[
   {src:'sml',n:'PLANK',w:5,h:1,gx:0, gy:1,rot:0,p:'TOP COURSE',r:''},
   {src:'sml',n:'PLANK',w:5,h:1,gx:5, gy:1,rot:0,p:'SMALLS IN THE GAPS',r:''},
   {src:'sml',n:'BOARD',w:4,h:1,gx:10,gy:1,rot:0,p:'FILLING THE LAST CELLS',r:''},
-  {src:'sml',n:'STRIP',w:3,h:1,gx:14,gy:1,rot:0,p:'SEALED. PERFECT WALL.',r:''},
+  {src:'sml',n:'STRIP',w:3,h:1,gx:14,gy:1,rot:0,p:'SEALED · 95% PACKED.',r:''},
 ];
 
 // v3.5.152 DEAD-CODE CULL (The Schema) · the legacy timer-driven training (startTraining / toggleTrainingPlay /
@@ -8945,7 +9006,8 @@ function liSignPrepare(){ // the wall-complete card signs Trailer-Load walls onl
 function liShiftSign(){
   var wl=S.wallLog||[],w=wl[wl.length-1];
   if(!w){var m=document.getElementById('np-sign-msg');if(m)m.textContent='Seal a wall first.';return;}
-  liArcadeSign('np','np:'+_liRunN+':'+wl.length,{mode:'shift',score:w.score,integrity:w.integrity,pieces:w.pieces,pack:packPct()});
+  // 3.9.1005 the finished wall's numbers: the wall log was frozen at the first seal, before the keep-loading
+  liArcadeSign('np','np:'+_liRunN+':'+wl.length,{mode:'shift',score:Math.max(w.score||0,(G&&G.score)||0),integrity:Math.round((G&&G.integrity!=null)?G.integrity:(w.integrity||0)),pieces:(typeof gridPieceCount==='function')?gridPieceCount():w.pieces,pack:packPct()});
 }
 function liDailySignPrepare(){
   // READS: _liDailyPay, _liRunN | WRITES: #dr-sign state
@@ -9091,6 +9153,7 @@ function nextTrailer(){
     G.preselectDepth=0;G.preselectWarned=false;G.seamWarned=false;G.segWarned=false;
     G.beltSinceNC=0;G.beltSinceBag=0;
     G.practice=false; // v3.5.161 a practice kick lasts ONE trailer · the next wall is real freight (DISPATCH clock back on)
+    G._dispatchMissed=false;G._ceilCoursePaid=false; // 3.9.1005 per-wall: a missed dispatch or a paid ceiling course belongs to that wall only
     placed=0;startT=null; // v3.5.144 clock deferred to first piece of the new wall
     if(typeof wallBaseline==='function')wallBaseline(); // v3.5.81 per-wall stat baseline (shift advance)
     selBeltIdx=null;selBeltRot=0;selNC=-1;selBag=-1;hCell=null;
@@ -9297,7 +9360,7 @@ function psBuild(){
       '<div><span class="k">DATE</span><span class="v">'+new Date().toISOString().slice(0,10)+'</span></div>'+
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.9.1004</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.9.1005</span></div></div>';
     var _legend='\u25c6 the last sealed wall and this whole session';
     H+='<div class="ps-legend"><span class="sp">'+_legend+'</span><span class="h w">WALL</span><span class="h s">SESSION</span></div>';
     H+='<div class="ps-blocks">';
@@ -9308,10 +9371,10 @@ function psBuild(){
     var _prodDocs=(S.prodIncidents||[]).length;
     H+='<div class="ps-block"><h4><span class="d">\u25b8</span> PRODUCTIVITY \u00b7 REAL FREIGHT</h4>'+
       row('Avg PPH',lwv('pph'),_sessAvgPph)+
-      row('Peak PPH',lwv('pph'),S.bestPPH||0)+
+      row('Peak PPH',null,S.bestPPH||0)+ /* 3.9.1005 a session peak; no per-wall peak is kept */
       row('Hub standard',STANDARD_PPH,STANDARD_PPH)+
       row('\u00b7 met standard?',(lwv('pph')!=null?(lwv('pph')>=STANDARD_PPH?'\u2713 YES':'\u2715 NO'):null),(_sessAvgPph>=STANDARD_PPH?'\u2713 YES':'\u2715 NO'),true)+
-      row('Productivity write-ups',lwv('prodFlag'),_prodDocs)+
+      row('Productivity flags',lwv('prodFlag'),_prodDocs)+ /* 3.9.1005 every second flag becomes a write-up */
       row('Pieces / sec (all)',lwPcsSec,pcsSec)+
       row('Shelves / min',lwShMin,shMin)+
       row('Wall time',(LW&&LW.durS!=null)?psFmtTime(LW.durS):null,tWall)+'</div>';
@@ -9323,16 +9386,16 @@ function psBuild(){
       row('\u00b7 Segregation',null,ic('SEGREGATION'),true)+
       row('\u00b7 Killer',null,ic('KILLER'),true)+
       row('\u00b7 Collapse',null,ic('COLLAPSE'),true)+
-      row('Warnings (total)',lwv('warningsWall'),(S.warnings||[]).length)+
+      row('Warnings (total)',lwv('warningsWall'),S.warnTotal||0)+
       row('\u00b7 washed / mitigated',lwv('safetiesWashed'),S.safetiesWashed||0,true)+
       row('Practice trailers',null,S.practiceKicks||0)+
       row('Crunches',lwv('crunches'),S.crunches||0)+
       row('Collapses',lwv('collapses'),S.collapses||0)+
       row('Recoveries',lwv('recoveries'),S.recoveries||0)+
       row('Hydration breaks',lwv('drinks'),S.drinks||0)+
-      row('\u00b7 with the rhythm bonus',lwv('drinkBonuses'),S.drinkBonuses||0,true)+
+      row('\u00b7 with a water bonus',lwv('drinkBonuses'),S.drinkBonuses||0,true)+
       row('Special handling left sitting',null,S.ncDwellWarn||0)+
-      row('Smalls dwell warnings',null,S.smallsDwellWarn||0)+'</div>';
+      '</div>';
 
     H+='<div class="ps-block"><h4><span class="d">\u25b8</span> LOAD QUALITY</h4>'+
       row('Integrity',lwv('integrity'),avgInt)+
@@ -9381,7 +9444,7 @@ function returnToMenu(){
   gameMode='';
   updateShiftBadge();
   PANIC_THRESHOLD=0.85;PANIC_DURATION=60;
-  S={truck:1,totalScore:0,bestPPH:0,trucksDone:0,intHistory:[],densHistory:[],crunches:0,incidents:[],collapses:0,rotations:0,lifts:0,bagsBroken:0,bagsPlaced:0,totalPieces:0,shelvesLocked:0,doubleLocks:0,recoveries:0,bestTrailerAvg:0,rejects:0,sessionStartT:0,hazShelfLocks:0,nests:0,drinks:0,hazViolations:0,ncDwellWarn:0,smallsDwellWarn:0,stagingActions:0,ncSpawned:0,ncPlaced:0,smallsSpawned:0};
+  S={truck:1,totalScore:0,bestPPH:0,trucksDone:0,intHistory:[],densHistory:[],crunches:0,incidents:[],collapses:0,rotations:0,lifts:0,bagsBroken:0,bagsPlaced:0,totalPieces:0,shelvesLocked:0,doubleLocks:0,recoveries:0,bestTrailerAvg:0,rejects:0,sessionStartT:0,hazShelfLocks:0,nests:0,drinks:0,hazViolations:0,ncDwellWarn:0,stagingActions:0,ncSpawned:0,ncPlaced:0,smallsSpawned:0};
   initTruck();
   showStartMenu();
 }
@@ -9413,7 +9476,7 @@ function checkWin(){
       // v2.1.17 tall but loose: tell the player WHY it won't seal · never silent limbo
       if(Date.now()-winHintT>5000){
         winHintT=Date.now();
-        showBanner('WALL\u2019S TALL BUT LOOSE \u00b7 pack it tighter to seal ('+Math.round(density*100)+'% / '+Math.round(targetD*100)+'% density).','warn',2600);
+        showBanner('WALL\u2019S TALL BUT LOOSE \u00b7 pack it tighter to seal ('+Math.round(density*100)+'% / '+Math.round(targetD*100)+'% packed).','warn',2600);
       }
     }
   }
@@ -9508,7 +9571,7 @@ function togglePause(){
     // v3.5.130 advance every clock PAST the pause so elapsed / PPH / session time never count paused seconds
     // v3.5.212 every clock that can end a run or cost points moves past the pause too, so a break never costs a trailer
     if(_pauseStart){var _pd=Date.now()-_pauseStart;if(typeof startT!=='undefined'&&startT)startT+=_pd;if(S&&S._wallBase&&S._wallBase.startT)S._wallBase.startT+=_pd;if(S&&S.sessionStartT)S.sessionStartT+=_pd;
-      if(panicStartT)panicStartT+=_pd;if(jamStarvedT)jamStarvedT+=_pd;if(recoveryT)recoveryT+=_pd;
+      if(panicStartT)panicStartT+=_pd;if(jamStarvedT)jamStarvedT+=_pd;if(recoveryT)recoveryT+=_pd;if(ncHazardDue)ncHazardDue+=_pd;
       _pauseStart=0;}
     lastLoopT=0; // prevent dt spike on resume
     animF=requestAnimationFrame(loop);
@@ -9795,6 +9858,7 @@ function showDailyComplete(){
   if(sh)sh.style.display='none';if(da)da.style.display='';
   var nb=document.getElementById('next-popup-badge');if(nb)nb.textContent='✓ DAILY WALL SEALED · '+packPct()+'% PACKED';
   liSignPrepare(); // v3.5.202 sign the wall
+  try{liCertOffer();}catch(_ce){} // 3.9.1005 the daily's certificate is graded on the wall you submit
   np.classList.add('vis');
   _elapsedFrozen=(typeof startT!=='undefined'&&startT)?(Date.now()-startT)/1000:0; // freeze PPH while you decide
 }
@@ -9822,7 +9886,7 @@ function restartGame(){
   document.getElementById('ov-end').classList.remove('vis');
   // v2.1.12 FIX: do NOT reset gameMode here · caller (startShift/startRegular) sets it.
   updateShiftBadge();
-  S={truck:1,totalScore:0,bestPPH:0,trucksDone:0,intHistory:[],densHistory:[],crunches:0,incidents:[],collapses:0,rotations:0,lifts:0,bagsBroken:0,bagsPlaced:0,totalPieces:0,shelvesLocked:0,doubleLocks:0,recoveries:0,bestTrailerAvg:0,rejects:0,sessionStartT:0,hazShelfLocks:0,nests:0,drinks:0,hazViolations:0,ncDwellWarn:0,smallsDwellWarn:0,stagingActions:0,ncSpawned:0,ncPlaced:0,smallsSpawned:0};
+  S={truck:1,totalScore:0,bestPPH:0,trucksDone:0,intHistory:[],densHistory:[],crunches:0,incidents:[],collapses:0,rotations:0,lifts:0,bagsBroken:0,bagsPlaced:0,totalPieces:0,shelvesLocked:0,doubleLocks:0,recoveries:0,bestTrailerAvg:0,rejects:0,sessionStartT:0,hazShelfLocks:0,nests:0,drinks:0,hazViolations:0,ncDwellWarn:0,stagingActions:0,ncSpawned:0,ncPlaced:0,smallsSpawned:0};
   initTruck();
   if(animF)cancelAnimationFrame(animF);lastLoopT=0;animF=requestAnimationFrame(loop);
   if(typeof startModeMusic==='function')startModeMusic(); // v3.5.73 open on the mode's track, then continue the playlist
