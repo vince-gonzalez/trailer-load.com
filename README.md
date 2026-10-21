@@ -25,12 +25,12 @@ means the things a loader actually thinks about: heavy low, nothing spanning a
 gap it cannot bridge, fragile off the floor and out from under the weight, and
 the load braced before the doors close.
 
-`lock-in.html` is the game. `dashboard/` is the operator view. `for-districts/`
+`lock-in.html` is the simulator. `dashboard/` is the operator view. `for-districts/`
 is the schools page.
 
 ## Assets
 
-The tapes, tires and cards at the repository root are the game's art, loaded
+The tapes, tires and cards at the repository root are the simulator's art, loaded
 directly rather than bundled, so a new hazard tape is a PNG and a line of
 config rather than a build step.
 

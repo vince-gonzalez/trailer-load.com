@@ -2,6 +2,21 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1003 - FREIGHT LOADING SIMULATOR, AND EVERY 49 CFR CITATION TRUE.
+     I said: "the game should be reconsidered a simulator. as long as it's valid." LOCK IN calls itself a simulator
+     everywhere it names itself: the page titles, search descriptions and share cards (Freight Loading Simulator), the
+     llms files, the programs, district, daily and Day One pages, the dashboard, the README, and the terms and privacy
+     text (dated October 21; the privacy history says only the word changed). The search data types it as an
+     educational application, not a video game. The certificate reads A SIMULATOR ACHIEVEMENT, still NOT A SAFETY
+     CERTIFICATION. Comparisons stay where they describe the feel ("plays like a puzzle game").
+     The validity check found one claim that did not hold. I read the federal segregation table (49 CFR 177.848) at the
+     source: it separates only some class pairs (an oxidizer with a flammable liquid or a corrosive must be kept apart;
+     a PG I zone A poison liquid and a corrosive never share a vehicle), leaves flammable and non-flammable gas with an
+     oxidizer or a corrosive blank, and does not list class 9 at all. It says nothing about loading below the waist. The
+     game told players "49 CFR" for all of it. The rules stay as they are, stricter than the table; the text now calls
+     the height rule and the all-pairs separation the dock rule, and cites 49 CFR 177.848 only where it holds (the
+     write-ups, the banners, Training, Day One, the programs and daily pages).
+
    CHANGE LOG v3.9.1002 - THE START-HERE TAG SITS UNDER TRAINING.
      On a laptop (1366 x 768) and a phone the NEW HERE? START HERE tag sat beside the TRAINING title, squeezed its box to
      26 px, and the word ran under the tag. It has its own line under the title now; measured at 1280, 1366, 1920 and

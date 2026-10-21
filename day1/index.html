@@ -117,7 +117,7 @@ footer a{color:var(--teal);}
 <div class="head">
   <div class="kicker">DAY ONE · THE BRIEFING</div>
   <h1>HOW TO BUILD<br>A FREIGHT WALL.</h1>
-  <p class="standfirst">Every rule the game enforces, in the order you meet them. This is what a loader learns in their first week on a dock, written down, which is not something that normally happens.</p>
+  <p class="standfirst">Every rule the simulator enforces, in the order you meet them. This is what a loader learns in their first week on a dock, written down, which is not something that normally happens.</p>
   <div class="toc">
     <b>ON THIS PAGE</b>
     <a href="#bay">1 The bay</a><a href="#sources">2 Where freight comes from</a><a href="#support">3 Support</a><a href="#shelf">4 The shelf</a><a href="#fragile">5 Fragile</a><a href="#hazmat">6 Hazmat</a><a href="#collapse">7 The six collapses</a><a href="#veteran">8 The veteran moves</a><a href="#pace">9 Pace</a><a href="#record">10 The record</a>
@@ -146,7 +146,7 @@ footer a{color:var(--teal);}
   <h2>Where freight comes from</h2>
   <p class="rule-line">Two. The belt, and the special handling rack beside it.</p>
   <figure>
-    <img src="img/03-full-hud.png" alt="The full game screen: the belt up the middle, the special handling rack, the staging spots on the floor, and the readouts.">
+    <img src="img/03-full-hud.png" alt="The full simulator screen: the belt up the middle, the special handling rack, the staging spots on the floor, and the readouts.">
     <figcaption><b>The whole floor.</b> Belt up the chute, special handling on its rack to the left, three taped staging spots on the floor, your pace and score to the right.</figcaption>
   </figure>
   <table>
@@ -185,7 +185,7 @@ footer a{color:var(--teal);}
   </div>
   <div class="callout">
     <span class="lbl">WHY IT WORKS THIS WAY</span>
-    <p>A box braced hard on both sides is held by friction and pressure, not by what is under it. Loaders use this constantly to close a gap that nothing fits cleanly into. The game models it because the building does.</p>
+    <p>A box braced hard on both sides is held by friction and pressure, not by what is under it. Loaders use this constantly to close a gap that nothing fits cleanly into. The simulator models it because the building does.</p>
   </div>
 </section>
 
@@ -193,7 +193,7 @@ footer a{color:var(--teal);}
 <section class="strip" id="shelf">
   <div class="num">STRIP 04</div>
   <h2>The shelf</h2>
-  <p class="rule-line">Fill all seventeen cells of a row and it locks. This is the whole game.</p>
+  <p class="rule-line">Fill all seventeen cells of a row and it locks. This is the whole job.</p>
   <p>A locked shelf is not just points. It changes the physics of everything above it.</p>
   <ul>
     <li>It <b>heals the wall's integrity</b> on the spot.</li>
@@ -272,7 +272,7 @@ footer a{color:var(--teal);}
   <table>
     <tr><th>Rule</th><th>What it means</th></tr>
     <tr><td><b>Height</b></td><td>Below the waist line, which is the bottom half of the bay. Any part above it is a violation.</td></tr>
-    <tr><td><b>Segregation</b></td><td>Two different hazard classes need two clear cells between them.</td></tr>
+    <tr><td><b>Segregation</b></td><td>Two different hazard classes need two clear cells between them. That is stricter than the federal table (49 CFR 177.848), which separates some pairs only.</td></tr>
     <tr><td><b>Killer pairs</b></td><td>Some class combinations cannot be near each other at all.</td></tr>
   </table>
   <p>Height and segregation both cut your score hard, and both are checked live. <b>Move the piece and the score comes back.</b> That is deliberate: the point is to teach the correction, not to punish one misclick.</p>
@@ -283,7 +283,7 @@ footer a{color:var(--teal);}
     </figure>
     <figure>
       <img src="img/17-hazmat-high.png" alt="The violation shown when hazmat is placed above the waist line.">
-      <figcaption><b>Too high.</b> The rule is drawn from 49 CFR, not invented for the game.</figcaption>
+      <figcaption><b>Too high.</b> Hazmat rides low on this dock so it cannot fall.</figcaption>
     </figure>
   </div>
   <figure>
@@ -292,7 +292,7 @@ footer a{color:var(--teal);}
   </figure>
   <div class="callout bad">
     <span class="lbl">NO SECOND CHANCE ON THIS ONE</span>
-    <p>Crushing a hazmat is written up the first time it happens. Every other mistake in the game needs a pattern before it reaches paper. This one does not, because it is a hurt-somebody event.</p>
+    <p>Crushing a hazmat is written up the first time it happens. Every other mistake in the simulator needs a pattern before it reaches paper. This one does not, because it is a hurt-somebody event.</p>
   </div>
 </section>
 
@@ -300,7 +300,7 @@ footer a{color:var(--teal);}
 <section class="strip" id="collapse">
   <div class="num">STRIP 07</div>
   <h2>The six ways it comes down</h2>
-  <p class="rule-line">Every collapse in the game is one of these six. Learn to recognize them and you stop having them.</p>
+  <p class="rule-line">Every collapse in the simulator is one of these six. Learn to recognize them and you stop having them.</p>
   <h3>1 · No support</h3>
   <p>Refused outright. Nothing breaks, you just lose the moment. This is the cheap one.</p>
   <h3>2 · A tire on its edge</h3>
@@ -378,7 +378,7 @@ footer a{color:var(--teal);}
   <p class="rule-line">Two hundred and fifty pieces an hour. That is the hub standard, and it counts freight only.</p>
   <p>Smalls do not count toward your rate. Neither do bags. Stopping to break down a bag of smalls to chink your gaps is time you are not moving freight, and the clock keeps running while you do it.</p>
   <div class="callout">
-    <span class="lbl">THIS IS NOT A GAME RULE</span>
+    <span class="lbl">THIS IS A FLOOR RULE</span>
     <p>It works this way on the floor for the same reason. A supervisor counts pieces, and a bag of smalls is one piece whether you place it whole or spend four minutes distributing it.</p>
   </div>
   <figure>
@@ -393,7 +393,7 @@ footer a{color:var(--teal);}
 <section class="strip" id="record">
   <div class="num">STRIP 10</div>
   <h2>The record</h2>
-  <p class="rule-line">The game separates a mistake from a pattern, because a workplace does.</p>
+  <p class="rule-line">The simulator separates a mistake from a pattern, because a workplace does.</p>
   <ul>
     <li><b>One broken box is a mistake.</b> It costs you, it breaks your streak, and that is the end of it. It is not a safety event.</li>
     <li><b>A third broken box starts the ladder.</b> Eyes go on you when the trailer keeps having damage, not when it has some.</li>
@@ -415,7 +415,7 @@ footer a{color:var(--teal);}
   <h3>Clocks</h3>
   <p>In TRAILER-LOAD no clock ends your shift. A missed dispatch, a jam the manager breaks, special handling left full, heavy freight left high with no base for 30 seconds, a load rate under 55 for three minutes, or five idle minutes is a strike. A warning comes first. The first strike of a kind costs 5,000, the second 10,000, and the third and every one after 20,000 and a write-up. Four write-ups end the shift. A pause stops every clock.</p>
   <h3>The certificate</h3>
-  <p>The hardest thing in the game, and it is deliberately hard. It needs a wall to the ceiling, packed tight, at full integrity, with <b>zero</b> collapses and <b>zero</b> incidents. Not a good wall. A perfect shift.</p>
+  <p>The hardest thing in the simulator, and it is deliberately hard. It needs a wall to the ceiling, packed tight, at full integrity, with <b>zero</b> collapses and <b>zero</b> incidents. Not a good wall. A perfect shift.</p>
   <figure>
     <img src="img/37-certificate.png" alt="The LOCK IN certificate awarded for a flawless wall.">
     <figcaption><b>The certificate.</b> It takes a sealed wall built to the ceiling, at least 95% packed, integrity 100, with nothing collapsed and no incident on that wall.</figcaption>

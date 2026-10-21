@@ -1,10 +1,10 @@
-LOCK IN · Warehouse Loading Training That Plays Like a Game
+LOCK IN · Freight Loading Simulator
 Source: https://trailer-load.com/  ·  Made by F-Keys Creative LLC (Operations President: Vince Gonzalez)
 
 === WHAT IT IS ===
 LOCK IN is a free, browser-based warehouse trailer-loading training simulator. Pieces ride in on a belt; you stack them into a trailer wall that has to physically hold up. It plays like a puzzle game but models real freight-loading: support and balance, load integrity, locking complete rows into shelves, hazmat placed low, fragiles boxed in on both sides, non-conveyables staged, dead air stuffed inside tires, and a dispatch clock counting down. Every wall is scored on integrity, density, pace, and safety, and ranked from Rookie to Yard Legend.
 
-It runs in any browser with no install and no login required. Gameplay is always free. There are no player accounts. Public boards take three initials. A player's results reach an instructor only after the player joins that instructor's crew with its join code, then a name and 4-digit PIN or a personal code the instructor issued.
+It runs in any browser with no install and no login required. The simulator is always free. There are no player accounts. Public boards take three initials. A player's results reach an instructor only after the player joins that instructor's crew with its join code, then a name and 4-digit PIN or a personal code the instructor issued.
 
 === HOW IT WORKS ===
 1. Build the wall · Select freight, place it, rotate it. Floor-up, support underneath, no floating boxes. The physics won't let you cheat gravity.
@@ -14,10 +14,10 @@ It runs in any browser with no install and no login required. Gameplay is always
 Modes: Training (a trainer builds a full wall one placement at a time, with the reason for every move, then you sign off), Trailer-Load (wall after wall at full tempo; a sealed wall can be signed on the board with three initials), Daily (one shared deterministic wall for every player, resetting 00:00 UTC).
 
 === BUSINESS MODEL: FREE FOR WORKERS, A LICENSE FOR FACILITIES ===
-The game is free forever. What schools and employers pay for is the program license: crews without the 9-person limit, the CSV export, a data agreement and support. Player data is never sold.
+The simulator is free forever. What schools and employers pay for is the program license: crews without the 9-person limit, the CSV export, a data agreement and support. Player data is never sold.
 
 Workers play free:
-- Full game, every mechanic, no paywall.
+- The full simulator, every mechanic, no paywall.
 - No player account: three initials on the boards, nothing else leaves the device without a crew.
 - Nothing about play is sent unless you join an instructor's crew.
 

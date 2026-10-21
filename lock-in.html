@@ -13,20 +13,20 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="LOCK·IN">
 <link rel="apple-touch-icon" href="ring-logo.png">
-<title>LOCK IN · Freight Loading, As a Game | trailer-load.com</title>
+<title>LOCK IN · Freight Loading Simulator | trailer-load.com</title>
 <!-- v3.5.200 the site's front door now opens HERE (index.html forwards to this page), so this page carries
      the description, canonical and link-preview tags the splash used to carry. -->
-<meta name="description" content="A free browser freight-loading game. Play the daily wall, the same one everybody gets, or load endless trailers. No download, no account. Program pricing and an instructor dashboard for CTE schools, trade programs and employers.">
+<meta name="description" content="A free browser freight-loading simulator. Play the daily wall, the same one everybody gets, or load endless trailers. No download, no account. Program pricing and an instructor dashboard for CTE schools, trade programs and employers.">
 <link rel="canonical" href="https://www.trailer-load.com/lock-in.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="LOCK IN">
-<meta property="og:title" content="LOCK IN · Freight Loading, As a Game">
-<meta property="og:description" content="A free browser freight-loading game. One daily wall everybody shares, or endless trailers. No download, no account.">
+<meta property="og:title" content="LOCK IN · Freight Loading Simulator">
+<meta property="og:description" content="A free browser freight-loading simulator. One daily wall everybody shares, or endless trailers. No download, no account.">
 <meta property="og:url" content="https://www.trailer-load.com/lock-in.html">
 <meta property="og:image" content="https://www.trailer-load.com/logo.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="LOCK IN · Freight Loading, As a Game">
-<meta name="twitter:description" content="A free browser freight-loading game. One daily wall everybody shares, or endless trailers.">
+<meta name="twitter:title" content="LOCK IN · Freight Loading Simulator">
+<meta name="twitter:description" content="A free browser freight-loading simulator. One daily wall everybody shares, or endless trailers.">
 <meta name="twitter:image" content="https://www.trailer-load.com/logo.png">
 <!-- NO THIRD-PARTY ANALYTICS ON TRAILER-LOAD.COM (v3.5.169). GA4 was removed before the first K-12 district
      vetting packet: reviewers scan for googletagmanager.com the same way they scan for ad tech, and "we ship zero
@@ -40,7 +40,7 @@
 small,sub,sup{font-size:11px;}
 
 /* ================================================================
-   LOCK IN v3.9.1002
+   LOCK IN v3.9.1003
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -1650,7 +1650,7 @@ body[data-cb="trit"]{
   <div class="fk-tag">AN F&#8209;KEYS PRODUCTION</div>
 </div>
 <div id="boot-splash"><img src="logo.png" alt="LOCK IN"></div>
-<button id="m-pause" onclick="togglePause()" aria-label="Pause game">⏸</button>
+<button id="m-pause" onclick="togglePause()" aria-label="Pause">⏸</button>
 <div id="m-stick" aria-label="Aim joystick"><div id="m-nub"></div></div>
 <div id="m-dpad" aria-label="D-pad">
   <button class="dpb dpb-u" onpointerdown="dpadHold('u',event)" aria-label="Up">▲</button>
@@ -1676,7 +1676,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.9.1002 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.9.1003 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -1791,8 +1791,8 @@ body[data-cb="trit"]{
   </div>
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
-  <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 20)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.9.999: updated Oct 20, the date on the policy; back to "Privacy" after 2026-11-20. -->
-  <div id="sm-footer">LOCK IN v3.9.1002 · © 2026</div>
+  <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 21)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.9.999: updated Oct 20, the date on the policy; back to "Privacy" after 2026-11-20. -->
+  <div id="sm-footer">LOCK IN v3.9.1003 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -1949,7 +1949,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.9.1002 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.9.1003 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -2059,7 +2059,7 @@ body[data-cb="trit"]{
     <button class="cert-btn" onclick="liSaveCert()">⬇ SAVE PNG</button>
     <button class="cert-btn ghost" onclick="liCloseCert()">✕ CLOSE</button>
   </div>
-  <div class="cert-note">This is a game achievement, not a safety certification and not a qualification to load real freight.</div>
+  <div class="cert-note">This is a simulator achievement, not a safety certification and not a qualification to load real freight.</div>
 </div></div>
 
 <div id="next-popup">
@@ -2309,7 +2309,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.9.1002
+// LOCK IN v3.9.1003
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -2788,7 +2788,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.9.1002'; // the version a crew session records · bump WITH the LOCK IN version
+var LI_APP_VER='3.9.1003'; // the version a crew session records · bump WITH the LOCK IN version
 function zBuildSession(){
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
   var inc=S.incidents||[];
@@ -2873,7 +2873,7 @@ function crewClose(){var ov=document.getElementById('ov-crew');if(ov)ov.classLis
 function crewLookup(){
   var el=document.getElementById('crew-code'),code=el?el.value.trim():'';
   if(!code){crewMsg('Enter the crew code from the instructor.','err');return;}
-  if(!LI_LIVE){crewMsg('This copy of the game is not connected. Open trailer-load.com to join a crew.','err');return;}
+  if(!LI_LIVE){crewMsg('This copy of LOCK IN is not connected. Open trailer-load.com to join a crew.','err');return;}
   crewMsg('Checking the code\u2026');
   zRpc('crew_peek',{p_code:code},function(j){
     if(!j){crewMsg('No connection. Try again.','err');return;}
@@ -4332,7 +4332,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
     S.hazViolations=(S.hazViolations||0)+1;playSfx('hazard');addShake(8);
     logIncident('HAZMAT_HIGH',box.hazClass||'');
     flash('fl-crunch');
-    showBanner('☢ HAZMAT TOO HIGH · SCORE HALVED<br><span style="font-size:.72em">DANGEROUS GOODS LOAD LOW · BELOW WAIST (49 CFR). MOVE IT DOWN TO RESTORE.</span>','danger',3200);
+    showBanner('☢ HAZMAT TOO HIGH · SCORE HALVED<br><span style="font-size:.72em">DANGEROUS GOODS LOAD LOW · BELOW THE WAIST (DOCK RULE). MOVE IT DOWN TO RESTORE.</span>','danger',3200);
   }
 
   var d=getDims(box,rot);
@@ -4414,7 +4414,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
 
   checkBulkhead();checkBrickLock();checkRecovery();
   if(!G.seamWarned&&countColumnSeams(G.grid)>0){G.seamWarned=true;showBanner('\u26a0 SEAMS ALIGNED \u00b7 stagger courses like brickwork; aligned seams weaken the wall.','warn',2800);}
-  if(!G.segWarned&&_segA>0){G.segWarned=true;if(typeof playSfx==='function')playSfx('segregation');showBanner('\u2622 SEGREGATION BREACH \u00b7 different hazmat classes need 2 clear cells between them. SCORE HALVED \u00b7 separate them to restore. (49 CFR)','danger',3400);}
+  if(!G.segWarned&&_segA>0){G.segWarned=true;if(typeof playSfx==='function')playSfx('segregation');showBanner('\u2622 SEGREGATION BREACH \u00b7 different hazmat classes need 2 clear cells between them (dock rule). SCORE HALVED \u00b7 separate them to restore.','danger',3400);}
   checkPanelFill();
   checkPanic();
   updateCoachTip();
@@ -4551,7 +4551,10 @@ function countHazmatViolations(grid){
   return n;
 }
 
-// ── v2.1.5 HAZMAT SEGREGATION (49 CFR 177.848, simplified) ──
+// ── v2.1.5 HAZMAT SEGREGATION (a dock rule, stricter than 49 CFR 177.848) ──
+// 3.9.1003 I read 177.848 at the source (eCFR, 2026-10-21). Its table separates only some pairs: 3 or 8 with 5.1 is O
+// (apart so a leak cannot mix), 6.1 PG I zone A with 8 is X (never the same vehicle), and 2.1 or 2.2 with 5.1 or 8
+// is blank; class 9 is not in it. So the player text calls this the dock rule and cites 49 CFR only where it holds.
 // Same class: may touch (max 2; 3+ chain = violation). Different class: need >=2
 // clear cells between nearest edges. Killer pairs: hard violation when too close.
 // Live grid scan like the height rule · separate them and the penalty clears.
@@ -4642,8 +4645,8 @@ var WRITEUP_DOCS={
   TIMEOUT_HEAVY:{t:'HEAVY FREIGHT LEFT UNSUPPORTED',w:'Heavy freight keeps sitting high with no base under it. Build under it or bring it down: a locked shelf or solid support below makes it safe.'},
   HAZMAT_HIGH:{t:'HAZMAT LOADED ABOVE SHOULDER HEIGHT',w:'Hazardous freight rides LOW and LOCKED under a shelf so it can never fall. A high hazmat that falls is a chemical-spill injury and an automatic write-up. Hazmat may not ride loose.'},
   HAZMAT_CRUSH:{t:'HAZMAT LOADED UNDER WEIGHT',w:'Never bury a hazmat under heavy freight \u00b7 crushed containers leak. Load it low, cap it with a LOCKED shelf, put nothing heavy on top.'},
-  KILLER:{t:'INCOMPATIBLE HAZMAT CLASSES IN CONTACT',w:'These two classes react with each other. 49 CFR requires separation \u00b7 a "killer pair" in contact is an automatic write-up.'},
-  SEGREGATION:{t:'HAZMAT SEGREGATION BREACH',w:'Different hazmat classes need clear cells between them (49 CFR segregation table). Keep them apart.'},
+  KILLER:{t:'INCOMPATIBLE HAZMAT CLASSES IN CONTACT',w:'These two classes must not touch. 49 CFR 177.848 requires separation for some of these pairs, such as an oxidizer with a flammable liquid or a corrosive; this dock keeps every listed pair apart. A "killer pair" in contact is an automatic write-up.'},
+  SEGREGATION:{t:'HAZMAT SEGREGATION BREACH',w:'Different hazmat classes need two clear cells between them. That is the dock rule, stricter than the federal segregation table (49 CFR 177.848), which separates some class pairs only. Keep them apart.'},
   TIRE_STACK:{t:'TIRES STACKED VERTICALLY',w:'Tires stacked on their edge ROLL the second the door opens. Lay them flat \u00b7 an obvious hazard is an immediate write-up.'},
   FRAGILE_CRUSH:{t:'REPEATED CRUSHED FRAGILES',w:'Only the heaviest freight crushes, and it has landed on exposed fragiles repeatedly. Height does not protect them · crushed fragiles are damage claims. Put a real box on each side of every fragile, or lock a shelf under it first.'},
   COLLAPSE:{t:'REPEATED WALL COLLAPSES',w:'The wall has collapsed repeatedly. Taper stacks (wide base, narrow top) and lock shelves. Repeated collapses are documented.'},
@@ -5658,7 +5661,7 @@ function packPct(){return (typeof countFilled==='function'&&typeof GW!=='undefin
 // The image is a crop of THEIR OWN WALL off the live scene canvas. Every wall
 // is near-unique, so the artifact is personal, and it is the only thing in the
 // product a player would share unprompted.
-// HONESTY: the card states on its face that it is a game achievement. The Terms
+// HONESTY: the card states on its face that it is a simulator achievement. The Terms
 // disclaim certification; this must never contradict that.
 //
 // v3.5.186 THE BAR, RECALIBRATED AGAINST THE RECORD. v3.5.185 required all 340
@@ -5802,7 +5805,7 @@ function liDrawCert(){
   c.beginPath(); c.moveTo(70,1140); c.lineTo(W2-70,1140); c.stroke();
 
   c.fillStyle='#8a7860'; c.font="16px 'Share Tech Mono',monospace";
-  c.fillText('A GAME ACHIEVEMENT \u00b7 NOT A SAFETY CERTIFICATION', W2/2, 1180);
+  c.fillText('A SIMULATOR ACHIEVEMENT \u00b7 NOT A SAFETY CERTIFICATION', W2/2, 1180);
   c.fillText('AND NOT A QUALIFICATION TO LOAD REAL FREIGHT', W2/2, 1206);
   c.fillStyle='#c8791e'; c.font="24px 'Share Tech Mono',monospace";
   c.fillText('trailer-load.com', W2/2, 1252);
@@ -8615,7 +8618,7 @@ var DEMO_SCRIPT=[
   // ── 1.5  THE ONE HAZMAT RULE, TAUGHT BY FAILURE (no placement -> STAGE) ──
   {src:'stage',n:'HAZMAT',
    p:'HAZMAT CAME LATE · AND THERE IS NO LEGAL LOW SLOT',
-   r:'Dangerous goods load below the waist (49 CFR). This wall is sealed, with nowhere low to put it. You do not force it high and halve your score · you STAGE it for the next trailer.'},
+   r:'Dangerous goods load below the waist (dock rule). This wall is sealed, with nowhere low to put it. You do not force it high and halve your score · you STAGE it for the next trailer.'},
 ];
 
 // v2.1.26 · MENU SHOWCASE CONTINUATION. Appended after the Lesson-1 placements
@@ -9276,7 +9279,7 @@ function psBuild(){
       '<div><span class="k">DATE</span><span class="v">'+new Date().toISOString().slice(0,10)+'</span></div>'+
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.9.1002</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.9.1003</span></div></div>';
     var _legend='\u25c6 the last sealed wall and this whole session';
     H+='<div class="ps-legend"><span class="sp">'+_legend+'</span><span class="h w">WALL</span><span class="h s">SESSION</span></div>';
     H+='<div class="ps-blocks">';
