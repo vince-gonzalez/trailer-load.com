@@ -11,8 +11,10 @@
 --   3. every 3.x player record goes: sessions, walls, daily scores, follows, recovery codes, handles, 3.x crews, seasons
 --   4. the 3.x functions, views, triggers and private helpers go, so a browser still running a cached 3.x page can
 --      write nothing (no sign-up, no session, no follow)
---   5. the 20 player accounts (username@players.lockin.app) are deleted, with their sign-ins
--- The one email login (last signed in 2026-06-08) is NOT touched here. Vince decides it separately.
+--   5. every account from before 4.0 is deleted, with its sign-ins: the 20 player accounts (username@players.lockin.app)
+--      and the one email login (last signed in 2026-06-08; his call 2026-10-20: "Delete it with the players"). An account
+--      made on or after 2026-10-21, or one that runs a 4.0 crew, is never touched, so a 4.0 instructor account is safe
+--      whichever order the ship steps run in.
 
 begin;
 
@@ -55,12 +57,15 @@ drop function if exists lockin_private.facilities_keep_license(), lockin_private
   lockin_private.share_active(uuid), lockin_private.showcase_guest_rows(), lockin_private.showcase_life(),
   lockin_private.showcase_ok(), lockin_private.showcase_sessions(), lockin_private.showcase_walls() cascade;
 
--- 5. the player accounts
-delete from auth.users where email like '%@players.lockin.app';
+-- 5. every account from before 4.0
+delete from auth.users u
+ where u.email like '%@players.lockin.app'
+    or (u.created_at < timestamptz '2026-10-21 00:00:00+00'
+        and not exists (select 1 from public.lockin_crews c where c.owner_uid = u.id));
 
 commit;
 
 -- AFTER: confirm with a read
---   select count(*) from auth.users;                         -- 1 (the email login) plus any 4.0 instructors
+--   select count(*) from auth.users;                         -- only 4.0 instructor accounts
 --   select count(*) from public.lockin_arcade where user_id is not null;   -- 0
 --   select jobname, schedule from cron.job;                  -- lockin-purge-inactive-instructors, 30 4 1 * *
