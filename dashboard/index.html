@@ -9,7 +9,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LOCK IN · Instructor Dashboard | trailer-load.com</title>
 <meta name="description" content="LOCK IN instructor dashboard · make a crew, give out its join code, and see each person's loading practice results.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self' https://igqpgsqogfrpujdgvefs.supabase.co; frame-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self'; frame-src 'none'; base-uri 'self'; form-action 'self'">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23140d08'/%3E%3Crect x='16' y='16' width='32' height='32' rx='3' fill='%23c8791e'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#c8791e">
 <link rel="canonical" href="https://www.trailer-load.com/dashboard/">
@@ -18,12 +18,15 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 /* ══════════════════════════════════════════════════════════════════════════
-   THE INSTRUCTOR DASHBOARD · v3.0 (LOCK IN 4.0, 2026-10-20)
-   LOCK IN 4.0 has no player accounts. The instructor is the only account: an email and a password, made here. An
+   THE INSTRUCTOR DASHBOARD · v3.1 (LOCK IN 4.0, 2026-10-21)
+   LOCK IN 4.0 has no player accounts. The instructor is the only account: an email and a password, made here and
+   confirmed by email; the instructor can change the password, reset a lost one by email, and unlock the account by
+   email after 5 wrong passwords. An
    instructor makes a crew, picks how people join it (a name and a 4-digit PIN they choose, or a personal code the
    instructor hands each person), and gives out the crew's join code. This page shows each crew's roster and results.
-   A licensed crew has no 9-person cap and exports every wall and session to CSV. Every read and write is a database
-   function that checks the instructor owns the crew (.db/lockin-4.0.sql); this page is not the gate.
+   A licensed crew has no 9-person cap and exports every wall and session to CSV. Every read and write goes through
+   the LOCK IN API, which checks that the signed-in instructor owns the crew (api/lockin-api.js); this page is not the
+   gate. v3.1 (2026-10-21) moved from a hosted database to the site's own API.
    v2.x (the licensed cohort sheets, the showcase, guests) is in the change log; none of it survives the account cut.
 
    CONTRAST, computed against the clipboard page #e8e4da (L=0.7657), never
@@ -170,7 +173,7 @@ tbody tr:hover td{background:#f6efdd;}
     <button class="tab" id="tab-new" aria-pressed="false" onclick="dMode('new')">Create an account</button>
   </div>
   <label class="fld" id="f-email"><span>Email</span><input id="li-email" type="email" autocomplete="email" autocapitalize="off" spellcheck="false"></label>
-  <label class="fld" id="f-pw"><span>Password <small>(8 or more characters)</small></span><input id="li-pw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')dSubmit();"></label>
+  <label class="fld" id="f-pw"><span>Password <small>(12 or more characters)</small></span><input id="li-pw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')dSubmit();"></label>
   <label class="fld" id="f-pw2" style="display:none"><span>Password again</span><input id="li-pw2" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')dSubmit();"></label>
   <div class="row">
     <button class="btn" id="li-go" onclick="dSubmit()">SIGN IN</button>
@@ -183,7 +186,7 @@ tbody tr:hover td{background:#f6efdd;}
 <!-- a password-reset link from email lands here -->
 <div id="reset" style="display:none;position:relative;z-index:2;max-width:460px;margin:60px auto;background:var(--paper2);border:1px solid var(--line2);border-radius:10px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.5);">
   <h1 style="font-family:'Bebas Neue',sans-serif;font-size:31px;letter-spacing:1px;margin:0 0 10px;">SET A NEW PASSWORD</h1>
-  <label class="fld"><span>New password <small>(8 or more characters)</small></span><input id="rs-pw" type="password" autocomplete="new-password"></label>
+  <label class="fld"><span>New password <small>(12 or more characters)</small></span><input id="rs-pw" type="password" autocomplete="new-password"></label>
   <label class="fld"><span>New password again</span><input id="rs-pw2" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')dSetPassword();"></label>
   <button class="btn" onclick="dSetPassword()">SAVE THE PASSWORD</button>
   <div id="rs-msg" class="msg" role="status" aria-live="polite"></div>
@@ -191,6 +194,18 @@ tbody tr:hover td{background:#f6efdd;}
 
 <!-- THE DASHBOARD -->
 <div id="dash"><div class="wrap">
+  <!-- CHANGE THE PASSWORD: opened from the bar at the top -->
+  <div class="board noprint" id="pwbox" style="display:none;">
+    <div class="clip">LOCK-IN</div>
+    <div class="hdr"><div><div class="t">CHANGE THE PASSWORD</div><div class="s">Any other device signed in to this account is signed out.</div></div></div>
+    <div class="sec">
+      <label class="fld"><span>Current password</span><input id="pw-cur" type="password" autocomplete="current-password"></label>
+      <label class="fld"><span>New password <small>(12 or more characters)</small></span><input id="pw-new" type="password" autocomplete="new-password"></label>
+      <label class="fld"><span>New password again</span><input id="pw-new2" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')dChangePw();"></label>
+      <div class="row"><button class="btn" onclick="dChangePw()">SAVE THE PASSWORD</button><button class="btn ghost small" onclick="dPwBox(false)">CANCEL</button></div>
+      <div id="pw-msg" class="msg" role="status" aria-live="polite"></div>
+    </div>
+  </div>
   <div class="board">
     <div class="clip">LOCK-IN</div>
     <div class="hdr"><div><div class="t">YOUR CREWS</div><div class="s">A crew is a class or a cohort. Each has its own join code.</div></div></div>
@@ -249,67 +264,49 @@ tbody tr:hover td{background:#f6efdd;}
 
 <script>
 // ══════════════════════════════════════════════════════════════════════════
-// INSTRUCTOR DASHBOARD v3.0 (LOCK IN 4.0)
-// WORKFLOW STACK: boot (a reset link, a stored sign-in, or the sign-in form) -> sign in / create an account ->
-//   YOUR CREWS (crew_mine) -> MAKE A CREW (crew_create) -> open a crew (crew_roster) -> add a name (crew_seat_add),
-//   reset a PIN or a code (crew_member_reset), remove a person (crew_member_remove), delete the crew (crew_delete),
-//   export CSV on a licensed crew (crew_export_walls, crew_export_sessions) -> sign out.
-// ASSET MANIFEST: /fonts/fonts.css, /lockbackdrop.png, the LOCK IN database (Supabase: Auth for the instructor,
-//   database functions for everything else).
+// INSTRUCTOR DASHBOARD v3.1 (LOCK IN 4.0)
+// WORKFLOW STACK: boot (a link from an email, a signed-in session, or the sign-in form) -> create an account (confirmed
+//   by email) / sign in -> YOUR CREWS (crew_mine) -> MAKE A CREW (crew_create) -> open a crew (crew_roster) -> add a
+//   name (crew_seat_add), reset a PIN or a code (crew_member_reset), remove a person (crew_member_remove), delete the
+//   crew (crew_delete), export CSV on a licensed crew (crew_export_walls, crew_export_sessions) -> change the password
+//   -> sign out. Forgot the password, and the unlock after 5 wrong passwords, come back here as links from email.
+// ASSET MANIFEST: /fonts/fonts.css, /lockbackdrop.png, this site's /api (the LOCK IN API, api/lockin-api.js in the
+//   repository: /api/auth for the account, /api/rpc for everything else).
+// The sign-in is an HttpOnly cookie the API sets. This page never sees it, never stores a token, and keeps only the
+// signed-in email in memory.
 // ══════════════════════════════════════════════════════════════════════════
 var DASH={
-  endpoint:'https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1',
-  authUrl:'https://igqpgsqogfrpujdgvefs.supabase.co/auth/v1',
-  anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo',
-  rpcPrefix:'lockin_', store:'lockinDashAuth',
-  session:null, mode:'in', crews:[], cur:null, crew:null, roster:[]
+  api:'/api/', pwMin:12,
+  session:null, mode:'in', crews:[], cur:null, crew:null, roster:[], link:null
 };
 function dEsc(s){return (''+(s==null?'':s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function dNum(v){return (v==null||isNaN(v))?0:(+v);}
 function dSet(id,t,cls){var e=document.getElementById(id);if(e){e.textContent=t||'';e.className='msg'+(cls?(' '+cls):'');}}
 function dDate(t){if(!t)return '·';try{var d=new Date(t);return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});}catch(e){return '·';}}
+function dVal(id){return document.getElementById(id).value;}
+function dClear(ids){var i;for(i=0;i<ids.length;i++)document.getElementById(ids[i]).value='';}
 
-// ── THE INSTRUCTOR'S SIGN-IN ──
-// READS/WRITES: localStorage lockinDashAuth, DASH.session
-function dSave(j,email){
-  DASH.session={access_token:j.access_token,refresh_token:j.refresh_token,exp:Date.now()+((j.expires_in||3600)*1000),email:email||(DASH.session&&DASH.session.email)||''};
-  try{localStorage.setItem(DASH.store,JSON.stringify(DASH.session));}catch(e){console.error('dSave:',e);}
-}
-function dForget(){DASH.session=null;try{localStorage.removeItem(DASH.store);}catch(e){}}
-function dAuth(path,body,cb,tok){
+// ── ONE DOOR TO THE API ──
+// cb(json, status); json is null when no usable answer came, status 0 when there was no connection
+function dPost(path,body,cb){
   try{
-    var h={'Content-Type':'application/json','apikey':DASH.anonKey};if(tok)h['Authorization']='Bearer '+tok;
-    fetch(DASH.authUrl+path,{method:tok&&path==='/user'?'PUT':'POST',headers:h,body:JSON.stringify(body||{})})
-      .then(function(r){var st=r.status;return r.json().then(function(j){return {st:st,j:j};},function(){return {st:st,j:{}};});})
-      .then(function(x){cb(x.j||{},x.st);})
-      .catch(function(e){console.error('dAuth:',e);cb(null,0);});
-  }catch(e){console.error('dAuth:',e);cb(null,0);}
+    fetch(DASH.api+path,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})})
+      .then(function(r){var st=r.status;return r.json().then(function(j){return {st:st,j:j};},function(){return {st:st,j:null};});})
+      .then(function(x){cb(x.j,x.st);})
+      .catch(function(e){console.error('dPost '+path+':',e);cb(null,0);});
+  }catch(e){console.error('dPost '+path+':',e);cb(null,0);}
 }
-function dAuthErr(j,fallback){return (j&&(j.error_description||j.msg||j.message||j.error))||fallback;}
-// a live token, refreshed if it is about to expire; cb(false) means sign in again
-function dToken(cb){
-  var s=DASH.session;if(!s||!s.access_token){cb(false);return;}
-  if(Date.now()<s.exp-30000){cb(true);return;}
-  if(!s.refresh_token){dForget();cb(false);return;}
-  dAuth('/token?grant_type=refresh_token',{refresh_token:s.refresh_token},function(j){
-    if(j&&j.access_token){dSave(j);cb(true);}else{dForget();cb(false);}
-  });
-}
-// one door to the database for the instructor: cb(json) or cb(null) when there was no usable answer
+// an instructor call: cb(json) or cb(null); a 401 means the session ended, so back to the sign-in form
+// READS/WRITES: DASH.session
 function dRpc(fn,body,cb){
-  dToken(function(ok){
-    if(!ok){dShowLogin('Your sign-in expired. Sign in again.','err');return;}
-    try{
-      fetch(DASH.endpoint+'/rpc/'+DASH.rpcPrefix+fn,{method:'POST',headers:{'Content-Type':'application/json','apikey':DASH.anonKey,'Authorization':'Bearer '+DASH.session.access_token},body:JSON.stringify(body||{})})
-        .then(function(r){var ok2=r.ok,st=r.status;return r.json().then(function(j){return {ok:ok2,st:st,j:j};},function(){return {ok:ok2,st:st,j:null};});})
-        .then(function(x){
-          if(x.st===401||x.st===403){dForget();dShowLogin('Your sign-in expired. Sign in again.','err');return;}
-          cb(x.ok?x.j:null);
-        })
-        .catch(function(e){console.error(fn+':',e);cb(null);});
-    }catch(e){console.error(fn+':',e);cb(null);}
+  dPost('rpc/'+fn,body,function(j,st){
+    if(st===401||st===403){DASH.session=null;dShowLogin('Your sign-in expired. Sign in again.','err');return;}
+    cb(st===200?j:null);
   });
 }
+function dAnswer(j,st,fallback){return (j&&(j.msg||j.err))||(st?fallback:'No connection. Try again.');}
+
+// ── THE INSTRUCTOR'S ACCOUNT ──
 function dMode(m){
   DASH.mode=m;var nw=(m==='new');
   document.getElementById('tab-in').classList.toggle('on',!nw);document.getElementById('tab-in').setAttribute('aria-pressed',nw?'false':'true');
@@ -322,59 +319,76 @@ function dMode(m){
   dSet('login-msg','');
 }
 function dSubmit(){
-  var em=document.getElementById('li-email').value.trim(),pw=document.getElementById('li-pw').value,pw2=document.getElementById('li-pw2').value;
+  var em=dVal('li-email').trim(),pw=dVal('li-pw'),pw2=dVal('li-pw2');
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){dSet('login-msg','Enter an email address.','err');return;}
-  if(pw.length<8){dSet('login-msg','The password needs 8 or more characters.','err');return;}
+  if(pw.length<DASH.pwMin){dSet('login-msg','The password needs '+DASH.pwMin+' or more characters.','err');return;}
   if(DASH.mode==='new'){
     if(pw!==pw2){dSet('login-msg','The two passwords do not match.','err');return;}
     dSet('login-msg','Creating the account…');
-    dAuth('/signup',{email:em,password:pw},function(j,st){
-      if(j&&j.access_token){dSave(j,em);dEnter();return;}
-      if(j&&(j.id||(j.user&&j.user.id))&&!j.access_token){dSet('login-msg','Account made. Open the confirmation email sent to '+em+', then sign in here.','good');dMode('in');return;}
-      dSet('login-msg',dAuthErr(j,st?'Could not create the account.':'No connection. Try again.'),'err');
+    dPost('auth/signup',{email:em,password:pw},function(j,st){
+      if(j&&j.ok){dClear(['li-pw','li-pw2']);dMode('in');dSet('login-msg',j.msg,'good');return;}
+      dSet('login-msg',dAnswer(j,st,'Could not create the account.'),'err');
     });
     return;
   }
   dSet('login-msg','Signing in…');
-  dAuth('/token?grant_type=password',{email:em,password:pw},function(j,st){
-    if(j&&j.access_token){dSave(j,em);document.getElementById('li-pw').value='';dEnter();return;}
-    dSet('login-msg',st?dAuthErr(j,'Email or password is wrong.'):'No connection. Try again.','err');
+  dPost('auth/login',{email:em,password:pw},function(j,st){
+    if(j&&j.ok){DASH.session={email:j.email};dClear(['li-pw']);dEnter();return;}
+    dSet('login-msg',dAnswer(j,st,'Email or password is wrong.'),'err');
   });
 }
 function dForgot(){
-  var em=document.getElementById('li-email').value.trim();
+  var em=dVal('li-email').trim();
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){dSet('login-msg','Type the account email above, then choose Forgot the password.','err');return;}
-  dAuth('/recover?redirect_to='+encodeURIComponent(location.origin+'/dashboard/'),{email:em},function(j,st){
-    dSet('login-msg',st&&st<300?'If '+em+' has an instructor account, a reset link is on its way. It opens this page.':dAuthErr(j,'Could not send the reset email.'),st&&st<300?'good':'err');
-  });
+  dPost('auth/forgot',{email:em},function(j,st){dSet('login-msg',dAnswer(j,st,'Could not send the reset email.'),(j&&j.ok)?'good':'err');});
 }
-// a reset link arrives as #access_token=...&type=recovery
-function dRecoveryToken(){var h=location.hash||'';if(h.indexOf('type=recovery')<0)return null;var m=h.match(/access_token=([^&]+)/);return m?decodeURIComponent(m[1]):null;}
+// a link from an email arrives as #verify=, #reset= or #unlock= and 64 hex characters
+function dLink(){var m=(location.hash||'').match(/^#(verify|reset|unlock)=([0-9a-f]{64})$/);return m?{kind:m[1],token:m[2]}:null;}
 function dSetPassword(){
-  var a=document.getElementById('rs-pw').value,b=document.getElementById('rs-pw2').value,tok=dRecoveryToken();
-  if(a.length<8){dSet('rs-msg','The password needs 8 or more characters.','err');return;}
+  var a=dVal('rs-pw'),b=dVal('rs-pw2'),l=DASH.link;
+  if(a.length<DASH.pwMin){dSet('rs-msg','The password needs '+DASH.pwMin+' or more characters.','err');return;}
   if(a!==b){dSet('rs-msg','The two passwords do not match.','err');return;}
-  if(!tok){dSet('rs-msg','This reset link is incomplete. Ask for a new one.','err');return;}
-  dAuth('/user',{password:a},function(j,st){
-    if(st&&st<300){try{history.replaceState(null,'',location.pathname);}catch(e){}document.getElementById('reset').style.display='none';dShowLogin('Password saved. Sign in with it.','good');}
-    else dSet('rs-msg',dAuthErr(j,'The link has expired. Ask for a new one.'),'err');
-  },tok);
+  if(!l||l.kind!=='reset'){dSet('rs-msg','This reset link is incomplete. Ask for a new one.','err');return;}
+  dSet('rs-msg','Saving…');
+  dPost('auth/reset',{token:l.token,password:a},function(j,st){
+    if(j&&j.ok){DASH.link=null;dClear(['rs-pw','rs-pw2']);document.getElementById('reset').style.display='none';dShowLogin(j.msg,'good');return;}
+    dSet('rs-msg',dAnswer(j,st,'The link has expired. Ask for a new one.'),'err');
+  });
 }
 function dShowLogin(t,cls){
   document.getElementById('dash').style.display='none';document.getElementById('who').style.display='none';
   document.getElementById('login').style.display='';dMode('in');if(t)dSet('login-msg',t,cls);
 }
+// the sign-in form comes back only once the API has ended the session, so a quick sign-in cannot be undone by it
 function dSignOut(){
-  var tok=DASH.session&&DASH.session.access_token;dForget();
-  if(tok){try{fetch(DASH.authUrl+'/logout?scope=local',{method:'POST',headers:{'apikey':DASH.anonKey,'Authorization':'Bearer '+tok}}).catch(function(){});}catch(e){}}
-  DASH.cur=null;document.getElementById('crew-board').style.display='none';dShowLogin('Signed out.','good');
+  DASH.session=null;DASH.cur=null;dPwBox(false);document.getElementById('crew-board').style.display='none';
+  dSet('mk-msg','Signing out…');
+  dPost('auth/logout',{},function(j,st){dSet('mk-msg','');dShowLogin(st?'Signed out.':'Signed out on this page. No connection reached the server, so sign out again when it is back.',st?'good':'err');});
+}
+// CHANGE THE PASSWORD: the current one first; every other device signs out; the account is emailed
+function dPwBox(on){
+  var b=document.getElementById('pwbox');b.style.display=on?'block':'none';
+  dClear(['pw-cur','pw-new','pw-new2']);dSet('pw-msg','');
+  if(on)document.getElementById('pw-cur').focus();
+}
+function dChangePw(){
+  var cur=dVal('pw-cur'),a=dVal('pw-new'),b=dVal('pw-new2');
+  if(!cur){dSet('pw-msg','Type the current password.','err');return;}
+  if(a.length<DASH.pwMin){dSet('pw-msg','The new password needs '+DASH.pwMin+' or more characters.','err');return;}
+  if(a!==b){dSet('pw-msg','The two new passwords do not match.','err');return;}
+  dSet('pw-msg','Saving…');
+  dPost('auth/password',{current:cur,password:a},function(j,st){
+    if(st===401){DASH.session=null;dShowLogin('Your sign-in expired. Sign in again.','err');return;}
+    if(j&&j.ok){dClear(['pw-cur','pw-new','pw-new2']);dSet('pw-msg',j.msg,'good');return;}
+    dSet('pw-msg',dAnswer(j,st,'Could not change the password.'),'err');
+  });
 }
 
 // ── YOUR CREWS ──
 function dEnter(){
-  document.getElementById('login').style.display='none';document.getElementById('dash').style.display='block';
+  document.getElementById('login').style.display='none';document.getElementById('reset').style.display='none';document.getElementById('dash').style.display='block';
   var w=document.getElementById('who');w.style.display='flex';
-  w.innerHTML='<span><b>'+dEsc(DASH.session.email||'Instructor')+'</b></span><button class="btn ghost small" onclick="dSignOut()">SIGN OUT</button>';
+  w.innerHTML='<span><b>'+dEsc(DASH.session.email||'Instructor')+'</b></span><button class="btn ghost small" onclick="dPwBox(true)">CHANGE PASSWORD</button><button class="btn ghost small" onclick="dSignOut()">SIGN OUT</button>';
   dCrews();
 }
 function dCrews(open){
@@ -524,11 +538,21 @@ function dExport(){
 }
 
 // ── BOOT ──
+// A link from an email is read once and wiped from the address bar, so it never stays in the history or a bookmark.
 function dBoot(){
-  if(dRecoveryToken()){document.getElementById('login').style.display='none';document.getElementById('reset').style.display='block';return;}
-  try{var r=localStorage.getItem(DASH.store);if(r)DASH.session=JSON.parse(r);}catch(e){DASH.session=null;}
-  if(DASH.session&&DASH.session.access_token&&DASH.session.email!==undefined&&DASH.session.exp){dToken(function(ok){if(ok)dEnter();else dShowLogin('Your sign-in expired. Sign in again.','err');});}
-  else{dForget();dShowLogin();}
+  var l=dLink();
+  if(l){try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}}
+  if(l&&l.kind==='reset'){DASH.link=l;document.getElementById('login').style.display='none';document.getElementById('reset').style.display='block';document.getElementById('rs-pw').focus();return;}
+  if(l){
+    dShowLogin(l.kind==='verify'?'Confirming the email…':'Unlocking the account…');
+    dPost('auth/'+l.kind,{token:l.token},function(j,st){dShowLogin(dAnswer(j,st,'That link did not work. Ask for a new one.'),(j&&j.ok)?'good':'err');});
+    return;
+  }
+  document.getElementById('login').style.display='none';
+  dPost('auth/me',{},function(j,st){
+    if(j&&j.ok){DASH.session={email:j.email};dEnter();return;}
+    dShowLogin(st?'':'No connection. Reload to try again.',st?'':'err');
+  });
 }
 dBoot();
 </script>

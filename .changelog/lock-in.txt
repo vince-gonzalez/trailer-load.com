@@ -2,6 +2,22 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1007 - LOCK IN MOVES TO ITS OWN API (STAGING AND THE SANDBOX ONLY; NOTHING SHIPS).
+     I asked to retire the hosted database 4.0 was built on and run the backend on the account that already serves the
+     site. The backend is now the LOCK IN API: one serverless worker (api/lockin-api.js) on one SQL database
+     (api/schema.sql). Every page calls the site's own /api, and no page carries a key. Every 4.0 database function is
+     ported with the same name, inputs and answers. The instructor account is the API's own: a sign-up is confirmed by
+     email; the instructor can change the password (every other device signs out and the account is emailed), reset a
+     lost one by email, and unlock the account from an email after 5 wrong passwords. Passwords and PINs are
+     PBKDF2-SHA256 with a salt, and session, device and link tokens are kept only as SHA-256 hashes. The sign-in is an
+     HttpOnly cookie the page cannot read. Passwords are 12 characters or more. A confirmation link carries the password
+     it was made with, so someone who signs up first with another person's email cannot keep the account. A PIN is
+     hashed in 1,000 rounds, not 15,000: a 4-digit PIN has 10,000 values, the 5-wrong-PIN lock is what protects it, and
+     at 15,000 rounds a class joining at once would run the free plan's CPU limit. Daily caps on visits, event totals and
+     board signatures protect the free plan's write budget, which every database on the account shares. The sandbox
+     and production share one database, the sandbox on lab_ tables and production on li_; only lab_ exists so far. With
+     no email sender set, the sandbox writes each email to its outbox table. Live stays 3.9.999 on the old backend.
+
    CHANGE LOG v3.9.1006 - THE TESTER CREW'S FOUR BLOCKING FINDINGS, FIXED.
      The tester crew read every served page and blocked on four things. The canvases inside the staging tiles (desktop
      and phone) and the conveyor belt are art inside controls that already carry a name, so screen readers now skip

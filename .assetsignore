@@ -7,3 +7,5 @@
 .tools
 *.md
 node_modules
+api
+.db

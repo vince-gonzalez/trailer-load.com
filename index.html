@@ -37,9 +37,8 @@
     try{counted=sessionStorage.getItem('liVisited')==='1';}catch(e){}
     if(!counted){
       try{sessionStorage.setItem('liVisited','1');}catch(e){}
-      var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo';
-      fetch('https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1/rpc/lockin_visit',{method:'POST',keepalive:true,
-        headers:{'apikey':K,'Authorization':'Bearer '+K,'Content-Type':'application/json'},body:'{}'}).catch(function(){});
+      // 3.9.1007 the site's own /api (the LOCK IN API); it was a hosted database, with a public key in the page
+      fetch('/api/rpc/visit',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:'{}'}).catch(function(){});
     }
   }catch(e){}
   try{location.replace('/lock-in.html'+(location.hash||''));}catch(e){location.href='/lock-in.html';}

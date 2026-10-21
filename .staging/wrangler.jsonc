@@ -40,8 +40,17 @@
   // the live site. worker.js reads these.
   "vars": {
     "LAB": "1",
-    "LAB_LABEL": "TEST SUITE — NOT PRODUCTION"
+    "LAB_LABEL": "TEST SUITE, NOT PRODUCTION",
+    // the LOCK IN API (api/lockin-api.js) reads and writes only the lab_ tables; production's are li_
+    "TABLE_PREFIX": "lab_"
   },
+
+  // The LOCK IN database. One database holds the sandbox (lab_) and production (li_) tables, because the free plan
+  // allows 10 databases and the account already had 9. With no email sender set, the API writes every email to the
+  // lab_outbox table instead, so the sandbox can test every link without sending anything.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "trailer-load", "database_id": "99fcb75d-64d0-4d8d-bc6f-31843eaf10b1" }
+  ],
 
   "observability": { "enabled": true }
 }

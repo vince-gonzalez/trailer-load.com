@@ -2,20 +2,33 @@
    TRAILER-LOAD LAB — static asset server for the private test suite
    F-Keys Creative LLC
 
-   Does three things and nothing else:
+   Does four things and nothing else:
      1. serves the repo as static files
      2. stamps X-Robots-Tag: noindex, nofollow on EVERY response
      3. overrides /robots.txt with a full Disallow, so the live robots.txt
         in the repo root is never the one a crawler reads here
+     4. answers /api/* with the LOCK IN API (api/lockin-api.js) on the
+        sandbox's own tables (TABLE_PREFIX lab_), the same code production runs
 
    No analytics. No tracking. No ads. Same standing rules as production.
    ═══════════════════════════════════════════════════════════════════════ */
 
+import { handleApi } from '../api/lockin-api.js';
+
 var ROBOTS = 'User-agent: *\nDisallow: /\n';
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     var url = new URL(request.url);
+
+    // The API. Never an asset: api/ is in .assetsignore, and this runs first.
+    if (url.pathname === '/api' || url.pathname.indexOf('/api/') === 0) {
+      var api = await handleApi(request, env, ctx);
+      var a = new Response(api.body, api);
+      a.headers.set('x-robots-tag', 'noindex, nofollow, noarchive, nosnippet');
+      a.headers.set('x-lab-build', env.LAB_LABEL || 'TEST SUITE');
+      return a;
+    }
 
     // /robots.txt NEVER comes from the asset bundle on the lab build.
     if (url.pathname === '/robots.txt') {

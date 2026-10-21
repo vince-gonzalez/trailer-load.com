@@ -55,7 +55,8 @@ PAGES = public_files()
 ALLOWED = {
     'trailer-load.com', 'www.trailer-load.com',   # self
     'www.f-keys.com',                             # the company that makes it
-    'igqpgsqogfrpujdgvefs.supabase.co',           # the backend, disclosed in the privacy policy
+    # 3.9.1007: the old hosted database's address left the allowlist when LOCK IN moved to its own /api, so a page
+    # that calls it again fails here.
     'schema.org',                                 # JSON-LD vocabulary
     'www.w3.org',                                 # SVG/XML namespace
     'www.sitemaps.org',                           # sitemap schema

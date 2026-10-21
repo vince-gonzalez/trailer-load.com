@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https:; connect-src 'self' https://igqpgsqogfrpujdgvefs.supabase.co; frame-src 'none'; manifest-src 'self' data:; base-uri 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https:; connect-src 'self'; frame-src 'none'; manifest-src 'self' data:; base-uri 'self'">
 <!-- v3.5.155 NO AD TECH ON TRAILER-LOAD.COM · EVER (my order, 2026-07-20). SOPIPA-class student-privacy laws prohibit ad tech on school-purpose services; district vetting scans for the tag. The AdSense account lives on other F-Keys properties only. Do not re-add. -->
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22LOCK%C2%B7IN%22%2C%22short_name%22%3A%22LOCK%C2%B7IN%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23140d08%22%2C%22theme_color%22%3A%22%23c8791e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22ring-logo.png%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
@@ -40,7 +40,7 @@
 small,sub,sup{font-size:11px;}
 
 /* ================================================================
-   LOCK IN v3.9.1006
+   LOCK IN v3.9.1007
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -1675,7 +1675,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.9.1006 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.9.1007 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -1791,7 +1791,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 21)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.9.999: updated Oct 20, the date on the policy; back to "Privacy" after 2026-11-20. -->
-  <div id="sm-footer">LOCK IN v3.9.1006 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.9.1007 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -1948,7 +1948,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.9.1006 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.9.1007 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -2308,7 +2308,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.9.1006
+// LOCK IN v3.9.1007
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -2765,12 +2765,12 @@ var S={truck:1,totalScore:0,bestPPH:0,trucksDone:0,intHistory:[],densHistory:[],
 // The public boards take three initials and nothing else. A crew member is known to their instructor by a name,
 // through the crew's join code and a 4-digit PIN, or through the personal code the instructor handed out. The device
 // keeps a random crew token; the server stores only its hash. Nothing else about a player leaves the device.
-// The anon key is public by design: every table is closed, and every call goes through a database function that
-// checks who is asking (.db/lockin-4.0.sql in the repository).
+// Every call goes to this site's own /api: the LOCK IN API (api/lockin-api.js in the repository). There is no key in
+// the page; each call checks who is asking. (3.9.1007: it was a hosted database, with a public key in the page.)
 // ============================================================
-var ZDATA={endpoint:'https://igqpgsqogfrpujdgvefs.supabase.co/rest/v1',anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlncXBnc3FvZ2ZycHVqZGd2ZWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Njc1MzQsImV4cCI6MjA5NjQ0MzUzNH0.8Pn459HUFkqZu7ORSX15E13u9fWSD96OKR0w6yiuJQo',rpcPrefix:'lockin_',player:null,events:[]};
-// LI_LIVE: the real site and the sandbox (its build sets another rpcPrefix) post; a copy opened anywhere else posts nothing
-var LI_LIVE=/(^|\.)trailer-load\.com$/.test(location.hostname)||ZDATA.rpcPrefix!=='lockin_';
+var ZDATA={api:'/api/rpc/',lab:false,player:null,events:[]};
+// LI_LIVE: the real site and the sandbox (its build sets lab:true) post; a copy opened anywhere else posts nothing
+var LI_LIVE=/(^|\.)trailer-load\.com$/.test(location.hostname)||ZDATA.lab;
 // READS: localStorage liPlayer | WRITES: ZDATA.player
 // The device record holds a crew membership and nothing else. A 3.x record (account, consent switches, device ID)
 // is cut down to that on first read.
@@ -2787,7 +2787,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.9.1006'; // the version a crew session records · bump WITH the LOCK IN version
+var LI_APP_VER='3.9.1007'; // the version a crew session records · bump WITH the LOCK IN version
 function zBuildSession(){
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
   var inc=S.incidents||[];
@@ -2821,8 +2821,7 @@ function zBuildSession(){
 function zRpc(fn,body,cb){
   try{
     var b=JSON.stringify(body||{});
-    fetch(ZDATA.endpoint+'/rpc/'+ZDATA.rpcPrefix+fn,{method:'POST',keepalive:b.length<60000,
-      headers:{'Content-Type':'application/json','apikey':ZDATA.anonKey,'Authorization':'Bearer '+ZDATA.anonKey},body:b})
+    fetch(ZDATA.api+fn,{method:'POST',keepalive:b.length<60000,headers:{'Content-Type':'application/json'},body:b})
       .then(function(r){var ok=r.ok;return r.json().then(function(j){return ok?j:null;},function(){return ok?{}:null;});})
       .then(function(j){if(cb)cb(j);})
       .catch(function(e){console.error(fn+':',e);if(cb)cb(null);});
