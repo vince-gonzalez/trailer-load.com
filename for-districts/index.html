@@ -76,7 +76,7 @@ footer a{color:var(--teal);}
 footer{margin-top:56px;border-top:1px solid var(--border);padding-top:16px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--t3);text-align:center;}
 footer a{color:var(--teal);}
 @media(max-width:640px){h1{font-size:44px;}h2{font-size:25px;}.bar .brand small{display:none;}.bar nav a{margin-left:11px;}}
-@media print{.bar,.toc,.noprint{display:none!important;}body{background:#fff;}a{color:#000;border:none;}.tldr{box-shadow:none;}}
+@media print{.bar,.toc{display:none!important;}body{background:#fff;}a{color:#000;border:none;}.tldr{box-shadow:none;}}
 </style>
 <style>/* v3.5.210 skip link (WCAG 2.4.1): off screen until the keyboard reaches it */
 .skip-link{position:absolute;left:-10000px;top:0;z-index:10000;}
@@ -137,7 +137,7 @@ footer a{color:var(--teal);}
   <h3>What is collected</h3>
   <ul>
     <li class="no"><strong>No student account, email, phone, home address or date of birth</strong>, and <strong>no payment data</strong> from students. A name exists only on a crew: the one the student types for a PIN crew, or the one the instructor types for a manual crew. First names or pseudonyms work.</li>
-    <li class="yes">For a crew member: the name, a bcrypt hash of the PIN (PIN crews) or the instructor-issued personal code (manual crews), a SHA-256 hash of each device's crew token, when the student joined and last played, and every wall and session the device sent while on the crew: score, load integrity, density, pace, safety incidents with the rule broken, collapses, water breaks, rotations, lifts, a timed log of moves (up to 6,000 per session, at 0.1 s), session start and end times, and the app version, plus Smalls Sort runs.</li>
+    <li class="yes">For a crew member: the name, a bcrypt hash of the PIN (PIN crews) or the instructor-issued personal code (manual crews), a SHA-256 hash of each device's crew token, when the student joined and last played, and every wall and session the device sent while on the crew: score, load integrity, density, pace, safety incidents with the rule broken, collapses, water breaks, rotations, lifts, a timed log of moves (up to 6,000 per session, at 0.1 s), session start and end times, and the app version.</li>
     <li class="yes">For an instructor: an email address and a password (handled by the sign-in provider and stored hashed), the time, IP address and browser type of each sign-in, and the crews the instructor makes with their names and personal codes.</li>
   </ul>
   <h3>Where it lives and who touches it</h3>
@@ -146,7 +146,7 @@ footer a{color:var(--teal);}
     <li><strong>Who sees a student's results:</strong> only the instructor of the crew the student joined, on the dashboard. No other student, crew or instructor can. A licensed crew's instructor can export its walls and sessions as CSV at any time.</li>
     <li><strong>Return and deletion on termination</strong> are addressed in the data privacy agreement (below).</li>
     <li><strong>Retention and deletion:</strong> a crew member's records stay until the instructor removes the student or deletes the crew (either deletes them at once), until the instructor's account is deleted, or until F-Keys deletes them on a confirmed request, within 30 days. An instructor account with no sign-in for 24 months is deleted with its crews, except while it runs a licensed crew. When a school's or program's agreement with F-Keys ends, F-Keys deletes the student records it covers within 60 days, unless the agreement says otherwise. Send requests to <a href="mailto:privacy@trailer-load.com">privacy@trailer-load.com</a>. A CSV a crew exported is outside LOCK IN, and deleting with F-Keys does not delete it.</li>
-    <li><strong>Public boards:</strong> the daily, TRAILER-LOAD and Smalls Sort boards show three self-chosen initials with that run's score, integrity and date. No board shows a name, and nothing links a signature to a student.</li>
+    <li><strong>Public boards:</strong> the daily and TRAILER-LOAD boards show three self-chosen initials with that run's score, integrity and date. No board shows a name, and nothing links a signature to a student.</li>
     <li><strong>Earlier versions:</strong> LOCK IN 3 had player accounts with usernames. When LOCK IN 4.0 shipped, F-Keys deleted every one of them with everything saved to them.</li>
   </ul>
 

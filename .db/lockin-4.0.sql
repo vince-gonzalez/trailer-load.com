@@ -36,12 +36,12 @@ create table if not exists public.{P}arcade (
   user_id uuid                                    -- 3.x linked a signature to an account; 4.0 never sets it
 );
 create index if not exists {P}arcade_board_idx on public.{P}arcade (mode, day, score desc);
--- the same checks on both databases: production's 3.x table had them (mode daily/shift only, pieces up to 340), the
--- sandbox's fresh table had none, so a Smalls Sort signature passed in the sandbox and would have failed on production
+-- the same checks on both databases: production's 3.x table had them and the sandbox's fresh table had none, so a
+-- sandbox could accept a row production refuses. Two boards exist in 4.0: daily and shift (TRAILER-LOAD).
 alter table public.{P}arcade drop constraint if exists {P}arcade_mode_check;
-alter table public.{P}arcade add constraint {P}arcade_mode_check check (mode in ('daily', 'shift', 'smalls'));
+alter table public.{P}arcade add constraint {P}arcade_mode_check check (mode in ('daily', 'shift'));
 alter table public.{P}arcade drop constraint if exists {P}arcade_pieces_check;
-alter table public.{P}arcade add constraint {P}arcade_pieces_check check (pieces >= 0 and pieces <= 5000);
+alter table public.{P}arcade add constraint {P}arcade_pieces_check check (pieces >= 0 and pieces <= 340);
 alter table public.{P}arcade drop constraint if exists {P}arcade_initials_check;
 alter table public.{P}arcade add constraint {P}arcade_initials_check check (initials ~ '^[A-Z]{3}$');
 alter table public.{P}arcade drop constraint if exists {P}arcade_integrity_check;
@@ -199,14 +199,13 @@ begin
                     'ANL','FAP','WTF']) then
     return json_build_object('ok', false, 'err', 'Pick different initials.');
   end if;
-  if coalesce(p_mode, '') not in ('daily', 'shift', 'smalls') then
+  if coalesce(p_mode, '') not in ('daily', 'shift') then
     return json_build_object('ok', false, 'err', 'Unknown mode.');
   end if;
-  -- smalls: score = packages sorted x points, pieces = packages sorted, pack = accuracy %, integrity = accuracy %
   if p_score is null or p_score < 0 or p_score > 400000 or p_integrity is null or p_integrity < 0 or p_integrity > 100
-     or p_pieces is null or p_pieces < 1 or p_pieces > (case when p_mode = 'smalls' then 5000 else 340 end)
+     or p_pieces is null or p_pieces < 1 or p_pieces > 340
      or p_pack is null or p_pack < 0 or p_pack > 100 then
-    return json_build_object('ok', false, 'err', 'That run does not check out.');
+    return json_build_object('ok', false, 'err', 'That wall does not check out.');
   end if;
   if (select count(*) from public.{P}arcade where created_at > now() - interval '1 minute') >= 30 then
     return json_build_object('ok', false, 'err', 'The board is busy. Try again in a minute.');
@@ -240,7 +239,7 @@ begin
   if coalesce(p_event, '') not in ('game_open', 'visitor_new', 'visitor_returning', 'mode_start', 'wall_done',
                                    'daily_submit', 'briefing_done', 'arcade_signed', 'training_done', 'crew_joined')
     then return; end if;
-  if v_mode not in ('', 'daily', 'shift', 'training', 'level', 'smalls') then v_mode := 'other'; end if;
+  if v_mode not in ('', 'daily', 'shift', 'training') then v_mode := 'other'; end if;
   insert into public.{P}event_counts (day, event, mode, n) values ((now() at time zone 'utc')::date, p_event, v_mode, 1)
   on conflict (day, event, mode) do update set n = public.{P}event_counts.n + 1;
 exception when others then return;

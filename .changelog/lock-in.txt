@@ -2,6 +2,22 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1001 - ONE TRAINING SYSTEM: TOUR, THE MINI-GAMES MENU AND SMALLS SORT ARE OUT.
+     I said: "we need a fully coherent system. not a game." LOCK IN is TRAINING to learn, TRAILER-LOAD to practice, DAILY
+     for the shared wall, the two boards (DAILY and TRAILER-LOAD, three initials) and instructor crews. Tour and its ten
+     level mechanics, the level select and level-end screens, the old step-by-step tutorial, the Mini-Games menu and
+     Smalls Sort are gone; /ss/ now says Smalls Sort is retired. The code is shelved at the git tag
+     shelf/smalls-sort-and-tour. The work-stoppage strike was a Tour mechanic and left with it. The database takes only
+     the two boards (mode daily or shift, at most 340 pieces a wall).
+     .tools/deadcss.py fails on a style rule nothing can match, and on a @keyframes nothing animates. A class a script
+     builds at run time ('msg-'+type) counts as used; its first pass did not know that and dropped the dispatch line's
+     ok, warn, danger and award colors, which are back. .tools/deadcode.py also fails now on DEAD STATE: a top-level
+     variable nothing reads, or one locked at its first value. It found eight variables nothing read, bagDwellFired and
+     its timer stuck at their first value (left behind when triggerBagDwell went), and four switches locked in one
+     position (BAND_MODE off since v3.4.6; SQUARE_CELLS, CHUTE_JAM and STAGING_LIGHTS on). Each switch folded to the
+     branch that runs, and the floor-slot drawing and hit test that only the other position reached are gone. The page
+     is 1,862 lines shorter (11,853 to 9,991).
+
    CHANGE LOG v3.9.1000 - THE 4.0 CANDIDATE: NO PLAYER ACCOUNTS. INITIALS ON THE BOARDS, CREWS FOR INSTRUCTORS.
      I said: "the accounts are out, it's arcade only." Usernames, sign-up, sign-in, CLOCK-IN, the ME and FRIENDS tabs,
      follows, the RECORDS boards, recovery codes, SAVE MY STATS and the sharing box are gone, with the /me/ page (it now
