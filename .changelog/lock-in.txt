@@ -2,6 +2,11 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1002 - THE START-HERE TAG SITS UNDER TRAINING.
+     On a laptop (1366 x 768) and a phone the NEW HERE? START HERE tag sat beside the TRAINING title, squeezed its box to
+     26 px, and the word ran under the tag. It has its own line under the title now; measured at 1280, 1366, 1920 and
+     390 px wide with the real fonts: no overlap, no card clipped, the menu does not scroll.
+
    CHANGE LOG v3.9.1001 - ONE TRAINING SYSTEM: TOUR, THE MINI-GAMES MENU AND SMALLS SORT ARE OUT.
      I said: "we need a fully coherent system. not a game." LOCK IN is TRAINING to learn, TRAILER-LOAD to practice, DAILY
      for the shared wall, the two boards (DAILY and TRAILER-LOAD, three initials) and instructor crews. Tour and its ten
