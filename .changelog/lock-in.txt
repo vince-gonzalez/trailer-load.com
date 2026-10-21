@@ -2,6 +2,21 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1008 - NO CARRIER'S SERVICE NAME ON A BOX, AND NO COMPANY NAME IN THE CODE (STAGING ONLY).
+     My rule: no company, carrier or product name in anything the site serves or the repository publishes. Four box
+     labels were carriers' service names. I asked whether my replacements copy anyone, so they were checked at the
+     trademark office on 2026-10-21: the carriers' own registrations had to disclaim SAME DAY, OVERNIGHT, 2DAY, GROUND
+     and a phrase that starts NEXT DAY, so those words belong to nobody, while one carrier lists the old media label
+     among its trademarks. My set: the three labels that were service names are now SAME DAY, NEXT DAY and MEDIA, and
+     OVERNIGHT stays, with the same colors, weights and rules. The service codes printed on a shipping label lose the
+     two that abbreviated those names, for SAME and NEXT. A
+     comment that named two carriers is reworded. The privacy page and the districts page now say what the new backend
+     does: its host and the eastern North America region, salted PBKDF2-SHA256 for passwords and PINs, the one sign-in
+     cookie on the dashboard, the email service as a provider, and no IP address or browser type kept per sign-in. The
+     lab's notes name the hosts by role. A new gate, .tools/nonames.py, fails on any company or carrier name, with five
+     exceptions kept for a stated reason each: crawler names in robots.txt, the sitemap's priority field, warranty
+     language, and the providers a privacy policy and a subprocessor list have to name.
+
    CHANGE LOG v3.9.1007 - LOCK IN MOVES TO ITS OWN API (STAGING AND THE SANDBOX ONLY; NOTHING SHIPS).
      I asked to retire the hosted database 4.0 was built on and run the backend on the account that already serves the
      site. The backend is now the LOCK IN API: one serverless worker (api/lockin-api.js) on one SQL database

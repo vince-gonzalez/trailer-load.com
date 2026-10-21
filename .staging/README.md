@@ -8,7 +8,7 @@ rest.
 | | PRODUCTION | THE LAB |
 |---|---|---|
 | URL | https://www.trailer-load.com | https://trailer-load-lab.vince-848.workers.dev |
-| Host | **GitHub Pages** | **Cloudflare Workers** |
+| Host | **the static host** | **the edge worker host** |
 | Branch | `main` | whatever is checked out when you deploy |
 | Deploys when | you push to `main` | you run the deploy command, never automatically |
 | Indexed by search | yes | **no.** Full `Disallow: /` plus `X-Robots-Tag: noindex` on every response |
@@ -31,7 +31,7 @@ When a change is actually good:
 ```bash
 git checkout main
 git merge staging
-git push                      # GitHub Pages picks it up, and only now
+git push                      # the production host picks it up, and only now
 ```
 
 The deploy command is run **from the repository root**, not from inside
@@ -39,8 +39,8 @@ The deploy command is run **from the repository root**, not from inside
 
 ## Why the routing config looks fussy
 
-GitHub Pages serves `/lock-in.html` literally and resolves `/dashboard/` to its
-`index.html`. The Workers asset server has no single mode that does both:
+The production host serves `/lock-in.html` literally and resolves `/dashboard/` to its
+`index.html`. The worker asset server has no single mode that does both:
 
 - `html_handling: "auto-trailing-slash"` resolves directories but
   **307-redirects every `.html` link**, which breaks every link in the product.
@@ -57,7 +57,7 @@ exactly this.
 
 ## How to verify the lab is honest
 
-Line endings differ between a Windows working copy (CRLF) and what GitHub checks
+Line endings differ between a Windows working copy (CRLF) and what the repository host checks
 out (LF), so a raw byte count will always disagree. Compare content, not size:
 
 ```bash
@@ -67,8 +67,8 @@ curl -sL https://www.trailer-load.com/lock-in.html              | tr -d '\r' | s
 
 Verified 2026-10-01: identical, `445750a968007db9...`
 
-`index.html` will NOT match, and that is expected. Cloudflare's Email Address
-Obfuscation rewrites the `mailto:` links on production at the edge and injects a
+`index.html` will NOT match, and that is expected. The edge network's email address
+obfuscation rewrites the `mailto:` links on production at the edge and injects a
 decoder script. The lab sees the real source; production serves the rewritten
 version.
 

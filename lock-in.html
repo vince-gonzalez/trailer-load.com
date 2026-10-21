@@ -40,7 +40,7 @@
 small,sub,sup{font-size:11px;}
 
 /* ================================================================
-   LOCK IN v3.9.1007
+   LOCK IN v3.9.1008
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -1675,7 +1675,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.9.1007 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.9.1008 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -1791,7 +1791,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 21)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.9.999: updated Oct 20, the date on the policy; back to "Privacy" after 2026-11-20. -->
-  <div id="sm-footer">LOCK IN v3.9.1007 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.9.1008 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -1948,7 +1948,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.9.1007 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.9.1008 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -2308,7 +2308,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.9.1007
+// LOCK IN v3.9.1008
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -2359,7 +2359,7 @@ function ncStartCapped(){return _ncStartCap!==null&&G&&G.ncSlots&&(G.ncSlots.fil
 // Fast loaders (1000 PPH) are already rewarded via speedM · they never see this.
 var MIN_PPH=55, LOW_PPH_GRACE=60, LOW_PPH_FAIL=180;
 var AFK_LIMIT=300; // v3.5.118 no-placement idle kill (kills a playtester's 44-min "farm longest time by afking" exploit)
-// v3.5.90 THE HUB STANDARD. Real FedEx/UPS loaders run ~250 pieces/hr · and "pieces" = REAL FREIGHT (boxes),
+// v3.5.90 THE HUB STANDARD. Real hub loaders run ~250 pieces/hr · and "pieces" = REAL FREIGHT (boxes),
 // NOT smalls, NOT bags. Breaking down a smalls bag to chink your gaps is time you're NOT moving freight, so it
 // drags your pph. A wall sealed below standard is a PRODUCTIVITY incident · documented like a safety write-up.
 var STANDARD_PPH=250;
@@ -2705,7 +2705,7 @@ function shx(hex,amt){
 // ── LABEL SYSTEM ──
 var LABELS=[
   {t:'STANDARD', s:'STD', ico:'',   bg:'rgba(240,238,228,.88)',tc:'#2a2010',isFrag:false},
-  {t:'PRIORITY', s:'PRI', ico:'★',  bg:'rgba(255,235,140,.90)',tc:'#5a3a00',isFrag:false},
+  {t:'NEXT DAY', s:'NEXT', ico:'★', bg:'rgba(255,235,140,.90)',tc:'#5a3a00',isFrag:false}, // 3.9.1008 was a carrier's service name
   {t:'FRAGILE',  s:'FRAG',ico:'⚠',  bg:'rgba(255,80,60,.88)', tc:'#fff',   isFrag:true},
   {t:'THIS SIDE UP',s:'↑UP',ico:'↑',bg:'rgba(245,196,0,.90)',tc:'#2a1800', isFrag:false,isUp:true},
   {t:'TOP LOAD', s:'TOP', ico:'↑',  bg:'rgba(100,200,255,.85)',tc:'#002040',isFrag:false},
@@ -2721,8 +2721,8 @@ var LABELS=[
   {t:'FILL',      s:'FILL',ico:'',   bg:'rgba(180,140,255,.8)',tc:'#0a0020',isFrag:false},
   {t:'GROUND',    s:'GND', ico:'',   bg:'rgba(120,180,120,.92)',tc:'#06200a',isFrag:false},
   {t:'OVERNIGHT', s:'OVN', ico:'★',  bg:'rgba(255,120,40,.92)', tc:'#fff',   isFrag:false},
-  {t:'EXPRESS',   s:'EXP', ico:'⚡', bg:'rgba(40,140,220,.92)', tc:'#fff',   isFrag:false},
-  {t:'MEDIA MAIL',s:'MEDIA',ico:'',  bg:'rgba(210,200,170,.92)',tc:'#221a08',isFrag:false},
+  {t:'SAME DAY',  s:'SAME',ico:'⚡', bg:'rgba(40,140,220,.92)', tc:'#fff',   isFrag:false}, // 3.9.1008 was a carrier's service name
+  {t:'MEDIA',     s:'MEDIA',ico:'',  bg:'rgba(210,200,170,.92)',tc:'#221a08',isFrag:false}, // 3.9.1008 MEDIA alone; with MAIL it is a carrier's mark
 ];
 function pickLabel(type,isPanic,isNC,isGap){
   if(isGap)return LABELS[14];
@@ -2748,8 +2748,8 @@ function pickLabel(type,isPanic,isNC,isGap){
     add('STANDARD',34);add('HEAVY',14);add('GROUND',8);add('THIS SIDE UP',8);
     if(!isEarly){add('FRAGILE',6);add('GLASS',4);}
   } else {
-    add('STANDARD',42);add('GROUND',10);add('PRIORITY',7);
-    add('OVERNIGHT',5);add('EXPRESS',5);add('MEDIA MAIL',5);add('THIS SIDE UP',12);
+    add('STANDARD',42);add('GROUND',10);add('NEXT DAY',7);
+    add('OVERNIGHT',5);add('SAME DAY',5);add('MEDIA',5);add('THIS SIDE UP',12);
     if(!isEarly){add('FRAGILE',6);add('GLASS',4);}
   }
   var tot=0,i;for(i=0;i<WL.length;i++)tot+=WL[i].w;
@@ -2787,7 +2787,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.9.1007'; // the version a crew session records · bump WITH the LOCK IN version
+var LI_APP_VER='3.9.1008'; // the version a crew session records · bump WITH the LOCK IN version
 function zBuildSession(){
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
   var inc=S.incidents||[];
@@ -6904,8 +6904,10 @@ function drawBelt(ts){
 }
 
 // v3.4.3 SHIPPING IDENTITY · boxes carry a SERVICE LEVEL + a DESTINATION (no brand/retail names).
-// Service: GND/AIR/OVN/EXP/PRI/2DAY/3DAY/1DAY (conveyable) · FRT (large freight) · SP/NC/FRT (non-conveyable).
-var SVC_REG=['GND','GND','GND','GND','AIR','AIR','OVN','OVN','EXP','PRI','2DAY','3DAY','1DAY'];
+// Service: GND/AIR/OVN/SAME/NEXT/2DAY/3DAY/1DAY (conveyable) · FRT (large freight) · SP/NC/FRT (non-conveyable).
+// 3.9.1008 SAME and NEXT replace two codes that abbreviated carrier service names. Same day, overnight, 2day and
+// ground were checked at the trademark office on 2026-10-21: the carriers' own registrations disclaim them.
+var SVC_REG=['GND','GND','GND','GND','AIR','AIR','OVN','OVN','SAME','NEXT','2DAY','3DAY','1DAY'];
 var SVC_NC=['SP','NC','FRT'];
 var DEST=['MEM','IND','OAK','EWR','ANC','RSW','CMH','ONT','LAX','ORD','DFW','ATL','PHX','DEN','SEA','MIA','BOS','MCO','SDF','GSO','PHL','SLC','MSP','DTW','BNA','AUS','PDX','SAN','TPA','STL'];
 function svcCode(p){
@@ -6989,7 +6991,7 @@ function boxTapes(p){
   if(nc){t.push('heavy'); if(rr(3)<0.45)t.push('teamlift'); else if(mx>=5)t.push('oversize');}
   if(svc==='FRT'||p.type==='large'){if(t.indexOf('freight')<0)t.push('freight');}
   else if(svc==='GND'){if(rr(5)<0.5)t.push('bulk');}
-  else if(svc==='AIR'||svc==='OVN'||svc==='EXP'||svc==='1DAY'){t.push('aircargo');}
+  else if(svc==='AIR'||svc==='OVN'||svc==='SAME'||svc==='1DAY'){t.push('aircargo');}
   if(isLong){if(t.indexOf('thissideup')<0)t.push('thissideup'); if(rr(6)<0.44)t.push('liveplants');}
   else if(h>w&&w>=2&&h<=6&&rr(7)<0.4){t.push('thissideup');}
   if(w===2&&h===2&&rr(8)<0.16)t.push('liveanimals');

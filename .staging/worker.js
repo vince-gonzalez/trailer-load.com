@@ -41,8 +41,8 @@ export default {
       });
     }
 
-    // ── GITHUB PAGES ROUTING PARITY ──────────────────────────────────────
-    // Production is GitHub Pages. It serves "/lock-in.html" LITERALLY (no
+    // ── PRODUCTION ROUTING PARITY ──────────────────────────────────────
+    // Production is a static host. It serves "/lock-in.html" LITERALLY (no
     // redirect) and resolves a directory to its index.html. No single
     // html_handling mode does both: "auto-trailing-slash" 307s every .html
     // link, and "none" 404s every directory. So html_handling is "none" and
