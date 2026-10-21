@@ -2,6 +2,18 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1006 - THE TESTER CREW'S FOUR BLOCKING FINDINGS, FIXED.
+     The tester crew read every served page and blocked on four things. The canvases inside the staging tiles (desktop
+     and phone) and the conveyor belt are art inside controls that already carry a name, so screen readers now skip
+     them (WCAG 1.1.1). The page had no h1, and the only headings were the post-sort report's h4s: the page now has one
+     h1, read by screen readers and not shown, and the report's four section titles are h2 under it (1.3.1). The front
+     page draws a visible outline around a link that has keyboard focus (2.4.7). The comment about third-party
+     analytics no longer names the tag manager, so a district reviewer who searches the source for it finds nothing.
+     The accessibility checker learned this morning to account for see-through colors, and it found one more real
+     failure: in the light theme the source chips on the LINEHAUL board (MANAGER, COWORKER and the rest) measured 2.17
+     to 2.85:1 on the rendered pixels, a see-through dark chip over a light drawer. The chips are solid now, 5.44:1 or
+     better in every theme. The footer's chip rules went too: the footer line has shown no chip since v3.5.116.
+
    CHANGE LOG v3.9.1005 - THE FIDELITY AUDIT: EVERY STATED RULE MATCHES THE CODE.
      I asked whether calling it a simulator is valid, then for an audit of every rule it states. Six rule families were
      checked against the code (and hazmat against the saved 49 CFR text), each finding put to a skeptic: 344

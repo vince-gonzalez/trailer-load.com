@@ -28,10 +28,10 @@
 <meta name="twitter:title" content="LOCK IN · Freight Loading Simulator">
 <meta name="twitter:description" content="A free browser freight-loading simulator. One daily wall everybody shares, or endless trailers.">
 <meta name="twitter:image" content="https://www.trailer-load.com/logo.png">
-<!-- NO THIRD-PARTY ANALYTICS ON TRAILER-LOAD.COM (v3.5.169). GA4 was removed before the first K-12 district
-     vetting packet: reviewers scan for googletagmanager.com the same way they scan for ad tech, and "we ship zero
-     third-party analytics" is a one-line answer instead of a meeting. Usage lives in our own consent-gated
-     Supabase tables + the public aggregate counter. Do not re-add. -->
+<!-- NO THIRD-PARTY ANALYTICS ON TRAILER-LOAD.COM (v3.5.169). The analytics tag came out before the first K-12
+     district vetting packet: reviewers search the source for tag managers the same way they search for ad tech, and
+     "the site ships no third-party analytics" is a one-line answer instead of a meeting. Usage lives in the site's own
+     aggregate counters. Do not re-add. (3.9.1006: this comment no longer names the tag, so a search finds nothing.) -->
 <style>
 @import url('/fonts/fonts.css');
 /* TYPE FLOOR: bare <small>/<sub>/<sup> otherwise inherit the browser's 0.8em
@@ -40,7 +40,7 @@
 small,sub,sup{font-size:11px;}
 
 /* ================================================================
-   LOCK IN v3.9.1005
+   LOCK IN v3.9.1006
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -263,11 +263,12 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 .cd-lh-row{display:flex;align-items:baseline;gap:9px;padding:7px 2px;border-bottom:1px solid var(--border);}
 .cd-lh-row .msg-src{flex:none;font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:bold;
   letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:3px;
-  background:rgba(0,0,0,.5);border:1px solid rgba(224,150,46,.4);color:#f0d9a8;}
-
-.cd-lh-row.msg-ok .msg-src{color:#aef0c6;border-color:rgba(31,157,87,.6);background:rgba(14,74,42,.55);}
-.cd-lh-row.msg-warn .msg-src{color:#f2cf92;border-color:rgba(212,130,15,.6);background:rgba(110,72,10,.55);}
-.cd-lh-row.msg-danger .msg-src{color:#f4b09c;border-color:rgba(204,56,32,.65);background:rgba(110,22,12,.6);}
+  background:#1d1510;border:1px solid rgba(224,150,46,.4);color:#f0d9a8;}
+/* 3.9.1006 solid chips: see-through dark over the light theme's light drawer measured 2.17 to 2.85:1 on the rendered
+   pixels. Solid, the ratio no longer depends on what is behind: plain 13.0:1, ok 7.91, warn 5.44, danger 6.47. */
+.cd-lh-row.msg-ok .msg-src{color:#aef0c6;border-color:rgba(31,157,87,.6);background:#0e4a2a;}
+.cd-lh-row.msg-warn .msg-src{color:#f2cf92;border-color:rgba(212,130,15,.6);background:#6e480a;}
+.cd-lh-row.msg-danger .msg-src{color:#f4b09c;border-color:rgba(204,56,32,.65);background:#6e160c;}
 .cd-lh-row .msg-body{font-family:'Barlow Condensed',sans-serif;font-size:16px;color:var(--t1);line-height:1.4;}
 .cd-empty{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--t3);text-align:center;padding:24px 0;}
 /* v3.5.38 OPERATIONS = live mini-report (grade hero + grouped metrics, pulled from the end-report sources) */
@@ -1347,7 +1348,7 @@ body{--txt:1;}
 body[data-txt="lg"]{--txt:1.15;}
 body[data-txt="xl"]{--txt:1.3;}
 #cn-left .cn-title,#cn-left .sh-sub,#cn-left .sh-key,#cn-left .cn-hd,#cn-left .cn-sub,#cn-left .cn-dim,#cn-left .cn-stage-note,
-.console-btn,#cn-right .sp-lbl,#cn-right .sp-med,#sp-cog-s,#safety-live,#cn-right .cn-hd,#cn-right .cn-chute-t,#footer .msg-body,#footer .msg-src,
+.console-btn,#cn-right .sp-lbl,#cn-right .sp-med,#sp-cog-s,#safety-live,#cn-right .cn-hd,#cn-right .cn-chute-t,#footer .msg-body,
 #fp-tip-h,#fp-tip-s,.fp-tip-hdr,.pause-hint,.pause-sub,.pmb{zoom:var(--txt);}
 /* the desktop left panel scrolls at Large and XL when the bigger text needs more room than the panel has */
 body:not(.cn-sheet)[data-txt="lg"] #cn-left,body:not(.cn-sheet)[data-txt="xl"] #cn-left{overflow-y:auto;}
@@ -1404,13 +1405,9 @@ body[data-cb="trit"]{
 #footer #msg-feed{flex:1;flex-direction:row;align-items:center;gap:0;min-height:34px;height:auto;overflow:hidden;background:rgba(0,0,0,.22);border:1px solid var(--btn-line);border-radius:5px;padding:5px 12px;}
 /* v3.5.18 pro dispatch line: [SOURCE badge] + outlined body */
 #footer .msg-line{display:flex;align-items:center;gap:9px;line-height:1.2;padding:3px 8px;flex:1;min-width:0;background:rgba(0,0,0,.36);border-radius:0 4px 4px 0;border-left-width:4px;}
-#footer .msg-src{flex:none;font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:rgba(0,0,0,.5);border:1px solid rgba(224,150,46,.4);color:#f0d9a8;}/* v3.5.34 brighter base source tag; v3.5.145 10px->11px (read mid-game) */
 #footer .msg-body{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;letter-spacing:.3px;color:#fff;-webkit-text-stroke:.6px rgba(8,5,2,.9);paint-order:stroke fill;text-shadow:0 1px 2px rgba(0,0,0,.7);}
 #footer .msg-body b{color:#ffd98a;}
 
-#footer .msg-line.msg-ok .msg-src{color:#aef0c6;border-color:rgba(31,157,87,.55);background:rgba(14,74,42,.5);}
-#footer .msg-line.msg-warn .msg-src{color:#f2cf92;border-color:rgba(212,130,15,.55);background:rgba(110,72,10,.5);}
-#footer .msg-line.msg-danger .msg-src{color:#f4b09c;border-color:rgba(204,56,32,.6);background:rgba(110,22,12,.55);}
 #footer .msg-line:not(:first-child){display:none;}   /* only the newest shows · legible, not a crammed row */
 /* v3.5.19 LINEHAUL board · persistent dispatch record */
 @keyframes msgIn{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
@@ -1579,8 +1576,9 @@ body[data-cb="trit"]{
 .ps-blocks{column-count:1;column-gap:28px;}
 @media(max-width:700px){#ov-postsort{padding:14px 6px 40px;}}
 .ps-block{break-inside:avoid;margin-bottom:15px;}
-.ps-block h4{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.07em;color:#2a2018;border-bottom:2px solid #2a2018;padding-bottom:2px;margin:0 0 1px;}
-.ps-block h4 .d{color:#5a3306;font-size:11px;}
+.ps-block h2{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.07em;color:#2a2018;border-bottom:2px solid #2a2018;padding-bottom:2px;margin:0 0 1px;}
+.sr-h1{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+.ps-block h2 .d{color:#5a3306;font-size:11px;}
 .ps-row{display:grid;grid-template-columns:1fr 86px 86px;align-items:center;border-bottom:1px solid #d9cdb4;min-height:22px;}
 .ps-row:nth-child(odd){background:rgba(120,96,40,.022);}
 .ps-row .m{font-family:'Barlow Condensed',sans-serif;font-size:13.5px;font-weight:500;color:#2a2018;padding-left:2px;}
@@ -1643,6 +1641,7 @@ body[data-cb="trit"]{
 </style>
 </head>
 <body>
+<h1 class="sr-h1">LOCK IN · Freight Loading Simulator</h1><!-- 3.9.1006 the page's one h1, for screen readers; the report's sections are h2 under it -->
 <!-- v3.5.153 F-KEYS company splash · drop the real logo in as fkeys.png; the inline SVG is the never-broken fallback -->
 <div id="fkeys-splash">
   <img class="fk-mark" src="fkeys.png" alt="F-Keys" onerror="this.onerror=null;this.outerHTML=document.getElementById('fk-svg-src').innerHTML;">
@@ -1676,7 +1675,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.9.1005 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.9.1006 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -1792,7 +1791,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 21)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.9.999: updated Oct 20, the date on the policy; back to "Privacy" after 2026-11-20. -->
-  <div id="sm-footer">LOCK IN v3.9.1005 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.9.1006 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -1949,7 +1948,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.9.1005 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.9.1006 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -2135,7 +2134,7 @@ body[data-cb="trit"]{
         <button id="stage-btn" class="strip-act sa-stage" type="button" onclick="stageButton()" title="STAGE (F): set the box in your hand down beside the wall. 3 spots. With empty hands, choose a staged box to pick back up." aria-label="Stage. 0 of 3 staged. Key F.">⬇ STAGE <span id="stage-n">0/3</span></button>
         <button id="rot-btn" onclick="rotateSel()" aria-label="Rotate the box in hand. Key R.">↻ ROT<span class="kh"> [R]</span></button>
       </div>
-      <canvas id="belt-canvas" aria-hidden="true" style="display:none;width:100%;touch-action:none;">Conveyor belt.</canvas>
+      <canvas id="belt-canvas" aria-hidden="true" role="presentation" style="display:none;width:100%;touch-action:none;">Conveyor belt.</canvas>
     </div>
   </div>
 
@@ -2309,7 +2308,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.9.1005
+// LOCK IN v3.9.1006
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -2788,7 +2787,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.9.1005'; // the version a crew session records · bump WITH the LOCK IN version
+var LI_APP_VER='3.9.1006'; // the version a crew session records · bump WITH the LOCK IN version
 function zBuildSession(){
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
   var inc=S.incidents||[];
@@ -6165,7 +6164,7 @@ function stgRender(){
       var nm=(STG_OPEN==='nc')?'Special handling':(it.s.isBag?'Staged bag of smalls':'Staged box');
       // v3.5.114 tap-to-break chip; event.stopPropagation so the tap doesn't also pick the tile
       var brk=(STG_OPEN==='bag'&&it.s.isBag)?'<div class="stg-brk" role="button" tabindex="0" onclick="event.stopPropagation();stgBreak('+it.i+')" title="Break the bag into loose smalls to fill gaps (costs PPH)">✂ BREAK</div>':'';
-      h+='<div class="stg-tile'+(sel===it.i?' sel':'')+'" role="button" tabindex="0" aria-label="'+nm+', '+(it.s.w||2)+' by '+(it.s.h||2)+'" style="left:'+x+'px;top:'+y+'px;" onclick="stgPick('+it.i+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();stgPick('+it.i+');}"><canvas class="stg-art" width="52" height="34" data-i="'+it.i+'"></canvas><div class="d">'+dim+'</div>'+brk+'</div>';
+      h+='<div class="stg-tile'+(sel===it.i?' sel':'')+'" role="button" tabindex="0" aria-label="'+nm+', '+(it.s.w||2)+' by '+(it.s.h||2)+'" style="left:'+x+'px;top:'+y+'px;" onclick="stgPick('+it.i+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();stgPick('+it.i+');}"><canvas class="stg-art" width="52" height="34" data-i="'+it.i+'" aria-hidden="true" role="presentation"></canvas><div class="d">'+dim+'</div>'+brk+'</div>';
     }
   }
   if(box._stgH!==h||box._stgLane!==STG_OPEN){box._stgH=h;box._stgLane=STG_OPEN;box.innerHTML=h;_stgDrawArt(slots);}
@@ -7939,7 +7938,7 @@ function _cnLane(id,lane,slots,idx,sel,force){
     var si=idx[k],p=(si>=0)?slots[si]:null;
     if(!p){h+='<div class="cn-tile open" aria-hidden="true">'+(lane==='bag'?'OPEN':'')+'</div>';continue;}
     var nm=(lane==='nc')?'Special handling':(p.isBag?'Staged bag of smalls':'Staged box');
-    h+='<button type="button" class="cn-tile full'+(si===sel?' sel':'')+'" data-i="'+si+'" onclick="cnPick(\''+lane+'\','+si+')" aria-label="'+nm+', '+(p.w||2)+' by '+(p.h||2)+(si===sel?', in hand':'')+'"><canvas></canvas><span class="cn-dim">'+(p.w||2)+'×'+(p.h||2)+'</span></button>';
+    h+='<button type="button" class="cn-tile full'+(si===sel?' sel':'')+'" data-i="'+si+'" onclick="cnPick(\''+lane+'\','+si+')" aria-label="'+nm+', '+(p.w||2)+' by '+(p.h||2)+(si===sel?', in hand':'')+'"><canvas aria-hidden="true" role="presentation"></canvas><span class="cn-dim">'+(p.w||2)+'×'+(p.h||2)+'</span></button>';
   }
   box.innerHTML=h;
   var bs=box.querySelectorAll('.cn-tile.full'),dpr=Math.max(1,Math.min(3,window.devicePixelRatio||1));
@@ -9369,7 +9368,7 @@ function psBuild(){
     var lwShMin=(LW&&LW.durS>0)?(((LW.shelvesLocked||0)/LW.durS)*60).toFixed(1):null; // v3.5.87 per-wall shelves/min (WALL column was hardcoded null)
     var _sessAvgPph=Math.round((typeof avgPPH==='function')?avgPPH():0); // v3.5.90 real freight only
     var _prodDocs=(S.prodIncidents||[]).length;
-    H+='<div class="ps-block"><h4><span class="d">\u25b8</span> PRODUCTIVITY \u00b7 REAL FREIGHT</h4>'+
+    H+='<div class="ps-block"><h2><span class="d">\u25b8</span> PRODUCTIVITY \u00b7 REAL FREIGHT</h2>'+
       row('Avg PPH',lwv('pph'),_sessAvgPph)+
       row('Peak PPH',null,S.bestPPH||0)+ /* 3.9.1005 a session peak; no per-wall peak is kept */
       row('Hub standard',STANDARD_PPH,STANDARD_PPH)+
@@ -9379,7 +9378,7 @@ function psBuild(){
       row('Shelves / min',lwShMin,shMin)+
       row('Wall time',(LW&&LW.durS!=null)?psFmtTime(LW.durS):null,tWall)+'</div>';
 
-    H+='<div class="ps-block"><h4><span class="d">\u25b8</span> SAFETY \u00b7 DOCS RECEIVED</h4>'+
+    H+='<div class="ps-block"><h2><span class="d">\u25b8</span> SAFETY \u00b7 DOCS RECEIVED</h2>'+
       row('Incidents (total)',lwv('incidentsWall'),inc.length)+
       row('\u00b7 Hazmat-high',null,ic('HAZMAT_HIGH'),true)+
       row('\u00b7 Hazmat-crush',null,ic('HAZMAT_CRUSH'),true)+
@@ -9397,7 +9396,7 @@ function psBuild(){
       row('Special handling left sitting',null,S.ncDwellWarn||0)+
       '</div>';
 
-    H+='<div class="ps-block"><h4><span class="d">\u25b8</span> LOAD QUALITY</h4>'+
+    H+='<div class="ps-block"><h2><span class="d">\u25b8</span> LOAD QUALITY</h2>'+
       row('Integrity',lwv('integrity'),avgInt)+
       row('\u00b7 Structure',lwv('integrity'),wlAvg('integrity'),true)+
       row('\u00b7 Balance',lwv('bal'),wlAvg('bal'),true)+
@@ -9415,7 +9414,7 @@ function psBuild(){
       row('COG offset',lwv('cog'),null)+'</div>';
 
     var lwBonus=LW?((LW.recoveries||0)+(LW.doubleLocks||0)+(LW.hazShelfLocks||0)+(LW.nests||0)):null;
-    H+='<div class="ps-block"><h4><span class="d">\u25b8</span> MECHANICS</h4>'+
+    H+='<div class="ps-block"><h2><span class="d">\u25b8</span> MECHANICS</h2>'+
       row('Rotations',lwv('rotations'),S.rotations||0)+
       row('Lifts',lwv('lifts'),S.lifts||0)+
       row('Rejected drops',lwv('rejects'),S.rejects||0)+
