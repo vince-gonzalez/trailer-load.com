@@ -40,7 +40,7 @@
 small,sub,sup{font-size:11px;}
 
 /* ================================================================
-   LOCK IN v3.9.1003
+   LOCK IN v3.9.1004
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -1676,7 +1676,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.9.1003 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.9.1004 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -1792,7 +1792,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 21)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.9.999: updated Oct 20, the date on the policy; back to "Privacy" after 2026-11-20. -->
-  <div id="sm-footer">LOCK IN v3.9.1003 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.9.1004 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -1949,7 +1949,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.9.1003 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.9.1004 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -2309,7 +2309,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.9.1003
+// LOCK IN v3.9.1004
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -2546,12 +2546,12 @@ var P_NC=[
   {w:3,h:3,wc:5,type:'large',n:'SAFE-MED',   shape:'safe',cat:'pro',color:'#404040'},
   {w:3,h:4,wc:5,type:'large',n:'SAFE-LG',    shape:'safe',cat:'pro',color:'#484848'},
   {w:4,h:3,wc:5,type:'large',n:'GENERATOR',  shape:'industrial',cat:'pro',color:'#445038',hazEligible:true,hazClass:'3'},
-  {w:3,h:3,wc:4,type:'large',n:'COMPRESSOR', shape:'industrial',cat:'pro',color:'#484838',hazEligible:true,hazClass:'2'},
-  {w:4,h:3,wc:4,type:'large',n:'WATER-HTR',  shape:'industrial',cat:'pro',color:'#504840',hazEligible:true,hazClass:'3'},
+  {w:3,h:3,wc:4,type:'large',n:'COMPRESSOR', shape:'industrial',cat:'pro',color:'#484838'}, // 3.9.1004 ships drained: not on the hazmat list
+  {w:4,h:3,wc:4,type:'large',n:'WATER-HTR',  shape:'industrial',cat:'pro',color:'#504840'}, // 3.9.1004 not on the hazmat list
   // Outdoor hardware
-  {w:4,h:3,wc:4,type:'large',n:'GRILL-SM',   shape:'outdoor',cat:'home',color:'#404840',hazEligible:true,hazClass:'2'},
-  {w:5,h:4,wc:4,type:'large',n:'GRILL-MED',  shape:'outdoor',cat:'home',color:'#3c4838',hazEligible:true,hazClass:'2'},
-  {w:6,h:4,wc:4,type:'large',n:'GRILL-LG',   shape:'outdoor',cat:'home',color:'#384038',hazEligible:true,hazClass:'2'},
+  {w:4,h:3,wc:4,type:'large',n:'GRILL-SM',   shape:'outdoor',cat:'home',color:'#404840',hazEligible:true,hazClass:'2.1'},
+  {w:5,h:4,wc:4,type:'large',n:'GRILL-MED',  shape:'outdoor',cat:'home',color:'#3c4838',hazEligible:true,hazClass:'2.1'},
+  {w:6,h:4,wc:4,type:'large',n:'GRILL-LG',   shape:'outdoor',cat:'home',color:'#384038',hazEligible:true,hazClass:'2.1'},
   {w:5,h:5,wc:4,type:'large',n:'SWING-SET',  shape:'outdoor',cat:'home',color:'#687040'},
   {w:7,h:4,wc:4,type:'large',n:'PLAYSET',    shape:'outdoor',cat:'home',color:'#608040'},
   {w:5,h:3,wc:3,type:'large',n:'MOWER',      shape:'outdoor',cat:'home',color:'#506038',hazEligible:true,hazClass:'3'},
@@ -2574,17 +2574,17 @@ var P_NC=[
   {w:5,h:4,wc:5,type:'large',n:'PALLET-STK',shape:'pallet',cat:'pro',color:'#7a6848'},
   {w:5,h:5,wc:5,type:'large',n:'GAYLORD',  shape:'industrial',cat:'pro',color:'#6a6450'},
   // ── v2.1.0 PURE HAZMAT (carry hazClass; isHaz set at spawn) ──
-  {w:2,h:2,wc:4,type:'large',n:'FLARE-BOX', shape:'industrial',cat:'haz',hazClass:'1',color:'#b03020'},
+  {w:2,h:2,wc:4,type:'large',n:'FLARE-BOX', shape:'industrial',cat:'haz',hazClass:'1.4',color:'#b03020'},
   {w:2,h:2,wc:4,type:'large',n:'AIRBAG',    shape:'industrial',cat:'haz',hazClass:'9',color:'#a04060'},
-  {w:5,h:3,wc:5,type:'large',n:'LIFE-RAFT', shape:'industrial',cat:'haz',hazClass:'2',color:'#306080'},
-  {w:2,h:3,wc:4,type:'large',n:'AIR-TANK',  shape:'industrial',cat:'haz',hazClass:'2',color:'#407088'},
-  {w:2,h:2,wc:4,type:'large',n:'EXTINGUISH',shape:'industrial',cat:'haz',hazClass:'2',color:'#a03020'},
-  {w:2,h:3,wc:4,type:'large',n:'PROPANE',   shape:'industrial',cat:'haz',hazClass:'2',color:'#b04020'},
+  {w:5,h:3,wc:5,type:'large',n:'LIFE-RAFT', shape:'industrial',cat:'haz',hazClass:'9',color:'#306080'},
+  {w:2,h:3,wc:4,type:'large',n:'AIR-TANK',  shape:'industrial',cat:'haz',hazClass:'2.2',color:'#407088'},
+  {w:2,h:2,wc:4,type:'large',n:'EXTINGUISH',shape:'industrial',cat:'haz',hazClass:'2.2',color:'#a03020'},
+  {w:2,h:3,wc:4,type:'large',n:'PROPANE',   shape:'industrial',cat:'haz',hazClass:'2.1',color:'#b04020'},
   {w:3,h:2,wc:5,type:'large',n:'LITHIUM',   shape:'industrial',cat:'haz',hazClass:'9',color:'#308060'},
   {w:2,h:2,wc:4,type:'large',n:'FUEL-CAN',  shape:'industrial',cat:'haz',hazClass:'3',color:'#c05010'},
   {w:3,h:2,wc:4,type:'large',n:'OXIDIZER',  shape:'industrial',cat:'haz',hazClass:'5.1',color:'#d0a020'},
   {w:2,h:3,wc:4,type:'large',n:'CORROSIVE', shape:'industrial',cat:'haz',hazClass:'8',color:'#80a020'},
-  {w:3,h:2,wc:4,type:'large',n:'PESTICIDE', shape:'industrial',cat:'haz',hazClass:'6',color:'#7040a0'},
+  {w:3,h:2,wc:4,type:'large',n:'PESTICIDE', shape:'industrial',cat:'haz',hazClass:'6.1',color:'#7040a0'},
 ];
 
 var P_PANIC=[
@@ -2788,7 +2788,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.9.1003'; // the version a crew session records · bump WITH the LOCK IN version
+var LI_APP_VER='3.9.1004'; // the version a crew session records · bump WITH the LOCK IN version
 function zBuildSession(){
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
   var inc=S.incidents||[];
@@ -3653,14 +3653,21 @@ function genPiece(isPanic,isGap){
 // ── v2.1.0 NC TAXONOMY + HAZMAT GOVERNOR ──
 // Buckets as % of NC output. Hazmat capped <=17% per wall (see spec).
 var NC_BUCKET_W={tire:.30,pro:.25,home:.30,haz:.15};
+// 3.9.1004 THE FEDERAL LIST. I read it at the source on 2026-10-21. Every item carries its 49 CFR 172.101 class:
+// propane and a grill's cylinder UN1075 2.1, an extinguisher UN1044 and compressed air UN1002 2.2, gasoline and a
+// fueled engine 3 (UN1203, UN3528), hand flares UN0191 1.4G, a self-inflating life raft UN2990 9, an airbag inflator
+// UN3268 9, lithium batteries UN3480 9, pesticides 6.1. Placard colors are 172.519-172.560: 1.4 orange, both gas
+// placards and FLAMMABLE red or green by division, OXIDIZER yellow, POISON white, CORROSIVE white over black, CLASS 9
+// white with seven black stripes on the top half. White on #d6281e is 5.0:1 and on #00804a 5.0:1.
 var HAZ_CLASS={
-  '1':  {n:'EXPLOSIVE', s:'1',  bg:'rgba(255,140,0,.95)', tc:'#1a0000'},
-  '2':  {n:'GAS',       s:'2',  bg:'rgba(80,180,90,.92)', tc:'#fff'},
-  '3':  {n:'FLAMMABLE', s:'3',  bg:'rgba(255,80,30,.92)', tc:'#fff'},
-  '5.1':{n:'OXIDIZER',  s:'5.1',bg:'rgba(245,196,0,.95)', tc:'#2a1800'},
-  '6':  {n:'TOXIC',     s:'6',  bg:'rgba(160,80,220,.90)',tc:'#fff'},
-  '8':  {n:'CORROSIVE', s:'8',  bg:'rgba(140,170,30,.92)',tc:'#1a1a00'},
-  '9':  {n:'MISC HAZ',  s:'9',  bg:'rgba(120,120,130,.92)',tc:'#fff'}
+  '1.4':{n:'EXPLOSIVE',        s:'1.4',bg:'rgba(255,140,0,.95)',tc:'#1a0000'},
+  '2.1':{n:'FLAMMABLE GAS',    s:'2.1',bg:'#d6281e',tc:'#fff'},
+  '2.2':{n:'NON-FLAMMABLE GAS',s:'2.2',bg:'#00804a',tc:'#fff'},
+  '3':  {n:'FLAMMABLE',        s:'3',  bg:'#d6281e',tc:'#fff'},
+  '5.1':{n:'OXIDIZER',         s:'5.1',bg:'rgba(245,196,0,.95)',tc:'#2a1800'},
+  '6.1':{n:'POISON',           s:'6.1',bg:'#f4f1ea',tc:'#111'},
+  '8':  {n:'CORROSIVE',        s:'8',  bg:'#111',tc:'#fff',top:'#f4f1ea',sym:'#111'},
+  '9':  {n:'MISC HAZ',         s:'9',  bg:'#f4f1ea',tc:'#111',stripes:true}
 };
 function ncByCat(cat){var o=[];for(var i=0;i<P_NC.length;i++){if((P_NC[i].cat||'home')===cat)o.push(P_NC[i]);}return o;}
 function hazRateThisWall(){var n=G.ncThisWall||0;return n?((G.hazThisWall||0)/n):0;}
@@ -4552,15 +4559,18 @@ function countHazmatViolations(grid){
 }
 
 // ── v2.1.5 HAZMAT SEGREGATION (a dock rule, stricter than 49 CFR 177.848) ──
-// 3.9.1003 I read 177.848 at the source (eCFR, 2026-10-21). Its table separates only some pairs: 3 or 8 with 5.1 is O
-// (apart so a leak cannot mix), 6.1 PG I zone A with 8 is X (never the same vehicle), and 2.1 or 2.2 with 5.1 or 8
-// is blank; class 9 is not in it. So the player text calls this the dock rule and cites 49 CFR only where it holds.
+// 3.9.1003 I read 177.848 at the source (eCFR, 2026-10-21). Its table separates only some pairs, and those are the
+// killer pairs below (3.9.1004). Two cells between ANY two classes is the dock rule, stricter than the table.
 // Same class: may touch (max 2; 3+ chain = violation). Different class: need >=2
 // clear cells between nearest edges. Killer pairs: hard violation when too close.
 // Live grid scan like the height rule · separate them and the penalty clears.
-var HAZ_KILLER={'3|5.1':1,'2|5.1':1,'5.1|8':1,'2|8':1,'6|8':1}; // keys in JS .sort() order
+// 3.9.1004 the killer pairs are the pairs 177.848's table marks O among the classes this dock carries: kept apart so a
+// leak cannot mix them. Flares (1.4) with flammable gas, flammable liquid or corrosive; an oxidizer with a flammable
+// liquid or a corrosive. Gas 2.1 or 2.2 with an oxidizer or a corrosive is blank in the table, a pesticide is not the
+// table's 6.1 row (that row is PG I zone A, an inhalation hazard), and class 9 is not in the table. Every other pair of
+// classes still gets the two-cell dock rule in countSegregationViolations.
+var HAZ_KILLER={'1.4|2.1':1,'1.4|3':1,'1.4|8':1,'3|5.1':1,'5.1|8':1}; // keys in JS .sort() order
 function isKillerPair(a,b){
-  if(a==='1'||b==='1')return true; // Class 1 explosives: away from everything
   return !!HAZ_KILLER[[a,b].sort().join('|')];
 }
 function hazPiecesOnGrid(grid){
@@ -4645,7 +4655,7 @@ var WRITEUP_DOCS={
   TIMEOUT_HEAVY:{t:'HEAVY FREIGHT LEFT UNSUPPORTED',w:'Heavy freight keeps sitting high with no base under it. Build under it or bring it down: a locked shelf or solid support below makes it safe.'},
   HAZMAT_HIGH:{t:'HAZMAT LOADED ABOVE SHOULDER HEIGHT',w:'Hazardous freight rides LOW and LOCKED under a shelf so it can never fall. A high hazmat that falls is a chemical-spill injury and an automatic write-up. Hazmat may not ride loose.'},
   HAZMAT_CRUSH:{t:'HAZMAT LOADED UNDER WEIGHT',w:'Never bury a hazmat under heavy freight \u00b7 crushed containers leak. Load it low, cap it with a LOCKED shelf, put nothing heavy on top.'},
-  KILLER:{t:'INCOMPATIBLE HAZMAT CLASSES IN CONTACT',w:'These two classes must not touch. 49 CFR 177.848 requires separation for some of these pairs, such as an oxidizer with a flammable liquid or a corrosive; this dock keeps every listed pair apart. A "killer pair" in contact is an automatic write-up.'},
+  KILLER:{t:'INCOMPATIBLE HAZMAT CLASSES TOO CLOSE',w:'These two classes stay at least two clear cells apart. 49 CFR 177.848 requires them to be kept apart so a leak cannot mix them: flares with a flammable gas, a flammable liquid or a corrosive, and an oxidizer with a flammable liquid or a corrosive. A killer pair closer than that is an automatic write-up.'},
   SEGREGATION:{t:'HAZMAT SEGREGATION BREACH',w:'Different hazmat classes need two clear cells between them. That is the dock rule, stricter than the federal segregation table (49 CFR 177.848), which separates some class pairs only. Keep them apart.'},
   TIRE_STACK:{t:'TIRES STACKED VERTICALLY',w:'Tires stacked on their edge ROLL the second the door opens. Lay them flat \u00b7 an obvious hazard is an immediate write-up.'},
   FRAGILE_CRUSH:{t:'REPEATED CRUSHED FRAGILES',w:'Only the heaviest freight crushes, and it has landed on exposed fragiles repeatedly. Height does not protect them · crushed fragiles are damage claims. Put a real box on each side of every fragile, or lock a shelf under it first.'},
@@ -6610,6 +6620,14 @@ function drawHazPlacard(c,cx,cy,d,cls,cb){
   c.moveTo(cx,cy-hh);c.lineTo(cx+hh,cy);c.lineTo(cx,cy+hh);c.lineTo(cx-hh,cy);c.closePath();
   c.fillStyle=cb?'#f4efe6':(hc.bg||'rgba(255,200,0,.95)');
   c.fill();
+  // 3.9.1004 the two placards that are not one color (172.558, 172.560): CORROSIVE is white in the upper part and black
+  // below; CLASS 9 is white with seven black vertical stripes down the top half
+  if(!cb&&(hc.top||hc.stripes)){
+    c.save();c.clip();
+    if(hc.top){c.fillStyle=hc.top;c.fillRect(cx-hh,cy-hh,d,hh);}
+    if(hc.stripes){var _sw=d/15,_k;c.fillStyle='#111';for(_k=0;_k<7;_k++)c.fillRect(cx-hh+_sw*(1+2*_k),cy-hh,_sw,hh*0.88);}
+    c.restore();
+  }
   c.lineWidth=Math.max(1.5,d*0.06);
   c.strokeStyle=cb?'#0a0a0a':'rgba(20,10,0,.9)';
   c.stroke();
@@ -6617,10 +6635,10 @@ function drawHazPlacard(c,cx,cy,d,cls,cb){
     c.lineWidth=Math.max(0.6,d*0.02);
     c.beginPath();c.moveTo(cx-hh*0.6,cy);c.lineTo(cx+hh*0.6,cy);c.stroke();
     var sfs=Math.max(6,d*0.20);
-    c.fillStyle=cb?'#0a0a0a':(hc.tc||'#1a0000');
+    c.fillStyle=cb?'#0a0a0a':(hc.sym||hc.tc||'#1a0000');
     c.font='bold '+sfs+'px "Share Tech Mono", monospace';
     c.textAlign='center';c.textBaseline='middle';
-    c.fillText('\u26A0',cx,cy-d*0.20);
+    if(cb||!hc.stripes)c.fillText('\u26A0',cx,cy-d*0.20); // the class 9 stripes are its symbol
   }
   var fs=Math.max(7,d*0.34);
   c.fillStyle=cb?'#0a0a0a':(hc.tc||'#1a0000');
@@ -9279,7 +9297,7 @@ function psBuild(){
       '<div><span class="k">DATE</span><span class="v">'+new Date().toISOString().slice(0,10)+'</span></div>'+
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.9.1003</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v3.9.1004</span></div></div>';
     var _legend='\u25c6 the last sealed wall and this whole session';
     H+='<div class="ps-legend"><span class="sp">'+_legend+'</span><span class="h w">WALL</span><span class="h s">SESSION</span></div>';
     H+='<div class="ps-blocks">';

@@ -2,6 +2,16 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1004 - THE HAZMAT FREIGHT MATCHES THE FEDERAL LIST.
+     I chose "Match the federal list." Read at the source the same day (49 CFR 172.101 classes, 172.519-172.560
+     placards, 177.848 segregation). Propane and a grill's cylinder are 2.1 (red), the extinguisher and the air tank 2.2
+     (green), the life raft 9 (it was 2), the flares 1.4 (it was 1), the pesticide 6.1. The water heater and the
+     compressor no longer arrive as hazmat; neither is on the list. Placards wear the DOT colors: POISON white,
+     CORROSIVE white over black, CLASS 9 white with seven black stripes on the top half (colorblind mode keeps its plain
+     high-contrast placard). The killer pairs are now exactly the pairs the federal table keeps apart among these
+     classes: flares with a flammable gas, a flammable liquid or a corrosive, and an oxidizer with a flammable liquid or
+     a corrosive. The write-up and Day One say so. Two clear cells between any two classes stays the dock rule.
+
    CHANGE LOG v3.9.1003 - FREIGHT LOADING SIMULATOR, AND EVERY 49 CFR CITATION TRUE.
      I said: "the game should be reconsidered a simulator. as long as it's valid." LOCK IN calls itself a simulator
      everywhere it names itself: the page titles, search descriptions and share cards (Freight Loading Simulator), the
