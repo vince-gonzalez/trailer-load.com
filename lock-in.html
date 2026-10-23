@@ -58,7 +58,7 @@ small,sub,sup{font-size:11px;}
   --acc-ink:#6e3f08;--ok-ink:#0f5c31;--warn-ink:#7a4500;--danger-ink:#96270d;--teal-ink:#0a5a50;
   --t1:#2a2018;--t2:#4f4230;--t3:#5c4f3b;
   --ok:#1f9d57;--warn:#d4820f;--danger:#c23a1a;--teal:#138578;--teal-bright:#19a594;--teal-wash:#def0ec;
-  --border:#d2c6ad;--border2:#c0b193;--border3:#ab9a78;
+  --border:#d2c6ad;--border2:#c0b193;--border3:#ab9a78;--edge:#76664c;/* 3.9.1009 the edge of a button or a field (1.4.11 asks 3:1): 4.01:1 on #e3dac9, 3.52:1 on the shaded drawer head, 3.60:1 against the field's own #d9cfbb */
   --sm:#7a4dd0;--sm-bright:#9a6fe8;
   --lg:#b04040;--lg-bright:#d86060;
   --panel-left-w:204px;--panel-right-w:226px;
@@ -73,7 +73,7 @@ small,sub,sup{font-size:11px;}
   --bg:#1c1410;--bg2:#241a13;--bg3:#2e2016;
   --acc:#e0962e;--acc-bright:#f0ad4a;--acc-dim:#b07820;--acc-wash:#3a2a16;--acc-ink:#e0962e;--ok-ink:#28b870;--warn-ink:#e0962e;--danger-ink:#e0593a;--teal-ink:#2dc0ad;
   --t1:#f0e6d4;--t2:#c0ad90;--t3:#a08e74;
-  --ok:#28b870;--warn:#e0962e;--danger:#e0593a;--teal:#19a594;--teal-bright:#2dc0ad;--teal-wash:#1a3a36;
+  --ok:#28b870;--warn:#e0962e;--danger:#e0593a;--teal:#19a594;--teal-bright:#2dc0ad;--teal-wash:#1a3a36;--edge:#8a7658;/* 3.91:1 on #241a13, 3.61:1 against the field's own #2e2016 */
   --border:#3a2c20;--border2:#4a3826;--border3:#5a4632;
   --sm:#a07de8;--sm-bright:#c0a0ff;
   --lg:#d86060;--lg-bright:#e88080;
@@ -249,7 +249,7 @@ html,body{width:100%;height:100dvh;color:var(--t1);
   border-bottom:1px solid var(--border2);background:rgba(0,0,0,.06);flex:none;}
 .cd-title{font-family:'Share Tech Mono',monospace;font-size:14px;letter-spacing:2px;color:var(--acc-ink);
   text-transform:uppercase;font-weight:bold;}
-.cd-x{background:transparent;border:1px solid var(--border2);color:var(--t2);font-size:13px;letter-spacing:1px;
+.cd-x{background:transparent;border:1px solid var(--edge);color:var(--t2);font-size:13px;letter-spacing:1px;
   border-radius:4px;padding:4px 11px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-weight:bold;}
 .cd-x:hover{border-color:var(--acc);color:var(--acc);}
 .cd-body{padding:12px 14px;overflow-y:auto;flex:1;}
@@ -295,12 +295,12 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 .data-p{font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--t2);line-height:1.35;margin:0 0 14px;}
 .data-fld{display:block;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--t2);margin-bottom:10px;} /* v3.5.145 was 10px/--t3 (sub-AA while typing) */
 .data-fld span{color:var(--t2);text-transform:none;letter-spacing:0;}
-.data-fld input{display:block;width:100%;margin-top:4px;padding:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--t1);font-family:'Share Tech Mono',monospace;font-size:13px;}
+.data-fld input{display:block;width:100%;margin-top:4px;padding:8px;background:var(--bg3);border:1px solid var(--edge);border-radius:6px;color:var(--t1);font-family:'Share Tech Mono',monospace;font-size:13px;}
 
 .data-btns{display:flex;gap:10px;margin:14px 0 8px;}
 .data-save{flex:1;padding:10px;background:var(--acc);color:#1c1206;font-weight:bold;border:none;border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:14px;letter-spacing:.06em;cursor:pointer;} /* v3.5.145 was white-on-amber (~2:1) + 7px radius */
 .data-save:hover{background:var(--acc-bright);}
-.data-cancel{flex:1;padding:10px;background:transparent;color:var(--t2);border:1px solid var(--border2);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:14px;letter-spacing:.06em;cursor:pointer;}
+.data-cancel{flex:1;padding:10px;background:transparent;color:var(--t2);border:1px solid var(--edge);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:14px;letter-spacing:.06em;cursor:pointer;}
 
  /* v3.5.152 (Letterman) 10px/--t3 -> 11px/--t2 */
 #sm-tagline{
@@ -386,8 +386,8 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 .sm-loginbtn{font-size:14px;letter-spacing:1px;padding:9px 16px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .sm-iconbtn:hover,.sm-loginbtn:hover{background:var(--acc-bright);color:#140c04;}
 /* on a crew = the crew name, in the cyan "load-rate" tone so it reads as a live membership, not a call to action */
-.sm-loginbtn.signed-in{background:#123f3a;color:#5fd6cd;border-color:#2aa9a0;}
-.sm-loginbtn.signed-in:hover{background:#18514a;color:#8be6de;}
+.sm-loginbtn.on-crew{background:#123f3a;color:#5fd6cd;border-color:#2aa9a0;}
+.sm-loginbtn.on-crew:hover{background:#18514a;color:#8be6de;}
 
 /* Mode cards · VERTICAL, brick-laid, LARGE legible text */
 #sm-modes{display:flex;flex-direction:column;gap:11px;width:360px;max-width:46vw;margin:0;padding:0 0 0 34px;}
@@ -563,7 +563,7 @@ body.m-portrait #to-principle-card{overflow-y:auto;}
   color:#040f06;border-color:var(--ok);
 }
 .to-btn-play:hover{filter:brightness(1.1);}
-.to-btn-exit{background:transparent;color:var(--t2);border-color:var(--border2);}
+.to-btn-exit{background:transparent;color:var(--t2);border-color:var(--edge);}
 .to-btn-exit:hover{border-color:var(--acc);color:var(--acc-ink);} /* 3.9.1009 --acc measured 2.44:1 on the light panel; --acc-ink is 6.37 there and the same #e0962e as before in the dark theme (7.42) */
 #to-exit-hint{
   font-family:'Share Tech Mono',monospace;font-size:11px;
@@ -802,9 +802,9 @@ body.m-portrait #ov-pause.vis ~ #root #stats-panel{left:0;}
 /* v3.5.153 F-KEYS COMPANY SPLASH · plays first, before the LOCK IN boot splash. Uses fkeys.png if present, else a clean inline SVG mark so it's never broken. */
 #fkeys-splash{position:fixed;inset:0;z-index:902;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;background:#000;transition:opacity .5s ease;}
 #fkeys-splash.gone{opacity:0;pointer-events:none;}
-#fkeys-splash .fk-mark{width:min(52vmin,320px);height:auto;opacity:0;animation:fkIn 1.15s cubic-bezier(.22,.9,.3,1) forwards;}
+#fkeys-splash .fk-mark{width:min(52vmin,320px);height:auto;color:#fff;opacity:0;animation:fkIn 1.15s cubic-bezier(.22,.9,.3,1) forwards;}
 @keyframes fkIn{0%{opacity:0;transform:scale(.9);filter:blur(8px);}40%{opacity:1;}100%{opacity:1;transform:scale(1);filter:blur(0);}}
-#fkeys-splash .fk-tag{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:4px;color:#6a6a6a;opacity:0;animation:fkTag .8s ease .5s forwards;}
+#fkeys-splash .fk-tag{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:4px;color:#808080;opacity:0;animation:fkTag .8s ease .5s forwards;}
 @keyframes fkTag{to{opacity:1;}}
 /* v3.5.151 OPEN DOOR (Rule-8 blocker) · Reduced Motion was only gating the JS juice (shake/particles, via juiceOn); the decorative CSS animations (button pulses, ribbon/score pops, banner slides, chute blink, first-run pulse) still fired. This kills looping + near-instants one-shots when the reduce-motion setting OR the OS prefers-reduced-motion is on. Canvas gameplay rendering (belt/wall) is JS rAF, untouched · only vestibular-trigger decoration stops. */
 body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important;}
@@ -835,7 +835,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 .pause-clip .pmb-resume{background:linear-gradient(180deg,var(--acc-bright),var(--acc));color:#2a1c08;border-color:var(--acc);}
 .pause-clip .pmb-resume:hover{filter:brightness(1.05);color:#2a1c08;}
 .pause-clip .pmb-restart{color:#6a2418;border-color:#d0a08a;}
-.pause-clip .pmb-account{background:#dcebe5;border-color:#7fbcae;color:#0f5e52;}
+.pause-clip .pmb-crew{background:#dcebe5;border-color:#7fbcae;color:#0f5e52;}
 .pause-clip #fp-tip{background:rgba(42,32,24,.05);border-radius:6px;padding:9px 11px;border:1px solid rgba(42,32,24,.08);}
 .pause-clip .fp-tip-hdr{color:#7e4a0c;}
 .pause-clip #fp-tip-h{color:#3a2c1a;}
@@ -851,7 +851,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 .pause-clip #fp-tip{background:rgba(255,250,240,.85);border:1px solid rgba(42,32,24,.2);}
 #ov-pause .pause-clip #fp-tip{background:#e3dac9;} /* v3.5.210 #ov-pause #fp-tip's var(--bg2) won here and went near-black in the dark theme */
 .pause-clip .pause-title,.pause-clip .pause-sub,.pause-clip .fp-tip-hdr,.pause-clip #fp-tip-h,.pause-clip #fp-tip-s,.pause-clip .pause-hint,
-.pause-clip .pmb-restart,.pause-clip .pmb:not(.pmb-resume):not(.pmb-account){
+.pause-clip .pmb-restart,.pause-clip .pmb:not(.pmb-resume):not(.pmb-crew){
   text-shadow:0 1px 0 rgba(255,255,255,.95),0 -1px 0 rgba(255,255,255,.7),1px 0 0 rgba(255,255,255,.7),-1px 0 0 rgba(255,255,255,.7);}
 /* v3.5.68 SAFETY WRITE-UP · a clipboard document that STOPS the game; you must sign to continue */
 #ov-writeup{position:fixed;inset:0;z-index:520;display:none;align-items:center;justify-content:center;background:rgba(10,7,4,.82);padding:16px;}
@@ -1357,7 +1357,7 @@ body.m-portrait.cn-sheet.m-armed #m-rot{right:150px;bottom:14px;}
   padding:16px 20px 12px;border-bottom:1px solid var(--border2);position:sticky;top:0;background:var(--bg2);z-index:2;}
 #set-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:6px;color:var(--acc-ink);line-height:1;}
 #set-close{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;
-  background:transparent;border:1px solid var(--border2);border-radius:6px;
+  background:transparent;border:1px solid var(--edge);border-radius:6px;
   color:var(--t2);padding:6px 14px;cursor:pointer;}
 #set-close:hover{border-color:var(--acc);color:var(--acc-ink);}
 #set-body{padding:6px 20px 16px;}
@@ -1480,7 +1480,7 @@ body[data-cb="trit"]{
 
 #safety-dot{width:16px;height:16px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok);flex:none;transition:background .3s,box-shadow .3s;}
 
-/* ── v2.5.0 PROFILE DASHBOARD ── */
+/* ── the BOARDS overlay (v2.5.0 began as a player profile; 4.0 has none) ── */
 /* v2.11.0 PROFILE = trusty clipboard popup (warm paper + metal clip), same stats logic */
 #ov-leaderboard{position:fixed;inset:0;z-index:560;display:none;align-items:center;justify-content:center;background:rgba(28,20,16,.92);overflow:auto;padding:34px 12px 30px;}/* v3.5.31 above the start menu (400) so they're interactive from the menu */
 
@@ -1494,10 +1494,11 @@ body[data-cb="trit"]{
 #ov-leaderboard .lb-note{color:#3f3020;border-top-color:#8a7a5c;} /* 4.0 the notes sit on the gray clipboard art: #a08b6a measured 1.58:1 there, #3f3020 is the clipboard ink */
 /* v3.5.104 THE HALL LEDGER · World-Board fame cards + medal rows, cream-paper style (v3.5.205 shame removed) */
 
-.lb-crow{display:grid;grid-template-columns:20px 1fr auto;align-items:center;gap:7px;padding:4px 7px;border-radius:5px;background:rgba(255,255,255,.5);}
+.lb-crow,.lb-hrow{display:grid;grid-template-columns:22px 1fr auto 52px;align-items:center;gap:8px;padding:4px 7px;border-radius:5px;background:rgba(255,255,255,.5);}
+.lb-hrow{background:none;padding:0 7px 3px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:#4a3a22;} /* 3.9.1009 the column names: #4a3a22 on the gray board 7.9:1 */
+.lb-crow .dt,.lb-hrow span:last-child{text-align:right;}
+.lb-crow .dt{font-family:'Share Tech Mono',monospace;font-size:12px;color:#4a3a22;}
 .lb-crow .rk{font-family:'Bebas Neue',sans-serif;font-size:15px;color:#5c4a2e;text-align:center;line-height:1;} /* 3.9.1009 the rank on the clipboard row: #a08b6a measured 2.39 to 2.58:1, #5c4a2e measures 6.19 to 6.68 (5.52 computed on the darkest row) */
-.lb-crow .who{display:flex;align-items:center;gap:5px;min-width:0;}
-.lb-crow .med{font-size:13px;flex:none;}
 .lb-crow .nm{font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:bold;color:#2a1a08;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.2px;}
 .lb-crow .v{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:bold;color:#8b4513;font-variant-numeric:tabular-nums;letter-spacing:.3px;}
 .lb-crow.r1{background:linear-gradient(90deg,rgba(246,220,144,.6),rgba(255,255,255,.5));}
@@ -1505,17 +1506,6 @@ body[data-cb="trit"]{
 .lb-crow.r1 .nm{color:#3a2708;}
 
 #lb-daily-board .lb-crow{background:rgba(255,255,255,.55);}
-/* v3.5.86 DAILY = the crown jewel: the world's #1 loader gets a hero, + a live reset countdown */
-.lb-daily-crown{background:linear-gradient(135deg,#f6dc90,#e0a838);border:1px solid #b5651a;border-radius:7px;padding:11px 14px;margin-bottom:11px;text-align:center;box-shadow:0 3px 14px rgba(224,150,46,.42);}
-.lb-daily-crown.empty{background:linear-gradient(135deg,#efe7d4,#ddd0b4);box-shadow:none;}
-.lb-daily-crown .dc-lbl{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.4px;color:#6a3a08;}
-.lb-daily-crown .dc-name{font-family:'Bebas Neue',sans-serif;font-size:27px;letter-spacing:1px;color:#3a1e04;line-height:1;margin:3px 0 2px;word-break:break-all;}
-.lb-daily-crown .dc-score{font-family:'Share Tech Mono',monospace;font-size:12px;color:#6a3a08;font-weight:bold;}
-.lb-daily-reset{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;color:#4a3a22;text-align:center;margin-top:7px;}
-/* v3.5.107 ALL-TIME DAILY records strip */
-.lb-alltime{margin-top:12px;padding-top:11px;border-top:2px dashed #cebf9c;}
-.lb-at-hd{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#5a3a06;margin:0 0 9px;display:flex;align-items:center;gap:7px;}
-.lb-at-hd::after{content:'';flex:1;height:1px;background:#cebf9c;}
 
 /* v3.5.111 2x2 grid, high-contrast (no more gray-on-gray) */
 .lb-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px;}
@@ -1567,6 +1557,7 @@ body[data-cb="trit"]{
   border:2px solid var(--btn-line);border-radius:6px;background:var(--acc);color:#241505;
   padding:9px 22px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
 .cert-btn.ghost{background:transparent;color:var(--t1);}
+#ov-cert .cert-btn{border-color:#e8b65c;} /* 3.9.1009 the certificate is a dark screen in both themes: #e8b65c is 9.29:1 on it (the light theme's #533a12 was 1.64:1) */
 .cert-note{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;
   color:var(--t2);text-align:center;max-width:460px;line-height:1.5;}
 #daily-result{margin:10px 0;padding:12px;background:#2e2016;border-radius:8px;border:1px solid var(--border2);text-align:left;} /* v3.5.178 explicit dark ground · this panel only ever renders on the dark end screen */
@@ -1733,13 +1724,13 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.9.1009 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.9.1009</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
     <button class="pmb pmb-restart" onclick="pauseRestart()">↺ RESTART</button>
     <button class="pmb" onclick="clockOut()">⏏ CLOCK OUT · END &amp; SEE STATS</button>
-    <button class="pmb pmb-account" onclick="crewOpen()">◈ CREW</button>
+    <button class="pmb pmb-crew" onclick="crewOpen()">◈ CREW</button>
     <button class="pmb" onclick="pauseToMenu()">⌂ MAIN MENU · SWITCH MODE</button>
   </div>
   <!-- v3.5.7: COACH lives here now · read it on a break, not over the wall -->
@@ -1781,7 +1772,7 @@ body[data-cb="trit"]{
 </div>
 <div id="brief-legal">
   Training supplement only · not a substitute for employer safety training or certification. &nbsp;·&nbsp;
-  No ads and no tracking. Your stats are saved only if you choose; the game keeps anonymous daily totals with nothing about you attached · see the
+  No ads and no tracking. Nothing about play leaves this device unless you sign a board or join a crew; the game keeps anonymous daily totals with nothing about you attached · see the
   <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>. &nbsp;·&nbsp; &copy; 2026
 </div>
 </div>
@@ -1865,7 +1856,7 @@ body[data-cb="trit"]{
   <div class="wu-in">
     <div class="wu-head"><span class="wu-brand">LOCK<b> IN</b></span><span class="wu-doc">SAFETY WRITE-UP</span></div>
     <div class="wu-meta">
-      <div><span>LOADER</span><b id="wu-loader">LOADER</b></div>
+      <div id="wu-loader-cell"><span>LOADER</span><b id="wu-loader"></b></div>
       <div><span>DATE</span><b id="wu-date">·</b></div>
       <div><span>INFRACTION #</span><b id="wu-num">1</b></div>
     </div>
@@ -1874,7 +1865,7 @@ body[data-cb="trit"]{
     <div class="wu-why-lbl">WHY IT MATTERS</div>
     <div class="wu-why" id="wu-why">·</div>
     <div class="wu-ack">
-      <span id="wu-ack-note">By signing, you acknowledge the safety briefing. Repeat infractions escalate · five incidents put you on a practice trailer; four write-ups end the shift.</span>
+      <span id="wu-ack-note">By signing, you acknowledge the safety briefing. Repeat infractions escalate · five incidents reset you to a fresh trailer; four write-ups end the shift.</span>
       <button id="wu-signbtn" onclick="signWriteup()">✍ SIGN &amp; CONTINUE</button>
     </div>
   </div>
@@ -2188,7 +2179,7 @@ body[data-cb="trit"]{
         <!-- v3.5.147 FLOW streak pip -->
         <div id="flow-pip" aria-hidden="true"></div>
         <!-- v3.5.203 THE WATER BOTTLE (my design): blue fill = drinks this trailer, 4 max. Press it to drink. -->
-        <button id="water-bottle" class="water-bottle" type="button" onclick="takeDrink()" title="Water · 4 drinks a trailer. The first two pay a bonus when you load a few boxes between them." aria-label="Water bottle: 0 of 4 drinks this trailer. Press to drink">
+        <button id="water-bottle" class="water-bottle" type="button" onclick="takeDrink()" title="Water · 4 drinks a trailer. The first two pay a bonus when you load a few boxes between them." aria-label="Water 0/4. 0 of 4 drinks this trailer. Press to drink">
           <svg viewBox="0 0 48 124" aria-hidden="true" focusable="false">
             <defs><clipPath id="wb-clip"><path d="M18 11 L18 18 C18 24 8 26 8 34 L8 113 Q8 120 15 120 L33 120 Q40 120 40 113 L40 34 C40 26 30 24 30 18 L30 11 Z"/></clipPath></defs>
             <path class="wb-glass-bg" d="M18 11 L18 18 C18 24 8 26 8 34 L8 113 Q8 120 15 120 L33 120 Q40 120 40 113 L40 34 C40 26 30 24 30 18 L30 11 Z"/>
@@ -2223,14 +2214,14 @@ body[data-cb="trit"]{
       </div>
       <div id="conv-header">
                 <div class="conv-lbl" style="display:flex;align-items:center;gap:8px;"><span id="chute-light" class="chute-light cl-ok" title="Chute flow"></span><button id="breakjam-btn" class="bj-btn" onclick="breakJam()" style="display:none">📦 BREAK JAM</button></div>
-        <button id="water-side" class="strip-act sa-water" onclick="takeDrink()" title="Drink water · 4 a trailer · 6s between drinks" aria-label="Drink water. 0 of 4 drinks this trailer">💧 WATER 0/4</button>
+        <button id="water-side" class="strip-act sa-water" onclick="takeDrink()" title="Drink water · 4 a trailer · 6s between drinks" aria-label="Water 0/4. 0 of 4 drinks this trailer. Press to drink">💧 WATER 0/4</button>
         <div class="conv-lbl" style="display:flex;align-items:center;gap:7px;">
           <button type="button" class="sh-plate" id="stg-nc" onclick="openStagingPopup('nc')" title="Special handling (H): too big, heavy or hazardous for the belt. Load it low." aria-label="Special handling. 0 of 8. Too big, heavy or hazardous for the belt. Load it low. Key H."><span class="sh-face"><span class="sh-word">SPECIAL HANDLING</span><span class="stg-pie" id="stg-nc-pie"></span><span class="sh-chip" id="stg-nc-n">0/8</span><span class="sh-br"></span><span class="sh-sub">Too big, heavy or hazardous for the belt. Load it low.</span><kbd class="sh-key" aria-hidden="true">H</kbd></span></button>
-          <span class="stg-light" id="stg-bag" role="button" tabindex="0" aria-label="Smalls staging" onclick="openStagingPopup('bag')" title="Smalls staging" style="display:none;"><b>SM</b><span class="stg-pie" id="stg-bag-pie"></span><span id="stg-bag-n">0/8</span></span>
+          <span class="stg-light" id="stg-bag" role="button" tabindex="0" aria-label="SM 0/8. Smalls staging" onclick="openStagingPopup('bag')" title="Smalls staging" style="display:none;"><b>SM</b><span class="stg-pie" id="stg-bag-pie"></span><span id="stg-bag-n">0/8</span></span>
         </div>
         <span class="conv-lbl" id="safety-live" style="font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:bold;letter-spacing:.5px;" title="Live safety · open warnings / incidents on record"></span>
-        <button id="stage-btn" class="strip-act sa-stage" type="button" onclick="stageButton()" title="STAGE (F): set the box in your hand down beside the wall. 3 spots. With empty hands, choose a staged box to pick back up." aria-label="Stage. 0 of 3 staged. Key F.">⬇ STAGE <span id="stage-n">0/3</span></button>
-        <button id="rot-btn" onclick="rotateSel()" aria-label="Rotate the box in hand. Key R.">↻ ROT<span class="kh"> [R]</span></button>
+        <button id="stage-btn" class="strip-act sa-stage" type="button" onclick="stageButton()" title="STAGE (F): set the box in your hand down beside the wall. 3 spots. With empty hands, choose a staged box to pick back up." aria-label="Stage 0/3. 0 of 3 staged. Key F.">⬇ STAGE <span id="stage-n">0/3</span></button>
+        <button id="rot-btn" onclick="rotateSel()" aria-label="Rot [R]: rotate the box in hand.">↻ ROT<span class="kh"> [R]</span></button>
       </div>
       <canvas id="belt-canvas" aria-hidden="true" role="presentation" style="display:none;width:100%;touch-action:none;">Conveyor belt.</canvas>
     </div>
@@ -2316,7 +2307,7 @@ body[data-cb="trit"]{
     <div class="dr-head">DAILY · <span id="dr-date"></span></div>
     <div class="dr-streak" id="dr-streak" style="display:none;"></div>
     <div class="dr-rank" id="dr-rank"></div>
-    <!-- v3.5.204 the daily signs HERE, with the run total, after the private record is saved -->
+    <!-- v3.5.204 the daily signs HERE, with the run total -->
     <div id="dr-sign" style="display:none;"><div class="dr-sign-hd">SIGN TODAY’S BOARD · THREE INITIALS</div><div class="dr-sign-row"><input id="dr-sign-in" type="text" maxlength="3" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="AAA" aria-label="Your three initials" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')" onkeydown="if(event.key==='Enter')liDailySign();"><button id="dr-sign-btn" onclick="liDailySign()">SIGN</button></div><div id="dr-sign-msg" aria-live="polite"></div></div>
     <button class="btn-p dr-share" onclick="shareDaily()">▲ SHARE RESULT</button>
     <div class="dr-board-h">TODAY’S ARCADE BOARD</div>
@@ -2335,9 +2326,9 @@ body[data-cb="trit"]{
 <div id="ov-tutdone">
   <div class="tutdone-card">
     <div class="td-hdr">LOCK IN <span class="td-badge">TRAINING RECORD</span></div>
-    <div class="td-sub">You watched a trainer load a full wall · the way it's done. Everything you saw is checked off. Sign to clock in.</div>
+    <div class="td-sub">You watched a trainer load a full wall · the way it's done. Everything you saw is checked off. Sign to finish training.</div>
     <div id="tutdone-list" class="td-list"></div>
-    <div class="td-ladder"><b>⚠ THE LADDER</b><br>COLLAPSE → ⚠ WARNING → ⛔ INCIDENT → ✍ WRITE-UP<br><small>5 incidents = practice trailer · 4 write-ups = shift over</small><br><small>🔒 a locked shelf clears a tire or fragile warning · 💧 water fixes a thirst warning</small></div>
+    <div class="td-ladder"><b>⚠ THE LADDER</b><br>COLLAPSE → ⚠ WARNING → ⛔ INCIDENT → ✍ WRITE-UP<br><small>5 incidents = fresh trailer · 4 write-ups = shift over</small><br><small>🔒 a locked shelf clears a tire or fragile warning · 💧 water fixes a thirst warning</small></div>
     <button class="td-sign" onclick="tutSign()">✍ SIGN HERE · TRAINING COMPLETE</button>
     <button class="td-sign pr-alt" onclick="startPractice()">✋ NOW LOAD IT YOURSELF · PRACTICE</button>
     <button class="td-skip" onclick="tutExit()">Skip · back to menu</button>
@@ -2352,23 +2343,15 @@ body[data-cb="trit"]{
     <button class="lb-tab" id="lb-tab-shift" aria-pressed="false" onclick="lbTab('shift')">🚛 TRAILER-LOAD</button>
   </div>
   <div id="lb-pane-daily">
-    <div class="lb-daily-crown" id="lb-daily-crown"></div>
     <div class="lb-tabline" id="lb-daily-date">◈ DAILY</div>
     <div class="lb-board" id="lb-daily-board"><div class="lb-empty">Loading…</div></div>
-    <div class="lb-daily-reset" id="lb-daily-reset"></div>
-    <div class="lb-alltime">
-      <div class="lb-at-hd">🏛 All-time daily · top 3</div>
-      <div class="lb-board" id="lb-daily-alltime"></div>
-    </div>
     <div class="lb-note">The same wall for everyone, 00:00 to 23:59 UTC.</div>
   </div>
   <div id="lb-pane-shift" style="display:none">
-    <div class="lb-tabline">🚛 TRAILER-LOAD · TODAY</div>
-    <div class="lb-board" id="lb-shift-today"></div>
-    <div class="lb-tabline">🏛 TRAILER-LOAD · ALL-TIME</div>
+    <div class="lb-tabline">🚛 TRAILER-LOAD · ALL-TIME</div>
     <div class="lb-board" id="lb-shift-all"></div>
   </div>
-  <div class="lb-note">Seal a wall, then sign it with three initials. A board shows the initials and that run's numbers. There are no player accounts, so nothing links a signature to a person.</div>
+  <div class="lb-note">Seal a wall, then sign it with three initials. A board shows the initials, the score and the date.</div>
 </div></div></div>
 
 <!-- v3.5.19 LINEHAUL · persistent dispatch record (transposed dispatch style) -->
@@ -2459,7 +2442,7 @@ function ncStartCapped(){return _ncStartCap!==null&&G&&G.ncSlots&&(G.ncSlots.fil
 var MIN_PPH=55, LOW_PPH_GRACE=60, LOW_PPH_FAIL=180;
 var AFK_LIMIT=300; // v3.5.118 no-placement idle kill (kills a playtester's 44-min "farm longest time by afking" exploit)
 // v3.5.90 THE HUB STANDARD. Real hub loaders run ~250 pieces/hr · and "pieces" = REAL FREIGHT (boxes),
-// NOT smalls, NOT bags. Breaking down a smalls bag to chink your gaps is time you're NOT moving freight, so it
+// NOT smalls, NOT bags. Breaking down a smalls bag to fill your gaps is time you're NOT moving freight, so it
 // drags your pph. A wall sealed below standard is a PRODUCTIVITY incident · documented like a safety write-up.
 var STANDARD_PPH=250;
 // v3.5.173 (Devs BLOCKER) PPH SANITY. getPPH divided freight by elapsed with only an el<=0 guard,
@@ -2934,8 +2917,8 @@ function zEndSession(){
   zRpc('member_session',{p_token:c.token,p_mode:s.mode,p_app_ver:s.app_ver,p_started:s.started_at,p_ended:s.ended_at,
     p_duration:s.duration_s,p_summary:s.summary,p_incidents:s.incidents,p_events:s.events},crewAnswer);
 }
-// the name on a write-up, the certificate and the report: the crew name, else the last initials signed, else LOADER
-function zWho(){var c=crewMine(),i='';if(c&&c.name)return c.name;try{i=localStorage.getItem('liInitials')||'';}catch(e){}return i||'LOADER';}
+// the name on a write-up, the certificate and the report: the crew name, or '' with no crew (then no name is shown)
+function zWho(){var c=crewMine();return (c&&c.name)?c.name:'';}
 
 // ── CREW (4.0) ──
 // The only way a player's results reach a person. An instructor makes the crew on the dashboard and gives out its join
@@ -2952,7 +2935,7 @@ function crewAnswer(j){var c=crewMine();if(c&&j&&j.ok===false&&j.err==='not in a
 function crewPaint(){
   var c=crewMine(),b=document.getElementById('sm-crewbtn'),st=document.getElementById('crew-state'),
       jn=document.getElementById('crew-join'),lv=document.getElementById('crew-leave');
-  if(b){b.textContent=c?('\u25c6 CREW: '+c.name):'\u25c6 JOIN A CREW';b.classList.toggle('signed-in',!!c);}
+  if(b){b.textContent=c?('\u25c6 CREW: '+c.name):'\u25c6 JOIN A CREW';b.classList.toggle('on-crew',!!c);}
   if(st)st.innerHTML=c?('On <b>'+drEsc(c.crew)+'</b> as <b>'+drEsc(c.name)+'</b>. Walls and sessions played on this device go to the crew\u2019s instructor.')
     :'Not on a crew. Without a crew, nothing about play leaves this device except initials signed on a board.';
   if(jn)jn.style.display=c?'none':'';
@@ -3931,10 +3914,10 @@ function updateWaterHUD(){
   if(bot){
     bot.style.display=(typeof gameMode!=='undefined'&&(gameMode==='training'||gameMode==='practice'))?'none':''; // the watch-only demo has no player to drink
     bot.classList.toggle('dry',dry);bot.classList.toggle('full',full);
-    bot.setAttribute('aria-label','Water bottle: '+d+' of '+WATER_PER_WALL+' drinks this trailer'+(full?', fully hydrated':'. Press to drink'));
+    bot.setAttribute('aria-label','Water '+(full?'FULL':d+'/'+WATER_PER_WALL)+'. '+d+' of '+WATER_PER_WALL+' drinks this trailer'+(full?', fully hydrated':'. Press to drink'));
   }
   var side=document.getElementById('water-side');
-  if(side){side.textContent='💧 WATER '+d+'/'+WATER_PER_WALL;side.setAttribute('aria-label','Drink water. '+d+' of '+WATER_PER_WALL+' drinks this trailer');}
+  if(side){side.textContent='💧 WATER '+d+'/'+WATER_PER_WALL;side.setAttribute('aria-label','Water '+d+'/'+WATER_PER_WALL+'. '+d+' of '+WATER_PER_WALL+' drinks this trailer. Press to drink');}
 }
 // the bottle stands beside the trailer, left of it, level with the middle of the wall. Wide screens have an
 // open dock gutter there. Without one it stands between the trailer frame and the wall; on a phone, where
@@ -4778,7 +4761,7 @@ var WRITEUP_DOCS={
   HAZMAT_CRUSH:{t:'HAZMAT LOADED UNDER WEIGHT',w:'Never bury a hazmat under heavy freight \u00b7 crushed containers leak. Load it low, cap it with a LOCKED shelf, put nothing heavy on top.'},
   KILLER:{t:'INCOMPATIBLE HAZMAT CLASSES TOO CLOSE',w:'These two classes stay at least two clear cells apart, and a corrosive liquid never rides above an oxidizer. 49 CFR 177.848 keeps these pairs apart so a leak cannot mix them: flares with a flammable gas, a flammable liquid or a corrosive liquid, and an oxidizer with a flammable liquid or a corrosive liquid. Breaking either rule is an automatic write-up.'},
   SEGREGATION:{t:'HAZMAT SEGREGATION BREACH',w:'Different hazmat classes need two clear cells between them, and no more than two pieces of one class may touch. That is the dock rule, stricter than the federal segregation table (49 CFR 177.848) for every class on this dock. Keep them apart.'},
-  TIRE_STACK:{t:'TIRES STACKED VERTICALLY',w:'Tires stacked on their edge ROLL the second the door opens. Lay them flat. The first stack is a warning, the second is this write-up, the third loads a practice trailer and the fourth ends the round.'},
+  TIRE_STACK:{t:'TIRES STACKED VERTICALLY',w:'Tires stacked on their edge ROLL the second the door opens. Lay them flat. The first stack is a warning, the second is this write-up, the third loads a fresh trailer and the fourth ends the round.'},
   FRAGILE_CRUSH:{t:'REPEATED CRUSHED FREIGHT',w:'Only the heaviest freight crushes, and it has landed on exposed fragiles, small packages or bags repeatedly. Height does not protect them · crushed fragiles are damage claims. Put a real box on each side of every fragile, or lock a shelf under it first.'},
   COLLAPSE:{t:'REPEATED WALL COLLAPSES',w:'The wall has collapsed repeatedly. Taper stacks (wide base, narrow top) and lock shelves. Repeated collapses are documented.'},
   ACCUMULATED:{t:'MULTIPLE SAFETY VIOLATIONS',w:'Multiple safety violations this session. Each one is now documented.'},
@@ -4807,9 +4790,9 @@ function raiseWriteup(offense,num){
   if(typeof zLog==='function')zLog('writeup',{offense:offense,n:S.writeups}); // v3.5.132 raw timeline
   var terminal=(S.writeups>=WRITEUP_SENT_HOME);
   var doc=terminal?WRITEUP_DOCS.SENT_HOME:(WRITEUP_DOCS[offense]||WRITEUP_DOCS.ACCUMULATED);
-  var who=zWho(); // the crew name, else the last initials signed, else LOADER: the same name the report prints
+  var who=zWho(); // the crew name, or '' with no crew: then the LOADER cell is hidden, as on the report
   function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
-  set('wu-loader',who);set('wu-date',new Date().toISOString().slice(0,10));
+  set('wu-loader',who);var _wlc=document.getElementById('wu-loader-cell');if(_wlc)_wlc.style.display=who?'':'none';set('wu-date',new Date().toISOString().slice(0,10));
   set('wu-num',S.writeups);set('wu-title',doc.t);set('wu-why',doc.w); // v3.5.109 wu-num = the running write-up count
   var _sb=document.getElementById('wu-signbtn');if(_sb)_sb.textContent=terminal?'✍ SIGN · CLOCK OUT':'✍ SIGN & CONTINUE';
   if(terminal&&G)G._sentHome=true; // v3.5.109 sign -> game over
@@ -4870,7 +4853,7 @@ function sendToPractice(why){
   if(gameMode==='practice')return; // 3.9.1009 already on a practice wall
   if(G&&G._practiceSent)return;if(G)G._practiceSent=true;
   S.practiceKicks=(S.practiceKicks||0)+1;
-  showBanner('\u26d4 PRACTICE TRAILER \u00b7 '+(why||'incident limit reached')+'.<br><span style="font-size:.72em">A clean practice trailer is loaded. Incidents already logged stay on this session.</span>','danger',4200);
+  showBanner('\u26d4 FRESH TRAILER \u00b7 '+(why||'incident limit reached')+'.<br><span style="font-size:.72em">A clean trailer is loaded, with no dispatch clock. Incidents already logged stay on this session.</span>','danger',4200);
   setTimeout(function(){
     S.warnings=[]; // new wall, warnings reset (incidents/record persist)
     G.grid=makeGrid();placed=0;G.score=0;G.cog=.5;G.support=1;G.integrity=100;G._finalized=false;G._practiceSent=false;
@@ -4881,7 +4864,7 @@ function sendToPractice(why){
     if(typeof wallBaseline==='function')wallBaseline(); // v3.5.81 per-wall stat baseline (practice trailer)
     selBeltIdx=null;selBeltRot=0;selNC=-1;selBag=-1;
     if(typeof refillBelt==='function')refillBelt();
-    if(typeof showBanner==='function')showBanner('\ud83d\udfe2 PRACTICE TRAILER \u00b7 clean trailer.','ok',2600);
+    if(typeof showBanner==='function')showBanner('\ud83d\udfe2 FRESH TRAILER \u00b7 clean, no dispatch clock.','ok',2600);
     if(typeof updateWaterHUD==='function')updateWaterHUD();
     updateSafetyHUD();
   },1400);
@@ -5067,7 +5050,7 @@ function stageHUD(){
     var c=stageCount(),t=c+'/'+STAGE_MAX+(c>=STAGE_MAX?' FULL':'');
     if(sn.textContent!==t){
       sn.textContent=t;
-      sb.setAttribute('aria-label','Stage. '+c+' of '+STAGE_MAX+' staged'+(c>=STAGE_MAX?', full':'')+'. Key F.');
+      sb.setAttribute('aria-label','Stage '+t+'. '+c+' of '+STAGE_MAX+' staged'+(c>=STAGE_MAX?', full':'')+'. Key F.');
       sb.classList.toggle('s-full',c>=STAGE_MAX);
     }
   }
@@ -5349,7 +5332,7 @@ function tireStackStrike(){
   addShake(12);
   if(n===1){showBanner('⚠ TIRES STACKED ON EDGE · on-edge tires roll. First warning.','warn',3000);}
   else if(n===2){if(typeof logIncident==='function')logIncident('TIRE_STACK','');showBanner('⛔ STACKED TIRES AGAIN · that’s an incident on your record.','danger',3200);}
-  else if(n===3){showBanner('⛔ THIRD TIME · a practice trailer is loaded.','danger',2800);if(typeof sendToPractice==='function')sendToPractice('third stacked tire');}
+  else if(n===3){showBanner('⛔ THIRD TIME · a fresh trailer is loaded.','danger',2800);if(typeof sendToPractice==='function')sendToPractice('third stacked tire');}
   else if(!gOver&&typeof endGame==='function'){endGame('WALL COLLAPSE · stacked tires rolled the load. A rolled load is an injury hazard.',false);}
 }
 // v3.5.66 COLLAPSE ESCALATION · a collapse is a LEARNING CURVE, not an instant violation.
@@ -5901,7 +5884,7 @@ function liDrawCert(){
   var c=cv.getContext('2d'), W2=cv.width, H2=cv.height;
   var shot=CERT_LAST||liWallShot();
   var gr=CERT_GRADE||liCertGrade()||{pack:(typeof packPct==='function')?packPct():0,integ:100,inc:0,pieces:0,perfect:false};
-  var who=(typeof zWho==='function')?zWho():'LOADER';
+  var who=(typeof zWho==='function')?zWho():'';
   var when=new Date().toISOString().slice(0,10);
 
   c.fillStyle='#1c1410'; c.fillRect(0,0,W2,H2);
@@ -5939,7 +5922,7 @@ function liDrawCert(){
 
   c.fillStyle='#e0962e';
   c.font="46px 'Bebas Neue',sans-serif";
-  c.fillText(String(who).toUpperCase(), W2/2, 972);
+  if(who)c.fillText(String(who).toUpperCase(), W2/2, 972);
   c.fillStyle='#8a7860';
   c.font="17px 'Share Tech Mono',monospace";
   c.fillText(when, W2/2, 1000);
@@ -5984,7 +5967,7 @@ function liSaveCert(){
   try{
     var cv=document.getElementById('cert-canvas');
     var a=document.createElement('a');
-    a.download='LOCK-IN-'+((CERT_GRADE&&CERT_GRADE.perfect)?'perfect-wall':'locked-in')+'-'+String((typeof zWho==='function')?zWho():'loader').replace(/[^a-z0-9_-]/gi,'')+'-'+new Date().toISOString().slice(0,10)+'.png';
+    a.download='LOCK-IN-'+((CERT_GRADE&&CERT_GRADE.perfect)?'perfect-wall':'locked-in')+'-'+String((typeof zWho==='function')?zWho():'').replace(/[^a-z0-9_-]/gi,'').replace(/(.)$/,'$1-')+new Date().toISOString().slice(0,10)+'.png';
     a.href=cv.toDataURL('image/png');
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }catch(e){console.error('liSaveCert:',e);}
@@ -6236,7 +6219,7 @@ function _stgSet(key,used,max,warnFill,critFired){
     var _cn='sh-plate'+(crit?' s-crit':'');if(el.className!==_cn)el.className=_cn;
     var _al='Special handling. '+used+' of '+max+(used>=max?', full':'')+'. Too big, heavy or hazardous for the belt. Load it low. Key H.';
     if(el.getAttribute('aria-label')!==_al)el.setAttribute('aria-label',_al);
-  } else el.className='stg-light'+(crit?' s-crit':'');
+  } else {el.className='stg-light'+(crit?' s-crit':'');var _ab='SM '+_nt+'. Smalls staging';if(el.getAttribute('aria-label')!==_ab)el.setAttribute('aria-label',_ab);}
 }
 function openStagingPopup(type){
   if(gOver||paused)return;
@@ -7287,7 +7270,7 @@ function updateHUD(){
     :_gm==='training'?'TRAINING'
     :_gm===''?'PRACTICE' // v3.5.62 gameMode='' (no mode running) was rendering a BLANK mode cell
     :(''+_gm).toUpperCase();
-  if(typeof G!=='undefined'&&G&&G.practice)_modeLbl='PRACTICE'; // v3.5.62 safety-kickout trailer reads PRACTICE too
+  if(typeof G!=='undefined'&&G&&G.practice&&_gm!=='practice')_modeLbl='FRESH TRAILER'; // v3.5.62 the safety-kickout trailer says so; 3.9.1009 FRESH TRAILER, so it is never mistaken for PRACTICE mode
   setEl('sp-mode',_modeLbl);
   updateWaterHUD();
   var pphEl=document.getElementById('sp-pph');
@@ -9309,7 +9292,7 @@ function liCountBoot(){
 // The daily signs on the END SCREEN with the run total; a Trailer-Load wall signs on the wall-complete card.
 // read a board: cb(array) = read, and [] is truly empty; cb(null) = could not read it
 function liLoadArcade(mode,scope,limit,cb){zRpc('arcade_board',{p_mode:mode,p_scope:scope,p_limit:limit},function(j){cb(Array.isArray(j)?j:null);});}
-var LI_SIGN_HINT='The board shows the three initials and this wall\u2019s numbers. No account exists to link them to.';
+var LI_SIGN_HINT='The board shows the three initials, the score and the date.';
 // fill a sign box (prefix np = the wall card, dr = the daily end screen) for the wall named by key
 function liSignFill(prefix,key){
   var box=document.getElementById(prefix+'-sign');if(box)box.setAttribute('data-key',key); // which wall this box shows now
@@ -9573,8 +9556,8 @@ function closePostSort(){var ov=document.getElementById('ov-postsort');if(ov)ov.
 // ── BOARDS (4.0): initials only. DAILY shows today, the crown and the all-time top 3; TRAILER-LOAD shows today and
 // all-time. Every read either renders rows or says the board is offline; it never shows an empty board
 // for a read that failed.
-var _lbCur='daily',_lbGen=0,_dailyCD=null;
-function closeLeaderboard(){var ov=document.getElementById('ov-leaderboard');if(ov)ov.classList.remove('vis');if(_dailyCD){clearInterval(_dailyCD);_dailyCD=null;}}
+var _lbCur='daily',_lbGen=0;
+function closeLeaderboard(){var ov=document.getElementById('ov-leaderboard');if(ov)ov.classList.remove('vis');}
 function openBoards(tab){var ov=document.getElementById('ov-leaderboard');if(ov)ov.classList.add('vis');lbTab(tab||'daily');}
 function lbTab(which){
   var names=['daily','shift'],k,p,t,gen=++_lbGen;_lbCur=which;
@@ -9582,48 +9565,22 @@ function lbTab(which){
     p=document.getElementById('lb-pane-'+names[k]);if(p)p.style.display=(names[k]===which)?'':'none';
     t=document.getElementById('lb-tab-'+names[k]);if(t){t.classList.toggle('active',names[k]===which);t.setAttribute('aria-pressed',names[k]===which?'true':'false');}
   }
+  // 3.9.1009 two boards, each a plain list: DAILY is today's wall, TRAILER-LOAD is all-time (my call 2026-10-23)
   if(which==='daily'){
     var dd=document.getElementById('lb-daily-date');if(dd)dd.textContent='\u25c8 DAILY \u00b7 '+dailyKey();
-    var db=document.getElementById('lb-daily-board');if(db)db.innerHTML='<div class="lb-empty">Loading\u2026</div>';
-    liLoadArcade('daily','today',10,function(rows){if(gen===_lbGen)lbRenderDaily(rows);});
-    lbStartDailyCountdown();
-    lbLoad('lb-daily-alltime','daily','all',3,'No daily wall signed yet.',gen);
+    lbLoad('lb-daily-board','daily','today',10,'No initials on today\u2019s board yet.',gen);
     return;
   }
-  if(_dailyCD){clearInterval(_dailyCD);_dailyCD=null;}
-  lbLoad('lb-'+which+'-today',which,'today',10,'Nothing signed today yet.',gen);
-  lbLoad('lb-'+which+'-all',which,'all',10,'Nothing signed yet.',gen);
+  lbLoad('lb-shift-all','shift','all',10,'Nothing signed yet.',gen);
 }
 function lbLoad(id,mode,scope,limit,emptyMsg,gen){
   var el=document.getElementById(id);if(el)el.innerHTML='<div class="lb-empty">Loading\u2026</div>';
   liLoadArcade(mode,scope,limit,function(rows){
     if(gen!==_lbGen)return;var e2=document.getElementById(id);if(!e2)return;
     if(!rows){e2.innerHTML='<div class="lb-empty">Board offline. That is a connection problem, not an empty board.</div>';return;}
-    e2.innerHTML=rows.length?lbMedalRows(rows,limit):'<div class="lb-empty">'+emptyMsg+'</div>';
+    e2.innerHTML=rows.length?lbRows(rows,limit):'<div class="lb-empty">'+emptyMsg+'</div>';
   });
 }
-// the daily: the day's #1 on top, then the board
-function lbRenderDaily(rows){
-  var crown=document.getElementById('lb-daily-crown'),db=document.getElementById('lb-daily-board');
-  if(!Array.isArray(rows)){
-    if(crown){crown.className='lb-daily-crown empty';crown.innerHTML='<div class="dc-lbl">TODAY\u2019S BOARD</div><div class="dc-name">OFFLINE</div><div class="dc-score">The board did not load. That is not an empty board.</div>';}
-    if(db)db.innerHTML='<div class="lb-empty">Board offline.</div>';return;
-  }
-  if(crown){
-    if(rows.length){var w=rows[0];crown.className='lb-daily-crown';
-      crown.innerHTML='<div class="dc-lbl">\ud83d\udc51 TODAY\u2019S #1</div><div class="dc-name">'+drEsc(w.initials)+'</div><div class="dc-score">'+(+w.score||0)+' points</div>';}
-    else{crown.className='lb-daily-crown empty';
-      crown.innerHTML='<div class="dc-lbl">\ud83d\udc51 TODAY\u2019S #1</div><div class="dc-name">NO SIGNATURE YET</div><div class="dc-score">Seal today\u2019s wall and sign it.</div>';}
-  }
-  if(db)db.innerHTML=(rows.length?lbMedalRows(rows,10):'<div class="lb-empty">No initials on today\u2019s board yet.</div>');
-}
-function lbDailyCountdown(){
-  var el=document.getElementById('lb-daily-reset');if(!el)return;
-  var now=new Date(),end=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()+1,0,0,0));
-  var s=Math.max(0,Math.floor((end-now)/1000)),hh=Math.floor(s/3600),mm=Math.floor((s%3600)/60),ss=s%60;
-  el.textContent='\u23f1 NEW BOARD IN '+hh+'h '+(mm<10?'0':'')+mm+'m '+(ss<10?'0':'')+ss+'s \u00b7 UTC RESET';
-}
-function lbStartDailyCountdown(){lbDailyCountdown();if(_dailyCD)clearInterval(_dailyCD);_dailyCD=setInterval(lbDailyCountdown,1000);}
 // would this score crack the daily top 10? returns the 1-based rank (<=10) or 0
 function lbWouldRankDaily(rows,score){
   if(!(score>0))return 0;
@@ -9631,11 +9588,12 @@ function lbWouldRankDaily(rows,score){
   for(i=0;i<rows.length;i++){if(score>(+rows[i].score||0))break;rank++;}
   return (rank<=10)?rank:0;
 }
-// medals for the podium, gold #1, tabular values
-function lbMedalRows(rows,cap){
-  var medals=['\ud83e\udd47','\ud83e\udd48','\ud83e\udd49'],h='',i,r,rank,med;
-  for(i=0;i<rows.length&&i<(cap||5);i++){r=rows[i];rank=r.rank||(i+1);med=medals[i]||'';
-    h+='<div class="lb-crow'+(rank===1?' r1':'')+'"><span class="rk">'+rank+'</span><span class="who">'+(med?'<span class="med">'+med+'</span>':'')+'<span class="nm">'+drEsc(r.initials)+'</span></span><span class="v">'+(+r.score||0)+'</span></div>';
+// 3.9.1009 one row shape for both boards: rank, initials, score, date. No medals.
+function lbDay(d){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||'');if(!m)return '';return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1]+' '+(+m[3]);}
+function lbRows(rows,cap){
+  var h='<div class="lb-hrow" aria-hidden="true"><span>#</span><span>INITIALS</span><span>SCORE</span><span>DATE</span></div>',i,r,rank;
+  for(i=0;i<rows.length&&i<(cap||10);i++){r=rows[i];rank=r.rank||(i+1);
+    h+='<div class="lb-crow'+(rank===1?' r1':'')+'"><span class="rk">'+rank+'</span><span class="nm">'+drEsc(r.initials)+'</span><span class="v">'+(+r.score||0)+'</span><span class="dt">'+lbDay(r.day)+'</span></div>';
   }
   return h;
 }
@@ -9679,8 +9637,8 @@ function psBuild(){
     H+='<div class="ps-tools"><button onclick="window.print()">\u23cf PRINT</button><button onclick="closePostSort()">\u2715 CLOSE</button></div>';
     H+='<div class="ps-mast"><div style="display:flex;align-items:baseline"><span class="lg">LOCK<b> IN</b></span><span class="doc">POST-SORT REPORT</span></div><span class="stamp">SESSION COMPLETE</span></div><div class="ps-rule"></div>';
     H+='<div class="ps-id">'+
-      '<div><span class="k">LOADER</span><span class="v">'+zWho()+'</span></div>'+
-      '<div><span class="k">CREW</span><span class="v">'+(_crew?drEsc(_crew.crew):'\u00b7')+'</span></div>'+
+      (_crew?'<div><span class="k">LOADER</span><span class="v">'+drEsc(_crew.name)+'</span></div>':'')+
+      (_crew?'<div><span class="k">CREW</span><span class="v">'+drEsc(_crew.crew)+'</span></div>':'')+
       '<div><span class="k">MODE</span><span class="v">'+(TRAILER_MODE?'TRAILER-LOAD':(gameMode||'\u00b7').toUpperCase())+'</span></div>'+
       '<div><span class="k">DATE</span><span class="v">'+new Date().toISOString().slice(0,10)+'</span></div>'+
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
@@ -9713,7 +9671,7 @@ function psBuild(){
       row('\u00b7 Collapse',null,ic('COLLAPSE'),true)+
       row('Warnings (total)',lwv('warningsWall'),S.warnTotal||0)+
       row('\u00b7 washed / mitigated',lwv('safetiesWashed'),S.safetiesWashed||0,true)+
-      row('Practice trailers',null,S.practiceKicks||0)+
+      row('Fresh trailers',null,S.practiceKicks||0)+
       row('Crunches',lwv('crunches'),S.crunches||0)+
       row('Collapses',lwv('collapses'),S.collapses||0)+
       row('Recoveries',lwv('recoveries'),S.recoveries||0)+
@@ -10375,8 +10333,8 @@ resize();
 initTruck();
 
 // 4.0 a browser that ran 3.x still holds that version's sign-in tokens and choices; they belong to accounts that no
-// longer exist, so they are removed. The dashboard keeps its own instructor sign-in (lockinDashAuth).
-try{var _k3=['liAuth','lockinMeAuth','liAuthEpoch','liGuestAck','meNoSSO','liSessions'],_ki;for(_ki=0;_ki<_k3.length;_ki++)localStorage.removeItem(_k3[_ki]);}catch(e){}
+// longer exist, so they are removed, the 3.x dashboard's stored sign-in (lockinDashAuth) with them. The 4.0 dashboard signs in with a cookie.
+try{var _k3=['liAuth','lockinMeAuth','lockinDashAuth','liAuthEpoch','liGuestAck','meNoSSO','liSessions'],_ki;for(_ki=0;_ki<_k3.length;_ki++)localStorage.removeItem(_k3[_ki]);}catch(e){}
 // the crew membership is checked on every load, and another tab joining or leaving a crew repaints this one
 try{crewBoot();}catch(e){console.error('crewBoot:',e);}
 try{window.addEventListener('storage',function(e){if(e.storageArea&&e.storageArea!==localStorage)return;if(e.key===null||e.key==='liPlayer'){ZDATA.player=null;crewPaint();}});}catch(e){console.error('crew sync boot:',e);}
@@ -10396,7 +10354,7 @@ liCountBoot(); // v3.5.202 daily totals: game opened, new or returning (decided 
 // deep links land in the promised place: #crew opens the crew panel (the dashboard's join instructions link there)
 try{
   var _dlh=location.hash;
-  if(_dlh==='#crew'||_dlh==='#signin')setTimeout(crewOpen,300);
+  if(_dlh==='#crew')setTimeout(crewOpen,300);
   else { // v3.5.162 deep links land in the promised mode. v3.5.200: for everyone now; guardLaunch puts the briefing in front of a first-timer's first loading wall
     if(_dlh==='#daily')setTimeout(function(){guardLaunch(startDaily);},380);
     else if(_dlh==='#shift')setTimeout(function(){guardLaunch(startTrailerLoad);},380);

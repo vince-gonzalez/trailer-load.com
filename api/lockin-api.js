@@ -36,7 +36,7 @@ var PIN_ITER = 1000;
 var PW_MIN = 12;                     // instructor password minimum
 var LOCK_AFTER = 5;                  // wrong passwords or PINs before a 15-minute lock
 var LOCK_MIN = 15;
-var SESSION_DAYS = 14;
+var SESSION_HOURS = 12;               // 3.9.1009 an instructor's sign-in lasts a working day, not two weeks (shared lab computers)
 var CAP_VISITS = 5000;               // daily caps that protect the account's shared write budget
 var CAP_EVENTS = 5000;
 var CAP_BOARD = 2000;
@@ -440,7 +440,7 @@ var INSTRUCTOR = {
 // ── INSTRUCTOR ACCOUNTS ────────────────────────────────────────────────────────────────────────────────────────────
 var COOKIE = 'lockin_session';
 function sessionCookie(token, url) {
-  return COOKIE + '=' + token + '; Path=/api; HttpOnly; SameSite=Strict; Max-Age=' + (SESSION_DAYS * 86400) + (url.protocol === 'https:' ? '; Secure' : '');
+  return COOKIE + '=' + token + '; Path=/api; HttpOnly; SameSite=Strict; Max-Age=' + (SESSION_HOURS * 3600) + (url.protocol === 'https:' ? '; Secure' : '');
 }
 function clearCookie(url) { return COOKIE + '=; Path=/api; HttpOnly; SameSite=Strict; Max-Age=0' + (url.protocol === 'https:' ? '; Secure' : ''); }
 
@@ -457,7 +457,7 @@ async function startSession(c, who) {
   var t = randHex(32), now = nowIso();
   await c.db.batch([
     c.db.prepare('DELETE FROM ' + c.P + 'auth_sessions WHERE instructor_id = ? AND expires_at <= ?').bind(who.id, now),
-    c.db.prepare('INSERT INTO ' + c.P + 'auth_sessions (token_hash, instructor_id, created_at, expires_at) VALUES (?, ?, ?, ?)').bind(await sha256(t), who.id, now, minutesFrom(SESSION_DAYS * 1440)),
+    c.db.prepare('INSERT INTO ' + c.P + 'auth_sessions (token_hash, instructor_id, created_at, expires_at) VALUES (?, ?, ?, ?)').bind(await sha256(t), who.id, now, minutesFrom(SESSION_HOURS * 60)),
     c.db.prepare('UPDATE ' + c.P + 'instructors SET failed = 0, locked_until = NULL, last_login = ? WHERE id = ?').bind(now, who.id)
   ]);
   return json({ ok: true, email: who.email }, 200, { 'set-cookie': sessionCookie(t, c.url) });

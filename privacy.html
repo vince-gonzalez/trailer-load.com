@@ -20,7 +20,7 @@ small,sub,sup{font-size:11px;}
   --t1:#2a2018;--t2:#544738;--t3:#625543;
   --acc:#c8791e;--acc-bright:#e0962e;--acc-dim:#9a5c12;--acc-ink:#7d4a0e;--acc-wash:#f6e9d3;
   --teal:#0a6a5e;--teal-wash:#dcefec;--ok:#1f9d57;--danger:#c23a1a;
-  --border:#cdbfa6;--border2:#bcaa8b;
+  --border:#cdbfa6;--border2:#bcaa8b;--edge:#827257;/* a link pill's edge: 3.46:1 on #e6ddcb (1.4.11 asks 3:1) */
 }
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -59,7 +59,7 @@ li::before{content:'▸';position:absolute;left:5px;top:1px;color:var(--acc);fon
 .toc{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin:20px 0 30px;}
 .toc-h{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--t3);margin-bottom:10px;}
 .toc a{display:inline-block;margin:4px 8px 4px 0;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--teal);
-  background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 12px;border-bottom:1px solid var(--border);}
+  background:var(--bg);border:1px solid var(--edge);border-radius:20px;padding:5px 12px;border-bottom:1px solid var(--edge);}
 .toc a:hover{background:var(--acc);color:#241505;border-color:var(--acc);}
 footer a{color:var(--teal);}
 footer{margin-top:56px;border-top:1px solid var(--border);padding-top:16px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--t3);text-align:center;}
@@ -155,7 +155,7 @@ footer{margin-top:56px;border-top:1px solid var(--border);padding-top:16px;font-
   </ul>
 
   <h2 id="cookies">Cookies &amp; Analytics</h2>
-  <p><mark class="hl">F&#8209;Keys does not use Google Analytics and adds no analytics, advertising or tracking script of its own.</mark> There is no advertising and no ad technology of any kind on this site. The simulator sets no cookies. The instructor dashboard sets one, and only after an instructor signs in: the sign-in itself, which the LOCK IN server reads and the page cannot. It lasts 14 days or until sign-out. It uses your browser's local storage and session storage, both on your device. Local storage keeps your settings and controls, your personal bests and daily streak, the last initials you signed with, a few flags (whether you finished the briefing, whether you have played, and whether this browser has opened LOCK IN before), and, while the device is on a crew, the crew's name and code, the name you joined with, and the device's crew token. Session storage keeps a few tab-only flags, such as your level bests for that tab and a mark that this tab was already counted.</p>
+  <p><mark class="hl">F&#8209;Keys does not use Google Analytics and adds no analytics, advertising or tracking script of its own.</mark> There is no advertising and no ad technology of any kind on this site. The simulator sets no cookies. The instructor dashboard sets one, and only after an instructor signs in: the sign-in itself, which the LOCK IN server reads and the page cannot. It lasts 12 hours or until sign-out. It uses your browser's local storage and session storage, both on your device. Local storage keeps your settings and controls, your personal bests and daily streak, the last initials you signed with, a few flags (whether you finished the briefing, whether you have played, and whether this browser has opened LOCK IN before), and, while the device is on a crew, the crew's name and code, the name you joined with, and the device's crew token. Session storage keeps a few tab-only flags, such as your level bests for that tab and a mark that this tab was already counted.</p>
   <p>The front page keeps one aggregate total, <strong>visits</strong>: a single integer on the LOCK IN server. Your browser adds 1 to it once per tab session. The simulator also keeps a few <strong>daily totals</strong>: how many times it was opened, how many first-time and returning visits there were, how many times each mode was started, how many walls were finished, how many daily walls were submitted, how many times the briefing was finished, how many runs were signed on a board, and how many crews were joined. Each is one number per day. <mark class="hl">Nothing about you is attached to a total: no account, device, cookie, or IP address.</mark> Whether a visit counts as new or returning is decided on your own device, which keeps a single "1" in local storage; only which total to add 1 to is sent. As with any request, the database provider's request log records it (see <a href="#device">Device &amp; technical data</a>). The totals are private and are used only to see what in the simulator is working.</p>
 
   <h2 id="retention">Data Retention</h2>

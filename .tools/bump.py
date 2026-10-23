@@ -14,7 +14,7 @@ PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
 # Each stamp is a template; {v} is the version. Order matches the file top to bottom.
 STAMPS = [
     '   LOCK IN v{v}',                                    # 1 CSS-comment header in <style>
-    '<div class="pause-sub">LOCK IN v{v} · ADMIN</div>',  # 2 pause footer
+    '<div class="pause-sub">LOCK IN v{v}</div>',          # 2 pause footer
     '<div id="sm-footer">LOCK IN v{v} · © 2026</div>',    # 3 start-menu footer
     '<div class="set-foot">LOCK IN v{v} · SETTINGS</div>',# 4 settings footer
     '// LOCK IN v{v}\n',                                  # 5 JS comment at the top of the game script

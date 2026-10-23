@@ -41,6 +41,7 @@ small,sub,sup{font-size:11px;}
   --ground:#140d08; --paper:#e8e4da; --paper2:#f3f0e8; --ink:#241a0c;
   --ink2:#4a3c28; --amber:#c8791e; --amberInk:#7d4a0e; --line:#c4b79c;
   --line2:#a89877; --bad:#96270d; --good:#10663a; --warn:#8a5a0b;
+  --edge:#827257; /* the edge of a button or a field (1.4.11 asks 3:1): 4.10:1 on #f3f0e8, 3.68:1 on #e8e4da, 3.75:1 on #f7e2da */
 }
 html,body{margin:0;background:var(--ground);color:var(--ink);
   font-family:'Barlow Condensed',system-ui,sans-serif;font-size:17px;line-height:1.45;}
@@ -64,19 +65,19 @@ body::before{content:'';position:fixed;inset:0;z-index:0;
 #login .sub{color:var(--ink2);margin:0 0 16px;font-size:16px;}
 .tabs{display:flex;gap:6px;margin:0 0 14px;}
 .tab{flex:1;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1.2px;min-height:38px;
-  border:2px solid var(--line2);border-radius:6px;background:transparent;color:var(--ink2);cursor:pointer;text-transform:uppercase;}
+  border:2px solid var(--edge);border-radius:6px;background:transparent;color:var(--ink2);cursor:pointer;text-transform:uppercase;}
 .tab.on{background:var(--amber);color:#1b1206;border-color:var(--amberInk);font-weight:700;}
 .fld{display:block;margin-bottom:12px;}
 .fld span{display:block;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.4px;
   color:var(--amberInk);margin-bottom:4px;text-transform:uppercase;}
-.fld input,.fld select{width:100%;padding:10px 12px;min-height:40px;border:2px solid var(--line2);border-radius:6px;
+.fld input,.fld select{width:100%;padding:10px 12px;min-height:40px;border:2px solid var(--edge);border-radius:6px;
   background:#fff;color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-size:17px;}
-.fld input:focus,.fld select:focus{outline:none;border-color:var(--amber);}
+.fld input:focus,.fld select:focus{outline:2px solid var(--amberInk);outline-offset:1px;border-color:var(--amber);} /* 3.9.1009 a focus ring 5.79 to 6.45:1; the amber edge alone was 2.97 */
 .btn{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;min-height:40px;
   padding:9px 20px;border-radius:7px;cursor:pointer;border:2px solid var(--amberInk);
   background:var(--amber);color:#1b1206;}
 .btn:hover{background:#e0962e;}
-.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line2);}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--edge);}
 .btn.ghost:hover{border-color:var(--amberInk);color:var(--amberInk);}
 #topbar .btn.ghost{color:#f1e7d6;border-color:#8a7a5c;}
 .btn.danger{background:transparent;color:var(--bad);border-color:var(--bad);}
@@ -159,7 +160,7 @@ body.demo #demo-note{display:block;}
 }
 </style>
 <style>/* v3.5.210 skip link (WCAG 2.4.1): off screen until the keyboard reaches it */
-.skip-link{position:absolute;left:-10000px;top:0;z-index:10000;}
+.skip-link{position:absolute;left:-10000px;top:0;z-index:10000;background:#1d1710;color:#f8f1e2;}
 .skip-link:focus{left:8px;top:8px;padding:10px 16px;background:#1d1710;color:#f8f1e2;font:bold 16px/1.2 system-ui,sans-serif;text-decoration:underline;outline:3px solid #f0ad4a;outline-offset:2px;}
 </style>
 </head>
@@ -222,7 +223,7 @@ body.demo #demo-note{display:block;}
     <div class="sec noprint">
       <h2>MAKE A CREW</h2>
       <div class="make">
-        <label class="fld"><span>Crew name</span><input id="mk-name" type="text" maxlength="48" placeholder="example: Region 3 Boot Camp, October"></label>
+        <label class="fld"><span>Crew name</span><input id="mk-title" type="text" maxlength="48" autocomplete="off" placeholder="example: Region 3 Boot Camp, October"></label>
         <label class="fld"><span>Join code <small>(4 to 24 letters or numbers)</small></span><input id="mk-code" type="text" maxlength="24" autocapitalize="off" spellcheck="false" placeholder="example: region3"></label>
         <label class="fld"><span>How people join</span>
           <select id="mk-mode">
@@ -251,7 +252,7 @@ body.demo #demo-note{display:block;}
     <div class="sec noprint" id="cb-add" style="display:none;">
       <h2>ADD A NAME</h2>
       <p>Type the name the way you know the person. LOCK IN makes their personal code; hand it to them.</p>
-      <div class="row"><label class="fld" style="flex:1;margin:0;"><span>Name</span><input id="add-name" type="text" maxlength="40" autocomplete="off" onkeydown="if(event.key==='Enter')dAddSeat();"></label><button class="btn" onclick="dAddSeat()">ADD</button></div>
+      <div class="row"><label class="fld" style="flex:1;margin:0;"><span>Name</span><input id="add-seat" type="text" maxlength="40" autocomplete="off" onkeydown="if(event.key==='Enter')dAddSeat();"></label><button class="btn" onclick="dAddSeat()">ADD</button></div>
     </div>
     <div id="cb-msg" class="msg noprint" role="status" aria-live="polite" style="margin:6px 18px 0;"></div>
     <div class="tblwrap">
@@ -418,14 +419,14 @@ function dCrews(open){
   });
 }
 function dMake(){
-  var nm=document.getElementById('mk-name').value.trim(),cd=document.getElementById('mk-code').value.trim(),md=document.getElementById('mk-mode').value;
+  var nm=document.getElementById('mk-title').value.trim(),cd=document.getElementById('mk-code').value.trim(),md=document.getElementById('mk-mode').value;
   if(nm.length<2){dSet('mk-msg','Give the crew a name.','err');return;}
   if(!/^[A-Za-z0-9_-]{4,24}$/.test(cd)){dSet('mk-msg','The join code is 4 to 24 letters, numbers, dashes or underscores.','err');return;}
   dSet('mk-msg','Making the crew…');
   dRpc('crew_create',{p_name:nm,p_code:cd,p_mode:md},function(j){
     if(!j){dSet('mk-msg','No connection. Try again.','err');return;}
     if(!j.ok){dSet('mk-msg',j.err||'Could not make the crew.','err');return;}
-    document.getElementById('mk-name').value='';document.getElementById('mk-code').value='';
+    document.getElementById('mk-title').value='';document.getElementById('mk-code').value='';
     dSet('mk-msg','Made '+j.name+'. Its join code is '+j.code+'.','good');
     dCrews(j.code);
   });
@@ -508,7 +509,7 @@ function dCoach(r){
 }
 function dMember(id){var i;for(i=0;i<DASH.roster.length;i++)if(DASH.roster[i].id===id)return DASH.roster[i];return null;}
 function dAddSeat(){
-  var el=document.getElementById('add-name'),nm=el.value.trim();
+  var el=document.getElementById('add-seat'),nm=el.value.trim();
   if(nm.length<2){dSet('cb-msg','Type the person’s name.','err');return;}
   dRpc('crew_seat_add',{p_code:DASH.cur,p_name:nm},function(j){
     if(!j){dSet('cb-msg','No connection. Try again.','err');return;}
@@ -596,6 +597,7 @@ function dDemoRpc(fn,b,cb){
 // ── BOOT ──
 // A link from an email is read once and wiped from the address bar, so it never stays in the history or a bookmark.
 function dBoot(){
+  try{localStorage.removeItem('lockinDashAuth');}catch(e){} // 4.0 the 3.x dashboard kept its sign-in here (tokens and email); nothing reads it now
   if(/(^|&)demo(=|&|$)/.test(location.search.slice(1))){dDemoBoot();return;} // 3.9.1009 the demo dashboard
   var l=dLink();
   if(l){try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}}
