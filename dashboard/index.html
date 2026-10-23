@@ -46,7 +46,7 @@ html,body{margin:0;background:var(--ground);color:var(--ink);
   font-family:'Barlow Condensed',system-ui,sans-serif;font-size:17px;line-height:1.45;}
 body::before{content:'';position:fixed;inset:0;z-index:0;
   background:url('/lockbackdrop.png') center/cover no-repeat;opacity:.13;}
-.wrap{max-width:1200px;margin:0 auto;padding:0 18px;}
+.wrap{max-width:1340px;margin:0 auto;padding:0 18px;} /* 3.9.1009 wider, so the roster and WHAT TO COACH fit a laptop screen without scrolling sideways */
 #topbar{position:relative;z-index:2;background:rgba(14,9,5,.9);border-bottom:2px solid var(--amber);
   padding:9px 0;color:#f1e7d6;}
 #topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
@@ -138,7 +138,15 @@ tbody td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;wh
 tbody td:first-child{text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:16.5px;font-weight:600;}
 tbody td.seat{font-size:16px;font-weight:700;color:var(--amberInk);letter-spacing:1px;}
 tbody tr.zero td{background:#f7e2da;}
+/* 3.9.1009 WHAT TO COACH: the rule in the game's words, then one plain line. #241a0c and #4a3c28 on #f3f0e8 and #f7e2da, 4.5:1 or better */
+thead th.coachh{text-align:left;}
+tbody td.coach{text-align:left;white-space:normal;min-width:210px;max-width:290px;font-family:'Barlow Condensed',sans-serif;font-size:15px;line-height:1.25;}
+tbody td.coach b{color:var(--ink);letter-spacing:.3px;}
+tbody td.coach .w{display:block;color:var(--ink2);font-size:14.5px;}
 tbody tr:hover td{background:#f6efdd;}
+/* 3.9.1009 the DEMO note: #241a0c on #fff5d6 15.9:1, edge #8a5a0b 5.1:1 */
+#demo-note{display:none;margin:14px 18px 0;background:#fff5d6;border:2px solid var(--warn);border-radius:8px;padding:10px 14px;color:var(--ink);font-size:16px;line-height:1.4;}
+body.demo #demo-note{display:block;}
 .tag{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.8px;border:1px solid currentColor;border-radius:3px;padding:0 4px;}
 .tag.d{color:var(--bad);} .tag.g{color:var(--good);} .tag.w{color:var(--warn);}
 .empty{padding:16px 18px;color:var(--ink2);font-size:16px;}
@@ -180,7 +188,7 @@ tbody tr:hover td{background:#f6efdd;}
     <button class="linkbtn" id="li-forgot" onclick="dForgot()">Forgot the password?</button>
   </div>
   <div id="login-msg" class="msg" role="status" aria-live="polite"></div>
-  <div id="login-note">Players never make an account. They join your crew from the simulator with the code you give them. Questions: <a href="mailto:vince@trailer-load.com">vince@trailer-load.com</a>.</div>
+  <div id="login-note">Players never make an account. They join your crew from the simulator with the code you give them. Questions: <a href="mailto:vince@trailer-load.com">vince@trailer-load.com</a>.<br>To see what an instructor sees before you make an account, <a href="?demo">open the demo dashboard</a> (staged data, no sign-in).</div>
 </div>
 
 <!-- a password-reset link from email lands here -->
@@ -194,6 +202,7 @@ tbody tr:hover td{background:#f6efdd;}
 
 <!-- THE DASHBOARD -->
 <div id="dash"><div class="wrap">
+  <div id="demo-note" role="note"><b>DEMO · STAGED DATA.</b> This is the instructor dashboard with a demo crew. The people on it are simulated players: a script played LOCK IN for each of them, and LOCK IN recorded their walls and sessions the way it records anyone's. None of it is a real person's result, and nothing here can be changed. <a href="./" style="color:var(--amberInk);font-weight:700;">Leave the demo</a>.</div>
   <!-- CHANGE THE PASSWORD: opened from the bar at the top -->
   <div class="board noprint" id="pwbox" style="display:none;">
     <div class="clip">LOCK-IN</div>
@@ -299,6 +308,7 @@ function dPost(path,body,cb){
 // an instructor call: cb(json) or cb(null); a 401 means the session ended, so back to the sign-in form
 // READS/WRITES: DASH.session
 function dRpc(fn,body,cb){
+  if(DASH.demo){dDemoRpc(fn,body||{},cb);return;} // 3.9.1009 the demo answers from its snapshot and refuses every change
   dPost('rpc/'+fn,body,function(j,st){
     if(st===401||st===403){DASH.session=null;dShowLogin('Your sign-in expired. Sign in again.','err');return;}
     cb(st===200?j:null);
@@ -388,7 +398,8 @@ function dChangePw(){
 function dEnter(){
   document.getElementById('login').style.display='none';document.getElementById('reset').style.display='none';document.getElementById('dash').style.display='block';
   var w=document.getElementById('who');w.style.display='flex';
-  w.innerHTML='<span><b>'+dEsc(DASH.session.email||'Instructor')+'</b></span><button class="btn ghost small" onclick="dPwBox(true)">CHANGE PASSWORD</button><button class="btn ghost small" onclick="dSignOut()">SIGN OUT</button>';
+  w.innerHTML=DASH.demo?'<span><b>DEMO · STAGED DATA</b></span><a class="btn ghost small" href="./">LEAVE THE DEMO</a>'
+    :'<span><b>'+dEsc(DASH.session.email||'Instructor')+'</b></span><button class="btn ghost small" onclick="dPwBox(true)">CHANGE PASSWORD</button><button class="btn ghost small" onclick="dSignOut()">SIGN OUT</button>';
   dCrews();
 }
 function dCrews(open){
@@ -430,7 +441,7 @@ function dJoinCard(c){
     '<li>Open <b>'+site+'</b> in a web browser. No download, no account.</li>'+
     '<li>Choose <b>◆ JOIN A CREW</b>, top right of the menu.</li>'+
     '<li>Enter the crew code: <span class="code">'+dEsc(c.code)+'</span>, then NEXT.</li>'+step4+
-    '<li>Choose JOIN. The button now shows your name. Play TRAINING first, then TRAILER-LOAD.</li></ol>';
+    '<li>Choose JOIN. The button now shows your name. Play TRAINING first, then PRACTICE, then TRAILER-LOAD.</li></ol>';
 }
 function dOpen(code,keep){
   var c=dCrewByCode(code);if(!c)return;DASH.cur=code;DASH.crew=c;
@@ -454,7 +465,7 @@ function dRoster(){
   var c=DASH.crew,rows=DASH.roster,man=(c.mode==='manual');
   document.getElementById('cb-cap').textContent=rows.length+' '+(rows.length===1?'person':'people')+' on '+c.name+(c.licensed?'':' (a free crew holds 9)')+'. Least practiced first.';
   document.getElementById('cb-head').innerHTML='<tr><th scope="col">Name</th>'+(man?'<th scope="col">Personal code</th>':'<th scope="col">PIN</th>')+
-    '<th scope="col">Joined</th><th scope="col">Last played</th><th scope="col">Sessions</th><th scope="col">Walls</th><th scope="col">Best score</th><th scope="col">Avg integrity</th><th scope="col">Best pieces/hr</th><th scope="col">Incidents</th><th scope="col">Collapses</th><th scope="col" class="noprint">Manage</th></tr>';
+    '<th scope="col">Joined</th><th scope="col">Last played</th><th scope="col">Sessions</th><th scope="col">Walls</th><th scope="col">Best score</th><th scope="col">Avg integrity</th><th scope="col">Best pieces/hr</th><th scope="col">Incidents</th><th scope="col">Collapses</th><th scope="col" class="coachh">What to coach</th><th scope="col" class="noprint">Manage</th></tr>';
   var em=document.getElementById('cb-empty');
   if(!rows.length){document.getElementById('cb-body').innerHTML='';em.style.display='block';
     em.textContent=man?'No names yet. Add each person above, then hand them their personal code.':'No one has joined yet. Give out the join code above.';return;}
@@ -466,10 +477,34 @@ function dRoster(){
       (man?'<td class="seat">'+dEsc(r.seat||'·')+'</td>':'<td>'+(r.pin_set?'<span class="tag g">SET</span>':'<span class="tag w">NEW PIN</span>')+'</td>')+
       '<td>'+dDate(r.joined)+'</td><td>'+dDate(r.last_seen)+'</td><td>'+dNum(r.sessions)+'</td><td>'+dNum(r.walls)+'</td>'+
       '<td>'+(r.best_score==null?'·':dNum(r.best_score))+'</td><td>'+(r.avg_integrity==null?'·':dNum(r.avg_integrity)+'%')+'</td>'+
-      '<td>'+(r.best_pph==null?'·':dNum(r.best_pph))+'</td><td>'+(dNum(r.incidents)?'<span class="tag d">'+dNum(r.incidents)+'</span>':'0')+'</td><td>'+dNum(r.collapses)+'</td>'+
+      '<td>'+(r.best_pph==null?'·':dNum(r.best_pph))+'</td><td>'+(dNum(r.incidents)?'<span class="tag d">'+dNum(r.incidents)+'</span>':'0')+'</td><td>'+dNum(r.collapses)+'</td><td class="coach">'+dCoach(r)+'</td>'+
       '<td class="noprint"><button class="btn ghost small" onclick="dReset(\''+id+'\')">'+(man?'NEW CODE':'RESET PIN')+'</button> '+
       '<button class="btn danger small" onclick="dRemove(\''+id+'\')">REMOVE</button></td></tr>';}
   document.getElementById('cb-body').innerHTML=h;
+}
+// 3.9.1009 WHAT TO COACH: the incident a person had most often, as the rule's name in my rule list
+// (.tools/load-rules.json) and what to practice. The trainer's wall has no tires and one hazmat, so tire and hazmat-pair
+// rules point to DAILY, which always deals four tires and two hazmats of different classes.
+// With no incident on record it falls back to the wall numbers: repeated collapses, low integrity, or not started yet.
+var COACH={
+  HAZMAT_HIGH:['HAZMAT RIDES LOW','Hazmat loads below the waist, in the bottom half of the wall. PRACTICE ends on this lesson.'],
+  HAZMAT_CRUSH:['NOTHING HEAVY ON SQUISHY','Nothing heavy goes on a hazmat or a fragile. Lock a shelf over it first.'],
+  KILLER:['KILLER PAIRS','Some hazard classes never load near each other, so a leak cannot mix them. DAILY deals two classes.'],
+  SEGREGATION:['HAZMAT KEEPS ITS DISTANCE','Different hazard classes stay two clear cells apart. DAILY deals two classes.'],
+  TIRE_STACK:['TIRE ON TIRE','Tires lie flat, and nothing goes on a tire stood on edge. DAILY deals four tires.'],
+  COLLAPSE:['PYRAMID OR IT TOPPLES','Each layer narrower than the one under it, or lock the shelf first. Replay TRAINING.'],
+  FRAGILE_CRUSH:['NOTHING HEAVY ON SQUISHY','Put a box on each side of a fragile, or lock a shelf under it.'],
+  TIRE_SIDEWAYS:['TIRES LIE FLAT','Load tires flat, never on edge. DAILY deals four tires.'],
+  AISLE:['STAGE IT, KEEP THE AISLE CLEAR','Load a staged box before all three staging spots fill.']
+};
+function dCoach(r){
+  var t=r.top_incident,c=t?COACH[t]:null,n=dNum(r.top_incident_n);
+  if(c)return '<b>'+c[0]+'</b> · '+n+(n===1?' time':' times')+'<span class="w">'+c[1]+'</span>';
+  if(t)return '<b>'+dEsc(t)+'</b> · '+n+(n===1?' time':' times');
+  if(dNum(r.collapses)>=2)return '<b>PYRAMID OR IT TOPPLES</b><span class="w">'+dNum(r.collapses)+' collapses. Taper stacks and lock shelves. Replay TRAINING.</span>';
+  if(r.avg_integrity!=null&&dNum(r.avg_integrity)<70)return '<b>THE WALL HAS AN HP BAR</b><span class="w">Integrity averages '+dNum(r.avg_integrity)+'%. Support every box: PRACTICE with SHOW ME.</span>';
+  if(!dNum(r.walls))return '<b>NOT STARTED</b><span class="w">TRAINING first, then PRACTICE.</span>';
+  return '<span class="w">No repeated mistake on record.</span>';
 }
 function dMember(id){var i;for(i=0;i<DASH.roster.length;i++)if(DASH.roster[i].id===id)return DASH.roster[i];return null;}
 function dAddSeat(){
@@ -537,9 +572,31 @@ function dExport(){
   });
 }
 
+// ── 3.9.1009 THE DEMO ──
+// /dashboard/?demo: a prospective program sees what an instructor sees, with no account. demo.json is a snapshot of a
+// demo crew of simulated players, read through the real API (demo_seed.js in my test kit makes it). Read-only.
+// READS: demo.json | WRITES: DASH.demo, DASH.session, DASH.cur
+function dDemoBoot(){
+  document.body.classList.add('demo');document.getElementById('login').style.display='none';
+  try{
+    fetch('demo.json',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      DASH.demo=d;DASH.session={email:'Demo'};DASH.cur=(d.crews&&d.crews[0])?d.crews[0].code:null;dEnter();
+    }).catch(function(e){console.error('dDemoBoot:',e);document.body.classList.remove('demo');dShowLogin('The demo did not load. Reload to try again.','err');});
+  }catch(e){console.error('dDemoBoot:',e);dShowLogin('The demo did not load. Reload to try again.','err');}
+}
+function dDemoRpc(fn,b,cb){
+  var D=DASH.demo,code=b.p_code||'';
+  if(fn==='crew_mine'){cb(D.crews||[]);return;}
+  if(fn==='crew_roster'){cb((D.roster&&D.roster[code])||[]);return;}
+  if(fn==='crew_export_walls'){cb((D.walls&&D.walls[code])||[]);return;}
+  if(fn==='crew_export_sessions'){cb((D.sessions&&D.sessions[code])||[]);return;}
+  cb({ok:false,err:'This is the demo with staged data, so nothing here can be changed.'});
+}
+
 // ── BOOT ──
 // A link from an email is read once and wiped from the address bar, so it never stays in the history or a bookmark.
 function dBoot(){
+  if(/(^|&)demo(=|&|$)/.test(location.search.slice(1))){dDemoBoot();return;} // 3.9.1009 the demo dashboard
   var l=dLink();
   if(l){try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}}
   if(l&&l.kind==='reset'){DASH.link=l;document.getElementById('login').style.display='none';document.getElementById('reset').style.display='block';document.getElementById('rs-pw').focus();return;}

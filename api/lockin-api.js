@@ -198,7 +198,7 @@ var PUBLIC = {
   count: async function (c) {
     var b = c.body, P = c.P, ev = str(b.p_event), mode = str(b.p_mode);
     if (EVENTS.indexOf(ev) < 0) return null;
-    if (['', 'daily', 'shift', 'training'].indexOf(mode) < 0) mode = 'other';
+    if (['', 'daily', 'shift', 'training', 'practice'].indexOf(mode) < 0) mode = 'other'; // 3.9.1009 PRACTICE counts as itself
     var day = dayUtc();
     var t = await c.db.prepare('SELECT coalesce(sum(n), 0) AS n FROM ' + P + 'event_counts WHERE day = ?').bind(day).first();
     if (t.n >= CAP_EVENTS) return null;
@@ -407,7 +407,12 @@ var INSTRUCTOR = {
       '(SELECT round(avg(w.integrity), 1) FROM ' + P + 'crew_walls w WHERE w.member_id = m.id) AS avg_integrity, ' +
       '(SELECT round(max(CASE WHEN w.dur_s > 0 THEN w.pieces * 3600.0 / w.dur_s END), 0) FROM ' + P + 'crew_walls w WHERE w.member_id = m.id) AS best_pph, ' +
       '(SELECT coalesce(sum(w.incidents), 0) FROM ' + P + 'crew_walls w WHERE w.member_id = m.id) AS incidents, ' +
-      '(SELECT coalesce(sum(w.collapses), 0) FROM ' + P + 'crew_walls w WHERE w.member_id = m.id) AS collapses ' +
+      '(SELECT coalesce(sum(w.collapses), 0) FROM ' + P + 'crew_walls w WHERE w.member_id = m.id) AS collapses, ' +
+      // 3.9.1009 WHAT TO COACH: the incident this person had most often across their sessions, and how many times
+      '(SELECT json_extract(j.value, \'$.type\') FROM ' + P + 'crew_sessions s, json_each(s.incidents) j WHERE s.member_id = m.id AND json_extract(j.value, \'$.type\') IS NOT NULL ' +
+      'GROUP BY json_extract(j.value, \'$.type\') ORDER BY count(*) DESC, json_extract(j.value, \'$.type\') LIMIT 1) AS top_incident, ' +
+      '(SELECT count(*) FROM ' + P + 'crew_sessions s, json_each(s.incidents) j WHERE s.member_id = m.id AND json_extract(j.value, \'$.type\') IS NOT NULL ' +
+      'GROUP BY json_extract(j.value, \'$.type\') ORDER BY count(*) DESC, json_extract(j.value, \'$.type\') LIMIT 1) AS top_incident_n ' +
       'FROM ' + P + 'crew_members m JOIN ' + P + 'crews k ON k.code = m.crew_code WHERE k.code = ? AND k.owner_id = ? ORDER BY lower(m.name)';
     var rows = (await c.db.prepare(q).bind(now, code, c.who.id).all()).results || [];
     return rows.map(function (r) { r.pin_set = !!r.pin_set; r.locked = !!r.locked; return r; });

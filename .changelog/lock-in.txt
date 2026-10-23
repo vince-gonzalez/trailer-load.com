@@ -2,6 +2,32 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1009 - PRACTICE: LOAD THE TRAINER'S WALL YOURSELF (STAGING AND THE SANDBOX ONLY).
+     My call, 2026-10-23: training has to be the best feature in the product, and watching is only half of a first day.
+     PRACTICE sits beside TRAINING on the menu, on the training panel (LOAD IT YOURSELF) and on the sign-off card. It
+     deals the trainer's wall: the same 35 pieces built the same way every run, the three appliances on the special
+     handling rack and the belt in the trainer's order, topped up after every placement so it never jams. The new hire
+     places every piece under the real rules (support, crush, hazmat height, collapses, the seal line) with no clock, no
+     dispatch, no score, no water, no write-ups and no boards. A coach panel takes the place of the score and clock tiles:
+     the trainer's principle and reason for the piece in hand, a running count of pieces on the wall and pieces on the
+     trainer's spot, SHOW ME (a marching outline of the trainer's spot, said in words for a screen reader, with a note when
+     the trainer turned the piece), FINISH, WATCH, RESTART and EXIT. Any legal spot is allowed. The seal line opens no
+     popup, certificate or record. The hazmat comes late, after the last of the belt freight: leaving it on the rack is the
+     trainer's call, and loading it high is an incident on the practice record, never paperwork. FINISH shows a practice
+     record that is not sent anywhere. On a phone the coach sits on top of the controls and the trailer gives up the room.
+     The API counts practice as its own mode. New suite tpractice (41 checks), and the practice coach and record join the
+     rendered contrast sweep.
+     Also in 3.9.1009 (2026-10-23): the roster gains WHAT TO COACH, the incident each person had
+     most often across their sessions, by its name in my rule list, with what to practice; with none on record it
+     points to repeated collapses, low integrity, or not started. /dashboard/?demo opens a read-only demo crew of six
+     simulated players, labeled as staged, from dashboard/demo.json, a snapshot of a crew a script played through the real
+     game and API (demo_seed.js in my test kit); the dashboard is wider so the roster fits a laptop. Motion (WCAG 2.2.2):
+     TRAINING's AUTO reads PAUSE while it runs, NEXT, P and ESC pause it, and a pause no longer leaves it placing behind the
+     card; the wall that builds itself behind the menu has PAUSE DEMO and waits under Reduced Motion; the first-visit pulse
+     stops after three; the canvas pulses hold still under Reduced Motion; no BREAK JAM alarm behind the menu or in
+     TRAINING; PRACTICE has no pace or idle nags. Contrast: the boards' rank numbers (khaki 2.4:1 and gold 1.5:1 on the
+     gray clipboard) and two hover colors now read at 5.5:1 or better.
+
    CHANGE LOG v3.9.1008 - NO CARRIER'S SERVICE NAME ON A BOX, AND NO COMPANY NAME IN THE CODE (STAGING ONLY).
      My rule: no company, carrier or product name in anything the site serves or the repository publishes. Four box
      labels were carriers' service names. I asked whether my replacements copy anyone, so they were checked at the

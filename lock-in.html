@@ -40,7 +40,7 @@
 small,sub,sup{font-size:11px;}
 
 /* ================================================================
-   LOCK IN v3.9.1008
+   LOCK IN v3.9.1009
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -369,6 +369,7 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 #sm-board .sm-card.mode-shift{border-left-color:#7d4a0e;}
 #sm-board .sm-card.mode-daily{border-left-color:#0a6a5e;}       /* 5.5:1 */
 #sm-board .sm-card.mode-training{border-left-color:#1a7a42;} /* 4.6:1 */
+#sm-board .sm-card.mode-practice{border-left-color:#1d5f8a;} /* 5.8:1 */
  /* 5.9:1 */
 #sm-board .sm-card.mode-boards{border-left-color:#8a5a0b;}      /* 5.1:1 */
 
@@ -422,6 +423,8 @@ html,body{width:100%;height:100dvh;color:var(--t1);
 .sm-card.mode-daily .sm-card-name{color:#5fd6cd;}
 .sm-card.mode-training{border-left-color:#4fbf7a;}
 .sm-card.mode-training .sm-card-name{color:#84e0a6;}
+.sm-card.mode-practice{border-left-color:#5aa9e6;}
+.sm-card.mode-practice .sm-card-name{color:#9ccdf2;}
 
 .sm-card-desc{display:none;}
 /* Version / copyright footer */
@@ -561,11 +564,59 @@ body.m-portrait #to-principle-card{overflow-y:auto;}
 }
 .to-btn-play:hover{filter:brightness(1.1);}
 .to-btn-exit{background:transparent;color:var(--t2);border-color:var(--border2);}
-.to-btn-exit:hover{border-color:var(--acc);color:var(--acc);}
+.to-btn-exit:hover{border-color:var(--acc);color:var(--acc-ink);} /* 3.9.1009 --acc measured 2.44:1 on the light panel; --acc-ink is 6.37 there and the same #e0962e as before in the dark theme (7.42) */
 #to-exit-hint{
   font-family:'Share Tech Mono',monospace;font-size:11px;
   color:var(--t3);letter-spacing:.8px;text-align:center;
 }
+
+/* 3.9.1009 PRACTICE COACH. It heads the right console column, where the score and the clock had nothing to say in
+   practice, or the top of the phone sheet. With no console it stands at the right edge like the training panel. The
+   console's own colors on every layout, measured on #221912: #f0e6d4 13.96:1 · #c0ad90 7.91:1 · #f0ad4a 8.87:1 ·
+   #9ccdf2 10.22:1 · #ffd400 12.07:1; buttons #f0e6d4 on #2e2016 12.72:1 with a #8a7356 edge (3.84:1); SHOW ME pressed
+   #1a1206 on #ffd400 12.95:1; FINISH #f0e6d4 on #1f5c38 6.41:1. */
+#practice-coach{display:none;flex-direction:column;gap:8px;box-sizing:border-box;position:fixed;top:0;right:0;bottom:0;width:300px;z-index:450;
+  overflow:hidden;background:#221912;color:#f0e6d4;border-left:2px solid #8a7356;padding:12px 14px;font-family:'Barlow Condensed',sans-serif;}
+#practice-coach.vis{display:flex;}
+#cn-right #practice-coach{position:static;width:auto;z-index:auto;flex:1 1 auto;min-height:0;border:1px solid #8a7356;border-radius:10px;}
+#practice-coach *{box-sizing:border-box;}
+.pc-hd{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;}
+.pc-title{margin:0;font:400 24px/1 'Bebas Neue',sans-serif;letter-spacing:.12em;color:#9ccdf2;}
+.pc-sub{font:400 13px/1.2 'Share Tech Mono',monospace;letter-spacing:.06em;color:#c0ad90;}
+.pc-status{font:700 14px/1.25 'Share Tech Mono',monospace;letter-spacing:.04em;color:#f0e6d4;padding:5px 8px;border-radius:6px;background:#2e2016;}
+.pc-status.pc-hit{color:#1a1206;background:#ffd400;}
+.pc-body{flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
+.pc-principle{font:400 20px/1.1 'Bebas Neue',sans-serif;letter-spacing:.06em;color:#f0ad4a;border-left:3px solid #f0ad4a;padding-left:9px;}
+.pc-reason{font:600 15px/1.35 'Barlow Condensed',sans-serif;color:#f0e6d4;}
+.pc-hint{font:600 14px/1.3 'Barlow Condensed',sans-serif;color:#c0ad90;border-top:1px dashed #8a7356;padding-top:7px;}
+.pc-hint:empty{display:none;}
+.pc-btns{flex:none;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;}
+.pc-btn{grid-column:span 2;min-height:40px;padding:0 4px;border:1px solid #8a7356;border-radius:6px;background:#2e2016;color:#f0e6d4;
+  font:400 16px/1 'Bebas Neue',sans-serif;letter-spacing:.03em;white-space:nowrap;overflow:hidden;cursor:pointer;}
+.pc-btn:hover{border-color:#f0ad4a;}
+.pc-btn:focus-visible{outline:3px solid #f0ad4a;outline-offset:2px;}
+.pc-show,.pc-fin{grid-column:span 3;font-size:19px;}
+.pc-show{color:#ffd400;border-color:#ffd400;}
+.pc-show[aria-pressed="true"]{background:#ffd400;color:#1a1206;}
+.pc-fin{background:#1f5c38;border-color:#4fbf7a;}
+.pc-exit{background:#221912;color:#c0ad90;}
+.pc-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;}
+/* on the phone sheet: one compact card at its full height (the trailer gives up the room), the reason held to two lines */
+body.cn-sheet #cn-right #practice-coach{flex:none;gap:5px;padding:7px 9px;}
+body.cn-sheet .pc-body{flex:none;overflow:visible;gap:4px;}
+body.cn-sheet .pc-sub,body.cn-sheet .pc-hint{display:none;}
+body.cn-sheet .pc-hd{display:none;}
+body.cn-sheet .pc-status{font-size:13px;padding:3px 7px;}
+body.cn-sheet .pc-principle{font-size:18px;}
+body.cn-sheet .pc-reason{font-size:14px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+body.cn-sheet .pc-btns{gap:5px;}
+body.cn-sheet .pc-btn{min-height:38px;font-size:16px;letter-spacing:.04em;}
+/* what the coach replaces while practice runs: the score and clock tiles, the seal meter (the coach announces the seal
+   line), the spacer, the water, and on the phone the water and seal row; the phone's top bar says what this is instead (#9ccdf2 on #16100b 11.17:1) */
+body.li-practice.cn-cols #cn-right #stats-panel,body.li-practice.cn-cols #cn-right .cn-seal,body.li-practice.cn-sheet #cn-left #stats-panel,body.li-practice #cn-right .cn-spacer,body.li-practice.cn-sheet .cn-r3{display:none!important;}
+body.li-practice .cn-row{grid-template-columns:minmax(0,1fr);}
+body.li-practice.cn-sheet #cn-left::before{content:'PRACTICE · NO CLOCK';flex:1;min-width:0;white-space:nowrap;overflow:hidden;font:400 17px/1 'Bebas Neue',sans-serif;letter-spacing:.08em;color:#9ccdf2;padding-left:6px;}
+.to-btn.to-btn-try{flex:none;font-size:16px;letter-spacing:1.5px;padding:8px 0;}
 
 /* ── SHIFT MODE SESSION HEADER BADGE ── */
 #shift-badge{
@@ -679,7 +730,7 @@ body.m-portrait #to-principle-card{overflow-y:auto;}
 #flow-pip.broke{animation:flowBroke .5s ease;border-color:var(--danger);}
 @keyframes flowBroke{0%,100%{transform:translateX(0);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
 /* v3.5.147 first-run funnel · pulse the TRAINING card + tag */
-.sm-card.mode-training.first-run{animation:frPulse 1.6s ease-in-out infinite;}
+.sm-card.mode-training.first-run{animation:frPulse 1.6s ease-in-out 3;} /* 3.9.1009 WCAG 2.2.2: three pulses, 4.8 s, then still */
 @keyframes frPulse{0%,100%{box-shadow:0 0 0 0 rgba(132,224,166,0);}50%{box-shadow:0 0 0 3px rgba(132,224,166,.4),0 0 22px rgba(132,224,166,.35);}}
 /* 3.9.1001 the tag sits on its own line under TRAINING. Inline beside it, it squeezed the title to 26 px on a laptop
    and a phone and the word ran under the tag (measured: the title box 26 px wide, the tag 179 px). */
@@ -780,7 +831,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 .pause-clip .pause-menu{max-width:300px;gap:4px;margin-top:0;}
 .pause-clip .pmb{font-size:14px;letter-spacing:1.5px;padding:6px 0;border-color:#cbbfa6;color:#3a2c1a;background:rgba(255,255,255,.55);}
 .pause-clip #fp-tip{padding:6px 9px;}.pause-clip .fp-tip-hdr{font-size:11px;margin-bottom:1px;}.pause-clip #fp-tip-h{font-size:14px;}.pause-clip #fp-tip-s{font-size:12.5px;line-height:1.28;}
-.pause-clip .pmb:hover{border-color:var(--acc);color:var(--acc-dim);}
+.pause-clip .pmb:hover{border-color:var(--acc);color:#6e3f08;} /* 3.9.1009 the clipboard is light in both themes: the dark theme's --acc-dim #b07820 measured 3.69:1 on the button, #6e3f08 is 8.61 */
 .pause-clip .pmb-resume{background:linear-gradient(180deg,var(--acc-bright),var(--acc));color:#2a1c08;border-color:var(--acc);}
 .pause-clip .pmb-resume:hover{filter:brightness(1.05);color:#2a1c08;}
 .pause-clip .pmb-restart{color:#6a2418;border-color:#d0a08a;}
@@ -793,7 +844,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 /* v3.5.143 LEGIBILITY SWEEP · the clipboard menu read as gray-on-gray slop. Dark text now carries a light HALO
    (contrast off the busy clipboard texture), the muted tans are darkened, and the buttons are solidified so their
    labels pop. This is the "outline all front-facing text" pass for the light clipboard surfaces. */
-.pause-clip .pause-sub{color:#5e4e34;}
+.pause-clip .pause-sub{color:#3f3020;} /* 3.9.1009 was #5e4e34 at 4.60:1, a thin 12px line; #3f3020 is 7.28 on #c4c4c4 */
 .pause-clip #fp-tip-s{color:#4a3c26;}
 .pause-clip .pause-hint{color:#3a2c1a;}
 .pause-clip .pmb{background:rgba(255,255,255,.9);border-color:#9a8a6c;color:#241a0e;font-weight:bold;}
@@ -896,8 +947,8 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 .end-act.primary .ea-d{color:rgba(10,6,0,.72);}
 /* v3.5.137 the training sign-off clipboard */
 
-#ov-tutdone{position:fixed;inset:0;z-index:620;display:none;align-items:center;justify-content:center;background:rgba(10,7,4,.9);padding:20px;overflow-y:auto;}
-#ov-tutdone.vis{display:flex;}
+#ov-tutdone,#ov-practice{position:fixed;inset:0;z-index:620;display:none;align-items:center;justify-content:center;background:rgba(10,7,4,.9);padding:20px;overflow-y:auto;}
+#ov-tutdone.vis,#ov-practice.vis{display:flex;}
 .tutdone-card{background:#f5f0e8;color:#2a1c0a;border-radius:10px;max-width:460px;width:100%;max-height:94vh;overflow-y:auto;padding:22px 22px 20px;box-shadow:0 18px 48px rgba(0,0,0,.6);}
 .td-hdr{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;color:#1a1206;}
 .td-badge{font-family:'Share Tech Mono',monospace;font-size:12px;border:1.5px solid #b23b2e;color:#b23b2e;border-radius:4px;padding:2px 7px;vertical-align:middle;margin-left:6px;letter-spacing:1px;}
@@ -910,7 +961,14 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 .tdl-row:last-child .tdl-t{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;}
 .td-ladder{font-family:'Barlow Condensed',sans-serif;font-size:14px;line-height:1.4;color:#4a3a20;background:#f3e6dc;border-left:3px solid #b23b2e;padding:10px 12px;border-radius:0 6px 6px 0;margin-bottom:16px;}
 .td-sign{width:100%;background:linear-gradient(180deg,#e0a838,#c8801a);color:#160c00;border:none;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.5px;padding:13px;border-radius:7px;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.3);}
-.td-skip{width:100%;background:none;border:none;color:#7a6a4a;font-family:'Barlow Condensed',sans-serif;font-size:15px;text-decoration:underline;cursor:pointer;padding:10px;margin-top:4px;}
+.td-skip{width:100%;background:none;border:none;color:#5a4a30;font-family:'Barlow Condensed',sans-serif;font-size:15px;text-decoration:underline;cursor:pointer;padding:10px;margin-top:4px;} /* 3.9.1009 #7a6a4a was 4.64:1; #5a4a30 is 7.53 */
+/* 3.9.1009 the practice record: the second action on the card, a failed row, the figure at the end of a row. #f5f0e8 on
+   #2a1c0a 14.6:1 · #8c2a1f on #f3e6dc 7.0:1 · #2a1c0a on #f5f0e8 14.6:1 */
+.td-sign.pr-alt{margin-top:8px;background:#2a1c0a;color:#f5f0e8;}
+.tdl-row.bad .tdl-box{border-color:#8c2a1f;background:#f3e6dc;color:#8c2a1f;}
+.tdl-row.mid .tdl-box{border-color:#7a6a4a;color:#4a3a20;} /* a row with nothing to mark: #4a3a20 on #f5f0e8 10.4:1 (the default check green is 3.16:1 there) */
+.pr-list .tdl-row:last-child .tdl-t{font-family:'Barlow Condensed',sans-serif;font-size:17px;letter-spacing:0;}
+.pr-n{margin-left:auto;flex:none;font-family:'Share Tech Mono',monospace;font-size:16px;font-weight:700;color:#2a1c0a;}
 
 /* Panic bar (bars strip removed · stats in left panel) */
 #panic-wrap{display:none;flex-shrink:0;padding:2px 8px;background:rgba(0,0,0,.25);}
@@ -1437,13 +1495,13 @@ body[data-cb="trit"]{
 /* v3.5.104 THE HALL LEDGER · World-Board fame cards + medal rows, cream-paper style (v3.5.205 shame removed) */
 
 .lb-crow{display:grid;grid-template-columns:20px 1fr auto;align-items:center;gap:7px;padding:4px 7px;border-radius:5px;background:rgba(255,255,255,.5);}
-.lb-crow .rk{font-family:'Bebas Neue',sans-serif;font-size:15px;color:#a08b6a;text-align:center;line-height:1;}
+.lb-crow .rk{font-family:'Bebas Neue',sans-serif;font-size:15px;color:#5c4a2e;text-align:center;line-height:1;} /* 3.9.1009 the rank on the clipboard row: #a08b6a measured 2.39 to 2.58:1, #5c4a2e measures 6.19 to 6.68 (5.52 computed on the darkest row) */
 .lb-crow .who{display:flex;align-items:center;gap:5px;min-width:0;}
 .lb-crow .med{font-size:13px;flex:none;}
 .lb-crow .nm{font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:bold;color:#2a1a08;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.2px;}
 .lb-crow .v{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:bold;color:#8b4513;font-variant-numeric:tabular-nums;letter-spacing:.3px;}
 .lb-crow.r1{background:linear-gradient(90deg,rgba(246,220,144,.6),rgba(255,255,255,.5));}
-.lb-crow.r1 .rk{color:#d99a2b;}
+.lb-crow.r1 .rk{color:#6e3f08;} /* 3.9.1009 the #1 rank: #d99a2b measured 1.54 to 1.92:1 on the gold and gray rows, #6e3f08 measures 5.56 to 6.95 */
 .lb-crow.r1 .nm{color:#3a2708;}
 
 #lb-daily-board .lb-crow{background:rgba(255,255,255,.55);}
@@ -1675,7 +1733,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.9.1008 · ADMIN</div>
+  <div class="pause-sub">LOCK IN v3.9.1009 · ADMIN</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -1742,7 +1800,7 @@ body[data-cb="trit"]{
 <!-- ═══════════════════ START MENU ═══════════════════ -->
 <div id="start-menu" style="display:none;">
   <div id="sm-topright">
-    <button class="sm-loginbtn" id="sm-crewbtn" title="Join your instructor's crew" onclick="crewOpen()">◆ JOIN A CREW</button>
+    <button class="sm-loginbtn" id="sm-demobtn" type="button" onclick="menuDemoToggle()"><span aria-hidden="true">❚❚</span> PAUSE DEMO</button><button class="sm-loginbtn" id="sm-crewbtn" title="Join your instructor's crew" onclick="crewOpen()">◆ JOIN A CREW</button>
     <button class="sm-iconbtn" title="Settings" onclick="openSettings()">⚙</button>
   </div>
   <div id="sm-logo">
@@ -1758,7 +1816,8 @@ body[data-cb="trit"]{
        writing area; the board's own clip carries the LOCK-IN mark, so #sm-logo is hidden. -->
   <div id="sm-board">
   <div id="sm-tagline">SELECT YOUR MODE</div>
-  <!-- 4.0 ONE SYSTEM: TRAINING to learn, TRAILER-LOAD to practice, DAILY for the shared wall, and the boards. Tour,
+  <!-- 4.0 ONE SYSTEM: TRAINING to watch, PRACTICE to load the trainer's wall yourself (3.9.1009), TRAILER-LOAD at full
+       tempo, DAILY for the shared wall, and the boards. Tour,
        the Mini-Games menu and Smalls Sort left in 4.0 (my call 2026-10-21: a training system, not a game collection). -->
   <div id="sm-modes">
     <div class="sm-card mode-shift mode-flagship" role="button" tabindex="0" onclick="guardLaunch(startTrailerLoad)">
@@ -1777,6 +1836,11 @@ body[data-cb="trit"]{
       <div class="sm-card-name">TRAINING</div>
       <div class="sm-card-desc">Watch a trainer build a full wall, one placement at a time, with the reasons behind the key moves, then sign off. No clock, no fails. New here? Start on this.</div>
     </div>
+    <div class="sm-card mode-practice" role="button" tabindex="0" onclick="startPractice()">
+      <div class="sm-card-ico">✋</div>
+      <div class="sm-card-name">PRACTICE</div>
+      <div class="sm-card-desc">Load the trainer's wall yourself: the same freight in the same order, under the real rules. SHOW ME outlines where the trainer put each piece. No clock, no score.</div>
+    </div>
     <!-- v3.5.197 THE LEADERBOARD GETS A DOOR. I asked for this repeatedly and kept
          getting a reason not to: the boards were reachable only through CLOCK-IN, a
          button in the top-right corner that reads as an account control, not as competition.
@@ -1791,7 +1855,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 21)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.9.999: updated Oct 20, the date on the policy; back to "Privacy" after 2026-11-20. -->
-  <div id="sm-footer">LOCK IN v3.9.1008 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.9.1009 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -1948,7 +2012,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.9.1008 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.9.1009 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -1970,11 +2034,45 @@ body[data-cb="trit"]{
 
   <div id="to-controls">
     <div class="to-btn-row">
-      <button class="to-btn to-btn-play" id="train-next" onclick="trainNext()">NEXT ▶</button>
-      <button class="to-btn" id="train-auto" onclick="trainAuto()" title="Advance every step automatically">AUTO ▶▶</button>
+      <button class="to-btn to-btn-play" id="train-next" onclick="_trainAutoStop();trainNext()">NEXT ▶</button>
+      <button class="to-btn" id="train-auto" onclick="trainAuto()" title="Advance every step automatically. Press again to pause.">AUTO ▶▶</button>
       <button class="to-btn to-btn-exit" onclick="exitTraining()">✕ EXIT</button>
     </div>
-    <div id="to-exit-hint">CLICK NEXT TO WATCH EACH PLACEMENT · ESC OR ✕ EXITS</div>
+    <button class="to-btn to-btn-exit to-btn-try" onclick="practiceFromTraining()">✋ LOAD IT YOURSELF · PRACTICE</button>
+    <div id="to-exit-hint">NEXT FOR EACH PLACEMENT · AUTO PLAYS, PRESS IT AGAIN OR ESC TO PAUSE · ESC OR ✕ EXITS</div>
+  </div>
+</div>
+
+<!-- 3.9.1009 PRACTICE COACH: the trainer's wall, loaded by the new hire. practiceUI() moves it to the head of the console
+     column or the phone sheet; with no console it stands at the right edge like the training panel. -->
+<section id="practice-coach" aria-labelledby="pc-title">
+  <div class="pc-hd"><h2 class="pc-title" id="pc-title">PRACTICE</h2><span class="pc-sub">YOU LOAD THE TRAINER’S WALL · NO CLOCK</span></div>
+  <div class="pc-status" id="pc-status">ON THE WALL 0</div>
+  <div class="pc-body">
+    <div class="pc-principle" id="pc-principle"></div>
+    <div class="pc-reason" id="pc-reason"></div>
+    <div class="pc-hint" id="pc-hint"></div>
+  </div>
+  <div class="pc-btns">
+    <button type="button" class="pc-btn pc-show" id="pc-show" aria-pressed="false" onclick="practiceHint()">👁 SHOW ME</button>
+    <button type="button" class="pc-btn pc-fin" id="pc-finish" onclick="practiceFinish('')">✓ FINISH</button>
+    <button type="button" class="pc-btn" onclick="practiceWatch()">WATCH</button>
+    <button type="button" class="pc-btn" onclick="practiceRestart()">RESTART</button>
+    <button type="button" class="pc-btn pc-exit" onclick="practiceExit()">EXIT</button>
+  </div>
+  <div class="pc-sr" id="pc-live" aria-live="polite"></div>
+</section>
+<!-- 3.9.1009 PRACTICE RECORD: what the new hire loaded, against the trainer's wall. Shown here, never sent. -->
+<div id="ov-practice" role="dialog" aria-modal="true" aria-labelledby="pr-title">
+  <div class="tutdone-card">
+    <div class="td-hdr" id="pr-title">LOCK IN <span class="td-badge">PRACTICE RECORD</span></div>
+    <div class="td-ladder" id="pr-why" style="display:none"></div>
+    <div class="td-sub">You loaded the trainer’s wall yourself. This is how it went.</div>
+    <div id="pr-list" class="td-list pr-list"></div>
+    <div class="td-sub">Practice, not a test: no clock, no score, no board, and this record is not sent anywhere.</div>
+    <button class="td-sign" onclick="startPractice()">⟲ PRACTICE AGAIN</button>
+    <button class="td-sign pr-alt" onclick="practiceWatch()">🎓 WATCH THE TRAINER</button>
+    <button class="td-skip" onclick="practiceExit()">Back to menu</button>
   </div>
 </div>
 
@@ -2241,6 +2339,7 @@ body[data-cb="trit"]{
     <div id="tutdone-list" class="td-list"></div>
     <div class="td-ladder"><b>⚠ THE LADDER</b><br>COLLAPSE → ⚠ WARNING → ⛔ INCIDENT → ✍ WRITE-UP<br><small>5 incidents = practice trailer · 4 write-ups = shift over</small><br><small>🔒 a locked shelf clears a tire or fragile warning · 💧 water fixes a thirst warning</small></div>
     <button class="td-sign" onclick="tutSign()">✍ SIGN HERE · TRAINING COMPLETE</button>
+    <button class="td-sign pr-alt" onclick="startPractice()">✋ NOW LOAD IT YOURSELF · PRACTICE</button>
     <button class="td-skip" onclick="tutExit()">Skip · back to menu</button>
   </div>
 </div>
@@ -2308,7 +2407,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.9.1008
+// LOCK IN v3.9.1009
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -2787,7 +2886,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.9.1008'; // the version a crew session records · bump WITH the LOCK IN version
+var LI_APP_VER='3.9.1009'; // the version a crew session records · bump WITH the LOCK IN version
 function zBuildSession(){
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
   var inc=S.incidents||[];
@@ -2830,7 +2929,7 @@ function zRpc(fn,body,cb){
 // a finished session goes to the crew; a player with no crew sends nothing
 // READS: zLoadPlayer().crew | WRITES: the crew's sessions on the server
 function zEndSession(){
-  var c=crewMine();if(!c||!LI_LIVE)return;
+  var c=crewMine();if(!c||!LI_LIVE||gameMode==='practice')return; // 3.9.1009 a practice wall is not a crew session
   var s=zBuildSession();
   zRpc('member_session',{p_token:c.token,p_mode:s.mode,p_app_ver:s.app_ver,p_started:s.started_at,p_ended:s.ended_at,
     p_duration:s.duration_s,p_summary:s.summary,p_incidents:s.incidents,p_events:s.events},crewAnswer);
@@ -3137,7 +3236,7 @@ function musicStart(){
 // AUTO playlist continues from there. Skipped if the player has pinned a specific track in Settings.
 function startModeMusic(){
   if((SETTINGS.musicTrack||'auto')!=='auto')return;
-  var idx={'shift':1,'':2,'daily':3,'training':2}[(typeof gameMode!=='undefined')?gameMode:''];
+  var idx={'shift':1,'':2,'daily':3,'training':2,'practice':2}[(typeof gameMode!=='undefined')?gameMode:''];
   if(idx==null)return;
   try{sndInit();if(SND.ctx&&SND.ctx.state==='suspended')SND.ctx.resume();}catch(e){}
   MUSIC.started=true;musicLoad(idx);musicPlay();
@@ -3697,6 +3796,7 @@ function hazLabelDef(cls){
   return {t:'HAZMAT',s:hc.s,ico:'\u2622',bg:hc.bg,tc:hc.tc,isFrag:false,isHaz:true,hazClass:cls,hazName:hc.n};
 }
 function spawnNC(){
+  if(gameMode==='practice')return; // 3.9.1009 practice: the trainer's freight only
   var ncSlots=G.ncSlots;
   if(ncStartCapped())return; // v3.5.206 wall-start cap reached: skip, never an overload
   var emptyIdx=ncSlots.findIndex(function(s){return!s;});
@@ -3742,7 +3842,7 @@ function makeBagPiece(){
     labelDef:BAG_LABEL,label:'SMALLS',seed:seed,isFrag:false,isPanic:false,isGap:false};
 }
 function spawnBag(){
-  if(gameMode==='daily')return;                  // daily belt is deterministic · daily bag joins its stream separately (follow-up)
+  if(gameMode==='daily'||gameMode==='practice')return; // 3.9.1009 practice: the trainer's freight only                  // daily belt is deterministic · daily bag joins its stream separately (follow-up)
   if(typeof G==='undefined'||!G.belt)return;
   if(G.belt.length>=BELT_PIECE_COUNT+5)return;    // don't overflow the chute
   G.belt.push(makeBagPiece());
@@ -3829,7 +3929,7 @@ function updateWaterHUD(){
   if(fill)fill.style.transform='scaleY('+(d/WATER_PER_WALL)+')'; // the fill rect grows up from the bottle's floor
   if(cnt)cnt.textContent=full?'FULL':(d+'/'+WATER_PER_WALL);
   if(bot){
-    bot.style.display=(typeof gameMode!=='undefined'&&gameMode==='training')?'none':''; // the watch-only demo has no player to drink
+    bot.style.display=(typeof gameMode!=='undefined'&&(gameMode==='training'||gameMode==='practice'))?'none':''; // the watch-only demo has no player to drink
     bot.classList.toggle('dry',dry);bot.classList.toggle('full',full);
     bot.setAttribute('aria-label','Water bottle: '+d+' of '+WATER_PER_WALL+' drinks this trailer'+(full?', fully hydrated':'. Press to drink'));
   }
@@ -4100,7 +4200,7 @@ function wallTopFrac(){return (typeof G==='undefined'||!G||!G.grid)?0:wallH()/GH
 var TOP_BAG_AT=[0.70,0.85]; // the NC guy hands over a bag the first time the wall's top passes each of these
 // called after every successful placement: deliver the next top-off bag if the wall's top just passed its mark
 function topBagCheck(){
-  if(typeof G==='undefined'||!G||!G.belt)return;
+  if(typeof G==='undefined'||!G||!G.belt||gameMode==='practice')return; // 3.9.1009 practice carries the trainer's freight and nothing else
   var n=G._topBags||0;if(n>=TOP_BAG_AT.length||wallTopFrac()<TOP_BAG_AT[n])return;
   if(G.belt.length>=BELT_PIECE_COUNT+5)return; // the chute is full; he tries again on the next box
   var b=makeBagPiece();
@@ -4119,6 +4219,7 @@ function ncTooBigForTop(t){ // from 75% height, a piece that cannot fit in the r
 function dailyBagChance(idx){return (idx<20)?0.12:Math.min(0.36,0.12+(idx-20)*0.012);}
 function refillBelt(){
   if(gameMode==='daily'){var _dg=0;while(G.belt.length<BELT_PIECE_COUNT&&_dg++<240){G.belt.push(buildDailyPiece(DAILY.seed,DAILY.ptr++));}return;} // v2.7.0 deterministic daily belt
+  if(gameMode==='practice'){practiceFeed();return;} // 3.9.1009 the trainer's freight in the trainer's order, and nothing else
   var _rbG=0;while(G.belt.length<BELT_PIECE_COUNT&&_rbG++<240){
     // Guaranteed periodic NC/bag spawn · not pure random
     // One NC every NC_SPAWN_INTERVAL belt pieces consumed
@@ -4497,6 +4598,7 @@ function placeBox(source,sourceIdx,gx,gy,rot){
 
   if(typeof gridToCanvas==='function'){var _jbase=gridToCanvas(gx+d.w/2,gy+d.h),_jarea=d.w*d.h,_jheavy=(box.type==='large'||box.cat==='tire'||box.cat==='pro');spawnBurst(_jbase.x,_jbase.y,Math.min(14,4+Math.round(_jarea*0.7)),'rgba(180,150,110,.9)',_jheavy?95:70,0.34,180);if(_jheavy)addShake(Math.min(6,2+_jarea*0.15));hapt(_jheavy?'lock':'place');}
   playSfx((box.isGap||box.isBrokenBag)?'gaplock':'place');
+  if(gameMode==='practice')practiceAfterPlace(box,gx,gy,rot); // 3.9.1009 the next piece onto the belt, the coach current
 
   return true;
 }
@@ -4700,6 +4802,7 @@ function productivityLadder(pk){
 }
 var WRITEUP_SENT_HOME=4; // v3.5.109 the Nth documented write-up this shift = SENT HOME (game over)
 function raiseWriteup(offense,num){
+  if(gameMode==='practice')return; // 3.9.1009 practice: the banner teaches, no paperwork
   S.writeups=(S.writeups||0)+1; // v3.5.109 count every documented write-up
   if(typeof zLog==='function')zLog('writeup',{offense:offense,n:S.writeups}); // v3.5.132 raw timeline
   var terminal=(S.writeups>=WRITEUP_SENT_HOME);
@@ -4723,6 +4826,7 @@ function signWriteup(){
 }
 function _incidentEscalation(){ // shared by logIncident + safetyIncident + collapse
   _sfInit();
+  if(gameMode==='practice'){updateSafetyHUD();return;} // 3.9.1009 the incident is on the practice record; no write-up, no practice-trailer kick
   var n=S.incidents.length;
   var offense=(n>0&&S.incidents[n-1])?S.incidents[n-1].type:'';
   if(WRITEUP_POOL.indexOf(offense)>=0){raiseWriteup(offense);} // "bad the first time" \u2192 instant paperwork
@@ -4763,6 +4867,7 @@ function mitigateWarn(source){
   return true;
 }
 function sendToPractice(why){
+  if(gameMode==='practice')return; // 3.9.1009 already on a practice wall
   if(G&&G._practiceSent)return;if(G)G._practiceSent=true;
   S.practiceKicks=(S.practiceKicks||0)+1;
   showBanner('\u26d4 PRACTICE TRAILER \u00b7 '+(why||'incident limit reached')+'.<br><span style="font-size:.72em">A clean practice trailer is loaded. Incidents already logged stay on this session.</span>','danger',4200);
@@ -4798,7 +4903,7 @@ function updateSafetyHUD(){
 // unresolved warning into an INCIDENT, so a dry wall that reached the top DID get an incident despite the
 // comment above. Now 100% only warns when this wall has no hydration warning yet; otherwise it reminds.
 function checkHydrationSafety(){
-  if(typeof G==='undefined'||!G||!G.grid)return;
+  if(typeof G==='undefined'||!G||!G.grid||gameMode==='practice')return; // 3.9.1009 the trainer's wall teaches no water
   var pct=Math.round(wallH()/GH*100);
   if(pct>=75&&pct<100&&(G.drinks||0)===0&&!G._hyd75){G._hyd75=true;safetyWarn('HYDRATION','you\u2019re most of the way up and haven\u2019t had any water \u00b7 take a drink.');}
   if(pct>=100&&(G.drinks||0)===0&&!G._hyd100){G._hyd100=true;
@@ -5602,6 +5707,7 @@ function chargeShift(want){
   return cost;
 }
 function timeoutStrike(kind){
+  if(gameMode==='practice')return 0; // 3.9.1009 practice has no clock to strike against
   var K=TIMEOUT_KINDS[kind];if(!K||typeof S==='undefined'||!S)return 0;
   S.timeouts=S.timeouts||{};S._timeoutAt=S._timeoutAt||{};S._timeoutCost=S._timeoutCost||{};
   var now=Date.now();if(S._timeoutAt[kind]&&now-S._timeoutAt[kind]<TIMEOUT_COOLDOWN_MS)return 0; // one strike per kind per 15 s
@@ -5897,6 +6003,7 @@ function liCertOffer(){
 }
 
 function sealWall(reason){
+  if(gameMode==='practice'){practiceSeal(reason);return;} // 3.9.1009 no payout, certificate, record or board in practice
   if(!hydrationOK())return;
   if(G.sealed){
     if(gameMode==='daily'){if(!gOver)showDailyComplete();return;} // v3.5.139 re-seal in daily -> the submit-and-improve choice (never a NEXT TRAILER popup)
@@ -6082,6 +6189,7 @@ function breakJam(){
   jamStarvedT=0;jamWarnLevel=0;updateChuteUI();
 }
 function tickChute(){
+  if(gameMode==='training'||(gameMode==='practice'&&G&&G.belt&&G.belt.length===0&&practiceFedOut())){if(jamStarvedT||jamWarnLevel){jamStarvedT=0;jamWarnLevel=0;}updateChuteUI();return;} // 3.9.1009 the trainer's freight is all off the belt: an empty chute is the end, not a jam
   if(G&&G.belt&&G.belt.length>0){if(jamStarvedT||jamWarnLevel){jamStarvedT=0;jamWarnLevel=0;}updateChuteUI();return;} // v3.5.206 refresh every tick (updateChuteUI writes only on a change): a new wall's full chute used to keep the last wall's BREAK JAM up
   if(!jamStarvedT)jamStarvedT=Date.now();
   if((placed||0)<1){updateChuteUI();return;}
@@ -6099,7 +6207,7 @@ function updateChuteUI(cd){
   if(!btn||!lt)return;
   var bd='none',ld='',bc=btn.className,bt=btn.textContent,lc='chute-light cl-ok';
   var bl=(G&&G.belt)?G.belt.length:BELT_PIECE_COUNT;
-  if(bl<BELT_PIECE_COUNT){
+  if(bl<BELT_PIECE_COUNT&&gameMode!=='training'&&!(gameMode==='practice'&&practiceFedOut())){ // 3.9.1009 the trainer's freight is all out: nothing to break loose
     bd='';
     if(jamWarnLevel>=2){bc='bj-btn bj-crit';bt='\u26a1 BREAK JAM \u00b7 '+(cd||0)+'s';lc='chute-light cl-crit';}
     else if(jamWarnLevel>=1){bc='bj-btn bj-warn';bt='\u26a1 BREAK JAM';lc='chute-light cl-warn';}
@@ -6222,6 +6330,7 @@ function drawScene(ts){
   drawWallBoxes(sCtx);
   drawParticles(sCtx);
   drawPlacementPreview(sCtx);
+  if(gameMode==='practice')drawPracticeHint(sCtx); // 3.9.1009 SHOW ME
   drawFloorSlots(sCtx);
   drawDockFrame(sCtx);
   drawAtmosphere(sCtx);
@@ -6282,7 +6391,7 @@ function drawStructure(c){
 }
 
 function drawLights(c,ts){
-  var flicker=1+.012*Math.sin(ts*.003+1.7)*Math.sin(ts*.007);
+  var flicker=juiceOn()?1+.012*Math.sin(ts*.003+1.7)*Math.sin(ts*.007):1; // 3.9.1009 still under Reduced Motion
   [.09,.28,.50,.69,.84].forEach(function(lf){
     var cy=((DT+(NW.tl.y-DT)*lf)+(DT+(NW.tr.y-DT)*lf))/2;
     var cx=W/2,half=W*.085*(1-lf*.5);
@@ -6476,7 +6585,7 @@ function drawWallBoxes(c){
 
   // PASS 4 (v3.5.72): PERSISTENT HAZMAT MARKER · a LOOSE hazmat on the wall (not capped by a locked shelf above it)
   // pulses a red warning outline so the danger is always visible. Lock a shelf over it · or nest it in a tire · to clear it.
-  var _hzSeen={},_hzP=0.5+0.5*Math.sin(Date.now()/280),hzi;
+  var _hzSeen={},_hzP=juiceOn()?0.5+0.5*Math.sin(Date.now()/280):1,hzi;
   for(hzi=0;hzi<cells.length;hzi++){
     var hzc=cells[hzi];
     if(_hzSeen[hzc.id]||!hzc.box||!(hzc.box.isHaz||hzc.box.hazClass))continue;
@@ -6659,7 +6768,7 @@ function renderWallBox(c,cell){
 
   // Fragile pulse glow · clipped to piece boundary
   if(cell.box.isFrag&&!cell.isCrushed){
-    var a=.4+.28*Math.sin(Date.now()/280);
+    var a=juiceOn()?.4+.28*Math.sin(Date.now()/280):.68;
     c.save();piecePath();c.clip();
     piecePath();
     c.strokeStyle='rgba(255,70,50,'+a+')';c.lineWidth=4;
@@ -6766,7 +6875,7 @@ function drawPlacementPreview(c){
   // Validity border: bright teal = legal, pulsing dashed red = illegal
   var tl=gridToCanvas(gx,gy),tr=gridToCanvas(gx+d.w,gy),bl=gridToCanvas(gx,gy+d.h),br=gridToCanvas(gx+d.w,gy+d.h);
   c.save();
-  var pulse=0.55+0.45*Math.sin(Date.now()/200);
+  var pulse=juiceOn()?0.55+0.45*Math.sin(Date.now()/200):1;
   var _cbv=(typeof SETTINGS!=='undefined'&&SETTINGS.colorblind)||'off';
   var _okC=(_cbv==='deut'||_cbv==='prot')?'31,111,208':'30,210,180';
   var _badC=(_cbv==='deut'||_cbv==='prot')?'224,85,31':(_cbv==='trit')?'208,32,42':'255,70,40';
@@ -7333,7 +7442,7 @@ function buildTips(hp,integ,voids,cog,ss,pph){
 }
 
 // ── FAIL CONDITIONS ──
-function checkPPHFail(dt){
+function checkPPHFail(dt){if(gameMode==='practice')return; // 3.9.1009 PRACTICE has no clock: no pace or idle warnings
   // v3.5.118 AFK KILL (v3.5.214: now a strike, see timeoutStrike) · no placement for AFK_LIMIT (a playtester's "farm longest time by afking":
   // 44 min elapsed, 0 placed, immune because PPH was 0). placed-delta so it auto-resets on ANY placement AND on a
   // new game (placed drops to 0), needing no hooks in the placement/start paths. dt-accumulated => freezes on pause.
@@ -7603,7 +7712,7 @@ function rotateSel(){
 // Enter on a placed box lifts it (top-down, load-bearing aware). Live play only.
 var _kbHinted=false;
 function kbPlayActive(){
-  if(!(gameMode==='shift'||gameMode==='training'||gameMode==='daily'||gameMode===''))return false; // '' = regular; menu/idle excluded by overlay guards below
+  if(!(gameMode==='shift'||gameMode==='training'||gameMode==='daily'||gameMode==='practice'||gameMode===''))return false; // '' = regular; menu/idle excluded by overlay guards below
   if(paused||gOver)return false;
   if(_shown('start-menu')||_shown('ov-pause')||_shown('ov-end')||_shown('ov-postsort')||_shown('ov-writeup')||_shown('ov-recover')||_shown('next-popup'))return false;
   return true;
@@ -7787,7 +7896,7 @@ window.addEventListener('keydown',function(e){
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
     // ESC exits training if active, otherwise toggles pause
-    if(gameMode==='training'){exitTraining();return;}
+    if(gameMode==='training'){if(paused&&_shown('ov-pause')){togglePause();return;}if(_trainAutoIv){_trainAutoStop();return;}exitTraining();return;} // 3.9.1009 ESC resumes a paused trainer, then stops AUTO, then exits
     togglePause();return;
   }
   var ae=document.activeElement,tag=ae?ae.tagName:'';
@@ -7907,6 +8016,7 @@ function cnLayout(){
       var topH=CN.left.offsetHeight||52,fitH=Math.ceil(vw*0.976/AR/0.984)+2;
       var h=Math.max(220,Math.min(fitH,vh-topH-CN_SHEET_MIN));
       world.style.flex='0 0 '+h+'px';world.style.height=h+'px';
+      if(b.classList.contains('li-practice')&&CN.right){var _pov=CN.right.scrollHeight-CN.right.clientHeight;if(_pov>0){h=Math.max(220,h-_pov);world.style.flex='0 0 '+h+'px';world.style.height=h+'px';}} // 3.9.1009 the practice coach takes its room from the trailer, never off the bottom of the screen
       b.style.removeProperty('--u');
     }else{world.style.flex='';world.style.height='';}
     if(sw&&(sw.offsetWidth!==W||sw.offsetHeight!==H))resize();
@@ -8564,7 +8674,7 @@ function startMenuDemo(){
      bulkheadRows:{},bulkheadCount:0,brickAwarded:false,crunchCount:0,hazViolations:0,
      recoveryCount:0,ncPlaced:0,beltSinceNC:0,beltSinceBag:0};
   trainingState={playing:true,speed:1.5,stepIdx:0,stepTimer:null,loopCount:0};
-  _demoMenuMode=true;_demoScript=DEMO_SCRIPT.slice(0,17).concat(DEMO_TOP);
+  _demoMenuMode=true;_demoScript=DEMO_SCRIPT.slice(0,17).concat(DEMO_TOP);if(!juiceOn())_menuDemoHeld=true;menuDemoLabel(); // 3.9.1009 Reduced Motion: the menu wall waits for PLAY DEMO
   var _mc=document.getElementById('menu-demo-cap');if(_mc){_mc.textContent='LOADING A CLEAN WALL';_mc.classList.add('vis');}
   placed=0;startT=Date.now();gOver=false;paused=false;
   var _np=document.getElementById('next-popup');if(_np)_np.classList.remove('vis'); // v3.5.54 no round-over popup lingering over the menu demo
@@ -8572,13 +8682,14 @@ function startMenuDemo(){
   animF=requestAnimationFrame(trainingLoop);
   runDemoStep();
 }
-function stopMenuDemo(){
+/* 3.9.1009 WCAG 2.2.2: the wall that builds itself behind the menu pauses on its own button, and waits for PLAY DEMO under Reduced Motion */ var _menuDemoHeld=false;function menuDemoLabel(){var b=document.getElementById('sm-demobtn');if(b)b.innerHTML=_menuDemoHeld?'<span aria-hidden="true">▶</span> PLAY DEMO':'<span aria-hidden="true">❚❚</span> PAUSE DEMO';}function menuDemoToggle(){_menuDemoHeld=!_menuDemoHeld;menuDemoLabel();if(trainingState.stepTimer){clearTimeout(trainingState.stepTimer);trainingState.stepTimer=null;}if(!_menuDemoHeld&&_demoMenuMode)runDemoStep();}function stopMenuDemo(){
   trainingState.playing=false;
   _demoMenuMode=false;
   var _mc=document.getElementById('menu-demo-cap');if(_mc)_mc.classList.remove('vis');
   if(trainingState.stepTimer){clearTimeout(trainingState.stepTimer);trainingState.stepTimer=null;}
 }
 function showStartMenu(){
+  if(typeof practiceUI==='function')practiceUI(false); // 3.9.1009 the coach never outlives practice
   try{if(typeof liCertReset==='function')liCertReset();}catch(_cr3){} // v3.5.185 leaving to the menu drops the wall, so it drops the certificate
   TRAILER_MODE=false; // v3.5.89 clear the flagship flag on every menu return; the next pick sets it
   // v3.5.130 don't leak the live game HUD over the menu (a playtester: "back to lobby with my score still up on the scoreboard")
@@ -8732,7 +8843,7 @@ function trainingLoop(ts){
   if(gameMode!=='training'){return;}
   var dt=lastLoopT?Math.min((ts-lastLoopT)/1000,.1):.016;
   lastLoopT=ts;
-  convOffset=(convOffset+0.38)%40;
+  _hb++;convOffset=(convOffset+0.38)%40; // 3.9.1009 the heartbeat the watchdog reads: without it, TRAINING after any played mode was called a stall and handed to the game loop
   computeGeom();
   drawScene(ts);
   drawBelt(ts);
@@ -8742,7 +8853,7 @@ function trainingLoop(ts){
 // v2.1.23 · Authored demo pieces carry explicit dims so the sequence is
 // deterministic and immune to catalog drift (the 6x8/5x8 tutorial NCs do not
 // exist in the real pool). Name lookup stays a fallback for any dimless step.
-function demoBuildPiece(step){
+function demoBuildPiece(step,idx){ // 3.9.1009 idx: PRACTICE builds a step by its index, outside the trainer's stepIdx
   var w=step.w,h=step.h,type='regular',isNC=false,shape=null,color=step.color||null,hazCls=null;
   if(step.src==='nc'||step.src==='haz'){type='large';isNC=true;}
   else if(step.src==='sml'||step.src==='small'||step.src==='bag'){type='small';}
@@ -8758,7 +8869,7 @@ function demoBuildPiece(step){
     w=b.w;h=b.h;type=b.type;shape=b.shape||null;if(!color)color=b.color||null;
   }
   var wc=step.wc||(type==='small'?1:(type==='large'?4:2));
-  var seed=1234+trainingState.stepIdx;
+  var seed=1234+(idx!=null?idx:trainingState.stepIdx);
   var pal=seedPal(seed,type,shape,color);
   var labelDef=hazCls?hazLabelDef(hazCls):(isNC?LABELS[13]:(step.src==='bag'?LABELS[14]:LABELS[0]));
   return{w:w,h:h,wc:wc,type:type,n:step.n||'',shape:shape,color:color,
@@ -8767,7 +8878,7 @@ function demoBuildPiece(step){
 }
 
 function runDemoStep(){
-  if(!trainingState.playing||gameMode!=='training')return;
+  if(!trainingState.playing||gameMode!=='training'||(_demoMenuMode&&_menuDemoHeld))return; // 3.9.1009 PAUSE DEMO holds the menu wall
   var script=_demoScript||DEMO_SCRIPT;
   var step=script[trainingState.stepIdx];
 
@@ -8871,11 +8982,12 @@ var TRAIN_LEARN=[
   ['seal','Lay a long plank to lock a whole row'],
   ['hazmat','Load hazmat low · STAGE it if there’s no legal slot']
 ];
+function trainScript(){return DEMO_SCRIPT.slice(0,17).concat(DEMO_TOP).concat([DEMO_SCRIPT[17]]);} // the trainer's wall: TRAINING watches it, PRACTICE loads it
 function startTrainDemo(){
   hideStartMenu();
   gameMode='training';_demoMenuMode=false;if(typeof updateWaterHUD==='function')updateWaterHUD(); // v3.5.203 the watch-only demo hides the bottle
   liCount('mode_start','training'); // v3.5.202 daily total
-  TRAIN={script:DEMO_SCRIPT.slice(0,17).concat(DEMO_TOP).concat([DEMO_SCRIPT[17]]),step:0};
+  TRAIN={script:trainScript(),step:0};
   _demoScript=TRAIN.script;
   G={grid:makeGrid(),belt:[],ncSlots:Array(MAX_NC_SLOTS).fill(null),drinks:0,bagSlots:Array(MAX_BAG_SLOTS).fill(null),
      score:0,cog:.5,support:1,integrity:100,tetrisTotal:0,tetrisRows:{},bulkheadRows:{},bulkheadCount:0,
@@ -8900,10 +9012,10 @@ function trainRenderStep(){
   if(nb)nb.textContent=(TRAIN.step>=TRAIN.script.length-1)?'✍ FINISH · SIGN OFF':'NEXT ▶';
 }
 var _trainAutoIv=null; // v3.5.165 (LOW) AUTO advance for the NEXT-gated demo
-function _trainAutoStop(){if(_trainAutoIv){clearInterval(_trainAutoIv);_trainAutoIv=null;}var b=document.getElementById('train-auto');if(b)b.classList.remove('active');}
+function _trainAutoStop(){if(_trainAutoIv){clearInterval(_trainAutoIv);_trainAutoIv=null;}var b=document.getElementById('train-auto');if(b){b.classList.remove('active');b.textContent='AUTO ▶▶';}} // 3.9.1009 the button says what it does next
 function trainAuto(){
   if(_trainAutoIv){_trainAutoStop();return;}
-  var b=document.getElementById('train-auto');if(b)b.classList.add('active');
+  var b=document.getElementById('train-auto');if(b){b.classList.add('active');b.textContent='❚❚ PAUSE';} // 3.9.1009 a running AUTO shows PAUSE (WCAG 2.2.2); NEXT pauses it too
   _trainAutoIv=setInterval(function(){if(typeof TRAIN==='undefined'||!TRAIN){_trainAutoStop();return;}trainNext();},2800);
   trainNext();
 }
@@ -8943,6 +9055,219 @@ function tutSign(){
   showStartMenu();
 }
 function tutExit(){document.getElementById('ov-tutdone').classList.remove('vis');gameMode='';gOver=true;showStartMenu();}
+
+// ── 3.9.1009 PRACTICE · the trainer's wall, loaded by the new hire ──
+// TRAINING is watch-only: the trainer places every box and the new hire reads why. A first day doesn't stop there; next
+// you load one yourself with the trainer beside you. PRACTICE hands over the same freight in the same order: the
+// trainer's three appliances on the special handling rack, the belt in the trainer's order (topped up after every
+// placement, so it never jams), then the hazmat that came late. The new hire places it under the real rules, with no
+// clock, no dispatch, no score, no write-ups and no boards. SHOW ME outlines where the trainer put the piece in hand.
+// Any legal spot is allowed; the coach counts the pieces that went where the trainer put them. Every piece is built from
+// the script by its index, so every run is the same wall.
+var PRACTICE=null,_practiceIv=null;
+function practiceReset(){
+  var sc=trainScript(),i,belt=[],nc=[],haz=-1;
+  for(i=0;i<sc.length;i++){if(sc[i].src==='nc')nc.push(i);else if(sc[i].src==='stage')haz=i;else belt.push(i);}
+  PRACTICE={script:sc,belt:belt,nc:nc,haz:haz,ptr:0,hint:false,hazGiven:false,sealed:false,full:false,done:false,key:'',live:'',coachH:0};
+  if(typeof G!=='undefined'&&G)G.practice=true; // the practice-trailer flag: no dispatch clock
+}
+function practiceBuild(i){var b=demoBuildPiece(PRACTICE.script[i],i);if(b)b._pstep=i;return b;}
+function practiceSeedTray(){
+  var k;for(k=0;k<PRACTICE.nc.length&&k<G.ncSlots.length;k++)G.ncSlots[k]=practiceBuild(PRACTICE.nc[k]);
+  if(typeof buildNCPanel==='function')buildNCPanel();
+}
+function practiceFeed(){
+  if(!PRACTICE)return;
+  var g=0;while(G.belt.length<BELT_PIECE_COUNT&&PRACTICE.ptr<PRACTICE.belt.length&&g++<60){var b=practiceBuild(PRACTICE.belt[PRACTICE.ptr++]);if(b)G.belt.push(b);}
+}
+function practiceFedOut(){return !!(PRACTICE&&PRACTICE.ptr>=PRACTICE.belt.length);}
+// the hazmat comes after the last of the belt freight, onto the special handling rack: the trainer's last lesson
+function practiceGiveHaz(){
+  if(!PRACTICE||PRACTICE.hazGiven||PRACTICE.haz<0)return;
+  var slot=G.ncSlots.findIndex(function(s){return !s;});if(slot<0)return;
+  var b=demoBuildPiece({src:'haz',n:'GENERATOR',haz:'3',wc:5},PRACTICE.haz);if(!b)return;
+  b._pstep=PRACTICE.haz;G.ncSlots[slot]=b;PRACTICE.hazGiven=true;PRACTICE.key='';
+  if(typeof buildNCPanel==='function')buildNCPanel();
+  if(typeof playSfx==='function')playSfx('hazard');
+  showBanner('☢ A HAZMAT CAME LATE · it is on the special handling rack.<br><span style="font-size:.72em">Dangerous goods load below the waist. Find a legal low slot before you touch it.</span>','warn',3600);
+}
+// the piece the coach talks about: the one in hand, else the next one in the trainer's order that is not on the wall
+function practiceTarget(){
+  if(!PRACTICE||typeof G==='undefined'||!G)return null;
+  var held=(typeof kbSelBox==='function')?kbSelBox():null;
+  if(held&&held._pstep!=null)return {box:held,i:held._pstep,step:PRACTICE.script[held._pstep],held:true};
+  var best=null,lists=[G.ncSlots,G.belt,G.bagSlots],a,j,b;
+  for(a=0;a<lists.length;a++)for(j=0;j<lists[a].length;j++){b=lists[a][j];if(b&&b._pstep!=null&&(!best||b._pstep<best._pstep))best=b;}
+  return best?{box:best,i:best._pstep,step:PRACTICE.script[best._pstep],held:false}:null;
+}
+// read off the wall itself, so lifting a box or a collapse can never leave a stale count
+function practiceStats(){
+  var o={onWall:0,match:0,total:0,haz:null,hazHigh:false},seen={},y,x,c,s,t;
+  if(!PRACTICE||typeof G==='undefined'||!G||!G.grid)return o;
+  o.total=PRACTICE.nc.length+PRACTICE.belt.length;
+  for(y=0;y<GH;y++)for(x=0;x<GW;x++){
+    c=G.grid[y][x];if(!c||!c.box||seen[c.id]||c.box._pstep==null)continue;seen[c.id]=1;
+    if(c.box._pstep===PRACTICE.haz){o.haz=c;o.hazHigh=checkHazmatViolation(c.box,c.rx,c.ry,c.rot||0);continue;}
+    o.onWall++;s=PRACTICE.script[c.box._pstep];t=getDims(c.box,s.rot||0);
+    if(c.rx===s.gx&&c.ry===s.gy&&c.w===t.w&&c.h===t.h)o.match++;
+  }
+  return o;
+}
+function practiceWhere(gx,gy,w,h){var up=GH-(gy+h);return 'columns '+(gx+1)+' to '+(gx+w)+', '+(up<=0?'on the floor':(up+(up===1?' cell':' cells')+' up from the floor'));}
+function practiceRender(){
+  if(!PRACTICE)return;
+  var st=practiceStats(),t=practiceTarget(),p='',r='',h='';
+  var status='ON THE WALL '+st.onWall+' / '+st.total+' · TRAINER’S SPOT '+st.match;
+  if(t&&t.i===PRACTICE.haz){
+    p=t.step.p||'HAZMAT CAME LATE';
+    r='Dangerous goods load below the waist, the bottom half of the wall. With no legal slot left down there, it does not go high: leave it on the special handling rack for the next trailer and press FINISH.';
+    h='The trainer left it on the rack.';
+  }else if(t){
+    var d=getDims(t.box,t.step.rot||0),nm=t.step.n||'piece';
+    p=t.step.p||'';r=t.step.r||'';
+    if(PRACTICE.hint)h=(isLegal(G.grid,t.box,t.step.gx,t.step.gy,t.step.rot||0)?'Outlined: the trainer’s spot for this '+nm+', '+practiceWhere(t.step.gx,t.step.gy,d.w,d.h)+'.':'The trainer’s spot for this '+nm+' is not open on your wall: something is in it, or nothing is under it yet. Any spot that fits and follows the rules works.')+(((t.step.rot||0)%2===1)?' The trainer turned it: press R.':'');
+    else h=(t.held?'You have the '+nm+'. ':'Next in the trainer’s order: the '+nm+'. ')+'Any spot that fits and follows the rules counts. SHOW ME outlines the trainer’s spot.';
+  }else if(practiceFedOut()){
+    p='ALL THE FREIGHT IS LOADED';r='Press FINISH for your practice record.';
+  }
+  var sb=document.getElementById('pc-show');if(sb&&sb.getAttribute('aria-pressed')!==(PRACTICE.hint?'true':'false'))sb.setAttribute('aria-pressed',PRACTICE.hint?'true':'false');
+  var key=status+'|'+p+'|'+r+'|'+h;if(key===PRACTICE.key)return;PRACTICE.key=key;
+  function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+  set('pc-status',status);set('pc-principle',p);set('pc-reason',r);set('pc-hint',h);
+  if(PRACTICE.hint&&h&&h!==PRACTICE.live){PRACTICE.live=h;set('pc-live',h);} // a screen reader hears where the outline is
+}
+function practiceHint(){
+  if(!PRACTICE)return;
+  PRACTICE.hint=!PRACTICE.hint;PRACTICE.key='';PRACTICE.live='';
+  practiceRender();
+  if(!PRACTICE.hint){var l=document.getElementById('pc-live');if(l)l.textContent='Outline off.';}
+}
+// SHOW ME: the trainer's spot for the piece the coach is talking about. Black under a marching yellow dash, so it reads
+// on any box art and in every color vision setting; held still when motion is reduced.
+function drawPracticeHint(c){
+  if(!PRACTICE||!PRACTICE.hint||gOver)return;
+  var t=practiceTarget();if(!t||!t.step||t.step.gx==null||t.i===PRACTICE.haz)return;
+  var rot=t.step.rot||0,d=getDims(t.box,rot),gx=t.step.gx,gy=t.step.gy;
+  var tl=gridToCanvas(gx,gy),tr=gridToCanvas(gx+d.w,gy),bl=gridToCanvas(gx,gy+d.h),br=gridToCanvas(gx+d.w,gy+d.h);
+  var free=isLegal(G.grid,t.box,gx,gy,rot),still=(typeof juiceOn==='function'&&!juiceOn());
+  c.save();
+  c.beginPath();c.moveTo(tl.x,tl.y);c.lineTo(tr.x,tr.y);c.lineTo(br.x,br.y);c.lineTo(bl.x,bl.y);c.closePath();
+  c.fillStyle=free?'rgba(255,212,0,.20)':'rgba(255,255,255,.10)';c.fill();
+  c.setLineDash([]);c.lineWidth=6;c.strokeStyle='rgba(10,8,6,.92)';c.stroke();
+  c.setLineDash([10,6]);c.lineDashOffset=still?0:-((Date.now()/40)%16);c.lineWidth=3;c.strokeStyle='#ffd400';c.stroke();
+  c.setLineDash([]);
+  var cx=(tl.x+br.x)/2,cy=(tl.y+br.y)/2,lab=(rot%2===1?'R · ':'')+'TRAINER';
+  c.font='bold 13px Share Tech Mono';c.textAlign='center';c.textBaseline='middle';
+  var tw=c.measureText(lab).width+12;c.fillStyle='rgba(10,8,6,.9)';c.fillRect(cx-tw/2,cy-10,tw,20);
+  c.fillStyle='#ffd400';c.fillText(lab,cx,cy);
+  c.restore();
+}
+// after every placement: keep the trainer's freight coming, mark a box that went where the trainer put it
+function practiceAfterPlace(box,gx,gy,rot){
+  if(!PRACTICE)return;
+  practiceFeed();
+  var s=(box&&box._pstep!=null)?PRACTICE.script[box._pstep]:null;
+  if(s&&s.gx!=null){
+    var a=getDims(box,rot||0),b=getDims(box,s.rot||0);
+    if(gx===s.gx&&gy===s.gy&&a.w===b.w&&a.h===b.h){
+      var e=document.getElementById('pc-status');if(e){e.classList.add('pc-hit');setTimeout(function(){e.classList.remove('pc-hit');},900);}
+      var l=document.getElementById('pc-live');if(l)l.textContent='On the trainer’s spot.';
+    }
+  }
+  practiceRender();
+}
+// a practice wall seals without a payout, a certificate, a record or a board, and the wall stays open to finish
+function practiceSeal(reason){
+  if(!PRACTICE||typeof G==='undefined'||!G)return;
+  G.maxPack=true; // checkWin stops asking; practice never opens the next-trailer popup
+  if(!G.sealed){
+    G.sealed=true;PRACTICE.sealed=true;
+    if(typeof playSfx==='function')playSfx('win');
+    if(typeof gcurFlash==='function')gcurFlash('finish',1300);
+    showBanner('✓ SEAL LINE REACHED · '+packPct()+'% PACKED<br><span style="font-size:.72em">On a shift this wall could seal now. The trainer kept loading to the top course: load the rest, then press FINISH.</span>','award',3600);
+  }
+  if(G.wallDone&&!PRACTICE.full){PRACTICE.full=true;showBanner('✓ EVERY CELL FILLED · '+(reason||'PERFECT LOAD'),'award',2600);}
+}
+function practicePlaceCoach(){
+  var pc=document.getElementById('practice-coach');if(!pc)return;
+  var inCN=(typeof CN!=='undefined'&&CN.right&&(CN.mode==='cols'||CN.mode==='sheet'));
+  if(inCN){if(CN.right.firstChild!==pc)CN.right.insertBefore(pc,CN.right.firstChild);}
+  else if(pc.parentNode!==document.body)document.body.appendChild(pc);
+}
+function practiceTick(){
+  if(gameMode!=='practice'||!PRACTICE||PRACTICE.done){practiceUI(false);return;}
+  practicePlaceCoach();
+  if(!PRACTICE.hazGiven&&((practiceFedOut()&&G.belt.length===0)||G.wallDone))practiceGiveHaz();
+  practiceRender();
+  var pc=document.getElementById('practice-coach');
+  if(pc&&CN.mode==='sheet'&&pc.offsetHeight!==PRACTICE.coachH){PRACTICE.coachH=pc.offsetHeight;if(typeof cnLayout==='function')cnLayout();}
+}
+function practiceUI(on){
+  var pc=document.getElementById('practice-coach');
+  if(_practiceIv){clearInterval(_practiceIv);_practiceIv=null;}
+  document.body.classList.toggle('li-practice',!!on);
+  if(pc){pc.classList.toggle('vis',!!on);if(!on&&pc.parentNode!==document.body)document.body.appendChild(pc);}
+  if(on){practicePlaceCoach();if(PRACTICE){PRACTICE.key='';PRACTICE.coachH=0;}practiceRender();_practiceIv=setInterval(practiceTick,250);}
+  else{var k=document.querySelector('#next-popup button[onclick="npKeepLoading()"]');if(k)k.style.display='';} // a full practice wall hid KEEP LOADING; the next mode gets it back
+  if(typeof cnLayout==='function')cnLayout();
+  if(typeof updateWaterHUD==='function'&&typeof G!=='undefined'&&G)updateWaterHUD();
+}
+function startPractice(){
+  var o=document.getElementById('ov-practice');if(o)o.classList.remove('vis');
+  var td=document.getElementById('ov-tutdone');if(td)td.classList.remove('vis');
+  hideStartMenu();
+  gameMode='practice';_demoMenuMode=false;paused=false;
+  liCount('mode_start','practice');
+  restartGame(); // initTruck() deals the trainer's freight: practiceReset, the belt in order, practiceSeedTray
+  practiceUI(true);
+}
+function practiceFromTraining(){
+  if(typeof _trainAutoStop==='function')_trainAutoStop();
+  trainingState.playing=false;if(animF){cancelAnimationFrame(animF);animF=null;}
+  startPractice();
+}
+function practiceRestart(){
+  if(typeof stgClose==='function')stgClose();
+  restartGame();practiceUI(true);
+}
+function practiceWatch(){
+  var o=document.getElementById('ov-practice');if(o)o.classList.remove('vis');
+  if(typeof stgClose==='function')stgClose();
+  practiceUI(false);gOver=true;if(animF){cancelAnimationFrame(animF);animF=null;}
+  startTrainDemo();
+}
+function practiceExit(){
+  var o=document.getElementById('ov-practice');if(o)o.classList.remove('vis');
+  if(typeof stgClose==='function')stgClose();
+  practiceUI(false);
+  returnToMenu();
+}
+// the practice record: what went on the wall, against the trainer's wall. Shown on the card, never sent.
+function practiceFinish(why){
+  if(!PRACTICE||PRACTICE.done)return;
+  PRACTICE.done=true;gOver=true;
+  if(typeof stgClose==='function')stgClose();
+  if(animF){cancelAnimationFrame(animF);animF=null;}
+  var st=practiceStats(),inc=(S.incidents||[]).length,warn=S.warnTotal||0,col=S.collapses||0,slip=S.slips||0,cr=S.crunches||0,hz;
+  if(!PRACTICE.hazGiven)hz=['','Hazmat: it never came. It arrives after the last of the belt freight is loaded.'];
+  else if(st.haz&&st.hazHigh)hz=['bad','Hazmat: loaded above the waist. On a shift that is a write-up. The trainer left it on the rack for the next trailer.'];
+  else if(st.haz)hz=['on','Hazmat: loaded low, below the waist. That is legal.'];
+  else hz=['on','Hazmat: left on the rack for the next trailer. That is the trainer’s call.'];
+  var rows=[
+    [st.onWall>=st.total?'on':'','Freight loaded',st.onWall+' / '+st.total],
+    [st.match>=st.total?'on':'','On the trainer’s spot',st.match+' / '+st.total],
+    [PRACTICE.sealed?'on':'','Wall packed'+(PRACTICE.sealed?', seal line reached':''),packPct()+'%'],
+    [inc?'bad':(warn?'':'on'),'Safety warnings · incidents',warn+' · '+inc],
+    [(col+slip+cr)?'':'on','Collapses · slips · crushed boxes',col+' · '+slip+' · '+cr],
+    [hz[0],hz[1],'']
+  ];
+  var h='',i,m;
+  for(i=0;i<rows.length;i++){m=rows[i][0];h+='<div class="tdl-row'+(m?' '+m:' mid')+'"><span class="tdl-box" aria-hidden="true">'+(m==='on'?'✓':m==='bad'?'✕':'·')+'</span><span class="tdl-t">'+rows[i][1]+'</span>'+(rows[i][2]?'<span class="pr-n">'+rows[i][2]+'</span>':'')+'</div>';}
+  var L=document.getElementById('pr-list');if(L)L.innerHTML=h;
+  var W=document.getElementById('pr-why');if(W){W.textContent=why?('ENDED · '+why):'';W.style.display=why?'':'none';}
+  practiceUI(false);
+  var o=document.getElementById('ov-practice');if(o){o.classList.add('vis');var f=o.querySelector('button');if(f)try{f.focus();}catch(e){}}
+}
 
 // Training side panel: ESC key exits (handled by global keydown → togglePause catches it;
 // exitTraining() is wired to the EXIT button directly).
@@ -9360,7 +9685,7 @@ function psBuild(){
       '<div><span class="k">DATE</span><span class="v">'+new Date().toISOString().slice(0,10)+'</span></div>'+
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
-      '<div><span class="k">BUILD</span><span class="v">v3.9.1005</span></div></div>';
+      '<div><span class="k">BUILD</span><span class="v">v'+LI_APP_VER+'</span></div></div>'; // 3.9.1009 the build the report prints is the build that made it
     var _legend='\u25c6 the last sealed wall and this whole session';
     H+='<div class="ps-legend"><span class="sp">'+_legend+'</span><span class="h w">WALL</span><span class="h s">SESSION</span></div>';
     H+='<div class="ps-blocks">';
@@ -9456,6 +9781,7 @@ function checkWin(){
   // doomed tower still counts toward the win height and the player advances before it falls. Block the seal until
   // the collapse resolves; the wall re-checks on the next placement (honest, post-collapse height).
   if(collapseAnimating)return;
+  if(gameMode==='practice'&&G&&G.wallDone)return; // 3.9.1009 a full practice wall seals once; checkWin runs every frame
   // v3.5.23 DETERMINISTIC PERFECT LOAD: a 100%-full wall (zero empty cells) always completes · even mid keep-loading
   if(!gOver&&G&&G.grid&&countFilled()>=GW*GH&&!document.getElementById('next-popup').classList.contains('vis')){
     if(G.maxPack){G.maxPack=false;var _mf=document.getElementById('maxpack-finish');if(_mf)_mf.style.display='none';}
@@ -9529,6 +9855,7 @@ function fillTelemetryTiles(){
 // v2.1.8 CLOCK OUT · voluntary end. Keeps score, shows the full readout.
 function clockOut(){
   if(gOver)return;
+  if(gameMode==='practice'){paused=false;var _pov0=document.getElementById('ov-pause');if(_pov0)_pov0.classList.remove('vis');practiceFinish('');return;} // 3.9.1009 practice clocks out to its own record card
   _elapsedFrozen=(typeof startT!=='undefined'&&startT)?(Date.now()-startT)/1000:0; // v3.5.138 freeze the clock (PPH won't drop on the readout)
   paused=false;var pov=document.getElementById('ov-pause');if(pov)pov.classList.remove('vis');
   gOver=true;if(animF){cancelAnimationFrame(animF);animF=null;}
@@ -9564,7 +9891,7 @@ function togglePause(){
   if(paused){
     ov.classList.add('vis');
     _pauseStart=Date.now(); // v3.5.130 freeze the clock while paused (a playtester: "the timer doesn't pause")
-    if(typeof stgClose==='function')stgClose(); // v3.5.130 close the NC/smalls wheel so it doesn't show over the pause/admin surface
+    if(typeof _trainAutoStop==='function')_trainAutoStop(); /* 3.9.1009 a pause stops TRAINING's AUTO, which kept placing behind the PAUSED card */ if(typeof stgClose==='function')stgClose(); // v3.5.130 close the NC/smalls wheel so it doesn't show over the pause/admin surface
     if(animF){cancelAnimationFrame(animF);animF=null;}
   } else {
     ov.classList.remove('vis');
@@ -9573,7 +9900,7 @@ function togglePause(){
     if(_pauseStart){var _pd=Date.now()-_pauseStart;if(typeof startT!=='undefined'&&startT)startT+=_pd;if(S&&S._wallBase&&S._wallBase.startT)S._wallBase.startT+=_pd;if(S&&S.sessionStartT)S.sessionStartT+=_pd;
       if(panicStartT)panicStartT+=_pd;if(jamStarvedT)jamStarvedT+=_pd;if(recoveryT)recoveryT+=_pd;if(ncHazardDue)ncHazardDue+=_pd;
       _pauseStart=0;}
-    lastLoopT=0; // prevent dt spike on resume
+    lastLoopT=0;if(gameMode==='training'){if(animF)cancelAnimationFrame(animF);animF=requestAnimationFrame(trainingLoop);return;} // prevent dt spike on resume; 3.9.1009 TRAINING resumes its own loop
     animF=requestAnimationFrame(loop);
   }
 }
@@ -9683,7 +10010,7 @@ function setBoxGrid(on){
   SETTINGS.boxGrid=!!on;refreshSettingsUI();saveSettings();
 }
 function setReducedMotion(on){
-  SETTINGS.reducedMotion=!!on;
+  SETTINGS.reducedMotion=!!on;if(on&&_demoMenuMode&&!_menuDemoHeld)menuDemoToggle(); // 3.9.1009 turning motion off stills the menu wall at once
   document.body.classList.toggle('reduce-motion',!!on);
   refreshSettingsUI();saveSettings();
 }
@@ -9721,9 +10048,10 @@ function initTruck(){
     beltSinceNC:0,beltSinceBag:0,
   };
   _ncStartCap=(gameMode==='daily')?null:NC_START_MAX; // v3.5.206 wall-start cap on special handling
+  if(gameMode==='practice')practiceReset(); // 3.9.1009 the trainer's freight, from its first piece
   refillBelt();
   // Seed a couple of NCs and bags so the panels aren't empty from the start
-  if(gameMode==='daily'){seedDailyTray();}else{for(var i=0;i<2;i++)spawnNC();for(var i=0;i<2;i++)spawnBag();} // v2.7.3 daily = deterministic 6 NC + 4 bag loadout
+  if(gameMode==='daily'){seedDailyTray();}else if(gameMode==='practice'){practiceSeedTray();}else{for(var i=0;i<2;i++)spawnNC();for(var i=0;i<2;i++)spawnBag();} // v2.7.3 daily = deterministic 6 NC + 4 bag loadout; 3.9.1009 practice = the trainer's three
   _ncStartCap=null;_ncStartReserve=0;
   placed=0;startT=null; // v3.5.144 clock deferred to first piece
   if(typeof wallBaseline==='function')wallBaseline(); // v3.5.81 per-wall stat baseline
@@ -9940,6 +10268,7 @@ function dailyFinish(){
   });
 }
 function endGame(reason,win){
+  if(gameMode==='practice'){practiceFinish(reason);return;} // 3.9.1009 a practice wall ends on its own record card
   if(gOver)return;
   _elapsedFrozen=(typeof startT!=='undefined'&&startT)?(Date.now()-startT)/1000:0; // v3.5.138 freeze the clock at end (PPH stops dropping on the review screen)
   if(typeof stgClose==='function')stgClose(); // v3.4.13 close the staging wheel so it can't float over the end screen
