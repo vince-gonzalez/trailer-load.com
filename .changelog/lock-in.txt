@@ -2,6 +2,11 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1011 - NO PARTNER'S NAME IN AN EXAMPLE.
+     The examples in the crew name, join code and crew code boxes named a program I am working with. They read
+     "example: Morning Class, October" and "example: morning1" now, and the staff guide's sample crews are Morning Class
+     and Evening Class, re-shot.
+
    CHANGE LOG v3.9.1010 - THE CREW PAGE IS BACK, AND NOTHING ON A PAGE LEAVES WITHOUT MY YES.
      4.0 went live on 2026-10-23 with the crew page cut from the 3.x report (30 columns in six groups, three sheets,
      sorting, a name filter, a profile per person and four summary cards) to a nine-column roster. I never approved that

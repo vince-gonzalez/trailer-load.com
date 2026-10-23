@@ -40,7 +40,7 @@
 small,sub,sup{font-size:11px;}
 
 /* ================================================================
-   LOCK IN v3.9.1010
+   LOCK IN v3.9.1011
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -1727,7 +1727,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.9.1010</div>
+  <div class="pause-sub">LOCK IN v3.9.1011</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -1849,7 +1849,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 21)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.9.999: updated Oct 20, the date on the policy; back to "Privacy" after 2026-11-20. -->
-  <div id="sm-footer">LOCK IN v3.9.1010 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.9.1011 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -2006,7 +2006,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.9.1010 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.9.1011 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -2087,7 +2087,7 @@ body[data-cb="trit"]{
   <p id="crew-state" class="data-p"></p>
   <div id="crew-join">
     <div id="crew-step-code">
-      <label class="data-fld">CREW CODE, FROM YOUR INSTRUCTOR<input id="crew-code" type="text" maxlength="24" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="example: region3" onkeydown="if(event.key==='Enter')crewLookup()"></label>
+      <label class="data-fld">CREW CODE, FROM YOUR INSTRUCTOR<input id="crew-code" type="text" maxlength="24" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="example: morning1" onkeydown="if(event.key==='Enter')crewLookup()"></label>
       <div class="data-btns"><button class="data-save" onclick="crewLookup()">NEXT</button><button class="data-cancel" onclick="crewClose()">CLOSE</button></div>
     </div>
     <div id="crew-step-pin" style="display:none">
@@ -2393,7 +2393,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.9.1010
+// LOCK IN v3.9.1011
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -2872,7 +2872,7 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.9.1010'; // the version a crew session records · bump WITH the LOCK IN version
+var LI_APP_VER='3.9.1011'; // the version a crew session records · bump WITH the LOCK IN version
 function zBuildSession(){
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
   var inc=S.incidents||[];
