@@ -2,6 +2,14 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   4.0 LAUNCH PAGES (2026-10-23, with 3.9.1009).
+     /guide/ is the staff guide: every screen a participant and an instructor use, each photo with numbered boxes on the
+     parts that matter, placed from each element's real rectangle on screen. /guide/teaching/ is the short page on how
+     LOCK IN teaches and how to coach from the roster, linked once at the foot of the guide. Day One opens with how to
+     learn it in order (TRAINING, PRACTICE, then TRAILER-LOAD) and how to join an instructor's crew. The privacy and
+     districts pages name the email service. api/wrangler.jsonc is the production API on www.trailer-load.com/api/*
+     with the li_ tables. .db/lockin-4.0-retire-d1.sql retires LOCK IN 3 on the old database, written from a read of it.
+
    CHANGE LOG v3.9.1009 - PRACTICE: LOAD THE TRAINER'S WALL YOURSELF (STAGING AND THE SANDBOX ONLY).
      My call, 2026-10-23: training has to be the best feature in the product, and watching is only half of a first day.
      PRACTICE sits beside TRAINING on the menu, on the training panel (LOAD IT YOURSELF) and on the sign-off card. It

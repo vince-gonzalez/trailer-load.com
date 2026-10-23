@@ -1,0 +1,31 @@
+// ═══════════════════════════════════════════════════════════════════════
+//  LOCK IN API · PRODUCTION
+//  F-Keys Creative LLC
+//
+//  The production Worker answers www.trailer-load.com/api/* and nothing else; every page of the site is still served
+//  by the static host from the main branch. It reads and writes the li_ tables of the database "trailer-load" (the
+//  sandbox uses lab_ in the same database; api/README.md says why).
+//
+//  The email sender's three settings are set on the Worker, never in this file:
+//    MAIL_KEY (its key, a secret I set myself), MAIL_API (its send address) and MAIL_FROM (the From line).
+//  With no sender set, emails go to the li_outbox table instead.
+//
+//  Deploy from the repo root, only on my go:   npx wrangler deploy -c api/wrangler.jsonc
+// ═══════════════════════════════════════════════════════════════════════
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "lockin-api",
+  "main": "lockin-api.js",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": false,
+  "routes": [
+    { "pattern": "www.trailer-load.com/api/*", "zone_name": "trailer-load.com" }
+  ],
+  "vars": {
+    "TABLE_PREFIX": "li_"
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "trailer-load", "database_id": "99fcb75d-64d0-4d8d-bc6f-31843eaf10b1" }
+  ],
+  "observability": { "enabled": true }
+}

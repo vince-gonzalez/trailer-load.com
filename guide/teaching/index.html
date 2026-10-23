@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How LOCK IN Teaches | LOCK IN</title>
+<meta name="description" content="What a participant practices, why the modes come in their order, how feedback works, and how an instructor can coach from the roster.">
+<link rel="canonical" href="https://www.trailer-load.com/guide/teaching/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23140d08'/%3E%3Crect x='16' y='16' width='32' height='32' rx='3' fill='%23c8791e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#c8791e">
+<!-- NO AD TECH ON TRAILER-LOAD.COM, EVER (2026-07-20). Student-privacy laws + district vetting. Do not re-add. -->
+<link rel="stylesheet" href="/fonts/fonts.css">
+<style>
+:root{
+  --ink:#1b1b1b;      /* body text: 17.2:1 on white, 14.1:1 on --head, 15.6:1 on --band */
+  --ink2:#3d3d3d;     /* secondary text: 10.9:1 on white, 9.8:1 on --band */
+  --accent:#6e4300;   /* headings and rules: 8.5:1 on white */
+  --rule:#8c7f68;     /* table borders, not text: 3.9:1 on white */
+  --head:#efe8d8;     /* table header fill */
+  --band:#f7f3ea;     /* alternate row fill */
+  --paper:#ffffff;
+}
+@page{size:Letter;margin:0.4in 0.5in 0.45in;}
+*{box-sizing:border-box;}
+html{background:var(--paper);}
+body{margin:0 auto;max-width:7.5in;padding:24px 16px 32px;background:var(--paper);color:var(--ink);
+  font-family:system-ui,sans-serif;font-size:11pt;line-height:1.27;}
+header{border-bottom:3px solid var(--accent);padding-bottom:5px;margin-bottom:6px;}
+.kicker{margin:0;font-size:11pt;font-weight:700;letter-spacing:.12em;color:var(--accent);}
+h1{margin:1px 0 2px;font-size:18pt;line-height:1.15;color:var(--ink);}
+.meta{margin:0;font-size:11pt;color:var(--ink2);}
+h2{margin:9px 0 3px;font-size:13pt;line-height:1.2;color:var(--accent);break-after:avoid;page-break-after:avoid;}
+h3{margin:0 0 2px;font-size:11.5pt;color:var(--ink);break-after:avoid;page-break-after:avoid;}
+p{margin:0 0 5px;}
+ul,ol{margin:2px 0 5px;padding-left:19px;}
+li{margin:0 0 2px;}
+b,strong{font-weight:700;}
+table{width:100%;border-collapse:collapse;margin:3px 0 4px;font-size:11pt;line-height:1.24;}
+th,td{border:1px solid var(--rule);padding:2px 6px;vertical-align:top;text-align:left;}
+thead th{background:var(--head);color:var(--ink);}
+tbody th{font-weight:700;}
+tbody tr:nth-child(even) td,tbody tr:nth-child(even) th{background:var(--band);}
+tr{break-inside:avoid;page-break-inside:avoid;}
+.why{font-weight:700;}
+.note{color:var(--ink2);}
+.lede{margin:5px 0 2px;}
+.w-skill th:first-child{width:20%;}
+.w-mode th:first-child{width:17%;}
+.w-roster th:first-child{width:14%;}
+.w-roster td:last-child{width:31%;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;}
+.two ul{margin-top:0;}
+footer{margin-top:10px;padding-top:5px;border-top:2px solid var(--accent);font-size:10pt;color:var(--ink2);}
+@media screen and (max-width:640px){
+  body{padding:16px 16px 28px;}
+  .two{display:block;}
+  table,thead,tbody,tr,th,td{display:block;width:auto !important;}
+  thead{position:absolute;left:-9999px;}
+  tbody tr{border:1px solid var(--rule);margin:0 0 8px;}
+  th,td{border:0;border-bottom:1px solid var(--head);}
+}
+@media print{
+  body{max-width:none;padding:0;}
+}
+
+/* the site's top bar and footer, as on Day One (#2a2018 / #544738 / #0a6a5e on #ece5d8, 14.6 / 7.18 / 6.2:1) */
+.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;
+  padding:10px 22px;background:#ece5d8;border-bottom:1px solid #cdbfa6;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:#211a12;text-decoration:none;}
+.bar nav a{font-family:'Share Tech Mono',monospace;font-size:12px;text-decoration:none;margin-left:16px;color:#544738;}
+.bar nav a:hover{color:#7d4a0e;}
+.site-foot{border-top:3px solid #c8791e;margin-top:30px;padding:20px 0 40px;font-family:'Share Tech Mono',monospace;font-size:12.5px;color:#544738;}
+.site-foot a{color:#0a6a5e;}
+.skip-link{position:absolute;left:-10000px;top:0;z-index:10000;}
+.skip-link:focus{left:8px;top:8px;padding:10px 16px;background:#1d1710;color:#f8f1e2;font:bold 16px/1.2 system-ui,sans-serif;text-decoration:underline;outline:3px solid #f0ad4a;outline-offset:2px;}
+@media print{.bar,.skip-link{display:none;}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<div class="bar"><a class="logo" href="/">LOCK IN</a><nav><a href="/">Home</a><a href="/lock-in.html">Play</a><a href="/day1/">Day One</a><a href="/guide/">Staff guide</a><a href="/programs/">Programs</a><a href="/for-districts/">Documentation</a></nav></div>
+<main id="main">
+<header>
+  <p class="kicker">LOCK IN</p>
+  <h1>How LOCK IN teaches, and how to coach from it</h1>
+  
+</header>
+
+<p class="lede">How LOCK IN teaches a participant, step by step, and how an instructor can read the dashboard to decide what to coach next.</p>
+
+<h2>1. What LOCK IN is</h2>
+<p>LOCK IN is a practice simulator for loading freight into a trailer safely: the participant builds walls of boxes, appliances, tires, bags of small packages and hazardous materials under 41 named load rules, and the simulator answers on screen with refusals, collapses, warnings and write-ups. It runs in a web browser at trailer-load.com, with nothing to install and no account for the participant.</p>
+
+<h2>2. What a participant practices</h2>
+<p>The 41 named rules fall into eight groups. Each rule in LOCK IN's rule list names the code that enforces it.</p>
+<table class="w-skill">
+  <thead><tr><th scope="col">Skill (rules)</th><th scope="col">What the participant practices</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Support and stacking (7)</th><td>Every box rests on something solid. Stacks taper or stay short, thin towers stay low, heavy freight gets a full floor, and an overhang never sits on an overhang.</td></tr>
+    <tr><th scope="row">Shelves, seams and anchors (5)</th><td>Fill a row across the full width so it locks, and leave it sealed. Stagger seams like brickwork. Set special-handling freight in corners and against edges.</td></tr>
+    <tr><th scope="row">Balance and wall strength (2)</th><td>Keep the center of gravity within 15% of the middle. Integrity drops with unsupported heavy freight, narrow towers, overhangs, voids and lean.</td></tr>
+    <tr><th scope="row">Density, no voids (6)</th><td>Every covered empty cell costs. Fill gaps with small packages and bags, and fill the hollow of a flat tire. A wall seals at 92% height and at least 35% packed.</td></tr>
+    <tr><th scope="row">Fragile and crush (4)</th><td>The heaviest freight never lands on an exposed fragile, small package, bag or hazmat. This-side-up boxes stay upright. Tires lie flat.</td></tr>
+    <tr><th scope="row">Hazardous materials (5)</th><td>Hazmat loads in the bottom half of the wall, different hazard classes stay two clear cells apart, and the pairs 49 CFR 177.848 keeps apart never load close.</td></tr>
+    <tr><th scope="row">Workplace safety (6)</th><td>Keep the aisle clear, drink water, load special-handling freight before its rack fills, clear a jammed chute, take the front piece. Warnings climb a safety ladder.</td></tr>
+    <tr><th scope="row">Pace (6)</th><td>Steady placements build a flow streak; the rate counts freight only. In TRAILER-LOAD a wall of six or more boxes under 250 pieces an hour is flagged, and idling and re-handling are noticed.</td></tr>
+  </tbody>
+</table>
+
+<h2>3. How it teaches, in order</h2>
+<table class="w-mode">
+  <thead><tr><th scope="col">Step</th><th scope="col">What the participant does, and why it comes here</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">1. Watch<br>TRAINING</th><td>A trainer builds one complete wall in 36 steps. NEXT moves one placement at a time; AUTO steps every 2.8 seconds until PAUSE is pressed. The first 17 placements and the closing hazmat lesson show the trainer's reason, such as why the heaviest appliance goes in a bottom corner. It ends on a nine-point training record and a sign-off. <span class="why">Why first:</span> the participant sees a complete wall built, with the reasons, before handling any freight.</td></tr>
+    <tr><th scope="row">2. Load it with help<br>PRACTICE</th><td>The trainer's freight: three appliances on the rack, 32 belt pieces in the trainer's order, then a late hazmat. The loading rules apply, with no clock, score, water or write-up. A coach panel shows what the trainer said about the next piece; SHOW ME outlines the trainer's spot and says it in words. Any legal spot counts. FINISH shows a practice record: pieces loaded out of 35, pieces on the trainer's spot, how full the wall is, warnings, incidents and collapses. <span class="why">Why second:</span> every decision is the participant's, on freight with a known good answer one press away.</td></tr>
+    <tr><th scope="row">3. Load at pace<br>TRAILER-LOAD</th><td>Endless walls at full tempo. A 60-second dispatch clock starts at 85% full or 85% high. A missed dispatch, five idle minutes, a starved chute or a full special-handling rack is a strike, and write-ups stop the game until signed. <span class="why">Why third:</span> the same rules with the pressure and paperwork of a shift, once the participant knows what a good wall looks like.</td></tr>
+    <tr><th scope="row">4. The shared wall<br>DAILY</th><td>One wall a UTC day, built from the date, so every player gets the same freight, with a board signed in three initials. <span class="why">Why:</span> a crew can load the identical wall on the same day, so people are compared on the same freight. It is a comparison for practice, not a graded test.</td></tr>
+  </tbody>
+</table>
+
+<h2>4. How feedback works while they load</h2>
+<ul>
+  <li><b>Right away.</b> A refused placement is answered with "NO SUPPORT THERE · every box needs something solid under it." Many broken rules raise a message with the fix, such as "HAZMAT TOO HIGH" with "MOVE IT DOWN TO RESTORE." Every safety warning ends with a FIX IT line.</li>
+  <li><b>The safety ladder.</b> A warning repeated before it is fixed becomes an incident. Hazmat above the waist line, a crushed hazmat, a segregation breach, an incompatible pair too close and a second stacked tire are written up the first time; otherwise every third incident is. The fifth incident, and each one after it, loads a clean practice trailer (not PRACTICE mode), and four write-ups end the shift. A write-up stops the game until signed and says why the rule matters. Collapses climb the same way: a banner with the fix for the first three, a warning at the fourth, an incident from the fifth.</li>
+  <li><b>The post-sort report.</b> At the end of a run, FULL REPORT shows the last sealed wall beside the whole session: productivity against the 250 standard, safety by type, load quality and mechanics, with a grade. It prints.</li>
+  <li><b>PRACTICE</b> keeps the rules and the messages and drops the clock and the paperwork; incidents go on the practice record.</li>
+</ul>
+
+<h2>5. What the instructor sees, and how to coach from it</h2>
+<p>The instructor makes a crew on the instructor dashboard and gives out its join code. The roster lists the least practiced (fewest walls) first and shades anyone with none. It counts TRAILER-LOAD and DAILY only: a wall when it seals, a session when the run reaches the end screen. TRAINING and PRACTICE send no walls and no sessions, and a run left through MAIN MENU sends no session.</p>
+<table class="w-roster">
+  <thead><tr><th scope="col">Column</th><th scope="col">What it shows</th><th scope="col">What an instructor might do</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Name</th><td>The joined name, or the name the instructor typed. LOCKED for 15 minutes after five wrong PINs.</td><td>Wait, or reset the PIN.</td></tr>
+    <tr><th scope="row">PIN or Personal code</th><td>SET, or NEW PIN after a reset. On a manual crew, the person's code.</td><td>Print codes to hand out.</td></tr>
+    <tr><th scope="row">Joined</th><td>The first join, or the day the instructor added the name.</td><td>Compare with Last played.</td></tr>
+    <tr><th scope="row">Last played</th><td>The last day their device opened LOCK IN or sent a result.</td><td>A long gap: check in.</td></tr>
+    <tr><th scope="row">Sessions</th><td>Runs that reached the end screen.</td><td>Many, with few walls: ask why.</td></tr>
+    <tr><th scope="row">Walls</th><td>Walls sealed. This column sorts the roster.</td><td>Zero: TRAINING, then PRACTICE.</td></tr>
+    <tr><th scope="row">Best score</th><td>The highest score on one sealed wall.</td><td>Read it last.</td></tr>
+    <tr><th scope="row">Avg integrity</th><td>Average integrity (0 to 100) of their sealed walls.</td><td>Under 70: PRACTICE, SHOW ME.</td></tr>
+    <tr><th scope="row">Best pieces/hr</th><td>The fastest sealed wall, smalls included; the in-game rate counts freight only.</td><td>Fast, low integrity: slow down.</td></tr>
+    <tr><th scope="row">Incidents</th><td>Safety incidents on their sealed walls.</td><td>Go over the write-up text.</td></tr>
+    <tr><th scope="row">Collapses</th><td>Collapses (three or more pieces down) on sealed walls.</td><td>Two or more: replay TRAINING.</td></tr>
+    <tr><th scope="row">What to coach</th><td>The incident the person had most often across all their sessions, with the count: six kinds as the rule's name and what to practice, others as a code such as FRAGILE_CRUSH. With none on record it reads the walls: two or more collapses, integrity under 70%, or NOT STARTED.</td><td>Go over that rule; for tires and hazmat spacing, use DAILY.</td></tr>
+    <tr><th scope="row">Manage</th><td>RESET PIN or NEW CODE, and REMOVE. Not printed.</td><td>REMOVE deletes their results.</td></tr>
+  </tbody>
+</table>
+
+<h2>6. A suggested first session, about 45 minutes</h2>
+<p class="note">This is how I would run a first session. It is a suggestion, and the times are estimates.</p>
+<ol>
+  <li><b>Join the crew (5 minutes).</b> Print the crew's page from the dashboard; it lists the join steps: open trailer-load.com, choose JOIN A CREW, enter the crew code, then a name and a 4-digit PIN, or a personal code.</li>
+  <li><b>TRAINING (10 minutes).</b> Step through with NEXT. Before each press, ask where the next piece goes and why. Sign the training record.</li>
+  <li><b>PRACTICE with SHOW ME (10 minutes).</b> Choose PRACTICE on the menu. Use SHOW ME when stuck, then FINISH and read the practice record together.</li>
+  <li><b>One TRAILER-LOAD wall (10 minutes).</b> Seal one wall, choose NEXT TRAILER, then pause (P) and CLOCK OUT, so the session reaches the roster.</li>
+  <li><b>The post-sort report (5 minutes).</b> Open FULL REPORT on the end screen together. Start with safety.</li>
+  <li><b>The roster (5 minutes).</b> Press REFRESH on the dashboard: the session, the wall and WHAT TO COACH appear on the person's row.</li>
+</ol>
+
+<h2>7. What it is not</h2>
+<ul>
+  <li>It does not certify anyone, and it does not replace forklift operator training, OSHA training, hazmat training or any certification requirement. There is no forklift in it; it is practice in loading decisions, before and alongside those courses.</li>
+  <li>The certificate for a clean wall, ceiling high and 95% packed, states on its face that it is a simulator achievement, not a safety certification.</li>
+  <li>Scores are not for deciding who is job-ready, or for hiring or placement. There are no cut scores and no reliability data behind them.</li>
+  <li>LOCK IN has not been studied for outcomes yet. Measuring that is what a pilot is for.</li>
+</ul>
+
+<h2>8. Data and accessibility</h2>
+<div class="two">
+  <div>
+    <h3>Data</h3>
+    <ul>
+      <li>No account and no email: a crew code plus a name and a 4-digit PIN, or a personal code.</li>
+      <li>Stored per person: the name, join and last-played dates, each sealed wall's numbers, and each session's numbers, incidents and timed move log. No field holds a disability, diagnosis or case number.</li>
+      <li>PINs and device tokens are kept only as one-way hashes; personal codes are kept as written.</li>
+      <li>Removing a person deletes their walls and sessions; deleting a crew deletes everyone on it and their results.</li>
+      <li>No PRACTICE record is sent; without a crew, only anonymous counts and board signatures are.</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Accessibility</h3>
+    <ul>
+      <li>Keyboard play: arrows move a cursor, [ and ] pick the piece, R rotates, Enter or Space places. One-letter shortcuts can be turned off for speech input.</li>
+      <li>Colorblind modes (deutan, protan, tritan); hazmat placards carry the class number.</li>
+      <li>Text size: Normal, Large or X-Large.</li>
+      <li>Reduced motion, on from the start when the device asks for it.</li>
+      <li>SHOW ME's outline is also given in words for screen readers.</li>
+    </ul>
+  </div>
+</div>
+
+
+<footer class="site-foot"><a href="/">trailer-load.com</a> &nbsp;·&nbsp; <a href="/lock-in.html">Play</a> &nbsp;·&nbsp; <a href="/day1/">Day One</a> &nbsp;·&nbsp; <a href="/guide/">Staff guide</a> &nbsp;·&nbsp; <a href="/programs/">For schools and employers</a> &nbsp;·&nbsp; <a href="/for-districts/">Documentation</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="/terms.html">Terms</a><br><br>LOCK IN · F-Keys Creative LLC</footer>
+</main>
+</body>
+</html>
