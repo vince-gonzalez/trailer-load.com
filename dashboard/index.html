@@ -18,7 +18,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
 /* ══════════════════════════════════════════════════════════════════════════
-   THE INSTRUCTOR DASHBOARD · v3.1 (LOCK IN 4.0, 2026-10-21)
+   THE INSTRUCTOR DASHBOARD · v3.2 (LOCK IN 4.0, 2026-10-23)
    LOCK IN 4.0 has no player accounts. The instructor is the only account: an email and a password, made here and
    confirmed by email; the instructor can change the password, reset a lost one by email, and unlock the account by
    email after 5 wrong passwords. An
@@ -27,6 +27,13 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
    A licensed crew has no 9-person cap and exports every wall and session to CSV. Every read and write goes through
    the LOCK IN API, which checks that the signed-in instructor owns the crew (api/lockin-api.js); this page is not the
    gate. v3.1 (2026-10-21) moved from a hosted database to the site's own API.
+   v3.2 (2026-10-23) puts the 3.x crew page back on the crew board, on 4.0 data: the 4.0 rewrite had cut about 30 metrics
+   to a 12-column roster. One clipboard per crew, as in 3.x: COHORT REPORT over the crew's name, summary cards (on crew,
+   not started, average integrity, walls loaded, the most common mistake), the three 3.x sheets (Lifetime, Most recent
+   session, Most recent wall), column groups (Engagement, Throughput, Quality, Craft, Faults, Habits, Coach), a name
+   filter with REFRESH and EXPORT CSV, sortable headers, a profile for each person with every number and WHAT TO COACH,
+   and under the table the 4.0 crew tools (the join card, add a name, delete the crew). CHANGE THE PASSWORD is a
+   section of the YOUR CREWS board, not a clipboard of its own.
    v2.x (the licensed cohort sheets, the showcase, guests) is in the change log; none of it survives the account cut.
 
    CONTRAST, computed against the clipboard page #e8e4da (L=0.7657), never
@@ -47,7 +54,7 @@ html,body{margin:0;background:var(--ground);color:var(--ink);
   font-family:'Barlow Condensed',system-ui,sans-serif;font-size:17px;line-height:1.45;}
 body::before{content:'';position:fixed;inset:0;z-index:0;
   background:url('/lockbackdrop.png') center/cover no-repeat;opacity:.13;}
-.wrap{max-width:1340px;margin:0 auto;padding:0 18px;} /* 3.9.1009 wider, so the roster and WHAT TO COACH fit a laptop screen without scrolling sideways */
+.wrap{max-width:1500px;margin:0 auto;padding:0 18px;} /* v3.2 the 3.x width again: the crew clipboard holds every column group; narrower screens scroll the table inside its box */
 #topbar{position:relative;z-index:2;background:rgba(14,9,5,.9);border-bottom:2px solid var(--amber);
   padding:9px 0;color:#f1e7d6;}
 #topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
@@ -103,7 +110,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;
 .stamp{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--amberInk);
   border:2px solid var(--amberInk);border-radius:4px;padding:3px 9px;}
 .sec{padding:14px 18px 4px;}
-.sec h2{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;margin:0 0 8px;}
+.sec h2,.sec h3{font-family:'Bebas Neue',sans-serif;font-size:24px;font-weight:400;letter-spacing:1px;margin:0 0 8px;}
 .sec p{margin:0 0 10px;color:var(--ink2);}
 
 /* crew cards */
@@ -126,7 +133,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;
 .joincard .code{font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:700;color:var(--amberInk);letter-spacing:1px;}
 
 /* the roster */
-.tblwrap{overflow-x:auto;margin:6px 18px 0;border:1px solid var(--line);border-radius:7px;background:var(--paper2);}
+.tblwrap{overflow-x:auto;margin:6px 18px 0;border:1px solid var(--edge);border-radius:7px;background:var(--paper2);} /* v3.2 the keyboard can reach and scroll it, so its edge is a control's: #827257 on #e8e4da 3.68:1 */
 table{border-collapse:collapse;width:100%;font-size:15px;}
 caption{text-align:left;padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--ink2);}
 thead th{background:#ddd8cc;border-bottom:2px solid var(--ink);
@@ -145,6 +152,68 @@ tbody td.coach{text-align:left;white-space:normal;min-width:210px;max-width:290p
 tbody td.coach b{color:var(--ink);letter-spacing:.3px;}
 tbody td.coach .w{display:block;color:var(--ink2);font-size:14.5px;}
 tbody tr:hover td{background:#f6efdd;}
+/* v3.2 THE CREW BOARD is the 3.x crew page again, on 4.0 data: summary cards, three sheets, column groups, a name
+   filter, sortable headers and a profile for each person. Every pair computed, never eyeballed:
+   card and profile labels #7d4a0e on #f3f0e8 6.45:1, on #fff 7.35:1 · values #241a0c on #f3f0e8 15.0:1 · notes #4a3c28 9.37:1
+   tab text #4a3c28 on #dcd7cb 7.43:1, on its hover #e6e1d5 8.18:1 · a pressed tab #7d4a0e on #f3f0e8 6.45:1 with a 3px top rule #7d4a0e on #e8e4da 5.79:1
+   column switch text #4a3c28 on #e8e4da 8.40:1 · a pressed switch #1b1206 on #c8791e 5.47:1, and a check mark, because #c8791e on #e8e4da is 2.66:1
+   tab and switch edges #827257 on #e8e4da 3.68:1, on #dcd7cb 3.25:1 · header group #4a3c28 on #ddd8cc 7.50:1
+   the sorted header #5e3607 on #f0e5cf 8.38:1, its group #4a3c28 8.54:1
+   pills #10663a / #8a5a0b / #96270d: on #f3f0e8 6.18 / 5.20 / 7.11, on the not-started tint #f7e2da 5.65 / 4.75 / 6.50,
+   on the row hover #f6efdd 6.14 / 5.16 / 7.06, on the profile's #fff 7.04 / 5.92 / 8.10 */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;padding:14px 18px 6px;}
+.card{background:var(--paper2);border:1px solid var(--line);border-left:5px solid var(--line2);border-radius:7px;padding:9px 12px;}
+.card.ok{border-left-color:var(--good);} .card.warn{border-left-color:var(--warn);} .card.danger{border-left-color:var(--bad);}
+.card .k{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.3px;color:var(--amberInk);text-transform:uppercase;}
+.card .v{font-family:'Bebas Neue',sans-serif;font-size:31px;line-height:1;color:var(--ink);}
+.card .v.txt{font-size:22px;line-height:1.1;letter-spacing:.5px;padding-top:4px;}
+.card .c{font-size:14px;color:var(--ink2);line-height:1.3;}
+.sheets{display:flex;gap:4px;padding:12px 18px 0;flex-wrap:wrap;}
+.sheet{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1.2px;padding:11px 16px 9px;min-height:40px;
+  border:1px solid var(--edge);border-bottom:none;border-radius:6px 6px 0 0;background:#dcd7cb;color:var(--ink2);cursor:pointer;text-transform:uppercase;}
+.sheet:hover{background:#e6e1d5;}
+.sheet.on{background:var(--paper2);color:var(--amberInk);font-weight:700;border-color:var(--ink);border-top:3px solid var(--amberInk);
+  padding-top:9px;border-bottom:2px solid var(--paper2);margin-bottom:-2px;}
+.sheetbar{border-bottom:2px solid var(--ink);margin:0 18px;}
+.scopes{display:flex;gap:6px;flex-wrap:wrap;padding:12px 18px 4px;align-items:center;}
+.scopes .lbl{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.3px;color:var(--amberInk);text-transform:uppercase;margin-right:2px;}
+.scope{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.8px;padding:6px 11px;min-height:34px;
+  border:2px solid var(--edge);border-radius:5px;background:transparent;color:var(--ink2);cursor:pointer;text-transform:uppercase;}
+.scope.on{background:var(--amber);color:#1b1206;border-color:var(--amberInk);font-weight:700;}
+.scope.on::before{content:'\2713\00a0';content:'\2713\00a0' / '';}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding:10px 18px 6px;}
+.tools .fld{margin:0;flex:1 1 220px;max-width:420px;}
+/* the 3.x header: COHORT REPORT over the crew's name. #7d4a0e on #e8e4da 5.79:1, the line #4a3c28 on #e8e4da 8.40:1 */
+.hdr .kick{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--amberInk);margin-bottom:2px;}
+.hdr h2.t{margin:0;font-weight:400;}
+.sheet:focus-visible,.scope:focus-visible,.sortb:focus-visible,.namebtn:focus-visible,.tblwrap:focus-visible{outline:2px solid var(--amberInk);outline-offset:2px;}
+thead th{vertical-align:bottom;}
+thead th[aria-sort]{background:#f0e5cf;}
+.sortb{background:none;border:0;padding:0;margin:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;
+  text-align:inherit;cursor:pointer;white-space:normal;}
+.sortb.on{color:#5e3607;font-weight:700;}
+.sortb .g{display:block;font-size:11px;letter-spacing:.8px;color:var(--ink2);font-weight:400;}
+th.namecol,td.namecol{position:sticky;left:0;z-index:1;box-shadow:1px 0 0 var(--line);}
+tbody td.namecol{background:var(--paper2);}
+.namebtn{background:none;border:0;padding:0;margin:0;font:inherit;color:var(--ink);text-align:left;cursor:pointer;
+  text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px;}
+.namebtn:hover{color:var(--amberInk);text-decoration-color:currentColor;}
+.pill{display:inline-block;min-width:40px;padding:1px 6px;border-radius:4px;font-size:12.5px;border:1px solid currentColor;text-align:center;}
+.pill.g{color:var(--good);} .pill.w{color:var(--warn);} .pill.d{color:var(--bad);}
+#cb-prof{margin:14px 18px 0;background:var(--paper2);border:1px solid var(--line2);border-left:6px solid var(--amber);border-radius:8px;padding:14px 18px 16px;}
+#cb-prof h3{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin:0 0 2px;}
+#cb-prof h3:focus{outline:2px solid var(--amberInk);outline-offset:3px;}
+#cb-prof .sub{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--ink2);}
+.psec{font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:400;letter-spacing:1.6px;color:var(--amberInk);
+  text-transform:uppercase;margin:14px 0 6px;border-bottom:1px solid var(--line);padding-bottom:3px;}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:0;}
+.pcell{border:1px solid var(--line);border-radius:6px;padding:7px 10px;background:#fff;}
+.pcell dt{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.1px;color:var(--amberInk);text-transform:uppercase;}
+.pcell dd{margin:0;font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1.05;color:var(--ink);}
+.pcell .pill{font-family:'Share Tech Mono',monospace;font-size:14px;}
+.pcoach{font-size:16.5px;line-height:1.35;}
+.pcoach b{color:var(--ink);letter-spacing:.3px;}
+.pcoach .w{display:block;color:var(--ink2);}
 /* 3.9.1009 the DEMO note: #241a0c on #fff5d6 15.9:1, edge #8a5a0b 5.1:1 */
 #demo-note{display:none;margin:14px 18px 0;background:#fff5d6;border:2px solid var(--warn);border-radius:8px;padding:10px 14px;color:var(--ink);font-size:16px;line-height:1.4;}
 body.demo #demo-note{display:block;}
@@ -204,20 +273,18 @@ body.demo #demo-note{display:block;}
 <!-- THE DASHBOARD -->
 <div id="dash"><div class="wrap">
   <div id="demo-note" role="note"><b>DEMO · STAGED DATA.</b> This is the instructor dashboard with a demo crew. The people on it are simulated players: a script played LOCK IN for each of them, and LOCK IN recorded their walls and sessions the way it records anyone's. None of it is a real person's result, and nothing here can be changed. <a href="./" style="color:var(--amberInk);font-weight:700;">Leave the demo</a>.</div>
-  <!-- CHANGE THE PASSWORD: opened from the bar at the top -->
-  <div class="board noprint" id="pwbox" style="display:none;">
+  <div class="board">
     <div class="clip">LOCK-IN</div>
-    <div class="hdr"><div><div class="t">CHANGE THE PASSWORD</div><div class="s">Any other device signed in to this account is signed out.</div></div></div>
-    <div class="sec">
+    <!-- CHANGE THE PASSWORD: opened from the bar at the top; a section of this board, never a clipboard of its own -->
+    <div class="sec noprint" id="pwbox" style="display:none;">
+      <h2>CHANGE THE PASSWORD</h2>
+      <p>Any other device signed in to this account is signed out.</p>
       <label class="fld"><span>Current password</span><input id="pw-cur" type="password" autocomplete="current-password"></label>
       <label class="fld"><span>New password <small>(12 or more characters)</small></span><input id="pw-new" type="password" autocomplete="new-password"></label>
       <label class="fld"><span>New password again</span><input id="pw-new2" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')dChangePw();"></label>
       <div class="row"><button class="btn" onclick="dChangePw()">SAVE THE PASSWORD</button><button class="btn ghost small" onclick="dPwBox(false)">CANCEL</button></div>
       <div id="pw-msg" class="msg" role="status" aria-live="polite"></div>
     </div>
-  </div>
-  <div class="board">
-    <div class="clip">LOCK-IN</div>
     <div class="hdr"><div><div class="t">YOUR CREWS</div><div class="s">A crew is a class or a cohort. Each has its own join code.</div></div></div>
     <div class="sec"><div class="crews" id="crews"></div></div>
     <div class="sec noprint">
@@ -236,26 +303,47 @@ body.demo #demo-note{display:block;}
     </div>
   </div>
 
+  <!-- v3.2 THE CREW: one clipboard, the 3.x crew page on 4.0 data. The header, the cards, the three sheets, the column
+       switches, the tools, the profile and the table, then the 4.0 crew tools under the table (how to join, add a
+       name, delete the crew), all on this one board. -->
   <div class="board" id="crew-board" style="display:none;">
     <div class="clip">LOCK-IN</div>
-    <div class="hdr"><div><div class="t" id="cb-name">CREW</div><div class="s" id="cb-sub"></div></div><div class="stamp" id="cb-stamp"></div></div>
-    <div class="sec">
-      <div class="joincard" id="cb-join"></div>
-      <div class="row noprint" style="margin-top:8px;">
-        <button class="btn ghost small" onclick="window.print()">PRINT THIS PAGE</button>
-        <button class="btn ghost small" onclick="dCrews(DASH.cur)">REFRESH</button>
-        <button class="btn ghost small" id="cb-export" onclick="dExport()">EXPORT CSV</button>
-        <button class="btn danger small" onclick="dDelete()">DELETE THIS CREW</button>
+    <div class="hdr">
+      <div>
+        <div class="kick">COHORT REPORT</div>
+        <h2 class="t" id="cb-name">CREW</h2>
+        <div class="s" id="cb-line"></div>
       </div>
-      <div id="cb-lic" class="noprint" style="margin-top:8px;color:var(--ink2);font-size:15.5px;"></div>
+      <div class="stamp" id="cb-stamp"></div>
     </div>
-    <div class="sec noprint" id="cb-add" style="display:none;">
-      <h2>ADD A NAME</h2>
-      <p>Type the name the way you know the person. LOCK IN makes their personal code; hand it to them.</p>
-      <div class="row"><label class="fld" style="flex:1;margin:0;"><span>Name</span><input id="add-seat" type="text" maxlength="40" autocomplete="off" onkeydown="if(event.key==='Enter')dAddSeat();"></label><button class="btn" onclick="dAddSeat()">ADD</button></div>
+    <div class="cards" id="cb-cards"></div>
+    <div class="sheets noprint" role="group" aria-label="Lifetime, most recent session, most recent wall">
+      <button type="button" class="sheet on" id="sh-life" aria-pressed="true" onclick="dSheet('life')">Lifetime</button>
+      <button type="button" class="sheet" id="sh-session" aria-pressed="false" onclick="dSheet('session')">Most recent session</button>
+      <button type="button" class="sheet" id="sh-wall" aria-pressed="false" onclick="dSheet('wall')">Most recent wall</button>
     </div>
-    <div id="cb-msg" class="msg noprint" role="status" aria-live="polite" style="margin:6px 18px 0;"></div>
-    <div class="tblwrap">
+    <div class="sheetbar"></div>
+    <div class="scopes noprint" id="cb-scopes" role="group" aria-labelledby="cb-scopes-l">
+      <span class="lbl" id="cb-scopes-l">Columns</span>
+      <button type="button" class="scope on" data-g="engagement" aria-pressed="true" onclick="dScope('engagement')">Engagement</button>
+      <button type="button" class="scope" data-g="throughput" aria-pressed="false" onclick="dScope('throughput')">Throughput</button>
+      <button type="button" class="scope on" data-g="quality" aria-pressed="true" onclick="dScope('quality')">Quality</button>
+      <button type="button" class="scope" data-g="craft" aria-pressed="false" onclick="dScope('craft')">Craft</button>
+      <button type="button" class="scope on" data-g="faults" aria-pressed="true" onclick="dScope('faults')">Faults</button>
+      <button type="button" class="scope" data-g="habits" aria-pressed="false" onclick="dScope('habits')">Habits</button>
+      <button type="button" class="scope on" data-g="coach" aria-pressed="true" onclick="dScope('coach')">Coach</button>
+    </div>
+    <div class="tools noprint">
+      <label class="fld"><span>Filter by name</span><input id="cb-q" type="search" maxlength="40" autocomplete="off" spellcheck="false" oninput="dRender()"></label>
+      <button class="btn ghost" onclick="dCrews(DASH.cur)">REFRESH</button>
+      <button class="btn ghost" id="cb-export" onclick="dExport()">EXPORT CSV</button>
+      <button class="btn ghost" onclick="window.print()">PRINT THIS PAGE</button>
+    </div>
+    <section id="cb-prof" aria-labelledby="cb-prof-h" style="display:none;">
+      <h3 id="cb-prof-h" tabindex="-1">PERSON</h3>
+      <div id="cb-prof-body"></div>
+    </section>
+    <div class="tblwrap" role="region" aria-labelledby="cb-cap" tabindex="0">
       <table>
         <caption id="cb-cap">The roster</caption>
         <thead id="cb-head"></thead>
@@ -263,6 +351,22 @@ body.demo #demo-note{display:block;}
       </table>
     </div>
     <div class="empty" id="cb-empty" style="display:none;"></div>
+    <div id="cb-msg" class="msg noprint" role="status" aria-live="polite" style="margin:8px 18px 0;"></div>
+    <div class="sec" id="cb-extras">
+      <div class="joincard" id="cb-join"></div>
+      <p id="cb-sub" style="margin:8px 0 0;"></p>
+      <p id="cb-lic" class="noprint" style="margin:6px 0 0;"></p>
+    </div>
+    <div class="sec noprint" id="cb-add" style="display:none;">
+      <h3>ADD A NAME</h3>
+      <p>Type the name the way you know the person. LOCK IN makes their personal code; hand it to them.</p>
+      <div class="row"><label class="fld" style="flex:1;margin:0;"><span>Name</span><input id="add-seat" type="text" maxlength="40" autocomplete="off" onkeydown="if(event.key==='Enter')dAddSeat();"></label><button class="btn" onclick="dAddSeat()">ADD</button></div>
+    </div>
+    <div class="sec noprint">
+      <h3>DELETE THIS CREW</h3>
+      <p>Removes everyone on it and all their results. It asks for the join code first.</p>
+      <button class="btn danger small" onclick="dDelete()">DELETE THIS CREW</button>
+    </div>
     <div class="foot">
       Training supplement only. Builds intuition and tracks practice progress; it does not replace employer
       safety training, OSHA training, or any certification requirement. Not for hiring or placement decisions.<br>
@@ -274,9 +378,10 @@ body.demo #demo-note{display:block;}
 
 <script>
 // ══════════════════════════════════════════════════════════════════════════
-// INSTRUCTOR DASHBOARD v3.1 (LOCK IN 4.0)
+// INSTRUCTOR DASHBOARD v3.2 (LOCK IN 4.0)
 // WORKFLOW STACK: boot (a link from an email, a signed-in session, or the sign-in form) -> create an account (confirmed
-//   by email) / sign in -> YOUR CREWS (crew_mine) -> MAKE A CREW (crew_create) -> open a crew (crew_roster) -> add a
+//   by email) / sign in -> YOUR CREWS (crew_mine) -> MAKE A CREW (crew_create) -> open a crew (crew_roster; the
+//   most recent session and wall sheets read crew_sessions_list and crew_walls_list) -> a name opens its profile -> add a
 //   name (crew_seat_add), reset a PIN or a code (crew_member_reset), remove a person (crew_member_remove), delete the
 //   crew (crew_delete), export CSV on a licensed crew (crew_export_walls, crew_export_sessions) -> change the password
 //   -> sign out. Forgot the password, and the unlock after 5 wrong passwords, come back here as links from email.
@@ -287,7 +392,11 @@ body.demo #demo-note{display:block;}
 // ══════════════════════════════════════════════════════════════════════════
 var DASH={
   api:'/api/', pwMin:12,
-  session:null, mode:'in', crews:[], cur:null, crew:null, roster:[], link:null
+  session:null, mode:'in', crews:[], cur:null, crew:null, roster:[], link:null,
+  // v3.2 the crew board: the open sheet, each sheet's sort, the open crew's session and wall lists (undefined: not
+  // asked for yet, null: loading, false: did not load), the person whose profile is open, and how many rows a list asks for
+  sheet:'life', sort:{life:{k:'walls',dir:1},session:{k:'started_at',dir:-1},wall:{k:'loaded_at',dir:-1}},
+  lists:{}, prof:null, listMax:500
 };
 function dEsc(s){return (''+(s==null?'':s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function dNum(v){return (v==null||isNaN(v))?0:(+v);}
@@ -456,32 +565,254 @@ function dOpen(code,keep){
   document.getElementById('cb-export').style.display=c.licensed?'':'none';
   document.getElementById('cb-lic').innerHTML=c.licensed?'':'A free crew holds 9 people. A license removes the limit and adds the CSV export of every wall and session. See <a href="/programs/#facilities" style="color:var(--amberInk);font-weight:700;">pricing</a>.';
   if(!keep)dSet('cb-msg','');
-  var body=document.getElementById('cb-body');body.innerHTML='';document.getElementById('cb-empty').style.display='none';
+  DASH.lists={};dProfileClose(true); // a refresh reads everything again
+  document.getElementById('cb-cards').innerHTML='';document.getElementById('cb-head').innerHTML='';document.getElementById('cb-body').innerHTML='';
+  var em=document.getElementById('cb-empty');em.style.display='block';em.textContent='Loading…';
   dRpc('crew_roster',{p_code:code},function(rows){
-    if(!Array.isArray(rows)){document.getElementById('cb-empty').style.display='block';document.getElementById('cb-empty').textContent='The roster did not load. That is a connection problem, not an empty crew.';return;}
-    DASH.roster=rows;dRoster();
+    if(DASH.cur!==code)return; // another crew was opened while this one loaded
+    if(!Array.isArray(rows)){DASH.roster=[];em.style.display='block';em.textContent='The roster did not load. That is a connection problem, not an empty crew.';return;}
+    DASH.roster=rows;
+    if(DASH.sheet!=='life')dLoadList(DASH.sheet);else dRender();
   });
 }
-function dRoster(){
-  var c=DASH.crew,rows=DASH.roster,man=(c.mode==='manual');
-  document.getElementById('cb-cap').textContent=rows.length+' '+(rows.length===1?'person':'people')+' on '+c.name+(c.licensed?'':' (a free crew holds 9)')+'. Least practiced first.';
-  document.getElementById('cb-head').innerHTML='<tr><th scope="col">Name</th>'+(man?'<th scope="col">Personal code</th>':'<th scope="col">PIN</th>')+
-    '<th scope="col">Joined</th><th scope="col">Last played</th><th scope="col">Sessions</th><th scope="col">Walls</th><th scope="col">Best score</th><th scope="col">Avg integrity</th><th scope="col">Best pieces/hr</th><th scope="col">Incidents</th><th scope="col">Collapses</th><th scope="col" class="coachh">What to coach</th><th scope="col" class="noprint">Manage</th></tr>';
-  var em=document.getElementById('cb-empty');
-  if(!rows.length){document.getElementById('cb-body').innerHTML='';em.style.display='block';
-    em.textContent=man?'No names yet. Add each person above, then hand them their personal code.':'No one has joined yet. Give out the join code above.';return;}
+
+// ── v3.2 THE CREW BOARD ──
+// The 3.x crew page (dashboard v2.4) on 4.0 data. Every session the game sends carries the old metrics in its summary
+// (lock-in.html zBuildSession), and crew_roster adds them up per person. The 3.x sheets, one row per person on each:
+// LIFETIME (crew_roster), MOST RECENT SESSION (the first row per person of crew_sessions_list, which is newest first) and
+// MOST RECENT WALL (the same from crew_walls_list). Column groups switch on and off; a name opens that person's profile
+// with every number. LIFETIME sorts least practiced first: a scoreboard sorts by winner, a roster sorts by who needs
+// the instructor. Everything is on one clipboard, as in 3.x.
+// READS: DASH.crew, DASH.roster, DASH.lists, DASH.sheet, DASH.sort, GROUPS | WRITES: the crew board
+var GROUPS={
+  engagement:{label:'Engagement',on:true}, throughput:{label:'Throughput',on:false}, quality:{label:'Quality',on:true},
+  craft:{label:'Craft',on:false}, faults:{label:'Faults',on:true}, habits:{label:'Habits',on:false}, coach:{label:'Coach',on:true}
+};
+// k: the field, l: the label, g: the group (id and end always show), t: how it reads, x: in the profile only.
+// A session's Walls is walls_sealed: the walls crew_sessions_list counts for that person by server time, from the
+// session's length plus a minute before it arrived up to its arrival. Before 3.9.1010 the summary's own walls was the
+// trailer number the game was on, not a count, so it is never shown.
+var COLS={
+  life:[
+    {k:'name',l:'Name',g:'id',t:'name'},
+    {k:'sessions',l:'Sessions',g:'engagement',t:'n'}, {k:'walls',l:'Walls',g:'engagement',t:'n'}, {k:'pieces',l:'Pieces',g:'engagement',t:'n'},
+    {k:'joined',l:'Joined',g:'engagement',t:'date'}, {k:'last_seen',l:'Last played',g:'engagement',t:'date'},
+    {k:'best_pph',l:'Best pieces/hr',g:'throughput',t:'n'}, {k:'avg_pph',l:'Avg pieces/hr',g:'throughput',t:'n'},
+    {k:'best_score',l:'Best score',g:'throughput',t:'n'}, {k:'total_score',l:'Total score',g:'throughput',t:'n'},
+    {k:'peak_pph',l:'Peak pieces/hr',g:'throughput',t:'n',x:1},
+    {k:'avg_integrity',l:'Avg integrity',g:'quality',t:'pctpill'}, {k:'avg_wall_pct',l:'Wall %',g:'quality',t:'pct'},
+    {k:'density_pct',l:'Density',g:'quality',t:'pct'}, {k:'cube_eff',l:'Cube eff',g:'quality',t:'pct'},
+    {k:'nc_util_pct',l:'Special handling use',g:'quality',t:'pct'}, {k:'smalls_util_pct',l:'Smalls use',g:'quality',t:'pct'},
+    {k:'shelves_locked',l:'Shelves',g:'craft',t:'n'}, {k:'double_locks',l:'Bulkheads',g:'craft',t:'n'}, {k:'nests',l:'Nests',g:'craft',t:'n'},
+    {k:'recoveries',l:'Recoveries',g:'craft',t:'n'}, {k:'bonuses',l:'Bonuses',g:'craft',t:'n'}, {k:'hazmat_locks',l:'Hazmat shelves',g:'craft',t:'n'},
+    {k:'bags_placed',l:'Bags placed',g:'craft',t:'n',x:1},
+    {k:'incidents',l:'Incidents',g:'faults',t:'incpill'}, {k:'inc_haz_high',l:'Hazmat high',g:'faults',t:'n'},
+    {k:'inc_haz_crush',l:'Hazmat crushed',g:'faults',t:'n'}, {k:'inc_seg',l:'Segregation',g:'faults',t:'n'},
+    {k:'inc_killer',l:'Killer pairs',g:'faults',t:'n'}, {k:'collapses',l:'Collapses',g:'faults',t:'n'},
+    {k:'crunches',l:'Crunches',g:'faults',t:'n'}, {k:'rejected_drops',l:'Rejects',g:'faults',t:'n'},
+    {k:'hydration_breaks',l:'Water',g:'habits',t:'n'}, {k:'nc_dwell_warnings',l:'Special handling dwell',g:'habits',t:'n'},
+    {k:'aisle_warnings',l:'Aisle warnings',g:'habits',t:'n'}, {k:'rotations',l:'Rotations',g:'habits',t:'n'}, {k:'lifts',l:'Lifts',g:'habits',t:'n'},
+    {k:'stage_placed',l:'Placed from staging',g:'habits',t:'n',x:1},
+    {k:'top_incident',l:'What to coach',g:'coach',t:'coach'},
+    {k:'seat',l:'PIN',g:'end',t:'seat'}, {k:'manage',l:'Manage',g:'end',t:'manage'}
+  ],
+  session:[
+    {k:'name',l:'Name',g:'id',t:'name'},
+    {k:'mode',l:'Mode',g:'engagement',t:'mode'}, {k:'walls_sealed',l:'Walls',g:'engagement',t:'n'}, {k:'pieces',l:'Pieces',g:'engagement',t:'n'},
+    {k:'duration_s',l:'Duration',g:'engagement',t:'dur'}, {k:'started_at',l:'When',g:'engagement',t:'when'},
+    {k:'peak_pph',l:'Peak pieces/hr',g:'throughput',t:'n'}, {k:'score',l:'Score',g:'throughput',t:'n'},
+    {k:'avg_integrity',l:'Avg integrity',g:'quality',t:'pctpill'},
+    {k:'incidents',l:'Incidents',g:'faults',t:'incpill'}, {k:'collapses',l:'Collapses',g:'faults',t:'n'},
+    {k:'app_ver',l:'Build',g:'habits',t:'txt'}
+  ],
+  wall:[
+    {k:'name',l:'Name',g:'id',t:'name'},
+    {k:'mode',l:'Mode',g:'engagement',t:'mode'}, {k:'pieces',l:'Pieces',g:'engagement',t:'n'},
+    {k:'dur_s',l:'Duration',g:'engagement',t:'dur'}, {k:'loaded_at',l:'When',g:'engagement',t:'when'},
+    {k:'pph',l:'Pieces/hr',g:'throughput',t:'n'}, {k:'score',l:'Score',g:'throughput',t:'n'},
+    {k:'integrity',l:'Integrity',g:'quality',t:'pctpill'}, {k:'density',l:'Density',g:'quality',t:'pct'},
+    {k:'incidents',l:'Incidents',g:'faults',t:'incpill'}, {k:'collapses',l:'Collapses',g:'faults',t:'n'}
+  ]
+};
+var MODES={shift:'TRAILER-LOAD',daily:'DAILY',training:'TRAINING',practice:'PRACTICE'};
+var SEATCOL={pin:{l:'PIN',g:'end'},manual:{l:'Personal code',g:'end'}}; // the code column's label, by how the crew joins
+function dSeatLabel(){return SEATCOL[(DASH.crew&&DASH.crew.mode==='manual')?'manual':'pin'].l;}
+function dCount(v){return Array.isArray(v)?v.length:dNum(v);} // a count, or a list of incidents counted
+function dShow(v){return (Math.round(dNum(v)*10)/10).toLocaleString();}
+function dWhen(t){if(!t)return '·';try{var d=new Date(t);if(isNaN(d.getTime()))return '·';return d.toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});}catch(e){return '·';}}
+function dDur(s){s=Math.round(dNum(s));if(!s)return '·';var h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?(h+'h '+m+'m'):(m?(m+'m '+(s%60)+'s'):(s+'s'));}
+// one cell's text; blank (·) is no data, which is not the same as 0
+function dFmt(c,r){
+  var v=r[c.k];
+  if(c.t==='date')return dDate(v);
+  if(c.t==='when')return dWhen(v);
+  if(c.t==='dur')return dDur(v);
+  if(c.t==='mode')return dEsc(MODES[v]||(v?(''+v).toUpperCase():'·'));
+  if(c.t==='txt')return (v==null||v==='')?'·':dEsc(v);
+  if(c.t==='incpill'){if(v==null||v==='')return '·';var n=dCount(v);return '<span class="pill '+(n>=2?'d':n===1?'w':'g')+'">'+n+'</span>';}
+  if(v==null||v===''||isNaN(v))return '·';
+  if(c.t==='pct')return dShow(v)+'%';
+  if(c.t==='pctpill'){var a=dNum(v);return '<span class="pill '+(a>=80?'g':a>=60?'w':'d')+'">'+dShow(a)+'%</span>';}
+  return dShow(v);
+}
+function dActiveCols(){return COLS[DASH.sheet].filter(function(c){return !c.x&&(c.g==='id'||c.g==='end'||GROUPS[c.g].on);});}
+function dColByKey(k){var a=COLS[DASH.sheet],i;for(i=0;i<a.length;i++)if(a[i].k===k)return a[i];return a[0];}
+function dIsText(c){return c.t==='name'||c.t==='txt'||c.t==='mode'||c.t==='coach'||c.t==='seat';}
+// the value a column sorts by; null sorts last in either direction
+function dSortVal(c,r){
+  var v=r[c.k],t;
+  if(c.t==='coach'){v=dCoach(r).replace(/<[^>]*>/g,'');if(/^No repeated mistake/.test(v))v=null;}
+  if(c.t==='seat')v=(DASH.crew.mode==='manual')?r.seat:(r.pin_set?'set':'new');
+  if(c.t==='mode')v=MODES[v]||v;
+  if(c.t==='incpill')return dCount(v);
+  if(c.t==='date'||c.t==='when'){t=v?new Date(v).getTime():NaN;return isNaN(t)?null:t;}
+  if(dIsText(c))return (v==null||v==='')?null:(''+v).toLowerCase();
+  return (v==null||v===''||isNaN(v))?null:+v;
+}
+function dSortWords(c,dir){
+  if(c.t==='date'||c.t==='when')return dir<0?'newest first':'oldest first';
+  if(dIsText(c))return dir<0?'Z to A':'A to Z';
+  return dir<0?'highest first':'lowest first';
+}
+function dSort(k){
+  var s=DASH.sort[DASH.sheet],c=dColByKey(k);if(c.k!==k||c.t==='manage')return;
+  if(s.k===k)s.dir=-s.dir;else{s.k=k;s.dir=dIsText(c)?1:-1;} // a new column: names A to Z, numbers and dates highest or newest first
+  dRender();
+  var b=document.querySelector('#cb-head button[data-k="'+k+'"]');if(b)b.focus(); // the header was rebuilt; keep the keyboard on it
+}
+function dSheet(s){
+  if(!COLS[s])return;
+  DASH.sheet=s;
+  if(s!=='life'&&DASH.lists[s]===undefined){dLoadList(s);return;}
+  dRender();
+}
+function dScope(g){if(!GROUPS[g])return;GROUPS[g].on=!GROUPS[g].on;dRender();}
+function dLoadList(s){
+  var code=DASH.cur,fn=(s==='session')?'crew_sessions_list':'crew_walls_list';
+  DASH.lists[s]=null;dRender();
+  dRpc(fn,{p_code:code,p_limit:DASH.listMax},function(rows){
+    if(DASH.cur!==code)return;
+    DASH.lists[s]=Array.isArray(rows)?rows:false;
+    if(DASH.sheet===s)dRender();
+  });
+}
+// the switches and tabs are fixed buttons, so the keyboard stays on the one just pressed; only their state changes
+function dBars(){
+  var b=document.querySelectorAll('#cb-scopes .scope'),i,g,k,has,on;
+  for(i=0;i<b.length;i++){g=b[i].getAttribute('data-g');has=false;
+    for(k=0;k<COLS[DASH.sheet].length;k++)if(COLS[DASH.sheet][k].g===g&&!COLS[DASH.sheet][k].x)has=true;
+    on=GROUPS[g].on;b[i].style.display=has?'':'none';b[i].classList.toggle('on',on);b[i].setAttribute('aria-pressed',on?'true':'false');}
+  var sh=['life','session','wall'];
+  for(i=0;i<sh.length;i++){on=(DASH.sheet===sh[i]);b=document.getElementById('sh-'+sh[i]);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on?'true':'false');}
+}
+// the summary cards, from the roster whatever sheet is open
+function dCards(){
+  var c=DASH.crew,rows=DASH.roster,n=rows.length,never=0,walls=0,iw=0,isum=0,top={},best=null,i,r,k,w;
+  for(i=0;i<n;i++){r=rows[i];w=dNum(r.walls);walls+=w;if(!w)never++;
+    if(w&&r.avg_integrity!=null){iw+=w;isum+=dNum(r.avg_integrity)*w;}
+    if(r.top_incident){k=r.top_incident;if(!top[k])top[k]={p:0,t:0};top[k].p++;top[k].t+=dNum(r.top_incident_n);}}
+  for(k in top){if(top.hasOwnProperty(k)&&(!best||top[k].p>top[best].p||(top[k].p===top[best].p&&(top[k].t>top[best].t||(top[k].t===top[best].t&&k<best)))))best=k;}
+  var avg=iw?Math.round(isum/iw):null;
+  function card(key,v,note,cls,txt){return '<div class="card'+(cls?' '+cls:'')+'"><div class="k">'+key+'</div><div class="v'+(txt?' txt':'')+'">'+v+'</div><div class="c">'+note+'</div></div>';}
+  document.getElementById('cb-cards').innerHTML=
+    card('On crew',n,(n===1?'person':'people')+(c.licensed?'':' (a free crew holds 9)'),'')+
+    card('Not started',never,'joined, no wall yet',never?'danger':'ok')+
+    card('Avg integrity',avg==null?'·':avg+'%',avg==null?'no walls yet':('over all '+iw+(iw===1?' wall':' walls')),avg==null?'':(avg>=80?'ok':avg>=60?'warn':'danger'))+
+    card('Walls loaded',walls,'by the whole crew','')+
+    (best?card('Most common mistake',COACH[best]?COACH[best][0]:dEsc(best),'the top mistake for '+top[best].p+' of '+n+' '+(n===1?'person':'people'),'warn',1):'');
+}
+function dHead(cols){
+  var s=DASH.sort[DASH.sheet],h='<tr>',i,c,on,lab,cls;
+  for(i=0;i<cols.length;i++){c=cols[i];lab=(c.t==='seat')?dSeatLabel():c.l;
+    if(c.t==='manage'){h+='<th scope="col" class="noprint">'+lab+'</th>';continue;}
+    on=(s.k===c.k);cls=(c.t==='name'?'namecol':(c.t==='coach'?'coachh':''));
+    h+='<th scope="col"'+(cls?' class="'+cls+'"':'')+(on?' aria-sort="'+(s.dir<0?'descending':'ascending')+'"':'')+'>'+
+      '<button type="button" class="sortb'+(on?' on':'')+'" data-k="'+c.k+'" onclick="dSort(\''+c.k+'\')">'+dEsc(lab)+
+      (on?'<span aria-hidden="true">'+(s.dir<0?' ▼':' ▲')+'</span>':'')+
+      (GROUPS[c.g]?'<span class="g">'+GROUPS[c.g].label+'</span>':'')+'</button></th>';}
+  return h+'</tr>';
+}
+// a name opens the profile when the person is on the roster
+function dNameCell(r){
+  var id=r.id||r.member_id,nm=dEsc(r.name||'·'),m=id?dMember(id):null;
+  return (m?'<button type="button" class="namebtn" data-id="'+dEsc(id)+'" onclick="dProfile(\''+dEsc(id)+'\')">'+nm+'</button>':nm)+(r.locked?' <span class="tag d">LOCKED</span>':'');
+}
+function dRow(r,cols,man){
+  var h='<tr'+(DASH.sheet==='life'&&!dNum(r.walls)?' class="zero"':'')+'>',i,c,id=dEsc(r.id);
+  for(i=0;i<cols.length;i++){c=cols[i];
+    if(c.t==='name')h+='<td class="namecol">'+dNameCell(r)+'</td>';
+    else if(c.t==='coach')h+='<td class="coach">'+dCoach(r)+'</td>';
+    else if(c.t==='seat')h+=man?'<td class="seat">'+dEsc(r.seat||'·')+'</td>':'<td>'+(r.pin_set?'<span class="tag g">SET</span>':'<span class="tag w">NEW PIN</span>')+'</td>';
+    else if(c.t==='manage')h+='<td class="noprint"><button class="btn ghost small" onclick="dReset(\''+id+'\')">'+(man?'NEW CODE':'RESET PIN')+'</button> '+
+      '<button class="btn danger small" onclick="dRemove(\''+id+'\')">REMOVE</button></td>';
+    else h+='<td>'+dFmt(c,r)+'</td>';}
+  return h+'</tr>';
+}
+// one row per person from a newest-first list: the first row met for a person is that person's most recent
+function dLatest(list){
+  var seen={},out=[],i,id;
+  for(i=0;i<list.length;i++){id=list[i].member_id;if(seen[id])continue;seen[id]=1;out.push(list[i]);}
+  return out;
+}
+function dRender(){
+  var c=DASH.crew;if(!c)return;
+  var sh=DASH.sheet,man=(c.mode==='manual'),cols=dActiveCols(),s=DASH.sort[sh],sc=dColByKey(s.k),life=(sh==='life');
+  var list=life?DASH.roster:DASH.lists[sh],em=document.getElementById('cb-empty'),body=document.getElementById('cb-body'),cap=document.getElementById('cb-cap');
+  var what=(sh==='session')?'session':'wall',i,miss=0,base,q,rows,t;
+  dBars();dCards();
+  document.getElementById('cb-head').innerHTML=dHead(cols);
+  // the header line says how the sheet is sorted; the 3.x line when it is the 3.x order
+  document.getElementById('cb-line').textContent=(life&&s.k==='walls'&&s.dir>0)?'Sorted least engaged first · the students who need you are at the top'
+    :((life?'':'Each person’s most recent '+what+' · ')+'sorted by '+(sc.t==='seat'?dSeatLabel():sc.l).toLowerCase()+', '+dSortWords(sc,s.dir));
+  body.innerHTML='';em.style.display='block';
+  if(list==null){em.textContent='Loading…';cap.textContent='Each person’s most recent '+what+' on '+c.name+'.';return;}
+  if(list===false){em.textContent='The '+what+'s did not load. That is a connection problem, not an empty list. Choose REFRESH to try again.';cap.textContent='Each person’s most recent '+what+' on '+c.name+'.';return;}
+  base=life?list:dLatest(list);
+  if(!life)for(i=0;i<DASH.roster.length;i++){t=DASH.roster[i];if(dNum(what==='session'?t.sessions:t.walls)>0&&!base.some(function(x){return x.member_id===t.id;}))miss++;}
+  q=dVal('cb-q').trim().toLowerCase();
+  rows=base.filter(function(r){return !q||(''+(r.name||'')).toLowerCase().indexOf(q)>=0;});
+  t=life?(base.length+' '+(base.length===1?'person':'people')+' on '+c.name+(c.licensed?'':' (a free crew holds 9)')+'.')
+    :('Each person’s most recent '+what+': '+base.length+' of '+DASH.roster.length+' '+(DASH.roster.length===1?'person':'people')+' on '+c.name+' '+(base.length===1?'has':'have')+' one.');
+  if(miss)t+=' '+miss+' more '+(miss===1?'has':'have')+' a '+what+' on record that is not listed'+(list.length>=DASH.listMax?(': this sheet reads the newest '+DASH.listMax+' '+what+'s.'):'; choose REFRESH.');
+  if(q)t+=' '+rows.length+' '+(rows.length===1?'matches':'match')+' the filter.';
+  if(rows.length)t+=' Choose a name to see all of that person’s numbers.';
+  cap.textContent=t;
+  if(!base.length){
+    em.textContent=life?(man?'No names yet. Add each person under the table, then hand them their personal code.':'No one has joined yet. Give out the join code under the table.')
+      :('No '+what+'s on record yet.');return;}
+  if(!rows.length){em.textContent='No one on this sheet matches “'+q+'”.';return;}
   em.style.display='none';
-  rows=rows.slice().sort(function(a,b){return dNum(a.walls)-dNum(b.walls)||(''+a.name).localeCompare(''+b.name);});
-  var h='',i,r,id;
-  for(i=0;i<rows.length;i++){r=rows[i];id=dEsc(r.id);
-    h+='<tr'+(dNum(r.walls)===0?' class="zero"':'')+'><td>'+dEsc(r.name)+(r.locked?' <span class="tag d">LOCKED</span>':'')+'</td>'+
-      (man?'<td class="seat">'+dEsc(r.seat||'·')+'</td>':'<td>'+(r.pin_set?'<span class="tag g">SET</span>':'<span class="tag w">NEW PIN</span>')+'</td>')+
-      '<td>'+dDate(r.joined)+'</td><td>'+dDate(r.last_seen)+'</td><td>'+dNum(r.sessions)+'</td><td>'+dNum(r.walls)+'</td>'+
-      '<td>'+(r.best_score==null?'·':dNum(r.best_score))+'</td><td>'+(r.avg_integrity==null?'·':dNum(r.avg_integrity)+'%')+'</td>'+
-      '<td>'+(r.best_pph==null?'·':dNum(r.best_pph))+'</td><td>'+(dNum(r.incidents)?'<span class="tag d">'+dNum(r.incidents)+'</span>':'0')+'</td><td>'+dNum(r.collapses)+'</td><td class="coach">'+dCoach(r)+'</td>'+
-      '<td class="noprint"><button class="btn ghost small" onclick="dReset(\''+id+'\')">'+(man?'NEW CODE':'RESET PIN')+'</button> '+
-      '<button class="btn danger small" onclick="dRemove(\''+id+'\')">REMOVE</button></td></tr>';}
-  document.getElementById('cb-body').innerHTML=h;
+  rows=rows.slice().sort(function(a,b){
+    var x=dSortVal(sc,a),y=dSortVal(sc,b),o;
+    if(x===null&&y!==null)return 1;if(y===null&&x!==null)return -1;
+    o=(x===null)?0:((typeof x==='string')?x.localeCompare(y):(x-y))*s.dir;
+    return o||(''+a.name).localeCompare(''+b.name);
+  });
+  t='';for(i=0;i<rows.length;i++)t+=dRow(rows[i],cols,man);
+  body.innerHTML=t;
+}
+// the profile: every number on one person, grouped as the columns are, and what to coach
+function dProfile(id){
+  var r=dMember(id),p=document.getElementById('cb-prof');if(!r)return;
+  var man=(DASH.crew.mode==='manual'),cols=COLS.life,h,g,i,c,cells;
+  DASH.prof=id;
+  h='<div class="sub">'+(man?('Personal code '+dEsc(r.seat||'·')):(r.pin_set?'PIN set':'New PIN: the next join with this name sets it'))+(r.locked?' · <span class="tag d">LOCKED</span>':'')+'</div>'+
+    '<h4 class="psec">What to coach</h4><div class="pcoach">'+dCoach(r)+'</div>';
+  for(g in GROUPS){if(!GROUPS.hasOwnProperty(g)||g==='coach')continue;cells='';
+    for(i=0;i<cols.length;i++){c=cols[i];if(c.g===g)cells+='<div class="pcell"><dt>'+dEsc(c.l)+'</dt><dd>'+dFmt(c,r)+'</dd></div>';}
+    if(cells)h+='<h4 class="psec">'+GROUPS[g].label+'</h4><dl class="pgrid">'+cells+'</dl>';}
+  h+='<div class="row" style="margin-top:14px;"><button type="button" class="btn ghost small" onclick="dProfileClose()">CLOSE</button></div>';
+  document.getElementById('cb-prof-h').textContent=r.name;
+  document.getElementById('cb-prof-body').innerHTML=h;
+  p.style.display='block';
+  document.getElementById('cb-prof-h').focus(); // a screen reader hears the name; the panel scrolls into view
+}
+// quiet: the board is being reloaded, so the keyboard is not sent back to a name
+function dProfileClose(quiet){
+  var id=DASH.prof,b;
+  document.getElementById('cb-prof').style.display='none';DASH.prof=null;
+  if(quiet||!id)return;
+  b=document.querySelector('#cb-body button[data-id="'+id+'"]');if(b)b.focus();
 }
 // 3.9.1009 WHAT TO COACH: the incident a person had most often, as the rule's name in my rule list
 // (.tools/load-rules.json) and what to practice. The trainer's wall has no tires and one hazmat, so tire and hazmat-pair
@@ -514,7 +845,7 @@ function dAddSeat(){
   dRpc('crew_seat_add',{p_code:DASH.cur,p_name:nm},function(j){
     if(!j){dSet('cb-msg','No connection. Try again.','err');return;}
     if(!j.ok){dSet('cb-msg',j.err||'Could not add the name.','err');return;}
-    el.value='';dSet('cb-msg',j.name+'’s personal code is '+j.seat+'. It is in the roster below; print the page to hand them out.','good');
+    el.value='';dSet('cb-msg',j.name+'’s personal code is '+j.seat+'. It is in the table above; print the page to hand them out.','good');
     dCrews(DASH.cur);
   });
 }
@@ -591,6 +922,8 @@ function dDemoRpc(fn,b,cb){
   if(fn==='crew_roster'){cb((D.roster&&D.roster[code])||[]);return;}
   if(fn==='crew_export_walls'){cb((D.walls&&D.walls[code])||[]);return;}
   if(fn==='crew_export_sessions'){cb((D.sessions&&D.sessions[code])||[]);return;}
+  if(fn==='crew_sessions_list'){cb((D.sessions_list&&D.sessions_list[code])||[]);return;} // v3.2 the most recent session and wall sheets
+  if(fn==='crew_walls_list'){cb((D.walls_list&&D.walls_list[code])||[]);return;}
   cb({ok:false,err:'This is the demo with staged data, so nothing here can be changed.'});
 }
 

@@ -36,7 +36,7 @@ var PIN_ITER = 1000;
 var PW_MIN = 12;                     // instructor password minimum
 var LOCK_AFTER = 5;                  // wrong passwords or PINs before a 15-minute lock
 var LOCK_MIN = 15;
-var SESSION_HOURS = 12;               // 3.9.1009 an instructor's sign-in lasts a working day, not two weeks (shared lab computers)
+var SESSION_HOURS = 14 * 24;          // 14 days. 3.9.1010 back from 12 hours: that cut went live on launch day without being put to me
 var CAP_VISITS = 5000;               // daily caps that protect the account's shared write budget
 var CAP_EVENTS = 5000;
 var CAP_BOARD = 2000;
@@ -51,6 +51,19 @@ var BAD_INITIALS = ['ASS', 'FUK', 'FUC', 'FCK', 'FKU', 'SHT', 'CUM', 'FAG', 'FGT
 var EVENTS = ['game_open', 'visitor_new', 'visitor_returning', 'mode_start', 'wall_done', 'daily_submit',
   'briefing_done', 'arcade_signed', 'training_done', 'crew_joined'];
 var SEAT_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';   // no 0/O, 1/I/L
+// The crew page's per-person totals, read from the summary every crew session already records (zBuildSession in
+// lock-in.html): [roster field, sum | max | avg, summary key]. An avg is rounded to a whole number.
+var ROSTER_SUMS = [
+  ['pieces', 'sum', 'pieces'], ['total_score', 'sum', 'score'], ['peak_pph', 'max', 'peakPph'], ['avg_pph', 'avg', 'avgPph'],
+  ['avg_wall_pct', 'avg', 'avgWallPct'], ['density_pct', 'avg', 'densityPct'], ['cube_eff', 'avg', 'cubeEff'],
+  ['nc_util_pct', 'avg', 'ncUtilPct'], ['smalls_util_pct', 'avg', 'smallsUtilPct'], ['shelves_locked', 'sum', 'shelvesLocked'],
+  ['double_locks', 'sum', 'doubleLocks'], ['nests', 'sum', 'nests'], ['recoveries', 'sum', 'recoveries'], ['bonuses', 'sum', 'bonuses'],
+  ['crunches', 'sum', 'crunches'], ['rejected_drops', 'sum', 'rejectedDrops'], ['hydration_breaks', 'sum', 'hydrationBreaks'],
+  ['nc_dwell_warnings', 'sum', 'ncDwellWarn'], ['rotations', 'sum', 'rotations'], ['lifts', 'sum', 'lifts'],
+  ['inc_haz_high', 'sum', 'incHazHigh'], ['inc_haz_crush', 'sum', 'incHazCrush'], ['inc_seg', 'sum', 'incSeg'],
+  ['inc_killer', 'sum', 'incKiller'], ['bags_placed', 'sum', 'bagsPlaced'], ['hazmat_locks', 'sum', 'hazmatLocks'],
+  ['stage_placed', 'sum', 'stagePlaced'], ['aisle_warnings', 'sum', 'aisleWarnings']
+];
 
 // ── small helpers ──────────────────────────────────────────────────────────────────────────────────────────────────
 function nowIso() { return new Date().toISOString(); }
@@ -81,6 +94,8 @@ function sameHex(a, b) {           // constant-time compare of two hex strings
   return d === 0;
 }
 function clampInt(v, lo, hi) { v = parseInt(v, 10); if (isNaN(v)) v = 0; return Math.max(lo, Math.min(hi, v)); }
+// how many rows a crew sheet answers: 200 when the call names none, otherwise held to 1..500
+function sheetLimit(v) { return (v == null || v === '') ? 200 : clampInt(v, 1, 500); }
 // a whole number, or NaN for anything else (a fraction, text, true, null): the database took integers only
 function wholeOf(v) {
   if (typeof v === 'string' && /^-?[0-9]+$/.test(v.trim())) v = Number(v);
@@ -301,6 +316,24 @@ var PUBLIC = {
     return { ok: true };
   },
 
+  // 3.9.1010 the report's LIFETIME column for a crew member: their whole record on the crew, the same totals the
+  // dashboard roster shows, read with their own device token. Nobody else's numbers come back.
+  member_lifetime: async function (c) {
+    var P = c.P, id = await memberOf(c, c.body.p_token);
+    if (!id) return { ok: false, err: 'not in a crew' };
+    var aggs = ROSTER_SUMS.map(function (x) {
+      var v = 'CAST(json_extract(s.summary, \'$.' + x[2] + '\') AS REAL)';
+      if (/_util_pct$/.test(x[0])) v = 'min(' + v + ', 100)';   // 3.9.1010 a share of what arrived stops at 100%
+      return (x[1] === 'avg' ? 'round(avg(' + v + '))' : x[1] + '(' + v + ')') + ' AS ' + x[0];
+    }).join(', ');
+    var life = await c.db.prepare('SELECT count(*) AS sessions, ' +
+      'round(avg(CAST(json_extract(s.summary, \'$.avgIntegrity\') AS REAL))) AS avg_integrity, ' +
+      'sum(CAST(json_extract(s.summary, \'$.incTotal\') AS REAL)) AS incidents, ' +
+      'sum(CAST(json_extract(s.summary, \'$.collapses\') AS REAL)) AS collapses, ' + aggs +
+      ' FROM ' + P + 'crew_sessions s WHERE s.member_id = ?').bind(id).first();
+    return { ok: true, life: life || {} };
+  },
+
   member_leave: async function (c) {
     var t = str(c.body.p_token);
     if (t) await c.db.prepare('DELETE FROM ' + c.P + 'crew_tokens WHERE token_hash = ?').bind(await sha256(t)).run();
@@ -399,6 +432,15 @@ var INSTRUCTOR = {
 
   crew_roster: async function (c) {
     var P = c.P, code = str(c.body.p_code).trim().toLowerCase(), now = nowIso();
+    // The per-person totals (ROSTER_SUMS): one grouped pass over this crew's sessions, joined to the members. A field
+    // is null when the person has no sessions, or when none of their sessions recorded that number. Every value is
+    // read as REAL: a whole-number sum of posted numbers can overflow, and that error would fail the whole roster.
+    var sums = ROSTER_SUMS.map(function (x) { return 'a.' + x[0]; }).join(', ');
+    var aggs = ROSTER_SUMS.map(function (x) {
+      var v = 'CAST(json_extract(s.summary, \'$.' + x[2] + '\') AS REAL)';
+      if (/_util_pct$/.test(x[0])) v = 'min(' + v + ', 100)';   // 3.9.1010 a share of what arrived stops at 100%
+      return (x[1] === 'avg' ? 'round(avg(' + v + '))' : x[1] + '(' + v + ')') + ' AS ' + x[0];
+    }).join(', ');
     var q = 'SELECT m.id, m.name, CASE WHEN k.join_mode = \'manual\' THEN m.seat_code END AS seat, m.pin_hash IS NOT NULL AS pin_set, ' +
       '(m.locked_until IS NOT NULL AND m.locked_until > ?) AS locked, m.created_at AS joined, m.last_seen, ' +
       '(SELECT count(*) FROM ' + P + 'crew_sessions s WHERE s.member_id = m.id) AS sessions, ' +
@@ -412,10 +454,44 @@ var INSTRUCTOR = {
       '(SELECT json_extract(j.value, \'$.type\') FROM ' + P + 'crew_sessions s, json_each(s.incidents) j WHERE s.member_id = m.id AND json_extract(j.value, \'$.type\') IS NOT NULL ' +
       'GROUP BY json_extract(j.value, \'$.type\') ORDER BY count(*) DESC, json_extract(j.value, \'$.type\') LIMIT 1) AS top_incident, ' +
       '(SELECT count(*) FROM ' + P + 'crew_sessions s, json_each(s.incidents) j WHERE s.member_id = m.id AND json_extract(j.value, \'$.type\') IS NOT NULL ' +
-      'GROUP BY json_extract(j.value, \'$.type\') ORDER BY count(*) DESC, json_extract(j.value, \'$.type\') LIMIT 1) AS top_incident_n ' +
-      'FROM ' + P + 'crew_members m JOIN ' + P + 'crews k ON k.code = m.crew_code WHERE k.code = ? AND k.owner_id = ? ORDER BY lower(m.name)';
-    var rows = (await c.db.prepare(q).bind(now, code, c.who.id).all()).results || [];
+      'GROUP BY json_extract(j.value, \'$.type\') ORDER BY count(*) DESC, json_extract(j.value, \'$.type\') LIMIT 1) AS top_incident_n, ' + sums + ' ' +
+      'FROM ' + P + 'crew_members m JOIN ' + P + 'crews k ON k.code = m.crew_code ' +
+      'LEFT JOIN (SELECT s.member_id AS mid, ' + aggs + ' FROM ' + P + 'crew_sessions s WHERE s.member_id IN ' +
+      '(SELECT mm.id FROM ' + P + 'crew_members mm JOIN ' + P + 'crews kk ON kk.code = mm.crew_code WHERE kk.code = ? AND kk.owner_id = ?) ' +
+      'GROUP BY s.member_id) a ON a.mid = m.id ' +
+      'WHERE k.code = ? AND k.owner_id = ? ORDER BY lower(m.name)';
+    var rows = (await c.db.prepare(q).bind(now, code, c.who.id, code, c.who.id).all()).results || [];
     return rows.map(function (r) { r.pin_set = !!r.pin_set; r.locked = !!r.locked; return r; });
+  },
+
+  // The SESSIONS sheet: this crew's sessions, newest first, with the main numbers from each summary. Seeing a crew's
+  // results is free; only the CSV export needs a license.
+  crew_sessions_list: async function (c) {
+    var P = c.P, b = c.body;
+    var q = 'SELECT s.member_id, m.name, s.mode, s.app_ver, s.started_at, s.ended_at, s.duration_s, ' +
+      'json_extract(s.summary, \'$.score\') AS score, json_extract(s.summary, \'$.walls\') AS walls, ' +
+      'json_extract(s.summary, \'$.peakPph\') AS peak_pph, json_extract(s.summary, \'$.avgIntegrity\') AS avg_integrity, ' +
+      'json_extract(s.summary, \'$.incTotal\') AS incidents, json_extract(s.summary, \'$.collapses\') AS collapses, ' +
+      'json_extract(s.summary, \'$.pieces\') AS pieces, ' +
+      // 3.9.1010 the walls this person sealed during the session, counted from the wall log by server time (the
+      // summary's walls was the trailer number before 3.9.1010 and read 1 with nothing sealed)
+      '(SELECT count(*) FROM ' + P + 'crew_walls w WHERE w.member_id = s.member_id AND w.created_at <= s.created_at AND ' +
+      'w.created_at >= strftime(\'%Y-%m-%dT%H:%M:%fZ\', s.created_at, \'-\' || (coalesce(s.duration_s, 0) + 60) || \' seconds\') AND ' +
+      // and never earlier than the same person's previous session, so two sessions close together do not share walls
+      'w.created_at > coalesce((SELECT max(p.created_at) FROM ' + P + 'crew_sessions p WHERE p.member_id = s.member_id AND p.created_at < s.created_at), \'\')) AS walls_sealed ' +
+      'FROM ' + P + 'crew_sessions s JOIN ' + P + 'crew_members m ON m.id = s.member_id ' +
+      'JOIN ' + P + 'crews k ON k.code = m.crew_code WHERE k.code = ? AND k.owner_id = ? ORDER BY s.created_at DESC, s.id DESC LIMIT ?';
+    return (await c.db.prepare(q).bind(str(b.p_code).trim().toLowerCase(), c.who.id, sheetLimit(b.p_limit)).all()).results || [];
+  },
+
+  // The WALLS sheet: this crew's walls, newest first, with pieces per hour. Free to see, like the sessions.
+  crew_walls_list: async function (c) {
+    var P = c.P, b = c.body;
+    var q = 'SELECT w.member_id, m.name, w.mode, w.wall_score AS score, w.pieces, w.dur_s, ' +
+      'CASE WHEN w.dur_s > 0 THEN round(w.pieces * 3600.0 / w.dur_s) END AS pph, w.integrity, w.density, w.incidents, w.collapses, ' +
+      'w.created_at AS loaded_at FROM ' + P + 'crew_walls w JOIN ' + P + 'crew_members m ON m.id = w.member_id ' +
+      'JOIN ' + P + 'crews k ON k.code = m.crew_code WHERE k.code = ? AND k.owner_id = ? ORDER BY w.created_at DESC, w.id DESC LIMIT ?';
+    return (await c.db.prepare(q).bind(str(b.p_code).trim().toLowerCase(), c.who.id, sheetLimit(b.p_limit)).all()).results || [];
   },
 
   crew_export_walls: async function (c) {

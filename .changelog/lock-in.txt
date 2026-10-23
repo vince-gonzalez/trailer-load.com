@@ -2,6 +2,21 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1010 - THE CREW PAGE IS BACK, AND NOTHING ON A PAGE LEAVES WITHOUT MY YES.
+     4.0 went live on 2026-10-23 with the crew page cut from the 3.x report (30 columns in six groups, three sheets,
+     sorting, a name filter, a profile per person and four summary cards) to a nine-column roster. I never approved that
+     cut. The crew page is the 3.x report again, on one clipboard, on 4.0 data: COHORT REPORT, the cards (ON CREW, NOT
+     STARTED, AVG INTEGRITY, WALLS LOADED, and MOST COMMON MISTAKE when there is one), the LIFETIME, MOST RECENT SESSION
+     and MOST RECENT WALL sheets, the column groups (Engagement, Throughput, Quality, Craft, Faults, Habits, Coach), the
+     filter, REFRESH, PRINT, sorting by click or keyboard, and a profile per person. WHAT TO COACH stays. The API serves
+     28 more totals per person, the sessions and walls lists, and the walls each session sealed. The post-sort report has
+     its LIFETIME column again for a crew member (my answer, 2026-10-23), read from the API with the member's own token.
+     A session's wall count is the walls sealed in it (it was the trailer number, in 3.x too). Special handling use and
+     smalls use stop at 100%. The instructor sign-in lasts 14 days again; the 12-hour cut on launch day was never put to
+     me. Day One has its certificate picture again, shot from a perfect wall. .tools/lostsurface.py fails on any id,
+     button, heading, column or label that leaves a public page, measured against the live site, unless
+     .tools/approved-removals.json names it with my words and the date I said them.
+
    4.0 LAUNCH PAGES (2026-10-23, with 3.9.1009).
      /guide/ is the staff guide: every screen a participant and an instructor use, each photo with numbered boxes on the
      parts that matter, placed from each element's real rectangle on screen. /guide/teaching/ is the short page on how

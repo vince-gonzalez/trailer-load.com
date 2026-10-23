@@ -40,7 +40,7 @@
 small,sub,sup{font-size:11px;}
 
 /* ================================================================
-   LOCK IN v3.9.1009
+   LOCK IN v3.9.1010
    LOCK IN · V. Gonzalez · © 2026
    CSS: Warm-industrial LIGHT dock (default), warm-dark toggle, amber+teal.
 
@@ -1620,6 +1620,7 @@ body[data-cb="trit"]{
 .ps-legend .h{width:86px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.08em;padding:3px 0;border-radius:3px 3px 0 0;}
 .ps-legend .h.w{color:#0e6b60;background:#e0efec;}
 .ps-legend .h.s{color:#7e4a0c;background:#f4e6cf;}
+.ps-legend .h.l{color:#6a5130;background:#efe6d0;}
 /* v3.5.191 ONE column on screen. The report now lives in the board's writing area, which is
    ~500px wide, and two columns of 13px rows in 500px was unreadable. Print still gets two. */
 .ps-blocks{column-count:1;column-gap:28px;}
@@ -1635,6 +1636,8 @@ body[data-cb="trit"]{
 .ps-row .n{font-family:'Share Tech Mono',monospace;font-size:13px;text-align:center;font-variant-numeric:tabular-nums;}
 .ps-row .n.w{color:#053f38;}
 .ps-row .n.s{color:#2a2018;font-weight:bold;}
+.ps-row .n.l{color:#4a3a22;}
+.ps-blocks.l3 .ps-row{grid-template-columns:1fr 86px 86px 86px;}
 .ps-verdict{break-inside:avoid;margin-top:2px;border:2px solid #2a2018;border-radius:6px;background:linear-gradient(180deg,#fff8ec,#f5eede);padding:13px 15px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
 .ps-ring{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:5px solid #1f9d57;box-shadow:0 0 0 3px #f5eede;flex:0 0 auto;}
 .ps-ring span{font-family:'Bebas Neue',sans-serif;font-size:44px;color:#1f9d57;line-height:1;}
@@ -1645,7 +1648,7 @@ body[data-cb="trit"]{
 .ps-vsum .vr{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dotted #cdbf9f;}
 .ps-vsum .vr .lb{color:#5c4f3b;letter-spacing:.06em;}
 .ps-vsum .vr.s .va{color:#9a5c12;font-weight:bold;}
-.ps-vsum .vr.l .va{color:#8a6a3a;}
+.ps-vsum .vr.l .va{color:#5c4f3b;}
 .ps-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;border-top:2px solid #cdbf9f;padding-top:7px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#4a3a22;letter-spacing:.05em;}
 .ps-tools{position:sticky;top:0;display:flex;gap:8px;justify-content:flex-end;margin:-12px -12px 8px 0;}
 .ps-tools button{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.05em;cursor:pointer;background:#2a2018;color:#f5eede;border:2px solid var(--btn-line);border-radius:6px;padding:7px 12px;min-height:34px;}
@@ -1724,7 +1727,7 @@ body[data-cb="trit"]{
   <div class="pause-clip">
   <div class="clip-in">
   <div class="pause-title">PAUSED</div>
-  <div class="pause-sub">LOCK IN v3.9.1009</div>
+  <div class="pause-sub">LOCK IN v3.9.1010</div>
   <div class="pause-menu">
     <button class="pmb pmb-resume" onclick="togglePause()">▶ RESUME</button>
     <button class="pmb" onclick="openSettings()">⚙ SETTINGS</button>
@@ -1846,7 +1849,7 @@ body[data-cb="trit"]{
   </div><!-- /#sm-board -->
   <div id="menu-demo-cap"></div>
   <div id="sm-links"><a href="/programs/">For schools &amp; employers</a> · <a href="/for-districts/">Documentation</a> · <a href="privacy.html">Privacy (updated Oct 21)</a> · <a href="terms.html">Terms</a></div><!-- v3.5.202 the in-game notice the privacy policy promises for material changes. v3.9.999: updated Oct 20, the date on the policy; back to "Privacy" after 2026-11-20. -->
-  <div id="sm-footer">LOCK IN v3.9.1009 · © 2026</div>
+  <div id="sm-footer">LOCK IN v3.9.1010 · © 2026</div>
 </div>
 
 <!-- ═══════════════════ SAFETY WRITE-UP (v3.5.68) ═══════════════════ -->
@@ -2003,7 +2006,7 @@ body[data-cb="trit"]{
         </div>
       </div>
 
-      <div class="set-foot">LOCK IN v3.9.1009 · SETTINGS</div>
+      <div class="set-foot">LOCK IN v3.9.1010 · SETTINGS</div>
     </div>
   </div>
 </div>
@@ -2390,7 +2393,7 @@ body[data-cb="trit"]{
 
 <script>
 // ================================================================
-// LOCK IN v3.9.1009
+// LOCK IN v3.9.1010
 // LOCK IN · V. Gonzalez · © 2026
 // LAST STABLE: v2.0.4
 //
@@ -2869,12 +2872,12 @@ function zLog(kind,data){
   if(!ZDATA.events)ZDATA.events=[];
   if(ZDATA.events.length<6000)ZDATA.events.push([Math.round((Date.now()-(S.sessionStartT||Date.now()))/100),kind,data]);
 }
-var LI_APP_VER='3.9.1009'; // the version a crew session records · bump WITH the LOCK IN version
+var LI_APP_VER='3.9.1010'; // the version a crew session records · bump WITH the LOCK IN version
 function zBuildSession(){
   var ah=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):null;
   var inc=S.incidents||[];
   function _ic(t){var k=0,i;for(i=0;i<inc.length;i++){if(inc[i]&&inc[i].type===t)k++;}return k;}
-  var _walls=S.trucksDone||S.truck||0;
+  var _walls=(S.wallLog||[]).length; // 3.9.1010 the walls sealed this session; S.trucksDone||S.truck was the trailer number and read 1 with none sealed
   var _avgPph=(typeof avgPPH==='function'?avgPPH():(S.bestPPH||0));
   // avgWallPct = avg wall HEIGHT %, cubeEff = avg raw cube-fill %, densityPct = avg STRUCTURED density (the grade's density)
   var _wl=S.wallLog||[];
@@ -2886,7 +2889,7 @@ function zBuildSession(){
     summary:{
       score:S.totalScore||0, pieces:S.totalPieces||0, walls:_walls,
       peakPph:Math.min(PPH_CAP,S.bestPPH||0), avgPph:_avgPph, avgIntegrity:ah,
-      avgWallPct:_wlAvg('fillPct'), cubeEff:_wlAvg('cubePct'), densityPct:_wlAvg('density'), ncUtilPct:(S.ncSpawned?Math.round((S.ncPlaced||0)/S.ncSpawned*100):null), smallsUtilPct:(S.smallsSpawned?Math.round((S.bagsPlaced||0)/S.smallsSpawned*100):null),
+      avgWallPct:_wlAvg('fillPct'), cubeEff:_wlAvg('cubePct'), densityPct:_wlAvg('density'), ncUtilPct:(S.ncSpawned?Math.min(100,Math.round((S.ncPlaced||0)/S.ncSpawned*100)):null), smallsUtilPct:(S.smallsSpawned?Math.min(100,Math.round((S.bagsPlaced||0)/S.smallsSpawned*100)):null), /* 3.9.1010 capped at 100 like the report */
       shelvesLocked:S.shelvesLocked||0, doubleLocks:S.doubleLocks||0, nests:S.nests||0,
       incTotal:inc.length, incHazHigh:_ic('HAZMAT_HIGH'), incHazCrush:_ic('HAZMAT_CRUSH'), incSeg:_ic('SEGREGATION'), incKiller:_ic('KILLER'),
       crunches:S.crunches||0, collapses:S.collapses||0, recoveries:S.recoveries||0,
@@ -9550,7 +9553,14 @@ function openPostSort(){
   _elapsedFrozen=(typeof startT!=='undefined'&&startT)?(Date.now()-startT)/1000:0; // v3.5.138 freeze PPH while the report is open
   var ov=document.getElementById('ov-postsort');if(!ov)return;
   ov.classList.add('vis');
-  psBuild();
+  var c=crewMine();
+  psBuild(c?'loading':'none',null);
+  if(!c)return;
+  if(!LI_LIVE){psBuild('err',null);return;} // no server on this copy: the lifetime is unknown, never 0
+  zRpc('member_lifetime',{p_token:c.token},function(j){
+    if(j&&j.ok===false&&j.err==='not in a crew'){crewAnswer(j);psBuild('none',null);return;}
+    psBuild((j&&j.ok)?'ok':'err',(j&&j.ok)?(j.life||{}):null);
+  });
 }
 function closePostSort(){var ov=document.getElementById('ov-postsort');if(ov)ov.classList.remove('vis');}
 // ── BOARDS (4.0): initials only. DAILY shows today, the crown and the all-time top 3; TRAILER-LOAD shows today and
@@ -9608,12 +9618,22 @@ function zLogWall(){
       p_incidents:Math.round(w.incidentsWall||0),p_collapses:Math.round(w.collapses||0)},crewAnswer);
   }catch(e){console.error('zLogWall:',e);}
 }
-function psBuild(){
+function psBuild(lifeState,life){
   try{
     var W=snapWall();
     var _crew=crewMine();
+    // 3.9.1010 a crew member's report has the LIFETIME column again: their whole record on the crew, read from the server.
+    // A failed read shows ?, never 0. A player with no crew has no lifetime anywhere, so the column is not drawn.
+    var L3=!!_crew;
+    lifeState=L3?(lifeState||'loading'):'none';
+    function L(key,suf){
+      if(lifeState==='loading')return '\u2026';
+      if(lifeState==='err')return '?';
+      if(!key||!life||life[key]==null||life[key]==='')return '\u00b7';
+      return life[key]+(suf||'');
+    }
     var durS=Math.round((Date.now()-(S.sessionStartT||Date.now()))/1000);
-    var walls=S.trucksDone||S.truck||0;
+    var walls=(S.wallLog||[]).length; // 3.9.1010 WALLS SEALED counts sealed walls, not the trailer number
     var pieces=S.totalPieces||0;
     var wl=S.wallLog||[];
     var LW=(wl.length)?wl[wl.length-1]:W; // v3.5.81 the WALL column = the LAST SEALED wall (was reading the empty live wall = all 0s)
@@ -9622,10 +9642,11 @@ function psBuild(){
     var inc=S.incidents||[];
     function ic(t){var k=0,i;for(i=0;i<inc.length;i++){if(inc[i]&&inc[i].type===t)k++;}return k;}
     var avgInt=S.intHistory&&S.intHistory.length?Math.round(S.intHistory.reduce(function(a,b){return a+b;},0)/S.intHistory.length):'\u00b7';
-    function row(m,w,sv,sub){
+    function row(m,w,sv,sub,suf,lk){
       return '<div class="ps-row"><span class="m'+(sub?' sub':'')+'">'+m+'</span>'+
         '<span class="n w">'+(w==null?'\u00b7':w)+'</span>'+
-        '<span class="n s">'+(sv==null?'\u00b7':sv)+'</span></div>';
+        '<span class="n s">'+(sv==null?'\u00b7':sv)+'</span>'+
+        (L3?'<span class="n l">'+L(lk,suf)+'</span>':'')+'</div>';
     }
     var pcsSec=durS>0?(pieces/durS).toFixed(2):'0.00';
     var shMin=durS>0?(((S.shelvesLocked||0)/durS)*60).toFixed(1):'0.0';
@@ -9643,18 +9664,22 @@ function psBuild(){
       '<div><span class="k">DATE</span><span class="v">'+new Date().toISOString().slice(0,10)+'</span></div>'+
       '<div><span class="k">DURATION</span><span class="v">'+psFmtTime(durS)+'</span></div>'+
       '<div><span class="k">WALLS SEALED</span><span class="v">'+walls+'</span></div>'+
+      (L3?'<div><span class="k">CAREER SESSIONS</span><span class="v">'+(lifeState==='ok'&&life?(life.sessions||0):(lifeState==='loading'?'\u2026':'?'))+'</span></div>':'')+
       '<div><span class="k">BUILD</span><span class="v">v'+LI_APP_VER+'</span></div></div>'; // 3.9.1009 the build the report prints is the build that made it
-    var _legend='\u25c6 the last sealed wall and this whole session';
-    H+='<div class="ps-legend"><span class="sp">'+_legend+'</span><span class="h w">WALL</span><span class="h s">SESSION</span></div>';
-    H+='<div class="ps-blocks">';
+    var _legend=!L3?'\u25c6 the last sealed wall and this whole session'
+      :(lifeState==='loading')?'\u25c6 LOADING YOUR LIFETIME ON '+drEsc(_crew.crew)+'\u2026'
+      :(lifeState==='err')?'\u25c6 LIFETIME UNAVAILABLE \u00b7 COULD NOT REACH THE SERVER. THIS WALL AND SESSION ARE STILL ACCURATE.'
+      :'\u25c6 the last sealed wall, this session, and your lifetime on '+drEsc(_crew.crew);
+    H+='<div class="ps-legend"><span class="sp">'+_legend+'</span><span class="h w">WALL</span><span class="h s">SESSION</span>'+(L3?'<span class="h l">LIFETIME</span>':'')+'</div>';
+    H+='<div class="ps-blocks'+(L3?' l3':'')+'">';
 
     var lwPcsSec=(LW&&LW.durS>0)?((LW.pieces||0)/LW.durS).toFixed(2):null;
     var lwShMin=(LW&&LW.durS>0)?(((LW.shelvesLocked||0)/LW.durS)*60).toFixed(1):null; // v3.5.87 per-wall shelves/min (WALL column was hardcoded null)
     var _sessAvgPph=Math.round((typeof avgPPH==='function')?avgPPH():0); // v3.5.90 real freight only
     var _prodDocs=(S.prodIncidents||[]).length;
     H+='<div class="ps-block"><h2><span class="d">\u25b8</span> PRODUCTIVITY \u00b7 REAL FREIGHT</h2>'+
-      row('Avg PPH',lwv('pph'),_sessAvgPph)+
-      row('Peak PPH',null,S.bestPPH||0)+ /* 3.9.1005 a session peak; no per-wall peak is kept */
+      row('Avg PPH',lwv('pph'),_sessAvgPph,0,'','avg_pph')+
+      row('Peak PPH',null,S.bestPPH||0,0,'','peak_pph')+ /* 3.9.1005 a session peak; no per-wall peak is kept */
       row('Hub standard',STANDARD_PPH,STANDARD_PPH)+
       row('\u00b7 met standard?',(lwv('pph')!=null?(lwv('pph')>=STANDARD_PPH?'\u2713 YES':'\u2715 NO'):null),(_sessAvgPph>=STANDARD_PPH?'\u2713 YES':'\u2715 NO'),true)+
       row('Productivity flags',lwv('prodFlag'),_prodDocs)+ /* 3.9.1005 every second flag becomes a write-up */
@@ -9663,47 +9688,47 @@ function psBuild(){
       row('Wall time',(LW&&LW.durS!=null)?psFmtTime(LW.durS):null,tWall)+'</div>';
 
     H+='<div class="ps-block"><h2><span class="d">\u25b8</span> SAFETY \u00b7 DOCS RECEIVED</h2>'+
-      row('Incidents (total)',lwv('incidentsWall'),inc.length)+
-      row('\u00b7 Hazmat-high',null,ic('HAZMAT_HIGH'),true)+
-      row('\u00b7 Hazmat-crush',null,ic('HAZMAT_CRUSH'),true)+
-      row('\u00b7 Segregation',null,ic('SEGREGATION'),true)+
-      row('\u00b7 Killer',null,ic('KILLER'),true)+
+      row('Incidents (total)',lwv('incidentsWall'),inc.length,0,'','incidents')+
+      row('\u00b7 Hazmat-high',null,ic('HAZMAT_HIGH'),true,'','inc_haz_high')+
+      row('\u00b7 Hazmat-crush',null,ic('HAZMAT_CRUSH'),true,'','inc_haz_crush')+
+      row('\u00b7 Segregation',null,ic('SEGREGATION'),true,'','inc_seg')+
+      row('\u00b7 Killer',null,ic('KILLER'),true,'','inc_killer')+
       row('\u00b7 Collapse',null,ic('COLLAPSE'),true)+
       row('Warnings (total)',lwv('warningsWall'),S.warnTotal||0)+
       row('\u00b7 washed / mitigated',lwv('safetiesWashed'),S.safetiesWashed||0,true)+
       row('Fresh trailers',null,S.practiceKicks||0)+
-      row('Crunches',lwv('crunches'),S.crunches||0)+
-      row('Collapses',lwv('collapses'),S.collapses||0)+
-      row('Recoveries',lwv('recoveries'),S.recoveries||0)+
-      row('Hydration breaks',lwv('drinks'),S.drinks||0)+
+      row('Crunches',lwv('crunches'),S.crunches||0,0,'','crunches')+
+      row('Collapses',lwv('collapses'),S.collapses||0,0,'','collapses')+
+      row('Recoveries',lwv('recoveries'),S.recoveries||0,0,'','recoveries')+
+      row('Hydration breaks',lwv('drinks'),S.drinks||0,0,'','hydration_breaks')+
       row('\u00b7 with a water bonus',lwv('drinkBonuses'),S.drinkBonuses||0,true)+
-      row('Special handling left sitting',null,S.ncDwellWarn||0)+
+      row('Special handling left sitting',null,S.ncDwellWarn||0,0,'','nc_dwell_warnings')+
       '</div>';
 
     H+='<div class="ps-block"><h2><span class="d">\u25b8</span> LOAD QUALITY</h2>'+
-      row('Integrity',lwv('integrity'),avgInt)+
+      row('Integrity',lwv('integrity'),avgInt,0,'','avg_integrity')+
       row('\u00b7 Structure',lwv('integrity'),wlAvg('integrity'),true)+
       row('\u00b7 Balance',lwv('bal'),wlAvg('bal'),true)+
       row('\u00b7 Support',lwv('support'),wlAvg('support'),true)+
-      row('Density',lwv('density'),wlAvg('density'),'','%')+ // v3.5.135 UNIFIED: this is the STRUCTURED density that drives the grade (was reading raw cubePct \u00b7 the same number as Pack %)
-      row('Pack %',lwv('cubePct'),wlAvg('cubePct'),'','%')+     // v3.5.135 raw cube-fill \u00b7 one canonical label (was "Cube fill %"); the scoreboard "PACK" is its live short form
-      row('Wall height %',lwv('fillPct'),wlAvg('fillPct'),'','%')+
+      row('Density',lwv('density'),wlAvg('density'),'','%','density_pct')+ // v3.5.135 UNIFIED: this is the STRUCTURED density that drives the grade (was reading raw cubePct \u00b7 the same number as Pack %)
+      row('Pack %',lwv('cubePct'),wlAvg('cubePct'),'','%','cube_eff')+     // v3.5.135 raw cube-fill \u00b7 one canonical label (was "Cube fill %"); the scoreboard "PACK" is its live short form
+      row('Wall height %',lwv('fillPct'),wlAvg('fillPct'),'','%','avg_wall_pct')+
       row('Avg pieces / wall',lwv('pieces'),(wl.length?wlAvg('pieces'):(walls>0?Math.round(pieces/walls):'\u00b7')))+
-      row('Special handling used',null,(ncU==null?'\u00b7':ncU),'','%')+
-      row('Smalls used',null,(smU==null?'\u00b7':smU),'','%')+
+      row('Special handling used',null,(ncU==null?'\u00b7':ncU),'','%','nc_util_pct')+
+      row('Smalls used',null,(smU==null?'\u00b7':smU),'','%','smalls_util_pct')+
       row('Voids (open cells)',lwv('voids'),null)+
-      row('Shelves locked',lwv('shelves'),S.shelvesLocked||0)+
-      row('Double locks',lwv('doubles'),S.doubleLocks||0)+
-      row('Tire nests (vet)',lwv('nests'),S.nests||0)+
+      row('Shelves locked',lwv('shelves'),S.shelvesLocked||0,0,'','shelves_locked')+
+      row('Double locks',lwv('doubles'),S.doubleLocks||0,0,'','double_locks')+
+      row('Tire nests (vet)',lwv('nests'),S.nests||0,0,'','nests')+
       row('COG offset',lwv('cog'),null)+'</div>';
 
     var lwBonus=LW?((LW.recoveries||0)+(LW.doubleLocks||0)+(LW.hazShelfLocks||0)+(LW.nests||0)):null;
     H+='<div class="ps-block"><h2><span class="d">\u25b8</span> MECHANICS</h2>'+
-      row('Rotations',lwv('rotations'),S.rotations||0)+
-      row('Lifts',lwv('lifts'),S.lifts||0)+
-      row('Rejected drops',lwv('rejects'),S.rejects||0)+
-      row('Hazmat locks',lwv('hazShelfLocks'),S.hazShelfLocks||0)+
-      row('Bonuses received',lwBonus,S.bonuses||((S.recoveries||0)+(S.doubleLocks||0)+(S.hazShelfLocks||0)+(S.nests||0)))+
+      row('Rotations',lwv('rotations'),S.rotations||0,0,'','rotations')+
+      row('Lifts',lwv('lifts'),S.lifts||0,0,'','lifts')+
+      row('Rejected drops',lwv('rejects'),S.rejects||0,0,'','rejected_drops')+
+      row('Hazmat locks',lwv('hazShelfLocks'),S.hazShelfLocks||0,0,'','hazmat_locks')+
+      row('Bonuses received',lwBonus,S.bonuses||((S.recoveries||0)+(S.doubleLocks||0)+(S.hazShelfLocks||0)+(S.nests||0)),0,'','bonuses')+
       row('Bags broken / placed',LW?((LW.bagsBroken||0)+'/'+(LW.bagsPlaced||0)):null,(S.bagsBroken||0)+'/'+(S.bagsPlaced||0))+'</div>'; // v3.5.11 dropped the two perma-"," rows (Slot occupancy / Pack-fill) \u00b7 never implemented, read as slop
 
     H+='</div>'; // end blocks
@@ -9713,7 +9738,8 @@ function psBuild(){
     var _g0=(g||'').charAt(0), _gclr=(g==='F')?'#cc3820':(_g0==='A')?'#1f9d57':(g==='B')?'#2a7d9a':(_g0==='C'||_g0==='D')?'#b8760f':(_g0==='F')?'#cc3820':'#1f9d57';
     H+='<div class="ps-verdict"><div class="ps-ring" style="border-color:'+_gclr+'"><span style="color:'+_gclr+'">'+g+'</span></div>'+
       '<div class="ps-vmid"><div class="rk">'+rk+'</div><div class="ln">'+vd+'</div></div>'+
-      '<div class="ps-vsum"><div class="vr s"><span class="lb">SESSION</span><span class="va">'+g+' \u00b7 '+Math.round((typeof avgPPH==='function')?avgPPH():0)+' PPH \u00b7 '+avgInt+' INTEG \u00b7 '+inc.length+' INC</span></div></div></div>';
+      '<div class="ps-vsum"><div class="vr s"><span class="lb">SESSION</span><span class="va">'+g+' \u00b7 '+Math.round((typeof avgPPH==='function')?avgPPH():0)+' PPH \u00b7 '+avgInt+' INTEG \u00b7 '+inc.length+' INC</span></div>'+
+      (L3?'<div class="vr l"><span class="lb">LIFETIME</span><span class="va">'+((lifeState==='ok'&&life&&life.sessions)?((life.avg_pph!=null?life.avg_pph:'\u00b7')+' PPH \u00b7 '+(life.avg_integrity!=null?life.avg_integrity:'\u00b7')+' INTEG \u00b7 '+(life.incidents||0)+' INC \u00b7 '+life.sessions+' SESS'):(lifeState==='loading'?'\u2026':(lifeState==='err'?'UNAVAILABLE, NOT ZERO':'NO SESSIONS YET')))+'</span></div>':'')+'</div></div>';
 
     H+='<div class="ps-foot"><span>POST-SORT REPORT \u00b7 GENERATED ON SEAL</span><span style="display:inline-flex;align-items:center;gap:7px">\u00a9 2026</span></div>';
 
