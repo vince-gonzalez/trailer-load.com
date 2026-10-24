@@ -253,6 +253,7 @@ body.demo #demo-note{display:block;}
   <label class="fld" id="f-email"><span>Email</span><input id="li-email" type="email" autocomplete="email" autocapitalize="off" spellcheck="false"></label>
   <label class="fld" id="f-pw"><span>Password <small>(12 or more characters)</small></span><input id="li-pw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')dSubmit();"></label>
   <label class="fld" id="f-pw2" style="display:none"><span>Password again</span><input id="li-pw2" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')dSubmit();"></label>
+  <p class="sub" id="li-mailnote" style="display:none">A confirmation email comes next, from noreply@trailer-load.com. If it is not in your inbox, look in junk or spam.</p>
   <div class="row">
     <button class="btn" id="li-go" onclick="dSubmit()">SIGN IN</button>
     <button class="linkbtn" id="li-forgot" onclick="dForgot()">Forgot the password?</button>
@@ -432,6 +433,7 @@ function dMode(m){
   document.getElementById('tab-in').classList.toggle('on',!nw);document.getElementById('tab-in').setAttribute('aria-pressed',nw?'false':'true');
   document.getElementById('tab-new').classList.toggle('on',nw);document.getElementById('tab-new').setAttribute('aria-pressed',nw?'true':'false');
   document.getElementById('f-pw2').style.display=nw?'':'none';
+  document.getElementById('li-mailnote').style.display=nw?'':'none'; // 3.9.1012 who the confirmation comes from, and junk
   document.getElementById('li-forgot').style.display=nw?'none':'';
   document.getElementById('li-go').textContent=nw?'CREATE THE ACCOUNT':'SIGN IN';
   document.getElementById('login-h').textContent=nw?'CREATE AN INSTRUCTOR ACCOUNT':'INSTRUCTOR SIGN-IN';
@@ -446,7 +448,7 @@ function dSubmit(){
     if(pw!==pw2){dSet('login-msg','The two passwords do not match.','err');return;}
     dSet('login-msg','Creating the account…');
     dPost('auth/signup',{email:em,password:pw},function(j,st){
-      if(j&&j.ok){dClear(['li-pw','li-pw2']);dMode('in');dSet('login-msg',j.msg,'good');return;}
+      if(j&&j.ok){dClear(['li-pw','li-pw2']);dMode('in');dSet('login-msg',j.msg+' It comes from noreply@trailer-load.com. If it is not in your inbox, look in junk or spam.','good');return;}
       dSet('login-msg',dAnswer(j,st,'Could not create the account.'),'err');
     });
     return;
@@ -454,7 +456,9 @@ function dSubmit(){
   dSet('login-msg','Signing in…');
   dPost('auth/login',{email:em,password:pw},function(j,st){
     if(j&&j.ok){DASH.session={email:j.email};dClear(['li-pw']);dEnter();return;}
-    dSet('login-msg',dAnswer(j,st,'Email or password is wrong.'),'err');
+    var m=dAnswer(j,st,'Email or password is wrong.');
+    if(/^Confirm the email first/.test(m))m+=' It comes from noreply@trailer-load.com. If it is not in your inbox, look in junk or spam.'; // 3.9.1012
+    dSet('login-msg',m,'err');
   });
 }
 function dForgot(){

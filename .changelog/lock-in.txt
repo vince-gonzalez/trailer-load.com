@@ -2,6 +2,11 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   DASHBOARD, 2026-10-23 (with 3.9.1011) - THE CONFIRMATION EMAIL CAN LAND IN JUNK.
+     My first sign-up on the live site got its confirmation email in junk. Create an account now says the email comes
+     from noreply@trailer-load.com and to look in junk or spam, the message after sign-up says it again, and so does the
+     sign-in answer for an account that is not confirmed yet.
+
    CHANGE LOG v3.9.1011 - NO PARTNER'S NAME IN AN EXAMPLE.
      The examples in the crew name, join code and crew code boxes named a program I am working with. They read
      "example: Morning Class, October" and "example: morning1" now, and the staff guide's sample crews are Morning Class
