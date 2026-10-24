@@ -2,6 +2,17 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1013 - AN OUTSIDE REVIEW'S FINDINGS, AND WHO IS PLAYING ON A SHARED COMPUTER.
+     An outside review of the live code found three things that held. Integrity 0 read as 100 in three places (a default
+     written with ||): the fresh-lock shortcut, the shelf-lock recovery (a lock at 0 jumped the wall back to 100; it adds
+     its 30 now) and a scoreboard line. The incident record's comment called it a hiring filter; it is a coaching record
+     for practice and never a hiring or placement measure, and the comment says so. The speed multiplier's comment said
+     2.5x at 200 pph and a 0.5 floor; the formula every score has used gives 3.2x at 200, the 4.0x cap from about 257 pph
+     and a 0.4 floor, and the comment says that now. My call on shared lab computers: a crew membership stays on the
+     computer, so before each TRAILER-LOAD or DAILY from the menu a crew computer asks "Playing as <name> on <crew>?"
+     YES starts the mode; SOMEONE ELSE takes that computer off the crew and opens JOIN A CREW. New suite tengine.js
+     (integrity 0, a turned piece stored turned, the question), 11 checks, 6 of which fail on 3.9.1012.
+
    CHANGE LOG v3.9.1012 - SEALED WALLS COUNT, AND THE LAST THREE ACCESSIBILITY FINDINGS.
      A session's wall count and the report's WALLS SEALED counted the unfinished wall left on screen at the end of a shift
      (3.9.1010 counted the wall log, which keeps that wall too), so a person with three sealed walls showed four in the
