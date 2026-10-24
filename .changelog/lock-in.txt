@@ -2,6 +2,16 @@ LOCK IN · lock-in.html CHANGE LOG
 Moved out of the served page in v3.5.214 (2026-10-20): 318 entries, newest first, exactly as they stood in the page.
 The .changelog folder is in the repository and is not served by the site.
 
+   CHANGE LOG v3.9.1012 - SEALED WALLS COUNT, AND THE LAST THREE ACCESSIBILITY FINDINGS.
+     A session's wall count and the report's WALLS SEALED counted the unfinished wall left on screen at the end of a shift
+     (3.9.1010 counted the wall log, which keeps that wall too), so a person with three sealed walls showed four in the
+     game and three on the dashboard. Each logged wall now says whether it was sealed, and only sealed walls count; the
+     report's WALL column is the last sealed wall, as its legend says. On a phone held sideways the score tiles sit on the
+     paper, and in the light theme their words measured 1.77 to 2.60:1 there: they use the theme's ink colors now (5.8:1
+     or better) and keep their bright colors on the console's dark cards. The special handling plate, the smalls tile and
+     the trailer canvas say out loud the words they show (WCAG 2.5.3). New suite tscore.js measures the tiles in both
+     themes at three sizes; tlife.js checks the sealed-wall count; namecheck checks controls, not landmark containers.
+
    DASHBOARD, 2026-10-23 (with 3.9.1011) - THE CONFIRMATION EMAIL CAN LAND IN JUNK.
      My first sign-up on the live site got its confirmation email in junk. Create an account now says the email comes
      from noreply@trailer-load.com and to look in junk or spam, the message after sign-up says it again, and so does the
